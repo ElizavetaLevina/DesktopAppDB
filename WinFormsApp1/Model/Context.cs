@@ -86,7 +86,7 @@ namespace WinFormsApp1.Model
         {
             try
             {
-                optionsBuilder.UseSqlite("Data Source=" + path + ";Pooling=false");
+                optionsBuilder.UseSqlite(String.Format("Data Source={0};Pooling=false", path));
             }
             catch (Exception e)
             {

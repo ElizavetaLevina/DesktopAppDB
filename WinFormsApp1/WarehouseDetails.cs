@@ -9,10 +9,10 @@ namespace WinFormsApp1
     {
         public bool Add = false;
         public int id = 0;
-        public string device;
+        public string? device;
         public bool newDetail;
         List<Warehouse> list;
-        public WarehouseDetails(bool _newDetail, string _device)
+        public WarehouseDetails(bool _newDetail, string? _device)
         {
             InitializeComponent();
             device = _device;
@@ -72,11 +72,14 @@ namespace WinFormsApp1
 
         private void ButtonAddDetails_Click(object sender, EventArgs e)
         {
+            Context context = new();
             AddDetailToWarehouse addDetail = new(false)
             {
                 StartPosition = FormStartPosition.CenterParent
             };
             addDetail.ShowDialog();
+            list = context.Warehouse.Where(i => i.Availability).OrderByDescending(i => i.DatePurchase).ToList();
+            dataGridView1.DataSource = Funcs.ToDataTable(list);
             UpdateTable();
         }
 

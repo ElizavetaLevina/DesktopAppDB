@@ -63,17 +63,13 @@
             textBoxPrice3 = new TextBox();
             label19 = new Label();
             label20 = new Label();
-            textBoxFoundProblem4 = new TextBox();
-            label21 = new Label();
-            textBoxPrice4 = new TextBox();
-            label22 = new Label();
-            label23 = new Label();
-            textBoxFoundProblem5 = new TextBox();
-            label24 = new Label();
-            textBoxPrice5 = new TextBox();
-            label25 = new Label();
-            label26 = new Label();
             listBox1 = new ListBox();
+            label23 = new Label();
+            label24 = new Label();
+            label25 = new Label();
+            labelNameDevice = new Label();
+            labelIdOrder = new Label();
+            label27 = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -245,7 +241,7 @@
             // label12
             // 
             label12.BorderStyle = BorderStyle.Fixed3D;
-            label12.Location = new Point(-2, 556);
+            label12.Location = new Point(-2, 446);
             label12.Name = "label12";
             label12.Size = new Size(1216, 2);
             label12.TabIndex = 18;
@@ -253,14 +249,14 @@
             // label13
             // 
             label13.BorderStyle = BorderStyle.Fixed3D;
-            label13.Location = new Point(-2, 557);
+            label13.Location = new Point(-2, 447);
             label13.Name = "label13";
             label13.Size = new Size(1216, 2);
             label13.TabIndex = 19;
             // 
             // buttonSave
             // 
-            buttonSave.Location = new Point(710, 567);
+            buttonSave.Location = new Point(710, 459);
             buttonSave.Name = "buttonSave";
             buttonSave.Size = new Size(241, 43);
             buttonSave.TabIndex = 27;
@@ -270,7 +266,7 @@
             // 
             // buttonExit
             // 
-            buttonExit.Location = new Point(957, 567);
+            buttonExit.Location = new Point(957, 459);
             buttonExit.Name = "buttonExit";
             buttonExit.Size = new Size(241, 43);
             buttonExit.TabIndex = 28;
@@ -293,7 +289,7 @@
             label14.BorderStyle = BorderStyle.Fixed3D;
             label14.Location = new Point(236, 1);
             label14.Name = "label14";
-            label14.Size = new Size(2, 555);
+            label14.Size = new Size(2, 445);
             label14.TabIndex = 23;
             // 
             // textBoxFoundProblem2
@@ -390,127 +386,83 @@
             label20.TabIndex = 29;
             label20.Text = "Стоимость";
             // 
-            // textBoxFoundProblem4
-            // 
-            textBoxFoundProblem4.Enabled = false;
-            textBoxFoundProblem4.Location = new Point(507, 440);
-            textBoxFoundProblem4.Name = "textBoxFoundProblem4";
-            textBoxFoundProblem4.Size = new Size(317, 31);
-            textBoxFoundProblem4.TabIndex = 23;
-            textBoxFoundProblem4.Click += TextBoxFoundProblem4_Click;
-            textBoxFoundProblem4.TextChanged += TextBoxFoundProblem4_TextChanged;
-            textBoxFoundProblem4.KeyDown += TextBoxFoundProblem4_KeyDown;
-            // 
-            // label21
-            // 
-            label21.AutoSize = true;
-            label21.Location = new Point(1102, 443);
-            label21.Name = "label21";
-            label21.Size = new Size(46, 25);
-            label21.TabIndex = 37;
-            label21.Text = "руб.";
-            // 
-            // textBoxPrice4
-            // 
-            textBoxPrice4.Enabled = false;
-            textBoxPrice4.Location = new Point(946, 440);
-            textBoxPrice4.Name = "textBoxPrice4";
-            textBoxPrice4.Size = new Size(150, 31);
-            textBoxPrice4.TabIndex = 24;
-            textBoxPrice4.KeyPress += TextBoxPrice4_KeyPress;
-            // 
-            // label22
-            // 
-            label22.AutoSize = true;
-            label22.Location = new Point(273, 443);
-            label22.Name = "label22";
-            label22.Size = new Size(228, 25);
-            label22.TabIndex = 35;
-            label22.Text = "Найденная неисправность";
-            // 
-            // label23
-            // 
-            label23.AutoSize = true;
-            label23.Location = new Point(841, 443);
-            label23.Name = "label23";
-            label23.Size = new Size(99, 25);
-            label23.TabIndex = 34;
-            label23.Text = "Стоимость";
-            // 
-            // textBoxFoundProblem5
-            // 
-            textBoxFoundProblem5.Enabled = false;
-            textBoxFoundProblem5.Location = new Point(507, 494);
-            textBoxFoundProblem5.Name = "textBoxFoundProblem5";
-            textBoxFoundProblem5.Size = new Size(317, 31);
-            textBoxFoundProblem5.TabIndex = 25;
-            textBoxFoundProblem5.Click += TextBoxFoundProblem5_Click;
-            textBoxFoundProblem5.TextChanged += TextBoxFoundProblem5_TextChanged;
-            textBoxFoundProblem5.KeyDown += TextBoxFoundProblem5_KeyDown;
-            // 
-            // label24
-            // 
-            label24.AutoSize = true;
-            label24.Location = new Point(1102, 497);
-            label24.Name = "label24";
-            label24.Size = new Size(46, 25);
-            label24.TabIndex = 42;
-            label24.Text = "руб.";
-            // 
-            // textBoxPrice5
-            // 
-            textBoxPrice5.Enabled = false;
-            textBoxPrice5.Location = new Point(946, 494);
-            textBoxPrice5.Name = "textBoxPrice5";
-            textBoxPrice5.Size = new Size(150, 31);
-            textBoxPrice5.TabIndex = 26;
-            textBoxPrice5.KeyPress += TextBoxPrice5_KeyPress;
-            // 
-            // label25
-            // 
-            label25.AutoSize = true;
-            label25.Location = new Point(273, 497);
-            label25.Name = "label25";
-            label25.Size = new Size(228, 25);
-            label25.TabIndex = 40;
-            label25.Text = "Найденная неисправность";
-            // 
-            // label26
-            // 
-            label26.AutoSize = true;
-            label26.Location = new Point(841, 497);
-            label26.Name = "label26";
-            label26.Size = new Size(99, 25);
-            label26.TabIndex = 39;
-            label26.Text = "Стоимость";
-            // 
             // listBox1
             // 
             listBox1.FormattingEnabled = true;
             listBox1.ItemHeight = 25;
-            listBox1.Location = new Point(507, 73);
+            listBox1.Location = new Point(507, 167);
             listBox1.Name = "listBox1";
-            listBox1.Size = new Size(317, 129);
+            listBox1.Size = new Size(317, 79);
             listBox1.TabIndex = 44;
             listBox1.Visible = false;
             listBox1.Click += ListBox1_Click;
+            // 
+            // label23
+            // 
+            label23.AutoSize = true;
+            label23.Location = new Point(703, 97);
+            label23.Name = "label23";
+            label23.Size = new Size(109, 25);
+            label23.TabIndex = 47;
+            label23.Text = "Устройство:";
+            // 
+            // label24
+            // 
+            label24.BorderStyle = BorderStyle.Fixed3D;
+            label24.Location = new Point(648, 51);
+            label24.Name = "label24";
+            label24.Size = new Size(420, 2);
+            label24.TabIndex = 46;
+            // 
+            // label25
+            // 
+            label25.AutoSize = true;
+            label25.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label25.Location = new Point(648, 20);
+            label25.Name = "label25";
+            label25.Size = new Size(99, 25);
+            label25.TabIndex = 45;
+            label25.Text = " О заказе:";
+            // 
+            // labelNameDevice
+            // 
+            labelNameDevice.AutoSize = true;
+            labelNameDevice.Location = new Point(818, 97);
+            labelNameDevice.Name = "labelNameDevice";
+            labelNameDevice.Size = new Size(157, 25);
+            labelNameDevice.TabIndex = 50;
+            labelNameDevice.Text = "Сотовый телефон";
+            // 
+            // labelIdOrder
+            // 
+            labelIdOrder.AutoSize = true;
+            labelIdOrder.Location = new Point(818, 72);
+            labelIdOrder.Name = "labelIdOrder";
+            labelIdOrder.Size = new Size(42, 25);
+            labelIdOrder.TabIndex = 54;
+            labelIdOrder.Text = "111";
+            // 
+            // label27
+            // 
+            label27.AutoSize = true;
+            label27.Location = new Point(648, 72);
+            label27.Name = "label27";
+            label27.Size = new Size(164, 25);
+            label27.TabIndex = 53;
+            label27.Text = "Номер квитанции:";
             // 
             // CompletedOrder
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1210, 622);
-            Controls.Add(listBox1);
-            Controls.Add(textBoxFoundProblem5);
-            Controls.Add(label24);
-            Controls.Add(textBoxPrice5);
-            Controls.Add(label25);
-            Controls.Add(label26);
-            Controls.Add(textBoxFoundProblem4);
-            Controls.Add(label21);
-            Controls.Add(textBoxPrice4);
-            Controls.Add(label22);
+            ClientSize = new Size(1210, 513);
+            Controls.Add(labelIdOrder);
+            Controls.Add(label27);
+            Controls.Add(labelNameDevice);
             Controls.Add(label23);
+            Controls.Add(label24);
+            Controls.Add(label25);
+            Controls.Add(listBox1);
             Controls.Add(textBoxFoundProblem3);
             Controls.Add(label18);
             Controls.Add(textBoxPrice3);
@@ -591,16 +543,16 @@
         private TextBox textBoxPrice3;
         private Label label19;
         private Label label20;
-        private TextBox textBoxFoundProblem4;
+        private ListBox listBox1;
         private Label label21;
-        private TextBox textBoxPrice4;
         private Label label22;
         private Label label23;
-        private TextBox textBoxFoundProblem5;
         private Label label24;
-        private TextBox textBoxPrice5;
         private Label label25;
-        private Label label26;
-        private ListBox listBox1;
+        private Label labelModelDevice;
+        private Label labelBrandDevice;
+        private Label labelNameDevice;
+        private Label labelIdOrder;
+        private Label label27;
     }
 }

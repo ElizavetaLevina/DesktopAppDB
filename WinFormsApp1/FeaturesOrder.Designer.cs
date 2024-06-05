@@ -79,16 +79,6 @@
             label29 = new Label();
             textBoxSumPrice = new TextBox();
             label18 = new Label();
-            labelRub5 = new Label();
-            textBoxPrice5 = new TextBox();
-            textBoxProblem5 = new TextBox();
-            labelPrice5 = new Label();
-            labelProblem5 = new Label();
-            labelRub4 = new Label();
-            textBoxPrice4 = new TextBox();
-            textBoxProblem4 = new TextBox();
-            labelPrice4 = new Label();
-            labelProblem4 = new Label();
             labelRub3 = new Label();
             textBoxPrice3 = new TextBox();
             textBoxProblem3 = new TextBox();
@@ -140,7 +130,7 @@
             tabControl1.Location = new Point(12, 12);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(789, 677);
+            tabControl1.Size = new Size(789, 624);
             tabControl1.TabIndex = 0;
             // 
             // tabPageOrder
@@ -177,7 +167,7 @@
             tabPageOrder.Location = new Point(4, 34);
             tabPageOrder.Name = "tabPageOrder";
             tabPageOrder.Padding = new Padding(3);
-            tabPageOrder.Size = new Size(781, 639);
+            tabPageOrder.Size = new Size(781, 586);
             tabPageOrder.TabIndex = 0;
             tabPageOrder.Text = "Информация о заказе";
             tabPageOrder.UseVisualStyleBackColor = true;
@@ -214,7 +204,7 @@
             textBoxNote.Location = new Point(270, 487);
             textBoxNote.Multiline = true;
             textBoxNote.Name = "textBoxNote";
-            textBoxNote.Size = new Size(463, 101);
+            textBoxNote.Size = new Size(463, 87);
             textBoxNote.TabIndex = 27;
             // 
             // linkLabelBrand
@@ -465,7 +455,7 @@
             tabPageClient.Location = new Point(4, 34);
             tabPageClient.Name = "tabPageClient";
             tabPageClient.Padding = new Padding(3);
-            tabPageClient.Size = new Size(781, 639);
+            tabPageClient.Size = new Size(781, 586);
             tabPageClient.TabIndex = 1;
             tabPageClient.Text = "Информация о клиенте";
             tabPageClient.UseVisualStyleBackColor = true;
@@ -600,16 +590,6 @@
             tabPageDeviceRepair.Controls.Add(label29);
             tabPageDeviceRepair.Controls.Add(textBoxSumPrice);
             tabPageDeviceRepair.Controls.Add(label18);
-            tabPageDeviceRepair.Controls.Add(labelRub5);
-            tabPageDeviceRepair.Controls.Add(textBoxPrice5);
-            tabPageDeviceRepair.Controls.Add(textBoxProblem5);
-            tabPageDeviceRepair.Controls.Add(labelPrice5);
-            tabPageDeviceRepair.Controls.Add(labelProblem5);
-            tabPageDeviceRepair.Controls.Add(labelRub4);
-            tabPageDeviceRepair.Controls.Add(textBoxPrice4);
-            tabPageDeviceRepair.Controls.Add(textBoxProblem4);
-            tabPageDeviceRepair.Controls.Add(labelPrice4);
-            tabPageDeviceRepair.Controls.Add(labelProblem4);
             tabPageDeviceRepair.Controls.Add(labelRub3);
             tabPageDeviceRepair.Controls.Add(textBoxPrice3);
             tabPageDeviceRepair.Controls.Add(textBoxProblem3);
@@ -634,7 +614,7 @@
             tabPageDeviceRepair.Location = new Point(4, 34);
             tabPageDeviceRepair.Name = "tabPageDeviceRepair";
             tabPageDeviceRepair.Padding = new Padding(3);
-            tabPageDeviceRepair.Size = new Size(781, 639);
+            tabPageDeviceRepair.Size = new Size(781, 586);
             tabPageDeviceRepair.TabIndex = 2;
             tabPageDeviceRepair.Text = "Ремонт аппарата";
             tabPageDeviceRepair.UseVisualStyleBackColor = true;
@@ -643,7 +623,7 @@
             // 
             label29.AutoSize = true;
             label29.ForeColor = Color.FromArgb(105, 101, 148);
-            label29.Location = new Point(698, 595);
+            label29.Location = new Point(698, 516);
             label29.Name = "label29";
             label29.Size = new Size(46, 25);
             label29.TabIndex = 35;
@@ -651,7 +631,7 @@
             // 
             // textBoxSumPrice
             // 
-            textBoxSumPrice.Location = new Point(584, 592);
+            textBoxSumPrice.Location = new Point(584, 513);
             textBoxSumPrice.Name = "textBoxSumPrice";
             textBoxSumPrice.ReadOnly = true;
             textBoxSumPrice.Size = new Size(108, 31);
@@ -661,109 +641,11 @@
             // 
             label18.AutoSize = true;
             label18.ForeColor = Color.FromArgb(105, 101, 148);
-            label18.Location = new Point(513, 595);
+            label18.Location = new Point(513, 516);
             label18.Name = "label18";
             label18.Size = new Size(65, 25);
             label18.TabIndex = 33;
             label18.Text = "Итого:";
-            // 
-            // labelRub5
-            // 
-            labelRub5.AutoSize = true;
-            labelRub5.ForeColor = Color.FromArgb(150, 150, 150);
-            labelRub5.Location = new Point(698, 550);
-            labelRub5.Name = "labelRub5";
-            labelRub5.Size = new Size(46, 25);
-            labelRub5.TabIndex = 32;
-            labelRub5.Text = "руб.";
-            // 
-            // textBoxPrice5
-            // 
-            textBoxPrice5.Enabled = false;
-            textBoxPrice5.Location = new Point(584, 547);
-            textBoxPrice5.Name = "textBoxPrice5";
-            textBoxPrice5.ReadOnly = true;
-            textBoxPrice5.Size = new Size(108, 31);
-            textBoxPrice5.TabIndex = 31;
-            // 
-            // textBoxProblem5
-            // 
-            textBoxProblem5.AllowDrop = true;
-            textBoxProblem5.Enabled = false;
-            textBoxProblem5.Location = new Point(270, 547);
-            textBoxProblem5.Name = "textBoxProblem5";
-            textBoxProblem5.ReadOnly = true;
-            textBoxProblem5.Size = new Size(208, 31);
-            textBoxProblem5.TabIndex = 30;
-            // 
-            // labelPrice5
-            // 
-            labelPrice5.AutoSize = true;
-            labelPrice5.ForeColor = Color.FromArgb(150, 150, 150);
-            labelPrice5.Location = new Point(525, 550);
-            labelPrice5.Name = "labelPrice5";
-            labelPrice5.Size = new Size(53, 25);
-            labelPrice5.TabIndex = 29;
-            labelPrice5.Text = "Цена";
-            // 
-            // labelProblem5
-            // 
-            labelProblem5.AutoSize = true;
-            labelProblem5.ForeColor = Color.FromArgb(150, 150, 150);
-            labelProblem5.Location = new Point(27, 550);
-            labelProblem5.Name = "labelProblem5";
-            labelProblem5.Size = new Size(228, 25);
-            labelProblem5.TabIndex = 28;
-            labelProblem5.Text = "Найденная неисправность";
-            // 
-            // labelRub4
-            // 
-            labelRub4.AutoSize = true;
-            labelRub4.ForeColor = Color.FromArgb(150, 150, 150);
-            labelRub4.Location = new Point(698, 502);
-            labelRub4.Name = "labelRub4";
-            labelRub4.Size = new Size(46, 25);
-            labelRub4.TabIndex = 27;
-            labelRub4.Text = "руб.";
-            // 
-            // textBoxPrice4
-            // 
-            textBoxPrice4.Enabled = false;
-            textBoxPrice4.Location = new Point(584, 499);
-            textBoxPrice4.Name = "textBoxPrice4";
-            textBoxPrice4.ReadOnly = true;
-            textBoxPrice4.Size = new Size(108, 31);
-            textBoxPrice4.TabIndex = 26;
-            // 
-            // textBoxProblem4
-            // 
-            textBoxProblem4.AllowDrop = true;
-            textBoxProblem4.Enabled = false;
-            textBoxProblem4.Location = new Point(270, 499);
-            textBoxProblem4.Name = "textBoxProblem4";
-            textBoxProblem4.ReadOnly = true;
-            textBoxProblem4.Size = new Size(208, 31);
-            textBoxProblem4.TabIndex = 25;
-            // 
-            // labelPrice4
-            // 
-            labelPrice4.AutoSize = true;
-            labelPrice4.ForeColor = Color.FromArgb(150, 150, 150);
-            labelPrice4.Location = new Point(525, 502);
-            labelPrice4.Name = "labelPrice4";
-            labelPrice4.Size = new Size(53, 25);
-            labelPrice4.TabIndex = 24;
-            labelPrice4.Text = "Цена";
-            // 
-            // labelProblem4
-            // 
-            labelProblem4.AutoSize = true;
-            labelProblem4.ForeColor = Color.FromArgb(150, 150, 150);
-            labelProblem4.Location = new Point(27, 502);
-            labelProblem4.Name = "labelProblem4";
-            labelProblem4.Size = new Size(228, 25);
-            labelProblem4.TabIndex = 23;
-            labelProblem4.Text = "Найденная неисправность";
             // 
             // labelRub3
             // 
@@ -987,7 +869,7 @@
             tabPageGuarantee.Location = new Point(4, 34);
             tabPageGuarantee.Name = "tabPageGuarantee";
             tabPageGuarantee.Padding = new Padding(3);
-            tabPageGuarantee.Size = new Size(781, 639);
+            tabPageGuarantee.Size = new Size(781, 586);
             tabPageGuarantee.TabIndex = 3;
             tabPageGuarantee.Text = "Гарантия на устройство";
             tabPageGuarantee.UseVisualStyleBackColor = true;
@@ -1091,7 +973,7 @@
             // 
             // buttonSave
             // 
-            buttonSave.Location = new Point(390, 695);
+            buttonSave.Location = new Point(388, 647);
             buttonSave.Name = "buttonSave";
             buttonSave.Size = new Size(194, 43);
             buttonSave.TabIndex = 1;
@@ -1101,7 +983,7 @@
             // 
             // buttonExit
             // 
-            buttonExit.Location = new Point(603, 695);
+            buttonExit.Location = new Point(601, 647);
             buttonExit.Name = "buttonExit";
             buttonExit.Size = new Size(194, 43);
             buttonExit.TabIndex = 27;
@@ -1117,7 +999,7 @@
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(811, 746);
+            ClientSize = new Size(811, 700);
             Controls.Add(buttonExit);
             Controls.Add(buttonSave);
             Controls.Add(tabControl1);
@@ -1213,16 +1095,6 @@
         private Label label28;
         private TextBox textBoxMaxPrice;
         private Label label27;
-        private Label labelRub5;
-        private TextBox textBoxPrice5;
-        private TextBox textBoxProblem5;
-        private Label labelPrice5;
-        private Label labelProblem5;
-        private Label labelRub4;
-        private TextBox textBoxPrice4;
-        private TextBox textBoxProblem4;
-        private Label labelPrice4;
-        private Label labelProblem4;
         private Label labelRub3;
         private TextBox textBoxPrice3;
         private TextBox textBoxProblem3;

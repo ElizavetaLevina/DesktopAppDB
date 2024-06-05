@@ -47,10 +47,10 @@ namespace WinFormsApp1
                 {
                     StartPosition = FormStartPosition.CenterParent,
                     Text = "Изменение типа устройства",
-                    BtnText = "Изменить",
+                    BtnText = "Сохранить",
                     NameTextBox = name,
                     LabelSecondName = "Фирма-производитель",
-                    LabelNameInList = "Фирмы-производители " + name
+                    LabelNameInList = String.Format("Фирмы-производители {0}", name)
                 };
                 enterBrandForm.ShowDialog();
 

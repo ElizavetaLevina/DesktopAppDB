@@ -15,7 +15,7 @@ namespace WinFormsApp1
             InitializeComponent();
             idOrder = id;
             statusOrder = status;
-            this.Text = "Свойства устройства (заказ №" + id + ")";
+            this.Text = String.Format("Свойства устройства (заказ № {0} )", id);
             Context context = new();
             var list = context.Orders.Where(i => i.Id == id).ToList();
 
@@ -150,15 +150,11 @@ namespace WinFormsApp1
             int summDetails = 0;
             int sumPrice = 0;
 
-            List<TextBox> problem = [textBoxProblem1, textBoxProblem2, textBoxProblem3,
-                textBoxProblem4, textBoxProblem5];
-            List<TextBox> price = [textBoxPrice1, textBoxPrice2, textBoxPrice3, textBoxPrice4,
-                textBoxPrice5];
-            List<Label> lProblem = [labelProblem1, labelProblem2, labelProblem3, labelProblem4,
-                labelProblem5];
-            List<Label> lPrice = [labelPrice1, labelPrice2, labelPrice3, labelPrice4,
-                labelPrice5];
-            List<Label> lRub = [labelRub1, labelRub2, labelRub3, labelRub4, labelRub5];
+            List<TextBox> problem = [textBoxProblem1, textBoxProblem2, textBoxProblem3];
+            List<TextBox> price = [textBoxPrice1, textBoxPrice2, textBoxPrice3];
+            List<Label> lProblem = [labelProblem1, labelProblem2, labelProblem3];
+            List<Label> lPrice = [labelPrice1, labelPrice2, labelPrice3];
+            List<Label> lRub = [labelRub1, labelRub2, labelRub3];
             
 
             var listDetails = context.Details.Where(i => i.Id == idOrder).Select(a => new
@@ -185,12 +181,11 @@ namespace WinFormsApp1
                 }
                 for (int i = 0; i < listNameS.Count; i++)
                 {
-                    listBox1.Items.Add((i + 1) + ". " + listNameS[i] + " (" + listPriceSaleS[i]
-                        + " руб.)");
+                    listBox1.Items.Add(String.Format("{0}. {1} ({2} руб.)", i + 1, listNameS[i], listPriceSaleS[i]));
                     summDetails += listPriceSaleS[i];
                 }
-                textBoxPriceDetails.Text = summDetails.ToString() + " руб.";
-                textBoxCountDetails.Text = listPriceSaleS.Count.ToString() + " шт.";
+                textBoxPriceDetails.Text = String.Format("{0} руб.", summDetails);
+                textBoxCountDetails.Text = String.Format("{0} шт.", listPriceSaleS.Count);
             }            
             
 
@@ -240,11 +235,11 @@ namespace WinFormsApp1
             else
                 textBoxAvailabilityGuarantee.Text = "Отсутствует";
 
-            textBoxGuaranteePeriod.Text = list[0].Guarantee.ToString() + " мес.";
+            textBoxGuaranteePeriod.Text = String.Format("{0} мес.", list[0].Guarantee);
             textBoxEndGuarantee.Text = list[0].DateEndGuarantee;
 
             if (((int)(DateTime.Parse(list[0].DateEndGuarantee) - DateTime.Now).TotalDays) > 0)
-                textBoxGuaranteeLeft.Text = ((int)(DateTime.Parse(list[0].DateEndGuarantee) - DateTime.Now).TotalDays).ToString() + " дн.";
+                textBoxGuaranteeLeft.Text = String.Format("{0} дн.", (int)(DateTime.Parse(list[0].DateEndGuarantee) - DateTime.Now).TotalDays);
             else
                 textBoxGuaranteeLeft.Text = "Закончилась";
 
@@ -432,7 +427,7 @@ namespace WinFormsApp1
 
             textBoxEndGuarantee.Text = (dateTimePicker1.Value.AddMonths(list[0].Guarantee)).ToShortDateString();
             if (((int)(DateTime.Parse(textBoxEndGuarantee.Text) - DateTime.Now).TotalDays) > 0)
-                textBoxGuaranteeLeft.Text = ((int)(DateTime.Parse(textBoxEndGuarantee.Text) - DateTime.Now).TotalDays).ToString() + " дн.";
+                textBoxGuaranteeLeft.Text = String.Format("{0} дн.", (int)(DateTime.Parse(textBoxEndGuarantee.Text) - DateTime.Now).TotalDays);
             else
                 textBoxGuaranteeLeft.Text = "Закончилась";
 

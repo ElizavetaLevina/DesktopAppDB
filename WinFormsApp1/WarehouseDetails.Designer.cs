@@ -93,9 +93,9 @@
             // 
             // buttonExit
             // 
-            buttonExit.Location = new Point(598, 451);
+            buttonExit.Location = new Point(540, 451);
             buttonExit.Name = "buttonExit";
-            buttonExit.Size = new Size(190, 43);
+            buttonExit.Size = new Size(248, 43);
             buttonExit.TabIndex = 4;
             buttonExit.Text = "Выход";
             buttonExit.UseVisualStyleBackColor = true;
@@ -103,11 +103,11 @@
             // 
             // buttonAdd
             // 
-            buttonAdd.Location = new Point(402, 451);
+            buttonAdd.Location = new Point(286, 451);
             buttonAdd.Name = "buttonAdd";
-            buttonAdd.Size = new Size(190, 43);
+            buttonAdd.Size = new Size(248, 43);
             buttonAdd.TabIndex = 5;
-            buttonAdd.Text = "Добавить";
+            buttonAdd.Text = "Добавить деталь в заказ";
             buttonAdd.UseVisualStyleBackColor = true;
             buttonAdd.Click += ButtonAdd_Click;
             // 

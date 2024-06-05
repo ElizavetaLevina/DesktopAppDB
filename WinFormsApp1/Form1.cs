@@ -5,7 +5,7 @@ using ClosedXML.Report;
 using System.Net;
 using FluentFTP;
 using Color = System.Drawing.Color;
-using System.Windows.Forms;
+using WinFormsApp1.DTO;
 
 namespace WinFormsApp1
 {
@@ -139,7 +139,10 @@ namespace WinFormsApp1
             {
                 status = "Accepted";
                 using Context context = new();
-                var list = context.Orders.Where(i => i.InProgress == true && i.Deleted == false && i.Master == null).Select(a => new
+                var list = context.Orders.Where(i => i.InProgress == true && i.Deleted == false && i.Master == null)
+                    .OrderByDescending(i => i.DateCreation)
+                    .Select(a => //new OrderDTO(a)
+                new
                 {
                     a.Id,
                     a.DateCreation,
@@ -157,10 +160,11 @@ namespace WinFormsApp1
                     a.Guarantee,
                     a.DateEndGuarantee,
                     a.ColorRow
-                }).OrderByDescending(i => i.DateCreation).ToList();
+                }
+                ).ToList();
                 dataGridView1.DataSource = Funcs.ToDataTable(list);
-                UpdateTable();
-                ChangeColorRows();
+                /*UpdateTable();
+                ChangeColorRows();*/
             }
             catch (Exception e)
             {
@@ -338,6 +342,23 @@ namespace WinFormsApp1
                 ChangeColorRows();
             }
             catch { }
+        }
+
+        private void AddDevice()
+        {
+            AddDeviceForRepair addDeviceForRepair = new()
+            {
+                StartPosition = FormStartPosition.CenterParent
+            };
+            addDeviceForRepair.ShowDialog();
+            if (addDeviceForRepair.pressBtnAdd)
+            {
+                status = addDeviceForRepair.status;
+                /*UpdateDB();*/
+                UpdateTableData();
+                ToolStripEnabled();
+            }
+            FocusButton(status);
         }
 
         private void FeaturesOrderItem()
@@ -1430,6 +1451,11 @@ namespace WinFormsApp1
             NewOrder();
         }
 
+        private void ButtonAddDevice_Click(object sender, EventArgs e)
+        {
+            AddDevice();
+        }
+
         private void ButtonMasters_Click(object sender, EventArgs e)
         {
             AddMaster addMaster = new()
@@ -1731,19 +1757,7 @@ namespace WinFormsApp1
 
         private void ItemAddDeviceForRepair_Click(object sender, EventArgs e)
         {
-            AddDeviceForRepair addDeviceForRepair = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
-            addDeviceForRepair.ShowDialog();
-            if (addDeviceForRepair.pressBtnAdd)
-            {
-                status = addDeviceForRepair.status;
-                /*UpdateDB();*/
-                UpdateTableData();
-                ToolStripEnabled();
-            }
-            FocusButton(status);
+            AddDevice();
         }
 
         private void ItemFeaturesOrder_Click(object sender, EventArgs e)
@@ -1873,8 +1887,7 @@ namespace WinFormsApp1
                     i.DateCreation,
                 }).ToList();
 
-                string device = list[0].NameTypeTechnic + " " + list[0].NameBrandTechnic +
-                    " " + list[0].ModelTechnic;
+                string device = String.Format("{0} {1} {2}", list[0].NameTypeTechnic, list[0].NameBrandTechnic, list[0].ModelTechnic);
 
                 template.AddVariable("Id", value: list[0].Id);
                 template.AddVariable("MasterName", value: list[0].NameMaster);
@@ -2007,14 +2020,16 @@ namespace WinFormsApp1
 
                 for (int i = 0; i < 5; i++)
                 {
-                    nameDetails.Add("NameDetails" + i);
-                    priceDetails.Add("PriceDetails" + i);
-                    nameProblem.Add("FoundProblem" + i);
-                    priceProblem.Add("PriceRepair" + i);
+                    nameDetails.Add(String.Format("NameDetails{0}", i));
+                    priceDetails.Add(String.Format("PriceDetails{0}", i));
+                }
+                for (int i = 0; i < 3; i++)
+                {
+                    nameProblem.Add(String.Format("FoundProblem{0}", i));
+                    priceProblem.Add(String.Format("PriceRepair{0}", i));
                 }
 
-                string device = list[0].NameTypeTechnic + " " + list[0].NameBrandTechnic +
-                    " " + list[0].ModelTechnic;
+                string device = String.Format("{0} {1} {2}", list[0].NameTypeTechnic, list[0].NameBrandTechnic, list[0].ModelTechnic);
 
                 template.AddVariable("Id", value: list[0].Id);
                 template.AddVariable("MasterName", value: list[0].NameMaster);
@@ -2058,14 +2073,6 @@ namespace WinFormsApp1
                     }
                 }
                 template.AddVariable("TotalPrice", value: (detailsSum + problemSum));
-                /*if (list[0].ReturnUnderGuarantee)
-                {
-                    template.AddVariable("TotalPrice", value: (detailsSum));
-                }
-                else
-                {
-                    template.AddVariable("TotalPrice", value: "(detailsSum + list[0].PriceRepair)");
-                }*/
                 template.AddVariable("OrgName", value: Properties.Settings.Default.NameOrg);
                 template.AddVariable("OrgAddress", value: Properties.Settings.Default.AddressOrg);
                 template.AddVariable("OrgPhone", value: Properties.Settings.Default.PhoneOrg);
@@ -2217,8 +2224,6 @@ namespace WinFormsApp1
         private void Form1_SizeChanged(object sender, EventArgs e)
         {
             ChangeSizeAndLocation();
-            //label1.Text = this.Height.ToString() + ":" + this.Width.ToString();
-            //UpdateTableData();
         }
 
         private void DataGridView1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -2585,7 +2590,7 @@ namespace WinFormsApp1
 
         private void DataGridView1_MouseMove(object sender, MouseEventArgs e)
         {
-            
+
         }
     }
 }

@@ -27,7 +27,7 @@ namespace WinFormsApp1
                 a.BrandTechnic,
                 a.ModelTechnic
             }).ToList();
-            WarehouseDetails details = new(false, (listOrder[0].BrandTechnic.NameBrandTechnic + listOrder[0].ModelTechnic))
+            WarehouseDetails details = new(false, listOrder[0].BrandTechnic?.NameBrandTechnic)
             {
                 StartPosition = FormStartPosition.CenterParent,
                 VisibleBtnAdd = true
@@ -92,11 +92,11 @@ namespace WinFormsApp1
                 List<string> listNameS = [];
                 List<int> listPriceSaleS = [];
                 
-                for (int i = 0; i < listIdWarehouse[0].IdWarehouse.Count; i++)
+                for (int i = 0; i < listIdWarehouse[0].IdWarehouse?.Count; i++)
                 {
                     for (int j = 0; j < listWarehouse.Count; j++)
                     {
-                        if (listIdWarehouse[0].IdWarehouse[i] == listWarehouse[j].Id)
+                        if (listIdWarehouse[0].IdWarehouse?[i] == listWarehouse[j].Id)
                         {
                             listIdS.Add(listWarehouse[j].Id);
                             listNameS.Add(listWarehouse[j].NameDetail);
@@ -110,8 +110,8 @@ namespace WinFormsApp1
                     dataGridView1.Rows.Add(listIdS[i], listNameS[i], listPriceSaleS[i]);
                     summDetails += listPriceSaleS[i];
                 }
-                labelCount.Text = listPriceSaleS.Count.ToString() + " шт.";
-                labelPrice.Text = summDetails.ToString() + " руб.";
+                labelCount.Text = String.Format("{0} шт.", listPriceSaleS.Count);
+                labelPrice.Text = String.Format("{0} руб.", summDetails);
             }
         }
 
@@ -173,17 +173,16 @@ namespace WinFormsApp1
                     var listWarehouse = context.Warehouse.ToList();
                     List<int> listIdS = [];
 
-                    for (int i = 0; i < listIdWarehouse[0].IdWarehouse.Count; i++)
+                    for (int i = 0; i < listIdWarehouse[0].IdWarehouse?.Count; i++)
                     {
                         for (int j = 0; j < listWarehouse.Count; j++)
                         {
-                            if (listIdWarehouse[0].IdWarehouse[i] == listWarehouse[j].Id)
+                            if (listIdWarehouse[0].IdWarehouse?[i] == listWarehouse[j].Id)
                             {
                                 listIdS.Add(listWarehouse[j].Id);
                             }
                         }
                     }
-                    //!!!!!!!!!!!!!!!!!!!!
                     listIdS.RemoveAt(numberRow);
 
                     CRUD.ChangeDetails(idOrder, listIdS);

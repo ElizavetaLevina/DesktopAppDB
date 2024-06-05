@@ -156,6 +156,7 @@ namespace WinFormsApp1
             buttonReset = new Button();
             contextPhone = new ContextMenuStrip(components);
             numberPhone = new ToolStripMenuItem();
+            buttonAddDevice = new ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             contextMenu1.SuspendLayout();
             toolStrip1.SuspendLayout();
@@ -456,10 +457,10 @@ namespace WinFormsApp1
             // 
             toolStrip1.Dock = DockStyle.None;
             toolStrip1.ImageScalingSize = new Size(24, 24);
-            toolStrip1.Items.AddRange(new ToolStripItem[] { buttonMasters, buttonDevice, toolStripSeparator5, buttonExit, toolStripSeparator6, buttonDetails, buttonDelete, buttonRecoveryOrder, buttonCompletedTag, buttonIssue, buttonReturnInRepair, buttonReturnGuarantee, toolStripSeparator7, buttonFeaturesOrder, buttonFeaturesClient, toolStripSeparator8 });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { buttonAddDevice, buttonMasters, buttonDevice, toolStripSeparator5, buttonExit, toolStripSeparator6, buttonDetails, buttonDelete, buttonRecoveryOrder, buttonCompletedTag, buttonIssue, buttonReturnInRepair, buttonReturnGuarantee, toolStripSeparator7, buttonFeaturesOrder, buttonFeaturesClient, toolStripSeparator8 });
             toolStrip1.Location = new Point(20, 43);
             toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(450, 25);
+            toolStrip1.Size = new Size(530, 28);
             toolStrip1.TabIndex = 17;
             toolStrip1.Text = "toolStrip1";
             // 
@@ -470,7 +471,7 @@ namespace WinFormsApp1
             buttonMasters.ImageScaling = ToolStripItemImageScaling.None;
             buttonMasters.ImageTransparentColor = Color.Magenta;
             buttonMasters.Name = "buttonMasters";
-            buttonMasters.Size = new Size(34, 20);
+            buttonMasters.Size = new Size(34, 23);
             buttonMasters.Text = "Работа с данными о мастерах организации";
             buttonMasters.Click += ButtonMasters_Click;
             // 
@@ -481,14 +482,14 @@ namespace WinFormsApp1
             buttonDevice.ImageScaling = ToolStripItemImageScaling.None;
             buttonDevice.ImageTransparentColor = Color.Magenta;
             buttonDevice.Name = "buttonDevice";
-            buttonDevice.Size = new Size(34, 20);
+            buttonDevice.Size = new Size(34, 23);
             buttonDevice.Text = "Тип ремонтируемых устройств";
             buttonDevice.Click += ButtonDevice_Click;
             // 
             // toolStripSeparator5
             // 
             toolStripSeparator5.Name = "toolStripSeparator5";
-            toolStripSeparator5.Size = new Size(6, 25);
+            toolStripSeparator5.Size = new Size(6, 28);
             // 
             // buttonExit
             // 
@@ -497,14 +498,14 @@ namespace WinFormsApp1
             buttonExit.ImageScaling = ToolStripItemImageScaling.None;
             buttonExit.ImageTransparentColor = Color.Magenta;
             buttonExit.Name = "buttonExit";
-            buttonExit.Size = new Size(34, 20);
+            buttonExit.Size = new Size(34, 23);
             buttonExit.Text = "Выход из программы";
             buttonExit.Click += ButtonExit_Click;
             // 
             // toolStripSeparator6
             // 
             toolStripSeparator6.Name = "toolStripSeparator6";
-            toolStripSeparator6.Size = new Size(6, 25);
+            toolStripSeparator6.Size = new Size(6, 28);
             // 
             // buttonDetails
             // 
@@ -513,7 +514,7 @@ namespace WinFormsApp1
             buttonDetails.ImageScaling = ToolStripItemImageScaling.None;
             buttonDetails.ImageTransparentColor = Color.Magenta;
             buttonDetails.Name = "buttonDetails";
-            buttonDetails.Size = new Size(34, 20);
+            buttonDetails.Size = new Size(34, 23);
             buttonDetails.Text = "Детали, использованые в ремонте устройства";
             buttonDetails.Click += ButtonDetails_Click;
             // 
@@ -524,7 +525,7 @@ namespace WinFormsApp1
             buttonDelete.ImageScaling = ToolStripItemImageScaling.None;
             buttonDelete.ImageTransparentColor = Color.Magenta;
             buttonDelete.Name = "buttonDelete";
-            buttonDelete.Size = new Size(34, 20);
+            buttonDelete.Size = new Size(34, 23);
             buttonDelete.Text = "Удаление объекта из базы данных";
             buttonDelete.Click += ButtonDelete_Click;
             // 
@@ -535,7 +536,7 @@ namespace WinFormsApp1
             buttonRecoveryOrder.ImageScaling = ToolStripItemImageScaling.None;
             buttonRecoveryOrder.ImageTransparentColor = Color.Magenta;
             buttonRecoveryOrder.Name = "buttonRecoveryOrder";
-            buttonRecoveryOrder.Size = new Size(34, 20);
+            buttonRecoveryOrder.Size = new Size(34, 23);
             buttonRecoveryOrder.Text = "Восстановление удаленного ранее устройства";
             buttonRecoveryOrder.Click += ButtonRestoring_Click;
             // 
@@ -546,7 +547,7 @@ namespace WinFormsApp1
             buttonCompletedTag.ImageScaling = ToolStripItemImageScaling.None;
             buttonCompletedTag.ImageTransparentColor = Color.Magenta;
             buttonCompletedTag.Name = "buttonCompletedTag";
-            buttonCompletedTag.Size = new Size(34, 20);
+            buttonCompletedTag.Size = new Size(34, 23);
             buttonCompletedTag.Text = "Пометка устройства как отремонтированного";
             buttonCompletedTag.Click += ButtonCompletedTag_Click;
             // 
@@ -557,7 +558,7 @@ namespace WinFormsApp1
             buttonIssue.ImageScaling = ToolStripItemImageScaling.None;
             buttonIssue.ImageTransparentColor = Color.Magenta;
             buttonIssue.Name = "buttonIssue";
-            buttonIssue.Size = new Size(34, 20);
+            buttonIssue.Size = new Size(34, 23);
             buttonIssue.Text = "Выдача устройства клиенту после ремонта";
             buttonIssue.Click += ButtonIssue_Click;
             // 
@@ -568,7 +569,7 @@ namespace WinFormsApp1
             buttonReturnInRepair.ImageScaling = ToolStripItemImageScaling.None;
             buttonReturnInRepair.ImageTransparentColor = Color.Magenta;
             buttonReturnInRepair.Name = "buttonReturnInRepair";
-            buttonReturnInRepair.Size = new Size(34, 20);
+            buttonReturnInRepair.Size = new Size(34, 23);
             buttonReturnInRepair.Text = "Возвращение аппарата в доработку";
             buttonReturnInRepair.Click += ButtonReturnInRepair_Click;
             // 
@@ -579,14 +580,14 @@ namespace WinFormsApp1
             buttonReturnGuarantee.ImageScaling = ToolStripItemImageScaling.None;
             buttonReturnGuarantee.ImageTransparentColor = Color.Magenta;
             buttonReturnGuarantee.Name = "buttonReturnGuarantee";
-            buttonReturnGuarantee.Size = new Size(34, 20);
+            buttonReturnGuarantee.Size = new Size(34, 23);
             buttonReturnGuarantee.Text = "Возвращение устройтсва в ремонт по гарантии";
             buttonReturnGuarantee.Click += ButtonReturnGuarantee_Click;
             // 
             // toolStripSeparator7
             // 
             toolStripSeparator7.Name = "toolStripSeparator7";
-            toolStripSeparator7.Size = new Size(6, 25);
+            toolStripSeparator7.Size = new Size(6, 28);
             // 
             // buttonFeaturesOrder
             // 
@@ -595,7 +596,7 @@ namespace WinFormsApp1
             buttonFeaturesOrder.ImageScaling = ToolStripItemImageScaling.None;
             buttonFeaturesOrder.ImageTransparentColor = Color.Magenta;
             buttonFeaturesOrder.Name = "buttonFeaturesOrder";
-            buttonFeaturesOrder.Size = new Size(34, 20);
+            buttonFeaturesOrder.Size = new Size(34, 23);
             buttonFeaturesOrder.Text = "Свойства и параметры ремонтируемого объекта";
             buttonFeaturesOrder.Click += ButtonFeaturesOrder_Click;
             // 
@@ -606,14 +607,14 @@ namespace WinFormsApp1
             buttonFeaturesClient.ImageScaling = ToolStripItemImageScaling.None;
             buttonFeaturesClient.ImageTransparentColor = Color.Magenta;
             buttonFeaturesClient.Name = "buttonFeaturesClient";
-            buttonFeaturesClient.Size = new Size(34, 20);
+            buttonFeaturesClient.Size = new Size(34, 23);
             buttonFeaturesClient.Text = "Свойства клиента";
             buttonFeaturesClient.Click += ButtonFeaturesClient_Click;
             // 
             // toolStripSeparator8
             // 
             toolStripSeparator8.Name = "toolStripSeparator8";
-            toolStripSeparator8.Size = new Size(6, 25);
+            toolStripSeparator8.Size = new Size(6, 28);
             // 
             // labelDataBase
             // 
@@ -1247,6 +1248,17 @@ namespace WinFormsApp1
             numberPhone.Size = new Size(131, 38);
             numberPhone.Text = "One";
             // 
+            // buttonAddDevice
+            // 
+            buttonAddDevice.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            buttonAddDevice.Image = Properties.Resources.b2_1;
+            buttonAddDevice.ImageScaling = ToolStripItemImageScaling.None;
+            buttonAddDevice.ImageTransparentColor = Color.Magenta;
+            buttonAddDevice.Name = "buttonAddDevice";
+            buttonAddDevice.Size = new Size(34, 23);
+            buttonAddDevice.Text = "Добавление аппарата";
+            buttonAddDevice.Click += ButtonAddDevice_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
@@ -1429,5 +1441,6 @@ namespace WinFormsApp1
         private ToolStripMenuItem numberPhone;
         private ToolStripMenuItem itemOrg;
         private ToolStripSeparator toolStripSeparator20;
+        private ToolStripButton buttonAddDevice;
     }
 }

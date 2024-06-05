@@ -1,27 +1,19 @@
-﻿using FluentFTP.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using WinFormsApp1.Model;
 
-namespace WinFormsApp1.Model
+namespace WinFormsApp1.DTO
 {
-    public class Order
+    public class OrderDTO
     {
         public int Id { get; set; }
-        public int ClientId { get; set; }
-        public Client? Client { get; set; }
-        public int? MasterId { get; set; }
-        public Master? Master { get; set; }
+        public string? ClientName { get; set; }
+        public string? MasterName { get; set; }
         public string? DateCreation { get; set; }
         public string? DateStartWork { get; set; }
         public string? DateCompleted { get; set; }
-        public string? DateIssue {  get; set; } 
-        public int TypeTechnicId { get; set; }
-        public TypeTechnic? TypeTechnic { get; set; }
-        public int BrandTechnicId { get; set; }
-        public BrandTechnic? BrandTechnic { get; set; }
+        public string? DateIssue { get; set; }
+        public string? NameDevice { get; set; }
+        public int TypeTechnicName { get; set; }
+        public int BrandTechnicName { get; set; }
         public string? ModelTechnic { get; set; }
         public string? FactoryNumber { get; set; }
         public string? Equipment { get; set; }
@@ -42,5 +34,24 @@ namespace WinFormsApp1.Model
         public string? DateLastCall { get; set; }
         public bool PriceAgreed { get; set; }
         public int? MaxPrice { get; set; }
+
+        public OrderDTO(Order order)
+        {
+            Id = order.Id;
+            DateCreation = order.DateCreation;
+            DateStartWork = order.DateStartWork;
+            DateCompleted = order.DateCompleted;
+            DateIssue = order.DateIssue;
+            MasterName = order.Master?.NameMaster;
+            NameDevice = String.Format("{0} {1} {2}", order.TypeTechnic?.NameTypeTechnic,
+                order.BrandTechnic?.NameBrandTechnic, ModelTechnic);
+            ClientName = order.Client?.NameClient;
+            Diagnosis = order.Diagnosis;
+            Deleted = order.Deleted;
+            ReturnUnderGuarantee = order.ReturnUnderGuarantee;
+            Guarantee = order.Guarantee;
+            DateEndGuarantee = order.DateEndGuarantee;
+            ColorRow = order.ColorRow;
+        }
     }
 }

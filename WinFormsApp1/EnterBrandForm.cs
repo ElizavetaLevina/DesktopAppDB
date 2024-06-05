@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.InkML;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.InkML;
 using WinFormsApp1.Model;
 using Context = WinFormsApp1.Model.Context;
 
@@ -18,41 +19,7 @@ namespace WinFormsApp1
             name = _name;
             New = _New;
             id = _id;
-            using (Context context = new())
-            {
-                switch (name)
-                {
-                    case "type":
-                        comboBoxSecondName.ValueMember = "Id";
-                        comboBoxSecondName.DisplayMember = "NameBrandTechnic";
-                        comboBoxSecondName.DataSource = context.BrandTechnices.ToList();
-                        if (!New) 
-                        {
-                            var list = context.TypeBrands.Where(i => i.TypeTechnicsId == id).ToList();
-                            for(int i = 0; i < list.Count; i++)
-                            {
-                                listBox1.Items.Add(list[i].BrandTechnic.NameBrandTechnic);
-                                idList.Add(list[i].BrandTechnicsId);
-                            }
-                        }
-                        break;
-
-                    case "brand":
-                        comboBoxSecondName.ValueMember = "Id";
-                        comboBoxSecondName.DisplayMember = "NameTypeTechnic";
-                        comboBoxSecondName.DataSource = context.TypeTechnices.ToList();
-                        if (!New)
-                        {
-                            var list = context.TypeBrands.Where(i => i.BrandTechnicsId == id).ToList();
-                            for(int i = 0; i < list.Count; i++)
-                            {
-                                listBox1.Items.Add(list[i].TypeTechnic.NameTypeTechnic);
-                                idList.Add(list[i].TypeTechnicsId);
-                            }
-                        }
-                        break;
-                }
-            }
+            UpdateComboBox(name);
 
         }
 
@@ -81,30 +48,6 @@ namespace WinFormsApp1
         private void BtnExit_Click(object sender, EventArgs e)
         {
             this.Close();
-        }
-
-        private void NameTextBox_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            /*if (e.KeyChar == (char)Keys.Enter)
-            {
-                if (nameTextBox.Text.Length == 0)
-                {
-                    Warning warning = new()
-                    {
-                        StartPosition = FormStartPosition.CenterParent
-                    };
-                    warning.ShowDialog();
-                    if (nameTextBox.Text.Length == 0)
-                        label1.ForeColor = Color.Red;
-                    else
-                        label1.ForeColor = Color.Black;
-                }
-                else
-                {
-                    Add = true;
-                    this.Close();
-                }
-            }*/
         }
 
         private void EnterBrandForm_Activated(object sender, EventArgs e)
@@ -138,11 +81,11 @@ namespace WinFormsApp1
 
                         }
                     }
-                    idList.Add(id);
-                    if(idRemoveList.Contains(id))
+                    idList?.Add(id);
+                    if (idRemoveList.Contains(id))
                         idRemoveList.Remove(id);
                 }
-            } 
+            }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
@@ -169,8 +112,8 @@ namespace WinFormsApp1
 
                     }
                 }
-                idList.Remove(id);
-                idRemoveList.Add(id);
+                idList?.Remove(id);
+                idRemoveList?.Add(id);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
@@ -180,10 +123,141 @@ namespace WinFormsApp1
             switch (name)
             {
                 case "type":
-                    labelNameInList.Text = "Фирмы-производители для " + nameTextBox.Text;
+                    labelNameInList.Text = String.Format("Фирмы-производители для {0}", nameTextBox.Text);
                     break;
                 case "brand":
-                    labelNameInList.Text = "Типы устройств для " + nameTextBox.Text;
+                    labelNameInList.Text = String.Format("Типы устройств для {0}", nameTextBox.Text);
+                    break;
+            }
+        }
+
+        private void LinkLabelChange_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Context context = new();
+            string _name = "";
+            string secondName = "";
+            string nameInList = "";
+            int idKey = 0;
+            switch (name)
+            {
+                
+                case "type":
+                    _name = "brand";
+                    secondName = "Тип устройства";
+                    nameInList = "Типы устройств для ";
+                    break;
+                case "brand":
+                    _name = "type";
+                    secondName = "Фирма-производитель";
+                    nameInList = "Фирмы-производители для ";
+                    break;
+            }
+            EnterBrandForm enterBrandForm = new(_name, true, 0)
+            {
+                StartPosition = FormStartPosition.CenterParent,
+                LabelSecondName = secondName,
+                LabelNameInList = nameInList
+            };
+            enterBrandForm.ShowDialog();
+            if (enterBrandForm.Add)
+            {
+                switch (name)
+                {
+                    case "type":
+                        if(!context.BrandTechnices.Any(a => a.NameBrandTechnic == enterBrandForm.NameTextBox))
+                        {
+                            idKey = context.BrandTechnices.OrderBy(i => i.Id).Last().Id + 1;
+                            CRUD.AddAsyncBrandTechnic(idKey, enterBrandForm.NameTextBox);
+                        }
+                        if (enterBrandForm.idList != null)
+                        {
+                            for (int i = 0; i < enterBrandForm.idList.Count; i++)
+                            {
+                                if (!context.TypeBrands.Any(a => a.TypeTechnicsId == id &&
+                                a.BrandTechnicsId == enterBrandForm.idList[i]))
+                                {
+                                    CRUD.AddAsyncTypeBrand(id, enterBrandForm.idList[i]);
+                                }
+                            }
+                        }
+                        if (enterBrandForm.idRemoveList != null)
+                        {
+                            for (int i = 0; i < enterBrandForm.idRemoveList.Count; i++)
+                            {
+                                CRUD.RemoveTypeBrand(id, enterBrandForm.idRemoveList[i]);
+                            }
+                        }
+                        break;
+                    case "brand":
+                        if (!context.TypeTechnices.Any(a => a.NameTypeTechnic == enterBrandForm.NameTextBox))
+                        {
+                            idKey = context.TypeTechnices.OrderBy(i => i.Id).Last().Id + 1;
+                            CRUD.AddAsyncTypeTechnic(idKey, enterBrandForm.NameTextBox);
+                        }
+                        if (enterBrandForm.idList != null)
+                        {
+                            for (int i = 0; i < enterBrandForm.idList.Count; i++)
+                            {
+                                if (!context.TypeBrands.Any(a => a.TypeTechnicsId == id &&
+                                a.BrandTechnicsId == enterBrandForm.idList[i]))
+                                {
+                                    CRUD.AddAsyncTypeBrand(enterBrandForm.idList[i], id);
+                                }
+                            }
+                        }
+                        if (enterBrandForm.idRemoveList != null)
+                        {
+                            for (int i = 0; i < enterBrandForm.idRemoveList.Count; i++)
+                            {
+                                CRUD.RemoveTypeBrand(enterBrandForm.idRemoveList[i], id);
+                            }
+                        }
+                        break;
+                }
+                UpdateComboBox(name);
+            }
+        }
+
+        private void UpdateComboBox(string name)
+        {
+            Context context = new();
+            comboBoxSecondName.DataSource = null;
+            comboBoxSecondName.Items.Clear();
+            switch (name)
+            {
+                case "type":
+                    comboBoxSecondName.ValueMember = "Id";
+                    comboBoxSecondName.DisplayMember = "NameBrandTechnic";
+                    comboBoxSecondName.DataSource = context.BrandTechnices.ToList();
+                    if (!New)
+                    {
+                        var list = context.TypeBrands.Where(i => i.TypeTechnicsId == id).ToList();
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            if (listBox1.Items.IndexOf(list[i].BrandTechnic?.NameBrandTechnic) < 0)
+                            {
+                                listBox1.Items.Add(list[i].BrandTechnic?.NameBrandTechnic);
+                                idList?.Add(list[i].BrandTechnicsId);
+                            }
+                        }
+                    }
+                    break;
+                case "brand":
+                    comboBoxSecondName.ValueMember = "Id";
+                    comboBoxSecondName.DisplayMember = "NameTypeTechnic";
+                    comboBoxSecondName.DataSource = context.TypeTechnices.ToList();
+                    if (!New)
+                    {
+                        var list = context.TypeBrands.Where(i => i.BrandTechnicsId == id).ToList();
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            if (listBox1.Items.IndexOf(list[i].TypeTechnic?.NameTypeTechnic) < 0)
+                            {
+                                listBox1.Items.Add(list[i].TypeTechnic?.NameTypeTechnic);
+                                idList?.Add(list[i].TypeTechnicsId);
+                            }
+                        }
+                    }
                     break;
             }
         }
@@ -212,6 +286,6 @@ namespace WinFormsApp1
             set { this.labelNameInList.Text = value; }
         }
 
-        
+
     }
 }

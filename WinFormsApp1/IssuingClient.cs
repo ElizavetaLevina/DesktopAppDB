@@ -50,8 +50,8 @@ namespace WinFormsApp1
                 {
                     summDetails += listPriceSaleS[i];
                 }
-                labelPriceDetails.Text = summDetails.ToString() + " руб.";
-                labelCountDetails.Text = listPriceSaleS.Count.ToString() + " шт.";
+                labelPriceDetails.Text = String.Format("{0} руб.", summDetails);
+                labelCountDetails.Text = String.Format("{0} шт.", listPriceSaleS.Count);
             }
 
             labelNameClient.Text = list[0].NameClient;
@@ -63,18 +63,7 @@ namespace WinFormsApp1
                 sumPrice += listMalfunctionOrder[i].Price;
             }
             labelPriceRepair.Text = sumPrice.ToString();
-            labelTotalPrice.Text = (summDetails + sumPrice).ToString() + " руб.";
-
-            /* if (list[0].ReturnUnderGuarantee)
-                 labelPriceRepair.Text = "0";*/
-            /*else
-                labelPriceRepair.Text = list[0].PriceRepair.ToString();*/
-
-            /*if (list[0].ReturnUnderGuarantee)
-                labelTotalPrice.Text = (summDetails).ToString() + " руб.";*/
-            /*else
-                labelTotalPrice.Text = (summDetails + list[0].PriceRepair).ToString() + " руб.";
-*/
+            labelTotalPrice.Text = String.Format("{0} руб.", summDetails + sumPrice);
             labelGuaranteePeriod.Text = DateTime.Now.AddMonths(Convert.ToInt32(textBoxGuarantee.Text)).Date.ToShortDateString();
         }
 

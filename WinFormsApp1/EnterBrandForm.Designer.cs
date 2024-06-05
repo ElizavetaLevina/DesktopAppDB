@@ -40,13 +40,14 @@
             linkLabelDelete = new LinkLabel();
             listBox1 = new ListBox();
             labelNameInList = new Label();
+            linkLabelChange = new LinkLabel();
             SuspendLayout();
             // 
             // btnAdd
             // 
-            btnAdd.Location = new Point(63, 394);
+            btnAdd.Location = new Point(206, 394);
             btnAdd.Name = "btnAdd";
-            btnAdd.Size = new Size(161, 43);
+            btnAdd.Size = new Size(193, 43);
             btnAdd.TabIndex = 2;
             btnAdd.Tag = "Yes";
             btnAdd.Text = "Добавить";
@@ -55,9 +56,9 @@
             // 
             // btnExit
             // 
-            btnExit.Location = new Point(295, 394);
+            btnExit.Location = new Point(413, 394);
             btnExit.Name = "btnExit";
-            btnExit.Size = new Size(161, 43);
+            btnExit.Size = new Size(193, 43);
             btnExit.TabIndex = 3;
             btnExit.Tag = "No";
             btnExit.Text = "Отмена";
@@ -82,14 +83,13 @@
             nameTextBox.Size = new Size(228, 31);
             nameTextBox.TabIndex = 0;
             nameTextBox.TextChanged += NameTextBox_TextChanged;
-            nameTextBox.KeyPress += NameTextBox_KeyPress;
             // 
             // label4
             // 
             label4.BorderStyle = BorderStyle.Fixed3D;
             label4.Location = new Point(-1, 381);
             label4.Name = "label4";
-            label4.Size = new Size(507, 2);
+            label4.Size = new Size(620, 2);
             label4.TabIndex = 7;
             // 
             // labelSecondName
@@ -152,11 +152,24 @@
             labelNameInList.Text = "Фирмы-производители для Сотовый телефон";
             labelNameInList.TextAlign = ContentAlignment.TopRight;
             // 
+            // linkLabelChange
+            // 
+            linkLabelChange.AutoSize = true;
+            linkLabelChange.LinkColor = Color.FromArgb(64, 64, 64);
+            linkLabelChange.Location = new Point(462, 83);
+            linkLabelChange.Name = "linkLabelChange";
+            linkLabelChange.Size = new Size(152, 25);
+            linkLabelChange.TabIndex = 15;
+            linkLabelChange.TabStop = true;
+            linkLabelChange.Text = "Изменить список";
+            linkLabelChange.LinkClicked += LinkLabelChange_LinkClicked;
+            // 
             // EnterBrandForm
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(502, 449);
+            ClientSize = new Size(618, 449);
+            Controls.Add(linkLabelChange);
             Controls.Add(labelNameInList);
             Controls.Add(listBox1);
             Controls.Add(linkLabelDelete);
@@ -191,5 +204,6 @@
         private LinkLabel linkLabelDelete;
         private ListBox listBox1;
         private Label labelNameInList;
+        private LinkLabel linkLabelChange;
     }
 }

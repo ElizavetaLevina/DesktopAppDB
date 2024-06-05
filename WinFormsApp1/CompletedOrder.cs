@@ -37,11 +37,11 @@ namespace WinFormsApp1
                 List<string> listNameS = [];
                 List<int> listPriceSaleS = [];
 
-                for (int i = 0; i < listIdWarehouse[0].IdWarehouse.Count; i++)
+                for (int i = 0; i < listIdWarehouse[0].IdWarehouse?.Count; i++)
                 {
                     for (int j = 0; j < listWarehouse.Count; j++)
                     {
-                        if (listIdWarehouse[0].IdWarehouse[i] == listWarehouse[j].Id)
+                        if (listIdWarehouse[0].IdWarehouse?[i] == listWarehouse[j].Id)
                         {
                             listNameS.Add(listWarehouse[j].NameDetail);
                             listPriceSaleS.Add(listWarehouse[j].PriceSale);
@@ -53,13 +53,24 @@ namespace WinFormsApp1
                     summDetails += listPriceSaleS[i];
                 }
 
-                labelPriceDetails.Text = summDetails.ToString() + " руб.";
-                labelCountDetails.Text = listPriceSaleS.Count.ToString() + " шт.";
+                labelPriceDetails.Text = String.Format("{0} руб.", summDetails);
+                labelCountDetails.Text = String.Format("{0} шт.", listPriceSaleS.Count);
             }
-
-            var list = context.Orders.Where(i => i.Id == id).Select(a => new { a.DateCreation }).ToList();
+            var list = context.Orders.Where(i => i.Id == id)
+                .Select(a => new
+                {
+                    a.Id,
+                    a.DateCreation, 
+                    a.TypeTechnic,
+                    a.BrandTechnic, 
+                    a.ModelTechnic
+                })
+                .ToList();
             dateCreate = DateTime.Parse(list[0].DateCreation);
-            labelDurationRepair.Text = ((int)(DateTime.Now - dateCreate).TotalDays).ToString() + " дн.";
+            labelDurationRepair.Text = String.Format("{0} дн.", (int)(DateTime.Now - dateCreate).TotalDays);
+            labelIdOrder.Text = list[0].Id.ToString();
+            labelNameDevice.Text = String.Format("{0} {1} {2}", list[0].TypeTechnic?.NameTypeTechnic,
+                list[0].BrandTechnic?.NameBrandTechnic, list[0].ModelTechnic);
         }
 
         private void LinkLabelDateNow_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -76,8 +87,8 @@ namespace WinFormsApp1
         {
             Context context = new();
             var list = context.Orders.Where(i => i.Id == id).ToList();
-            price.Clear();
-            problem.Clear();
+            price?.Clear();
+            problem?.Clear();
             Warning warning = new()
             {
                 StartPosition = FormStartPosition.CenterParent
@@ -93,8 +104,8 @@ namespace WinFormsApp1
                         warning.ShowDialog();
                         return;
                     }
-                    problem.Add(textBoxFoundProblem1.Text);
-                    price.Add(Convert.ToInt32(textBoxPrice1.Text));
+                    problem?.Add(textBoxFoundProblem1.Text);
+                    price?.Add(Convert.ToInt32(textBoxPrice1.Text));
                     break;
                 case 2:
                     if (textBoxPrice2.Text.Length == 0 || textBoxPrice1.Text.Length == 0)
@@ -102,10 +113,10 @@ namespace WinFormsApp1
                         warning.ShowDialog();
                         return;
                     }
-                    problem.Add(textBoxFoundProblem1.Text);
-                    price.Add(Convert.ToInt32(textBoxPrice1.Text));
-                    problem.Add(textBoxFoundProblem2.Text);
-                    price.Add(Convert.ToInt32(textBoxPrice2.Text));
+                    problem?.Add(textBoxFoundProblem1.Text);
+                    price?.Add(Convert.ToInt32(textBoxPrice1.Text));
+                    problem?.Add(textBoxFoundProblem2.Text);
+                    price?.Add(Convert.ToInt32(textBoxPrice2.Text));
                     break;
                 case 3:
                     if (textBoxPrice3.Text.Length == 0 || textBoxPrice2.Text.Length == 0 ||
@@ -114,54 +125,19 @@ namespace WinFormsApp1
                         warning.ShowDialog();
                         return;
                     }
-                    problem.Add(textBoxFoundProblem1.Text);
-                    price.Add(Convert.ToInt32(textBoxPrice1.Text));
-                    problem.Add(textBoxFoundProblem2.Text);
-                    price.Add(Convert.ToInt32(textBoxPrice2.Text));
-                    problem.Add(textBoxFoundProblem3.Text);
-                    price.Add(Convert.ToInt32(textBoxPrice3.Text));
-                    break;
-                case 4:
-                    if (textBoxPrice4.Text.Length == 0 || textBoxPrice3.Text.Length == 0 ||
-                        textBoxPrice2.Text.Length == 0 || textBoxPrice1.Text.Length == 0)
-                    {
-                        warning.ShowDialog();
-                        return;
-                    }
-                    problem.Add(textBoxFoundProblem1.Text);
-                    price.Add(Convert.ToInt32(textBoxPrice1.Text));
-                    problem.Add(textBoxFoundProblem2.Text);
-                    price.Add(Convert.ToInt32(textBoxPrice2.Text));
-                    problem.Add(textBoxFoundProblem3.Text);
-                    price.Add(Convert.ToInt32(textBoxPrice3.Text));
-                    problem.Add(textBoxFoundProblem4.Text);
-                    price.Add(Convert.ToInt32(textBoxPrice4.Text));
-                    break;
-                case 5:
-                    if (textBoxPrice5.Text.Length == 0 || textBoxPrice4.Text.Length == 0 || 
-                        textBoxPrice3.Text.Length == 0 || textBoxPrice2.Text.Length == 0 || 
-                        textBoxPrice1.Text.Length == 0)
-                    {
-                        warning.ShowDialog();
-                        return;
-                    }
-                    problem.Add(textBoxFoundProblem1.Text);
-                    price.Add(Convert.ToInt32(textBoxPrice1.Text));
-                    problem.Add(textBoxFoundProblem2.Text);
-                    price.Add(Convert.ToInt32(textBoxPrice2.Text));
-                    problem.Add(textBoxFoundProblem3.Text);
-                    price.Add(Convert.ToInt32(textBoxPrice3.Text));
-                    problem.Add(textBoxFoundProblem4.Text);
-                    price.Add(Convert.ToInt32(textBoxPrice4.Text));
-                    problem.Add(textBoxFoundProblem5.Text);
-                    price.Add(Convert.ToInt32(textBoxPrice5.Text));
+                    problem?.Add(textBoxFoundProblem1.Text);
+                    price?.Add(Convert.ToInt32(textBoxPrice1.Text));
+                    problem?.Add(textBoxFoundProblem2.Text);
+                    price?.Add(Convert.ToInt32(textBoxPrice2.Text));
+                    problem?.Add(textBoxFoundProblem3.Text);
+                    price?.Add(Convert.ToInt32(textBoxPrice3.Text));
                     break;
             }
-            int sumPrice = price.Sum();
+            int? sumPrice = price?.Sum();
 
             if (list[0].PriceAgreed && sumPrice > list[0].MaxPrice)
             {
-                warning.LabelText = "Цена ремонта выше согласованной! \nСогласованная цена: " + list[0].MaxPrice + " руб.";
+                warning.LabelText = String.Format("Цена ремонта выше согласованной! \nСогласованная цена: {0} руб.", list[0].MaxPrice);
                 warning.ShowDialog();
                 return;
             }
@@ -179,7 +155,7 @@ namespace WinFormsApp1
                 dateComplete = dateCreate;
                 dateTimePicker1.Value = dateCreate;
             }
-            labelDurationRepair.Text = ((int)(dateComplete - dateCreate).TotalDays).ToString() + " дн.";
+            labelDurationRepair.Text = String.Format("{0} дн.", ((int)(dateComplete - dateCreate).TotalDays));
         }
 
         private void TextBoxFoundProblem1_TextChanged(object sender, EventArgs e)
@@ -190,7 +166,7 @@ namespace WinFormsApp1
             listBox1.DataSource = null;
             listBox1.Items.Clear();
             listBox1.Visible = false;
-            for (int i = 0; i < nameProblem.Count; i++)
+            for (int i = 0; i < nameProblem?.Count; i++)
             {
                 if (nameProblem[i].StartsWith(textBoxFoundProblem1.Text))
                 {
@@ -203,12 +179,8 @@ namespace WinFormsApp1
                 countProblem = 0;
                 textBoxFoundProblem2.Enabled = false;
                 textBoxFoundProblem3.Enabled = false;
-                textBoxFoundProblem4.Enabled = false;
-                textBoxFoundProblem5.Enabled = false;
                 textBoxPrice2.Enabled = false;
                 textBoxPrice3.Enabled = false;
-                textBoxPrice4.Enabled = false;
-                textBoxPrice5.Enabled = false;
                 textBoxPrice1.Text = "";
             }
             else
@@ -221,20 +193,6 @@ namespace WinFormsApp1
                     textBoxFoundProblem3.Enabled = true;
                     textBoxPrice3.Enabled = true;
                 }
-                else
-                    return;
-                if (textBoxFoundProblem3.Text != "")
-                {
-                    textBoxFoundProblem4.Enabled = true;
-                    textBoxPrice4.Enabled = true;
-                }
-                else
-                    return;
-                if (textBoxFoundProblem4.Text != "")
-                {
-                    textBoxFoundProblem5.Enabled = true;
-                    textBoxPrice5.Enabled = true;
-                }
             }
         }
 
@@ -246,7 +204,7 @@ namespace WinFormsApp1
             listBox1.DataSource = null;
             listBox1.Items.Clear();
             listBox1.Visible = false;
-            for (int i = 0; i < nameProblem.Count; i++)
+            for (int i = 0; i < nameProblem?.Count; i++)
             {
                 if (nameProblem[i].StartsWith(textBoxFoundProblem2.Text) && textBoxFoundProblem2.Text.Length > 0)
                 {
@@ -258,11 +216,7 @@ namespace WinFormsApp1
             {
                 countProblem = 1;
                 textBoxFoundProblem3.Enabled = false;
-                textBoxFoundProblem4.Enabled = false;
-                textBoxFoundProblem5.Enabled = false;
                 textBoxPrice3.Enabled = false;
-                textBoxPrice4.Enabled = false;
-                textBoxPrice5.Enabled = false;
                 textBoxPrice2.Text = "";
             }
             else
@@ -273,16 +227,6 @@ namespace WinFormsApp1
                 if (textBoxFoundProblem3.Text != "")
                 {
                     countProblem = 3;
-                    textBoxFoundProblem4.Enabled = true;
-                    textBoxPrice4.Enabled = true;
-                }
-                else
-                    return;
-                if (textBoxFoundProblem4.Text != "")
-                {
-                    countProblem = 4;
-                    textBoxFoundProblem5.Enabled = true;
-                    textBoxPrice5.Enabled = true;
                 }
             }
         }
@@ -295,7 +239,7 @@ namespace WinFormsApp1
             listBox1.DataSource = null;
             listBox1.Items.Clear();
             listBox1.Visible = false;
-            for (int i = 0; i < nameProblem.Count; i++)
+            for (int i = 0; i < nameProblem?.Count; i++)
             {
                 if (nameProblem[i].StartsWith(textBoxFoundProblem3.Text) && textBoxFoundProblem3.Text.Length > 0)
                 {
@@ -306,80 +250,12 @@ namespace WinFormsApp1
             if (textBoxFoundProblem3.Text == "")
             {
                 countProblem = 2;
-                textBoxFoundProblem4.Enabled = false;
-                textBoxFoundProblem5.Enabled = false;
-                textBoxPrice4.Enabled = false;
-                textBoxPrice5.Enabled = false;
                 textBoxPrice3.Text = "";
             }
             else
             {
                 countProblem = 3;
-                textBoxFoundProblem4.Enabled = true;
-                textBoxPrice4.Enabled = true;
-                if (textBoxFoundProblem4.Text != "")
-                {
-                    countProblem = 4;
-                    textBoxFoundProblem5.Enabled = true;
-                    textBoxPrice5.Enabled = true;
-                }
             }
-        }
-
-        private void TextBoxFoundProblem4_TextChanged(object sender, EventArgs e)
-        {
-            numberProblem = 4;
-            listBox1.Location = new Point(listBox1.Location.X, textBoxFoundProblem4.Location.Y +
-                textBoxFoundProblem4.Height);
-            listBox1.DataSource = null;
-            listBox1.Items.Clear();
-            listBox1.Visible = false;
-            for (int i = 0; i < nameProblem.Count; i++)
-            {
-                if (nameProblem[i].StartsWith(textBoxFoundProblem4.Text) && textBoxFoundProblem4.Text.Length > 0)
-                {
-                    listBox1.Visible = true;
-                    listBox1.Items.Add(nameProblem[i]);
-                }
-            }
-            if (textBoxFoundProblem4.Text == "")
-            {
-                countProblem = 3;
-                textBoxFoundProblem5.Enabled = false;
-                textBoxPrice5.Enabled = false;
-                textBoxPrice4.Text = "";
-            }
-            else
-            {
-                countProblem = 4;
-                textBoxFoundProblem5.Enabled = true;
-                textBoxPrice5.Enabled = true;
-            }
-        }
-
-        private void TextBoxFoundProblem5_TextChanged(object sender, EventArgs e)
-        {
-            numberProblem = 5;
-            listBox1.Location = new Point(listBox1.Location.X, textBoxFoundProblem5.Location.Y +
-                textBoxFoundProblem5.Height);
-            listBox1.DataSource = null;
-            listBox1.Items.Clear();
-            listBox1.Visible = false;
-            for (int i = 0; i < nameProblem.Count; i++)
-            {
-                if (nameProblem[i].StartsWith(textBoxFoundProblem5.Text) && textBoxFoundProblem5.Text.Length > 0)
-                {
-                    listBox1.Visible = true;
-                    listBox1.Items.Add(nameProblem[i]);
-                }
-            }
-            if (textBoxFoundProblem5.Text == "")
-            {
-                countProblem = 4;
-                textBoxPrice5.Text = "";
-            }
-            else
-                countProblem = 5;
         }
 
         private void TextBoxFoundProblem1_Click(object sender, EventArgs e)
@@ -409,26 +285,6 @@ namespace WinFormsApp1
                 listBox1.DataSource = nameProblem;
             listBox1.Location = new Point(listBox1.Location.X, textBoxFoundProblem3.Location.Y +
                 textBoxFoundProblem3.Height);
-            listBox1.Visible = true;
-        }
-
-        private void TextBoxFoundProblem4_Click(object sender, EventArgs e)
-        {
-            numberProblem = 4;
-            if (textBoxFoundProblem4.Text == "")
-                listBox1.DataSource = nameProblem;
-            listBox1.Location = new Point(listBox1.Location.X, textBoxFoundProblem4.Location.Y +
-                textBoxFoundProblem4.Height);
-            listBox1.Visible = true;
-        }
-
-        private void TextBoxFoundProblem5_Click(object sender, EventArgs e)
-        {
-            numberProblem = 5;
-            if (textBoxFoundProblem5.Text == "")
-                listBox1.DataSource = nameProblem;
-            listBox1.Location = new Point(listBox1.Location.X, textBoxFoundProblem5.Location.Y +
-                textBoxFoundProblem5.Height);
             listBox1.Visible = true;
         }
 
@@ -634,20 +490,6 @@ namespace WinFormsApp1
                             list = context.Malfunctions.Where(i => i.Name == textBoxFoundProblem3.Text).ToList();
                             textBoxPrice3.Text = list[0].Price.ToString();
                             textBoxPrice3.Focus();
-                            break;
-                        case 4:
-                            textBoxFoundProblem4.Text = listBox1.Items[id].ToString();
-                            listBox1.Visible = false;
-                            list = context.Malfunctions.Where(i => i.Name == textBoxFoundProblem4.Text).ToList();
-                            textBoxPrice4.Text = list[0].Price.ToString();
-                            textBoxPrice4.Focus();
-                            break;
-                        case 5:
-                            textBoxFoundProblem5.Text = listBox1.Items[id].ToString();
-                            listBox1.Visible = false;
-                            list = context.Malfunctions.Where(i => i.Name == textBoxFoundProblem5.Text).ToList();
-                            textBoxPrice5.Text = list[0].Price.ToString();
-                            textBoxPrice5.Focus();
                             break;
                     }
                 }

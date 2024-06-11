@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentFTP.Helpers;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 namespace WinFormsApp1.Model
@@ -16,6 +17,8 @@ namespace WinFormsApp1.Model
         public DbSet<TypeBrand> TypeBrands => Set<TypeBrand>();
         public DbSet<Malfunction> Malfunctions => Set<Malfunction>();
         public DbSet<MalfunctionOrder> MalfunctionOrders => Set<MalfunctionOrder>();
+        public DbSet<Diagnosis> Diagnosis => Set<Diagnosis>();
+        public DbSet<Equipment> Equipment => Set<Equipment>();
         public Context() => Database.EnsureCreatedAsync();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -23,6 +26,9 @@ namespace WinFormsApp1.Model
             modelBuilder.Entity<BrandTechnic>().HasIndex(n => n.NameBrandTechnic).IsUnique();
             modelBuilder.Entity<TypeTechnic>().HasIndex(n => n.NameTypeTechnic).IsUnique();
             modelBuilder.Entity<Malfunction>().HasIndex(n => n.Name).IsUnique();
+            modelBuilder.Entity<Diagnosis>().HasIndex(n => n.Name).IsUnique();
+            modelBuilder.Entity<Equipment>().HasIndex(n => n.Name).IsUnique();
+            modelBuilder.Entity<Client>().HasIndex(n => n.IdClient).IsUnique();
 
             modelBuilder.Entity<Order>()
                 .HasOne(b => b.Master)
@@ -43,6 +49,16 @@ namespace WinFormsApp1.Model
                 .HasOne(b => b.TypeTechnic)
                 .WithMany(a => a.Order)
                 .HasForeignKey(b => b.TypeTechnicId);
+
+            modelBuilder.Entity<Order>()
+                .HasOne(b => b.Diagnosis)
+                .WithMany(a => a.Order)
+                .HasForeignKey(b => b.DiagnosisId);
+
+            modelBuilder.Entity<Order>()
+                .HasOne(b => b.Equipment)
+                .WithMany(a => a.Order)
+                .HasForeignKey(b => b.EquipmentId);
 
             modelBuilder.Entity<BrandTechnic>()
                 .HasMany(b => b.TypeTechnics)
@@ -94,8 +110,5 @@ namespace WinFormsApp1.Model
             }
 
         }
-
-
-
     } 
 }

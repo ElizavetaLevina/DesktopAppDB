@@ -68,9 +68,14 @@ namespace WinFormsApp1
             dataGridView1.DataSource = context.Masters.Select(i => new { i.Id, i.NameMaster, i.NumberPhone}).ToList();
             dataGridView1.Columns[0].Visible = false;
             dataGridView1.Columns[1].HeaderText = "ФИО";
-            dataGridView1.Columns[1].Width = 300;
             dataGridView1.Columns[2].HeaderText = "Телефон";
-            dataGridView1.Columns[2].Width = 142;
+
+            int[] percent = [0, 40, 60];
+            for (int i = 0; i < dataGridView1.ColumnCount; i++)
+            {
+                double width = Convert.ToDouble(dataGridView1.Width) / 100.0 * percent[i];
+                dataGridView1.Columns[i].Width = Convert.ToInt32(width);
+            }
             if (context.Masters.Any())
             {
                 idKey = context.Masters.OrderBy(i => i.Id).Last().Id;

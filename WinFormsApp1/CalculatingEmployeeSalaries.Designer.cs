@@ -44,8 +44,6 @@
             radioButton2 = new RadioButton();
             radioButton1 = new RadioButton();
             dataGridView1 = new DataGridView();
-            colMaster = new DataGridViewTextBoxColumn();
-            colSalary = new DataGridViewTextBoxColumn();
             comboBoxYears = new ComboBox();
             label1 = new Label();
             label2 = new Label();
@@ -56,6 +54,8 @@
             buttonExit = new Button();
             label8 = new Label();
             comboBox1 = new ComboBox();
+            colMaster = new DataGridViewTextBoxColumn();
+            colSalary = new DataGridViewTextBoxColumn();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
@@ -241,25 +241,12 @@
             dataGridView1.Location = new Point(233, 18);
             dataGridView1.MultiSelect = false;
             dataGridView1.Name = "dataGridView1";
+            dataGridView1.RowHeadersVisible = false;
             dataGridView1.RowHeadersWidth = 62;
             dataGridView1.ScrollBars = ScrollBars.Vertical;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.Size = new Size(544, 481);
             dataGridView1.TabIndex = 1;
-            // 
-            // colMaster
-            // 
-            colMaster.HeaderText = "Мастер";
-            colMaster.MinimumWidth = 8;
-            colMaster.Name = "colMaster";
-            colMaster.Width = 270;
-            // 
-            // colSalary
-            // 
-            colSalary.HeaderText = "Зарплата";
-            colSalary.MinimumWidth = 8;
-            colSalary.Name = "colSalary";
-            colSalary.Width = 210;
             // 
             // comboBoxYears
             // 
@@ -349,6 +336,20 @@
             comboBox1.TabIndex = 14;
             comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
             // 
+            // colMaster
+            // 
+            colMaster.HeaderText = "Мастер";
+            colMaster.MinimumWidth = 8;
+            colMaster.Name = "colMaster";
+            colMaster.Width = 300;
+            // 
+            // colSalary
+            // 
+            colSalary.HeaderText = "Зарплата";
+            colSalary.MinimumWidth = 8;
+            colSalary.Name = "colSalary";
+            colSalary.Width = 244;
+            // 
             // CalculatingEmployeeSalaries
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
@@ -401,8 +402,8 @@
         private Label label6;
         private Button buttonExit;
         private Label label8;
+        private ComboBox comboBox1;
         private DataGridViewTextBoxColumn colMaster;
         private DataGridViewTextBoxColumn colSalary;
-        private ComboBox comboBox1;
     }
 }

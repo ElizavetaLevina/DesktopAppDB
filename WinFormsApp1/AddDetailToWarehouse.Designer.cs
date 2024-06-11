@@ -80,6 +80,7 @@
             textBoxNameDetail.Size = new Size(466, 31);
             textBoxNameDetail.TabIndex = 3;
             textBoxNameDetail.TextChanged += TextBoxNameDetail_TextChanged;
+            textBoxNameDetail.KeyPress += TextBoxNameDetail_KeyPress;
             // 
             // textBoxPricePurchase
             // 

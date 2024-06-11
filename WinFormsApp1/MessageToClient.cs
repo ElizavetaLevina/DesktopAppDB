@@ -12,10 +12,10 @@ using WinFormsApp1.Model;
 
 namespace WinFormsApp1
 {
-    public partial class Message : Form
+    public partial class MessageToClient : Form
     {
         public int idClient;
-        public Message(int id)
+        public MessageToClient(int id)
         {
             InitializeComponent();
             idClient = id;
@@ -32,7 +32,7 @@ namespace WinFormsApp1
             using (Context context = new())
             {
                 var list = context.Clients.Where(i => i.Id == idClient).ToList();
-                textBoxPhone.Text = list[0].NameClient;
+                textBoxPhone.Text = list[0].IdClient;
             }
         }
 
@@ -41,16 +41,7 @@ namespace WinFormsApp1
             using (Context context = new())
             {
                 var list = context.Clients.Where(i => i.Id == idClient).ToList();
-                textBoxPhone.Text = list[0].NumberPhoneWork;
-            }
-        }
-
-        private void Item3_Click(object sender, EventArgs e)
-        {
-            using (Context context = new())
-            {
-                var list = context.Clients.Where(i => i.Id == idClient).ToList();
-                textBoxPhone.Text = list[0].NumberPhoneHome;
+                textBoxPhone.Text = list[0].NumberSecondPhone;
             }
         }
 

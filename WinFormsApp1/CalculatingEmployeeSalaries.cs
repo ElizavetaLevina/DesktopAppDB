@@ -14,8 +14,7 @@ namespace WinFormsApp1
             int[] percent = [60, 40];
             for(int i = 0; i < dataGridView1.ColumnCount; i++)
             {
-                double width = Convert.ToDouble(dataGridView1.Width -
-                        dataGridView1.RowHeadersWidth) / 100.0 * percent[i];
+                double width = Convert.ToDouble(dataGridView1.Width) / 100.0 * percent[i];
                 dataGridView1.Columns[i].Width = Convert.ToInt32(width);
             }
         }
@@ -85,7 +84,6 @@ namespace WinFormsApp1
                     numberMonth = 12;
                     break;
             }
-
             return numberMonth;
         }
 
@@ -286,8 +284,7 @@ namespace WinFormsApp1
                 if (listMasters[i].TypeSalary == "rate")
                     dataGridView1.Rows.Add(listMasters[i].NameMaster, listMasters[i].Rate);
                 else
-                    dataGridView1.Rows.Add(listMasters[i].NameMaster,
-                            (double)listMasters[i].Rate / 100.0 * salary);
+                    dataGridView1.Rows.Add(listMasters[i].NameMaster, listMasters[i].Rate / 100.0 * salary);
                 salary = 0;
             }
         }

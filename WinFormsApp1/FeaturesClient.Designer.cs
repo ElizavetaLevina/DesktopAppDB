@@ -30,13 +30,11 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FeaturesClient));
             label1 = new Label();
-            textBoxName = new TextBox();
-            textBoxAddress = new TextBox();
+            textBoxID = new TextBox();
+            textBoxNameAddress = new TextBox();
             label2 = new Label();
             label3 = new Label();
-            textBoxHomePhone = new TextBox();
-            textBoxWorkPhone = new TextBox();
-            label4 = new Label();
+            textBoxSecondPhone = new TextBox();
             label5 = new Label();
             label6 = new Label();
             buttonSave = new Button();
@@ -50,66 +48,50 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(42, 44);
+            label1.Location = new Point(61, 44);
             label1.Name = "label1";
-            label1.Size = new Size(120, 25);
+            label1.Size = new Size(98, 25);
             label1.TabIndex = 0;
-            label1.Text = "ФИО клиента";
+            label1.Text = "ID клиента";
             // 
-            // textBoxName
+            // textBoxID
             // 
-            textBoxName.Location = new Point(201, 41);
-            textBoxName.Name = "textBoxName";
-            textBoxName.Size = new Size(394, 31);
-            textBoxName.TabIndex = 1;
+            textBoxID.Location = new Point(201, 41);
+            textBoxID.Name = "textBoxID";
+            textBoxID.Size = new Size(394, 31);
+            textBoxID.TabIndex = 1;
             // 
-            // textBoxAddress
+            // textBoxNameAddress
             // 
-            textBoxAddress.Location = new Point(201, 93);
-            textBoxAddress.Name = "textBoxAddress";
-            textBoxAddress.Size = new Size(522, 31);
-            textBoxAddress.TabIndex = 2;
+            textBoxNameAddress.Location = new Point(201, 86);
+            textBoxNameAddress.Name = "textBoxNameAddress";
+            textBoxNameAddress.Size = new Size(522, 31);
+            textBoxNameAddress.TabIndex = 2;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(100, 96);
+            label2.Location = new Point(48, 89);
             label2.Name = "label2";
-            label2.Size = new Size(62, 25);
+            label2.Size = new Size(111, 25);
             label2.TabIndex = 3;
-            label2.Text = "Адрес";
+            label2.Text = "ФИО, Адрес";
             // 
             // label3
             // 
             label3.AutoSize = true;
             label3.Location = new Point(38, 133);
             label3.Name = "label3";
-            label3.Size = new Size(124, 25);
+            label3.Size = new Size(121, 25);
             label3.TabIndex = 4;
-            label3.Text = "Дом. телефон";
+            label3.Text = "Доп. телефон";
             // 
-            // textBoxHomePhone
+            // textBoxSecondPhone
             // 
-            textBoxHomePhone.Location = new Point(201, 130);
-            textBoxHomePhone.Name = "textBoxHomePhone";
-            textBoxHomePhone.Size = new Size(150, 31);
-            textBoxHomePhone.TabIndex = 5;
-            // 
-            // textBoxWorkPhone
-            // 
-            textBoxWorkPhone.Location = new Point(510, 130);
-            textBoxWorkPhone.Name = "textBoxWorkPhone";
-            textBoxWorkPhone.Size = new Size(213, 31);
-            textBoxWorkPhone.TabIndex = 6;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(387, 133);
-            label4.Name = "label4";
-            label4.Size = new Size(117, 25);
-            label4.TabIndex = 7;
-            label4.Text = "Раб. телефон";
+            textBoxSecondPhone.Location = new Point(201, 130);
+            textBoxSecondPhone.Name = "textBoxSecondPhone";
+            textBoxSecondPhone.Size = new Size(150, 31);
+            textBoxSecondPhone.TabIndex = 5;
             // 
             // label5
             // 
@@ -202,13 +184,11 @@
             Controls.Add(buttonSave);
             Controls.Add(label6);
             Controls.Add(label5);
-            Controls.Add(label4);
-            Controls.Add(textBoxWorkPhone);
-            Controls.Add(textBoxHomePhone);
+            Controls.Add(textBoxSecondPhone);
             Controls.Add(label3);
             Controls.Add(label2);
-            Controls.Add(textBoxAddress);
-            Controls.Add(textBoxName);
+            Controls.Add(textBoxNameAddress);
+            Controls.Add(textBoxID);
             Controls.Add(label1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -222,13 +202,11 @@
         #endregion
 
         private Label label1;
-        private TextBox textBoxName;
-        private TextBox textBoxAddress;
+        private TextBox textBoxID;
+        private TextBox textBoxNameAddress;
         private Label label2;
         private Label label3;
-        private TextBox textBoxHomePhone;
-        private TextBox textBoxWorkPhone;
-        private Label label4;
+        private TextBox textBoxSecondPhone;
         private Label label5;
         private Label label6;
         private Button buttonSave;

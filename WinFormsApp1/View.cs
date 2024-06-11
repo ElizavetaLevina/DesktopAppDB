@@ -1,9 +1,4 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.Wordprocessing;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using WinFormsApp1.Model;
+﻿using WinFormsApp1.Model;
 using Color = System.Drawing.Color;
 
 namespace WinFormsApp1
@@ -87,8 +82,8 @@ namespace WinFormsApp1
                         list[i].BrandTechnicId,
                         list[i].ModelTechnic,
                         list[i].FactoryNumber,
-                        list[i].Equipment,
-                        list[i].Diagnosis,
+                        list[i].EquipmentId,
+                        list[i].DiagnosisId,
                         list[i].Note,
                         list[i].InProgress,
                         list[i].Guarantee,
@@ -99,8 +94,6 @@ namespace WinFormsApp1
                         list[i].DateCompletedReturn,
                         list[i].DateIssueReturn,
                         list[i].Issue,
-                        /*list[i].PriceRepair,
-                        list[i].FoundProblem,*/
                         ColorTranslator.ToHtml(FindColor(i)),
                         list[i].DateLastCall,
                         list[i].PriceAgreed,
@@ -146,12 +139,6 @@ namespace WinFormsApp1
             DateTime date = DateTime.Now;
             var list = context.Orders.ToList();
             if (list[id].InProgress == true && list[id].Deleted == false &&
-                list[id].MasterId == null)
-            {
-                status = "Accepted";
-                date = DateTime.Parse(list[id].DateCreation);
-            }
-            else if (list[id].InProgress == true && list[id].Deleted == false &&
                 list[id].MasterId != null)
             {
                 status = "InRepair";
@@ -164,7 +151,7 @@ namespace WinFormsApp1
                 date = DateTime.Parse(list[id].DateCompleted);
             }
 
-            if (status == "Accepted" || status == "InRepair" || status == "Completed")
+            if (status == "InRepair" || status == "Completed")
             {
                 if ((DateTime.Now - date).Days < Convert.ToInt32(textBoxFirstLevel.Text))
                 {

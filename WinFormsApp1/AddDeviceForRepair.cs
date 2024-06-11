@@ -1,4 +1,5 @@
 ﻿using WinFormsApp1.Model;
+using Color = System.Drawing.Color;
 
 namespace WinFormsApp1
 {
@@ -8,8 +9,11 @@ namespace WinFormsApp1
         bool loading = true;
         readonly List<string> oldClients = [];
         readonly List<string> oldClientsType = [];
-        public bool pressBtnAdd = false;
-        public string status = "Accepted";
+        readonly List<string> diagnosis = [];
+        readonly List<string> equipment = [];
+        private readonly List<Diagnosis> listDiagnosis;
+        private readonly List<Equipment> listEquipment;
+        string nameTextBox = "";
         public AddDeviceForRepair()
         {
             InitializeComponent();
@@ -18,14 +22,26 @@ namespace WinFormsApp1
             UpdateComboBox(2);
             textBoxIdOrder.Text = IdKeyOrder().ToString();
             Context context = new();
-            var listClient = context.Clients.Select(a => new { a.NameClient, a.TypeClient }).ToList();
+            var listClient = context.Clients.Select(a => new { a.IdClient, a.TypeClient }).ToList();
             if (listClient.Count > 0)
             {
                 for (int i = 0; i < listClient.Count; i++)
                 {
-                    oldClients.Add(listClient[i].NameClient);
+                    oldClients.Add(listClient[i].IdClient);
                     oldClientsType.Add(listClient[i].TypeClient);
                 }
+            }
+
+            listDiagnosis = context.Diagnosis.ToList();
+            for (int i = 0; i < listDiagnosis.Count; i++)
+            {
+                diagnosis.Add(listDiagnosis[i].Name);
+            }
+
+            listEquipment = context.Equipment.ToList();
+            for (int i = 0; i < listEquipment.Count; i++)
+            {
+                equipment.Add(listEquipment[i].Name);
             }
 
             foundInTable.Click += FoundInTable_Click;
@@ -169,7 +185,6 @@ namespace WinFormsApp1
                         {
                             nameMaster = context.Masters.Where(a => a.NameMaster == comboBoxMaster.Text).ToList()[0].Id;
                             dateStartWork = dateTimePicker1.Text;
-                            status = "InRepair";
                         }
 
                         if (checkBox1.Checked)
@@ -177,8 +192,13 @@ namespace WinFormsApp1
 
                         if (!CheckClient())
                         {
-                            CRUD.AddAsyncClient(idClient, textBoxNameClient.Text,
-                                textBoxAddress.Text, textBoxWorkPhone.Text, textBoxHomePhone.Text, "normal");
+                            try
+                            {
+                                String[] splitted = textBoxNameAddress.Text.Split(",", 2);
+                                CRUD.AddAsyncClient(idClient, textBoxNameClient.Text, splitted[0],
+                                    splitted[splitted.Length - 1], textBoxSecondPhone.Text, "normal");
+                            }
+                            catch { }
                         }
 
                         if ((DateTime.Now - dateTimePicker1.Value).Days < Convert.ToInt32
@@ -193,9 +213,31 @@ namespace WinFormsApp1
                         }
                         else color = ColorTranslator.ToHtml(Properties.Settings.Default.SecondLevelColor);
 
+                        int idDiagnosis = 1;
+                        var listDiagnosis = context.Diagnosis.Where(i => i.Name.IndexOf(textBoxDiagnosis.Text) > -1).ToList();
+                        if (listDiagnosis.Count == 0)
+                        {
+                            if (context.Diagnosis.Any())
+                                idDiagnosis = context.Diagnosis.OrderBy(i => i.Id).Last().Id + 1;
+                            CRUD.AddAsyncDiagnosis(idDiagnosis, textBoxDiagnosis.Text);
+                        }
+                        else
+                            idDiagnosis = listDiagnosis[0].Id;
+
+                        int idEquipment = 1;
+                        var listEquipment = context.Equipment.Where(i => i.Name.IndexOf(textBoxEquipment.Text) > -1).ToList();
+                        if (listEquipment.Count == 0)
+                        {
+                            if (context.Equipment.Any())
+                                idEquipment = context.Equipment.OrderBy(i => i.Id).Last().Id + 1;
+                            CRUD.AddAsyncEquipment(idEquipment, textBoxEquipment.Text);
+                        }
+                        else
+                            idEquipment = listEquipment[0].Id;
+
                         CRUD.AddAsyncOrder(
                             idOrder,
-                            context.Clients.Where(a => a.NameClient == textBoxNameClient.Text).ToList()[0].Id,
+                            context.Clients.Where(a => a.IdClient == textBoxNameClient.Text).ToList()[0].Id,
                             nameMaster,
                             dateTimePicker1.Text,
                             dateStartWork,
@@ -205,8 +247,8 @@ namespace WinFormsApp1
                             context.BrandTechnices.Where(a => a.NameBrandTechnic == comboBoxBrand.Text).ToList()[0].Id,
                             textBoxModel.Text,
                             textBoxFactoryNumber.Text,
-                            textBoxEquipment.Text,
-                            textBoxDiagnosis.Text,
+                            idEquipment,
+                            idDiagnosis,
                             textBoxNote.Text,
                             true,
                             0,
@@ -217,8 +259,6 @@ namespace WinFormsApp1
                             null,
                             null,
                             false,
-                            /*0,
-                            null,*/
                             color,
                             null,
                             checkBox1.Checked,
@@ -228,17 +268,16 @@ namespace WinFormsApp1
                         {
                             StartPosition = FormStartPosition.CenterParent,
                             LabelText = "Распечатать квитанцию?",
-                            ButtonText = "Нет",
+                            ButtonNoText = "Нет",
                             ButtonVisible = true
                         };
-                        warning.ShowDialog();
 
-                        if (warning.pressBtnYes)
+                        if (warning.ShowDialog() == DialogResult.OK)
                         {
                             Form1 form = new();
                             form.ReportGetting(idOrder);
                         }
-                        pressBtnAdd = true;
+                        this.DialogResult = DialogResult.OK;
                         this.Close();
                     }
                     break;
@@ -314,7 +353,8 @@ namespace WinFormsApp1
                     using (Context context = new())
                     {
                         var list = context.TypeBrands.Where(i =>
-                        i.TypeTechnic.NameTypeTechnic == comboBoxDevice.Text).Select(a => new {
+                        i.TypeTechnic.NameTypeTechnic == comboBoxDevice.Text).Select(a => new
+                        {
                             a.BrandTechnic.NameBrandTechnic
                         }).ToList();
                         comboBoxBrand.DisplayMember = "NameBrandTechnic";
@@ -352,10 +392,10 @@ namespace WinFormsApp1
             Context context = new();
             bool matching = false;
 
-            var list = context.Clients.Select(a => new { a.NameClient }).ToList();
+            var list = context.Clients.Select(a => new { a.IdClient }).ToList();
             for (int i = 0; i < list.Count; i++)
             {
-                if (textBoxNameClient.Text == list[i].NameClient)
+                if (textBoxNameClient.Text == list[i].IdClient)
                 {
                     matching = true;
                     break;
@@ -451,6 +491,7 @@ namespace WinFormsApp1
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
@@ -482,14 +523,8 @@ namespace WinFormsApp1
 
         private void CheckBox1_CheckedChanged(object sender, EventArgs e)
         {
-            if (!checkBox1.Checked)
-            {
-                textBoxMaxPrice.Enabled = false;
-            }
-            else
-            {
-                textBoxMaxPrice.Enabled = true;
-            }
+            if (checkBox1.Checked) textBoxMaxPrice.Enabled = true;
+            else textBoxMaxPrice.Enabled = false;
         }
 
         private void ComboBoxDevice_SelectedIndexChanged(object sender, EventArgs e)
@@ -497,160 +532,176 @@ namespace WinFormsApp1
             UpdateComboBox(2);
         }
 
+        private void TextBoxEquipment_TextChanged(object sender, EventArgs e)
+        {
+            listBoxEquipmentDiagnosis.Items.Clear();
+            listBoxEquipmentDiagnosis.Visible = false;
+            listBoxEquipmentDiagnosis.Location = new Point(listBoxEquipmentDiagnosis.Location.X, textBoxEquipment.Location.Y + textBoxEquipment.Height);
+            nameTextBox = "equipment";
+
+            for (int i = 0; i < equipment.Count; i++)
+            {
+                if (equipment[i].Contains(textBoxEquipment.Text, StringComparison.OrdinalIgnoreCase) && !loading)
+                {
+                    listBoxEquipmentDiagnosis.Visible = true;
+                    listBoxEquipmentDiagnosis.Items.Add(equipment[i]);
+                }
+            }
+        }
+
+        private void TextBoxDiagnosis_TextChanged(object sender, EventArgs e)
+        {
+            listBoxEquipmentDiagnosis.Items.Clear();
+            listBoxEquipmentDiagnosis.Visible = false;
+            listBoxEquipmentDiagnosis.Location = new Point(listBoxEquipmentDiagnosis.Location.X, textBoxDiagnosis.Location.Y + textBoxDiagnosis.Height);
+            nameTextBox = "diagnosis";
+
+            for (int i = 0; i < diagnosis.Count; i++)
+            {
+                if (diagnosis[i].Contains(textBoxDiagnosis.Text, StringComparison.OrdinalIgnoreCase) && !loading)
+                {
+                    listBoxEquipmentDiagnosis.Visible = true;
+                    listBoxEquipmentDiagnosis.Items.Add(diagnosis[i]);
+                }
+            }
+        }
+
+        private void ListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int id = listBoxEquipmentDiagnosis.SelectedIndex;
+            if (id >= 0)
+            {
+                switch (nameTextBox)
+                {
+                    case "equipment":
+                        textBoxEquipment.Text = listBoxEquipmentDiagnosis.Items[id].ToString();
+                        break;
+                    case "diagnosis":
+                        textBoxDiagnosis.Text = listBoxEquipmentDiagnosis.Items[id].ToString();
+                        break;
+                }
+
+                listBoxEquipmentDiagnosis.Items.Clear();
+                listBoxEquipmentDiagnosis.Visible = false;
+            }
+        }
+
+        private void TextBoxEquipment_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                listBoxEquipmentDiagnosis.Visible = false;
+            }
+        }
+
+        private void TextBoxDiagnosis_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                listBoxEquipmentDiagnosis.Visible = false;
+            }
+        }
+
+        private void TextBoxEquipment_Click(object sender, EventArgs e)
+        {
+            listBoxEquipmentDiagnosis.Items.Clear();
+            listBoxEquipmentDiagnosis.Visible = true;
+            listBoxEquipmentDiagnosis.Location = new Point(listBoxEquipmentDiagnosis.Location.X, textBoxEquipment.Location.Y + textBoxEquipment.Height);
+            nameTextBox = "equipment";
+            for (int i = 0; i < equipment.Count; i++)
+            {
+                if (textBoxEquipment.Text == "")
+                    listBoxEquipmentDiagnosis.Items.Add(equipment[i]);
+                else if(equipment[i].Contains(textBoxEquipment.Text, StringComparison.OrdinalIgnoreCase))
+                    listBoxEquipmentDiagnosis.Items.Add(equipment[i]);
+            }
+        }
+
+        private void TextBoxDiagnosis_Click(object sender, EventArgs e)
+        {
+            listBoxEquipmentDiagnosis.Items.Clear();
+            listBoxEquipmentDiagnosis.Visible = true;
+            listBoxEquipmentDiagnosis.Location = new Point(listBoxEquipmentDiagnosis.Location.X, textBoxDiagnosis.Location.Y + textBoxDiagnosis.Height);
+            nameTextBox = "diagnosis";
+            for (int i = 0; i < diagnosis.Count; i++)
+            {
+                if (textBoxDiagnosis.Text == "")
+                    listBoxEquipmentDiagnosis.Items.Add(diagnosis[i]);
+                else if (diagnosis[i].Contains(textBoxDiagnosis.Text, StringComparison.OrdinalIgnoreCase))
+                    listBoxEquipmentDiagnosis.Items.Add(diagnosis[i]);
+            }
+        }
+
         public string MasterName
         {
-            get
-            {
-                return this.comboBoxMaster.Text;
-            }
-            set
-            {
-                this.comboBoxMaster.Text = value;
-            }
+            get { return this.comboBoxMaster.Text; }
+            set { this.comboBoxMaster.Text = value; }
         }
 
         public string TypeDevice
         {
-            get
-            {
-                return this.comboBoxDevice.Text;
-            }
-            set
-            {
-                this.comboBoxDevice.Text = value;
-            }
+            get { return this.comboBoxDevice.Text; }
+            set { this.comboBoxDevice.Text = value; }
         }
 
         public string BrandDevice
         {
-            get
-            {
-                return this.comboBoxBrand.Text;
-            }
-            set
-            {
-                this.comboBoxBrand.Text = value;
-            }
+            get { return this.comboBoxBrand.Text; }
+            set { this.comboBoxBrand.Text = value; }
         }
 
         public string Model
         {
-            get
-            {
-                return this.textBoxModel.Text;
-            }
-            set
-            {
-                this.textBoxModel.Text = value;
-            }
+            get { return this.textBoxModel.Text; }
+            set { this.textBoxModel.Text = value; }
         }
 
         public string FactoryNumber
         {
-            get
-            {
-                return this.textBoxFactoryNumber.Text;
-            }
-            set
-            {
-                this.textBoxFactoryNumber.Text = value;
-            }
+            get { return this.textBoxFactoryNumber.Text; }
+            set { this.textBoxFactoryNumber.Text = value; }
         }
 
         public string ClientName
         {
-            get
-            {
-                return this.textBoxNameClient.Text;
-            }
-            set
-            {
-                this.textBoxNameClient.Text = value;
-            }
+            get { return this.textBoxNameClient.Text; }
+            set { this.textBoxNameClient.Text = value; }
         }
 
-        public string ClientAddress
+        public string ClientNameAddress
         {
-            get
-            {
-                return this.textBoxAddress.Text;
-            }
-            set
-            {
-                this.textBoxAddress.Text = value;
-            }
+            get { return this.textBoxNameAddress.Text; }
+            set { this.textBoxNameAddress.Text = value; }
         }
 
-        public string ClientWorkPhone
+        public string ClientSecondPhone
         {
-            get
-            {
-                return this.textBoxWorkPhone.Text;
-            }
-            set
-            {
-                this.textBoxWorkPhone.Text = value;
-            }
-        }
-
-        public string ClientHomePhone
-        {
-            get
-            {
-                return this.textBoxHomePhone.Text;
-            }
-            set
-            {
-                this.textBoxHomePhone.Text = value;
-            }
+            get { return this.textBoxSecondPhone.Text; }
+            set { this.textBoxSecondPhone.Text = value; }
         }
 
         public string TypeClient
         {
-            get
-            {
-                return this.labelTypeClient.Text;
-            }
-            set
-            {
-                this.labelTypeClient.Text = value;
-            }
+            get { return this.labelTypeClient.Text; }
+            set { this.labelTypeClient.Text = value; }
         }
 
         public string Equipment
         {
-            get
-            {
-                return this.textBoxEquipment.Text;
-            }
-            set
-            {
-                this.textBoxEquipment.Text = value;
-            }
+            get { return this.textBoxEquipment.Text; }
+            set { this.textBoxEquipment.Text = value; }
         }
 
         public string Diagnosis
         {
-            get
-            {
-                return this.textBoxDiagnosis.Text;
-            }
-            set
-            {
-                this.textBoxDiagnosis.Text = value;
-            }
+            get { return this.textBoxDiagnosis.Text; }
+            set { this.textBoxDiagnosis.Text = value; }
         }
 
         public string Note
         {
-            get
-            {
-                return this.textBoxNote.Text;
-            }
-            set
-            {
-                this.textBoxNote.Text = value;
-            }
+            get { return this.textBoxNote.Text; }
+            set { this.textBoxNote.Text = value; }
         }
     }
 }

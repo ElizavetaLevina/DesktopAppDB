@@ -1,6 +1,6 @@
 ﻿namespace WinFormsApp1
 {
-    partial class Message
+    partial class MessageToClient
     {
         /// <summary>
         /// Required designer variable.
@@ -29,13 +29,12 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Message));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MessageToClient));
             label1 = new Label();
             textBoxPhone = new TextBox();
             contextMenu = new ContextMenuStrip(components);
             item1 = new ToolStripMenuItem();
             item2 = new ToolStripMenuItem();
-            item3 = new ToolStripMenuItem();
             buttonChangeNumber = new Button();
             label2 = new Label();
             textBoxPort = new TextBox();
@@ -68,30 +67,23 @@
             // contextMenu
             // 
             contextMenu.ImageScalingSize = new Size(24, 24);
-            contextMenu.Items.AddRange(new ToolStripItem[] { item1, item2, item3 });
+            contextMenu.Items.AddRange(new ToolStripItem[] { item1, item2 });
             contextMenu.Name = "contextMenu";
-            contextMenu.Size = new Size(246, 100);
+            contextMenu.Size = new Size(297, 101);
             // 
             // item1
             // 
             item1.Name = "item1";
             item1.Size = new Size(245, 32);
-            item1.Text = "Имя клиента";
+            item1.Text = "ID клиента";
             item1.Click += Item1_Click;
             // 
             // item2
             // 
             item2.Name = "item2";
-            item2.Size = new Size(245, 32);
-            item2.Text = "Рабочий телефон";
+            item2.Size = new Size(296, 32);
+            item2.Text = "Дополнительный телефон";
             item2.Click += Item2_Click;
-            // 
-            // item3
-            // 
-            item3.Name = "item3";
-            item3.Size = new Size(245, 32);
-            item3.Text = "Домашний телефон";
-            item3.Click += Item3_Click;
             // 
             // buttonChangeNumber
             // 
@@ -202,7 +194,6 @@
         private ContextMenuStrip contextMenu;
         private ToolStripMenuItem item1;
         private ToolStripMenuItem item2;
-        private ToolStripMenuItem item3;
         private Button buttonChangeNumber;
         private Label label2;
         private TextBox textBoxPort;

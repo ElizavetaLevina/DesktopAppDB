@@ -24,8 +24,10 @@ namespace WinFormsApp1.Model
         public BrandTechnic? BrandTechnic { get; set; }
         public string? ModelTechnic { get; set; }
         public string? FactoryNumber { get; set; }
-        public string? Equipment { get; set; }
-        public string? Diagnosis { get; set; }
+        public int? EquipmentId { get; set; }
+        public Equipment? Equipment { get; set; }
+        public int? DiagnosisId { get; set; }
+        public Diagnosis? Diagnosis { get; set; }
         public string? Note { get; set; }
         public bool InProgress { get; set; }
         public int Guarantee { get; set; }

@@ -116,10 +116,11 @@ namespace WinFormsApp1.Model
         }
 
         //CLIENT
-        public static async void AddAsyncClient(int id, string? name, string? address, string? workPhone, string? homePhone, string typeClient)
+        public static async void AddAsyncClient(int id, string? idClient, string? name, string? address, string? secondPhone, string typeClient)
         {
             using Context db = new();
-            Client client = new() { Id = id, NameClient = name, Address = address, NumberPhoneWork = workPhone, NumberPhoneHome = homePhone, TypeClient = typeClient };
+            Client client = new() { Id = id, IdClient = idClient,  NameClient = name, Address = address, NumberSecondPhone = secondPhone, 
+                TypeClient = typeClient };
             try
             {
                 db.Clients.Add(client);
@@ -139,10 +140,11 @@ namespace WinFormsApp1.Model
             catch (Exception ex) { Console.WriteLine(ex.Message); }
         }
 
-        public static void ChangeClient(int id, string? name, string? address, string? workPhone, string? homePhone, string typeClient)
+        public static void ChangeClient(int id, string? idClient, string? name, string? address, string? secondPhone, string typeClient)
         {
             using Context db = new();
-            Client client = new() { Id = id, NameClient = name, Address = address, NumberPhoneWork = workPhone, NumberPhoneHome = homePhone, TypeClient = typeClient };
+            Client client = new() { Id = id, IdClient = idClient, NameClient = name, Address = address, NumberSecondPhone = secondPhone,
+                TypeClient = typeClient };
             try
             {
                 db.Clients.Update(client);
@@ -154,24 +156,23 @@ namespace WinFormsApp1.Model
         //ORDER
         public static async void AddAsyncOrder(int id, int idClient, int? idMaster, string? dateCreation,
             string? dateStartWork, string? dateCompleted, string? dateIssue, int idTypeTechnic,
-            int idBrandTechnic, string? model, string? factoryNumber, string? equipment,
-            string? diagnosis, string? note, bool inProgress, int guarantee,
+            int idBrandTechnic, string? model, string? factoryNumber, int? idEquipment,
+            int? idDiagnosis, string? note, bool inProgress, int guarantee,
             string? dateEndGuarantee, bool deleted, bool returnUnderGuarantee, string? dateReturn, 
-            string? dateCompletedReturn, string? dateIssueReturn, bool issue, /*int priceRepair, 
-            List<string>? foundProblem,*/ string color, string? dateLastCall, bool priceAgreed, int? maxPrice)
+            string? dateCompletedReturn, string? dateIssueReturn, bool issue, string color, string? dateLastCall, 
+            bool priceAgreed, int? maxPrice)
         {
             using Context db = new();
 
             Order order = new() { Id = id, ClientId = idClient, MasterId = idMaster, 
                 DateCreation = dateCreation, DateStartWork = dateStartWork, DateCompleted = dateCompleted, 
                 DateIssue = dateIssue, TypeTechnicId = idTypeTechnic, BrandTechnicId = idBrandTechnic, 
-                ModelTechnic = model, FactoryNumber = factoryNumber, Equipment = equipment, 
-                Diagnosis = diagnosis, Note = note, InProgress = inProgress, Guarantee = guarantee, 
+                ModelTechnic = model, FactoryNumber = factoryNumber, EquipmentId = idEquipment, 
+                DiagnosisId = idDiagnosis, Note = note, InProgress = inProgress, Guarantee = guarantee, 
                 DateEndGuarantee = dateEndGuarantee, Deleted = deleted, 
                 ReturnUnderGuarantee = returnUnderGuarantee, DateReturn = dateReturn, 
                 DateCompletedReturn = dateCompletedReturn, DateIssueReturn = dateIssueReturn,
-                Issue = issue, /*PriceRepair = priceRepair, FoundProblem = foundProblem,*/ 
-                ColorRow = color, DateLastCall = dateLastCall, PriceAgreed = priceAgreed, 
+                Issue = issue, ColorRow = color, DateLastCall = dateLastCall, PriceAgreed = priceAgreed, 
                 MaxPrice = maxPrice };
             try
             {
@@ -195,24 +196,22 @@ namespace WinFormsApp1.Model
 
         public static void ChangeOrder(int id, int idClient, int? idMaster, string? dateCreation,
             string? dateStartWork, string? dateCompleted, string? dateIssue, int idTypeTechnic,
-            int idBrandTechnic, string? model, string? factoryNumber, string? equipment,
-            string? diagnosis, string? note, bool inProgress, int guarantee,
+            int idBrandTechnic, string? model, string? factoryNumber, int? idEquipment,
+            int? idDiagnosis, string? note, bool inProgress, int guarantee,
             string? dateEndGuarantee, bool deleted, bool returnUnderGuarantee, string? dateReturn,
-            string? dateCompletedReturn, string? dateIssueReturn, bool issue, /*int priceRepair,
-            List<string>? foundProblem,*/ string color, string? dateLastCall, bool priceAgreed, 
-            int? maxPrice)
+            string? dateCompletedReturn, string? dateIssueReturn, bool issue, string color, 
+            string? dateLastCall, bool priceAgreed, int? maxPrice)
         {
             using Context db = new();
             Order order = new() { Id = id, ClientId = idClient, MasterId = idMaster,
                 DateCreation = dateCreation, DateStartWork = dateStartWork,
                 DateCompleted = dateCompleted, DateIssue = dateIssue, TypeTechnicId = idTypeTechnic,
                 BrandTechnicId = idBrandTechnic,  ModelTechnic = model, FactoryNumber = factoryNumber,
-                Equipment = equipment,  Diagnosis = diagnosis, Note = note, InProgress = inProgress,
+                EquipmentId = idEquipment,  DiagnosisId = idDiagnosis, Note = note, InProgress = inProgress,
                 Guarantee = guarantee, DateEndGuarantee = dateEndGuarantee, Deleted = deleted,
                 ReturnUnderGuarantee = returnUnderGuarantee, DateReturn = dateReturn,
                 DateCompletedReturn = dateCompletedReturn, DateIssueReturn = dateIssueReturn,
-                Issue = issue, /*PriceRepair = priceRepair, FoundProblem = foundProblem,*/
-                ColorRow = color, DateLastCall = dateLastCall, PriceAgreed = priceAgreed, 
+                Issue = issue, ColorRow = color, DateLastCall = dateLastCall, PriceAgreed = priceAgreed, 
                 MaxPrice = maxPrice };
             try
             {
@@ -390,8 +389,7 @@ namespace WinFormsApp1.Model
                 db.MalfunctionOrders.Add(malfunctionOrder);
                 await db.SaveChangesAsync();
             }
-            catch (Exception ex) 
-            { Console.WriteLine(ex.Message); }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
         }
 
         public static void RemoveMalfunctionOrder(int malfunctionId, int orderId, int price)
@@ -411,5 +409,94 @@ namespace WinFormsApp1.Model
             catch (Exception ex) { Console.WriteLine(ex.Message); }
         }
 
+        //DIAGNOSIS
+        public static async void AddAsyncDiagnosis(int id, string name)
+        {
+            using Context db = new();
+            Diagnosis diagnosis = new()
+            {
+                Id = id,
+                Name = name
+            };
+            try
+            {
+                db.Diagnosis.Add(diagnosis);
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
+        }
+
+        public static void RemoveDiagnosis(int id)
+        {
+            using Context db = new();
+            Diagnosis diagnosis = new() { Id = id };
+            try
+            {
+                db.Diagnosis.Remove(diagnosis);
+                db.SaveChanges();
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
+        }
+
+        public static void ChangeDiagnosis(int id, string name)
+        {
+            using Context db = new();
+            Diagnosis diagnosis = new()
+            {
+                Id = id,
+                Name = name
+            };
+            try
+            {
+                db.Diagnosis.Update(diagnosis);
+                db.SaveChangesAsync();
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
+        }
+
+        //EQUIPMENT
+        public static async void AddAsyncEquipment(int id, string name)
+        {
+            using Context db = new();
+            Equipment equipment = new()
+            {
+                Id = id,
+                Name = name
+            };
+            try
+            {
+                db.Equipment.Add(equipment);
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
+        }
+
+        public static void RemoveEquipment(int id)
+        {
+            using Context db = new();
+            Equipment equipment = new() { Id = id };
+            try
+            {
+                db.Equipment.Remove(equipment);
+                db.SaveChanges();
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
+        }
+
+        public static void ChangeEquipment(int id, string name)
+        {
+            using Context db = new();
+            Equipment equipment = new()
+            {
+                Id = id,
+                Name = name
+            };
+            try
+            {
+                db.Equipment.Update(equipment);
+                db.SaveChangesAsync();
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
+        }
     }
 }

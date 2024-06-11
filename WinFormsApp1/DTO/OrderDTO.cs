@@ -46,7 +46,7 @@ namespace WinFormsApp1.DTO
             NameDevice = String.Format("{0} {1} {2}", order.TypeTechnic?.NameTypeTechnic,
                 order.BrandTechnic?.NameBrandTechnic, ModelTechnic);
             ClientName = order.Client?.NameClient;
-            Diagnosis = order.Diagnosis;
+            Diagnosis = order.Diagnosis?.Name;
             Deleted = order.Deleted;
             ReturnUnderGuarantee = order.ReturnUnderGuarantee;
             Guarantee = order.Guarantee;

@@ -1,29 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Data;
 using WinFormsApp1.Model;
 
 namespace WinFormsApp1
 {
     public partial class FeaturesClient : Form
     {
-        public bool save = false;
         public FeaturesClient(int id)
         {
             InitializeComponent();
             Context context = new();
             var list = context.Clients.Where(i => i.Id == id).ToList();
 
-            textBoxName.Text = list[0].NameClient;
-            textBoxAddress.Text = list[0].Address;
-            textBoxHomePhone.Text = list[0].NumberPhoneHome;
-            textBoxWorkPhone.Text = list[0].NumberPhoneWork;
+            textBoxID.Text = list[0].IdClient;
+            textBoxNameAddress.Text = String.Format("{0}, {1}", list[0].NameClient, list[0].Address);
+            textBoxSecondPhone.Text = list[0].NumberSecondPhone;
 
             switch (list[0].TypeClient)
             {
@@ -38,98 +28,50 @@ namespace WinFormsApp1
 
         private void ButtonSave_Click(object sender, EventArgs e)
         {
-            save = true;
-
+            this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
-        public string NameClient
+        public string IdClient
         {
-            get
-            {
-                return this.textBoxName.Text;
-            }
-            set
-            {
-                this.textBoxName.Text = value;
-            }
+            get { return this.textBoxID.Text; }
+            set { this.textBoxID.Text = value; }
         }
 
-        public string AdressClient
+        public string NameAdressClient
         {
-            get
-            {
-                return this.textBoxAddress.Text;
-            }
-            set
-            {
-                this.textBoxAddress.Text = value;
-            }
+            get { return this.textBoxNameAddress.Text; }
+            set { this.textBoxNameAddress.Text = value; }
         }
 
-        public string HomePhone
+        public string SecondPhone
         {
-            get
-            {
-                return this.textBoxHomePhone.Text;
-            }
-            set
-            {
-                this.textBoxHomePhone.Text = value;
-            }
-        }
-
-        public string WorkPhone
-        {
-            get
-            {
-                return this.textBoxWorkPhone.Text;
-            }
-            set
-            {
-                this.textBoxWorkPhone.Text = value;
-            }
+            get { return this.textBoxSecondPhone.Text; }
+            set { this.textBoxSecondPhone.Text = value; }
         }
 
         public bool NormalType
         {
-            get
-            {
-                return radioButtonNormal.Checked;
-            }
-            set
-            {
-                radioButtonNormal.Checked = value;
-            }
+            get { return radioButtonNormal.Checked; }
+            set { radioButtonNormal.Checked = value; }
         }
 
         public bool WhiteType
         {
-            get
-            {
-                return radioButtonWhite.Checked;
-            }
-            set
-            {
-                radioButtonWhite.Checked = value;
-            }
+            get { return radioButtonWhite.Checked; }
+            set { radioButtonWhite.Checked = value; }
         }
 
         public bool BlackType
         {
-            get
-            {
-                return radioButtonBlack.Checked;
-            }
-            set
-            {
-                radioButtonBlack.Checked = value;
-            }
+            get { return radioButtonBlack.Checked; }
+            set { radioButtonBlack.Checked = value; }
         }
     }
 }

@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace WinFormsApp1
+﻿namespace WinFormsApp1
 {
     public partial class Warning : Form
     {
-        public bool pressBtnYes = false;
+        public int id;
         public Warning()
         {
             InitializeComponent();
@@ -20,57 +10,60 @@ namespace WinFormsApp1
 
         public string LabelText
         {
-            get
-            {
-                return this.label1.Text;
-            }
-            set
-            {
-                this.label1.Text = value;
-            }
+            get { return this.label1.Text; }
+            set { this.label1.Text = value; }
         }
 
-        public string ButtonText
+        public string ButtonNoText
         {
-            get
-            {
-                return this.buttonExit.Text;
-            }
-            set
-            {
-                this.buttonExit.Text = value;
-            }
+            get { return this.buttonExit.Text; }
+            set { this.buttonExit.Text = value; }
+        }
+
+        public string ButtonYesText
+        {
+            get { return this.buttonYes.Text; }
+            set { this.buttonYes.Text = value; }
         }
 
         public bool ButtonVisible
         {
-            get
-            {
-                return this.buttonYes.Visible;
-            }
-            set
-            {
-                this.buttonYes.Visible = value;
-            }
+            get {  return this.buttonYes.Visible; }
+            set {  this.buttonYes.Visible = value; }
+        }
+
+        public bool VisibleChangePrice
+        {
+            get { return this.linkLabelChangeMaxPrice.Visible; }
+            set { linkLabelChangeMaxPrice.Visible = value; }
         }
 
         private void Warning_Activated(object sender, EventArgs e)
         {
             if (buttonYes.Visible)
-            {
                 buttonYes.Focus();
-            }
         }
 
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
         private void ButtonYes_Click(object sender, EventArgs e)
         {
-            pressBtnYes = true;
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
+
+        private void LinkLabelChangeMaxPrice_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            FeaturesOrder featuresOrder = new(id, "InRepair")
+            {
+                StartPosition = FormStartPosition.CenterParent
+            };
+            featuresOrder.ShowDialog();
             this.Close();
         }
     }

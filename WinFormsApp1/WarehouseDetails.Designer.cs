@@ -37,6 +37,7 @@
             buttonExit = new Button();
             buttonAdd = new Button();
             textBoxDevice = new TextBox();
+            buttonChangeDetail = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -57,6 +58,7 @@
             dataGridView1.MultiSelect = false;
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
+            dataGridView1.RowHeadersVisible = false;
             dataGridView1.RowHeadersWidth = 62;
             dataGridView1.ScrollBars = ScrollBars.Vertical;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -75,7 +77,7 @@
             // 
             // buttonDeleteDetail
             // 
-            buttonDeleteDetail.Location = new Point(261, 381);
+            buttonDeleteDetail.Location = new Point(280, 381);
             buttonDeleteDetail.Name = "buttonDeleteDetail";
             buttonDeleteDetail.Size = new Size(243, 43);
             buttonDeleteDetail.TabIndex = 2;
@@ -113,18 +115,29 @@
             // 
             // textBoxDevice
             // 
-            textBoxDevice.Location = new Point(565, 387);
+            textBoxDevice.Location = new Point(12, 457);
             textBoxDevice.Name = "textBoxDevice";
             textBoxDevice.Size = new Size(223, 31);
             textBoxDevice.TabIndex = 6;
             textBoxDevice.Visible = false;
             textBoxDevice.TextChanged += TextBoxDevice_TextChanged;
             // 
+            // buttonChangeDetail
+            // 
+            buttonChangeDetail.Location = new Point(545, 381);
+            buttonChangeDetail.Name = "buttonChangeDetail";
+            buttonChangeDetail.Size = new Size(243, 43);
+            buttonChangeDetail.TabIndex = 7;
+            buttonChangeDetail.Text = "Изменить данные";
+            buttonChangeDetail.UseVisualStyleBackColor = true;
+            buttonChangeDetail.Click += ButtonChangeDetail_Click;
+            // 
             // WarehouseDetails
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 503);
+            Controls.Add(buttonChangeDetail);
             Controls.Add(textBoxDevice);
             Controls.Add(buttonAdd);
             Controls.Add(buttonExit);
@@ -150,5 +163,6 @@
         private Button buttonExit;
         private Button buttonAdd;
         private TextBox textBoxDevice;
+        private Button buttonChangeDetail;
     }
 }

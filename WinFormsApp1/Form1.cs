@@ -13,12 +13,13 @@ namespace WinFormsApp1
     {
         public int idRow;
         public string status = "";
+        public bool logInSystem = false;
         public Form1()
         {
             InitializeComponent();
             try
             {
-                Accepted();
+                InProgress();
                 ToolStripEnabled();
                 if (Properties.Settings.Default.Size == "Small")
                 {
@@ -59,18 +60,12 @@ namespace WinFormsApp1
             dataGridView1.Columns[14].Visible = false;
             dataGridView1.Columns[15].Visible = false;
 
-            int[] percentAccepted = [10, 14, 0, 0, 0, 14, 14, 16, 18, 14, 0, 0, 0, 0, 0];
             int[] percentInRepair = [8, 12, 12, 0, 0, 12, 14, 16, 14, 0, 12, 0, 0, 0, 0, 0];
             int[] percentCompleted = [8, 12, 0, 12, 0, 14, 16, 14, 10, 14, 0, 0, 0, 0, 0, 0];
             int[] percentOthers = [7, 10, 10, 10, 10, 9, 12, 12, 8, 12, 0, 0, 0, 0, 0, 0];
 
             switch (status)
             {
-                case "Accepted":
-                    dataGridView1.Columns[2].Visible = false;
-                    dataGridView1.Columns[3].Visible = false;
-                    dataGridView1.Columns[4].Visible = false;
-                    break;
                 case "InRepair":
                     dataGridView1.Columns[3].Visible = false;
                     dataGridView1.Columns[4].Visible = false;
@@ -86,21 +81,14 @@ namespace WinFormsApp1
             {
                 if (dataGridView1.Columns[i].Visible)
                 {
-                    double width = Convert.ToDouble(dataGridView1.Width -
-                        dataGridView1.RowHeadersWidth) / 100.0 * percentOthers[i];
+                    double width = Convert.ToDouble(dataGridView1.Width) / 100.0 * percentOthers[i];
                     switch (status)
                     {
-                        case "Accepted":
-                            width = Convert.ToDouble(dataGridView1.Width -
-                        dataGridView1.RowHeadersWidth) / 100.0 * percentAccepted[i];
-                            break;
                         case "InRepair":
-                            width = Convert.ToDouble(dataGridView1.Width -
-                        dataGridView1.RowHeadersWidth) / 100.0 * percentInRepair[i];
+                            width = Convert.ToDouble(dataGridView1.Width) / 100.0 * percentInRepair[i];
                             break;
                         case "Completed":
-                            width = Convert.ToDouble(dataGridView1.Width -
-                        dataGridView1.RowHeadersWidth) / 100.0 * percentCompleted[i];
+                            width = Convert.ToDouble(dataGridView1.Width) / 100.0 * percentCompleted[i];
                             break;
                     }
                     dataGridView1.Columns[i].Width = Convert.ToInt32(width);
@@ -112,9 +100,6 @@ namespace WinFormsApp1
         {
             switch (status)
             {
-                case "Accepted":
-                    Accepted();
-                    break;
                 case "InRepair":
                     InProgress();
                     break;
@@ -132,76 +117,37 @@ namespace WinFormsApp1
                     break;
             }
         }
-
-        private void Accepted()
-        {
-            try
-            {
-                status = "Accepted";
-                using Context context = new();
-                var list = context.Orders.Where(i => i.InProgress == true && i.Deleted == false && i.Master == null)
-                    .OrderByDescending(i => i.DateCreation)
-                    .Select(a => //new OrderDTO(a)
-                new
-                {
-                    a.Id,
-                    a.DateCreation,
-                    a.DateStartWork,
-                    a.DateCompleted,
-                    a.DateIssue,
-                    a.Master.NameMaster,
-                    a.TypeTechnic.NameTypeTechnic,
-                    a.BrandTechnic.NameBrandTechnic,
-                    a.ModelTechnic,
-                    a.Client.NameClient,
-                    a.Diagnosis,
-                    a.Deleted,
-                    a.ReturnUnderGuarantee,
-                    a.Guarantee,
-                    a.DateEndGuarantee,
-                    a.ColorRow
-                }
-                ).ToList();
-                dataGridView1.DataSource = Funcs.ToDataTable(list);
-                /*UpdateTable();
-                ChangeColorRows();*/
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-            }
-        }
-
         private void InProgress()
         {
             status = "InRepair";
             using Context context = new();
             try
             {
-                var list = context.Orders.Where(i => i.InProgress == true && i.Deleted == false && i.Master != null).Select(a => new
-                {
-                    a.Id,
-                    a.DateCreation,
-                    a.DateStartWork,
-                    a.DateCompleted,
-                    a.DateIssue,
-                    a.Master.NameMaster,
-                    a.TypeTechnic.NameTypeTechnic,
-                    a.BrandTechnic.NameBrandTechnic,
-                    a.ModelTechnic,
-                    a.Client.NameClient,
-                    a.Diagnosis,
-                    a.Deleted,
-                    a.ReturnUnderGuarantee,
-                    a.Guarantee,
-                    a.DateEndGuarantee,
-                    a.ColorRow
-                }).OrderByDescending(i => i.DateStartWork).ToList();
+                var list = context.Orders.Where(i => i.InProgress == true && i.Deleted == false).Select(
+                    a => new //OrderDTO(a)
+                    {
+                        a.Id,
+                        a.DateCreation,
+                        a.DateStartWork,
+                        a.DateCompleted,
+                        a.DateIssue,
+                        a.Master.NameMaster,
+                        a.TypeTechnic.NameTypeTechnic,
+                        a.BrandTechnic.NameBrandTechnic,
+                        a.ModelTechnic,
+                        a.Client.IdClient,
+                        a.Diagnosis.Name,
+                        a.Deleted,
+                        a.ReturnUnderGuarantee,
+                        a.Guarantee,
+                        a.DateEndGuarantee,
+                        a.ColorRow
+                    }).OrderByDescending(i => i.DateStartWork).ToList();
                 dataGridView1.DataSource = Funcs.ToDataTable(list);
                 UpdateTable();
                 ChangeColorRows();
             }
-            catch { }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         private void OrderСompleted()
@@ -221,8 +167,8 @@ namespace WinFormsApp1
                     a.TypeTechnic.NameTypeTechnic,
                     a.BrandTechnic.NameBrandTechnic,
                     a.ModelTechnic,
-                    a.Client.NameClient,
-                    a.Diagnosis,
+                    a.Client.IdClient,
+                    a.Diagnosis.Name,
                     a.Deleted,
                     a.ReturnUnderGuarantee,
                     a.Guarantee,
@@ -253,8 +199,8 @@ namespace WinFormsApp1
                     a.TypeTechnic.NameTypeTechnic,
                     a.BrandTechnic.NameBrandTechnic,
                     a.ModelTechnic,
-                    a.Client.NameClient,
-                    a.Diagnosis,
+                    a.Client.IdClient,
+                    a.Diagnosis.Name,
                     a.Deleted,
                     a.ReturnUnderGuarantee,
                     a.Guarantee,
@@ -291,8 +237,8 @@ namespace WinFormsApp1
                     a.TypeTechnic.NameTypeTechnic,
                     a.BrandTechnic.NameBrandTechnic,
                     a.ModelTechnic,
-                    a.Client.NameClient,
-                    a.Diagnosis,
+                    a.Client.IdClient,
+                    a.Diagnosis.Name,
                     a.Deleted,
                     a.ReturnUnderGuarantee,
                     a.Guarantee,
@@ -329,8 +275,8 @@ namespace WinFormsApp1
                     a.TypeTechnic.NameTypeTechnic,
                     a.BrandTechnic.NameBrandTechnic,
                     a.ModelTechnic,
-                    a.Client.NameClient,
-                    a.Diagnosis,
+                    a.Client.IdClient,
+                    a.Diagnosis.Name,
                     a.Deleted,
                     a.ReturnUnderGuarantee,
                     a.Guarantee,
@@ -350,10 +296,10 @@ namespace WinFormsApp1
             {
                 StartPosition = FormStartPosition.CenterParent
             };
-            addDeviceForRepair.ShowDialog();
-            if (addDeviceForRepair.pressBtnAdd)
+
+            if (addDeviceForRepair.ShowDialog() == DialogResult.OK)
             {
-                status = addDeviceForRepair.status;
+                status = "InRepair";
                 /*UpdateDB();*/
                 UpdateTableData();
                 ToolStripEnabled();
@@ -410,17 +356,17 @@ namespace WinFormsApp1
                     {
                         StartPosition = FormStartPosition.CenterParent,
                         LabelText = "Вы действительно хотите удалить аппарат из корзины?",
-                        ButtonText = "Нет",
+                        ButtonNoText = "Нет",
                         ButtonVisible = true
                     };
-                    warning.ShowDialog();
-                    FocusButton(status);
-                    if (warning.pressBtnYes)
+
+                    if (warning.ShowDialog() == DialogResult.OK)
                     {
                         CRUD.RemoveOrder(id);
                         CRUD.RemoveDetails(id);
                         Trash();
                     }
+                    FocusButton(status);
                 }
                 else
                 {
@@ -428,26 +374,25 @@ namespace WinFormsApp1
                     {
                         StartPosition = FormStartPosition.CenterParent,
                         LabelText = "Вы действительно хотите переместить аппарат в корзину?",
-                        ButtonText = "Нет",
+                        ButtonNoText = "Нет",
                         ButtonVisible = true
                     };
-                    warning.ShowDialog();
-                    FocusButton(status);
-                    if (warning.pressBtnYes)
+
+                    if (warning.ShowDialog() == DialogResult.OK)
                     {
                         ChangeOrder(id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
                             list[0].DateStartWork, list[0].DateCompleted, list[0].DateIssue,
                             list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
-                            list[0].FactoryNumber, list[0].Equipment, list[0].Diagnosis, list[0].Note,
+                            list[0].FactoryNumber, list[0].EquipmentId, list[0].DiagnosisId, list[0].Note,
                             list[0].InProgress, list[0].Guarantee, list[0].DateEndGuarantee, true,
                             list[0].ReturnUnderGuarantee, list[0].DateReturn, list[0].DateCompletedReturn,
-                            list[0].DateIssueReturn, list[0].Issue, /*list[0].PriceRepair,
-                            list[0].FoundProblem,*/ list[0].ColorRow, list[0].DateLastCall,
+                            list[0].DateIssueReturn, list[0].Issue, list[0].ColorRow, list[0].DateLastCall,
                             list[0].PriceAgreed, list[0].MaxPrice);
 
                         UpdateTableData();
                         /*UpdateDB();*/
                     }
+                    FocusButton(status);
                 }
             }
             catch { }
@@ -465,11 +410,11 @@ namespace WinFormsApp1
                     id, list[0].ClientId, list[0].MasterId, list[0].DateCreation, list[0].DateStartWork,
                     list[0].DateCompleted, list[0].DateIssue, list[0].TypeTechnicId,
                     list[0].BrandTechnicId, list[0].ModelTechnic, list[0].FactoryNumber,
-                    list[0].Equipment, list[0].Diagnosis, list[0].Note,
+                    list[0].EquipmentId, list[0].DiagnosisId, list[0].Note,
                     list[0].InProgress, list[0].Guarantee, list[0].DateEndGuarantee, false,
                     list[0].ReturnUnderGuarantee, list[0].DateReturn, list[0].DateCompletedReturn,
-                    list[0].DateIssueReturn, list[0].Issue, /*list[0].PriceRepair, list[0].FoundProblem,*/
-                    list[0].ColorRow, list[0].DateLastCall, list[0].PriceAgreed, list[0].MaxPrice);
+                    list[0].DateIssueReturn, list[0].Issue, list[0].ColorRow, list[0].DateLastCall,
+                    list[0].PriceAgreed, list[0].MaxPrice);
                 Trash();
                 /*UpdateDB();*/
             }
@@ -497,13 +442,11 @@ namespace WinFormsApp1
                         StartPosition = FormStartPosition.CenterParent,
                         LabelText = "Вы не использовали ни одной детали для ремонта данного устройства. " +
                         "\nХотите ли вы редактировать список деталей?",
-                        ButtonText = "Нет",
+                        ButtonNoText = "Нет",
                         ButtonVisible = true
                     };
-                    warning.ShowDialog();
-                    FocusButton(status);
 
-                    if (warning.pressBtnYes)
+                    if (warning.ShowDialog() == DialogResult.OK)
                     {
                         AddDetails addDetails = new(id)
                         {
@@ -517,14 +460,30 @@ namespace WinFormsApp1
                         switch (status)
                         {
                             case "InRepair":
+                                if (!logInSystem)
+                                {
+                                    warning = new()
+                                    {
+                                        StartPosition = FormStartPosition.CenterParent,
+                                        LabelText = "Войдите в систему!",
+                                        ButtonYesText = "Войти",
+                                        ButtonNoText = "Отмена",
+                                        ButtonVisible = true
+                                    };
+                                    if (warning.ShowDialog() == DialogResult.OK)
+                                    {
+                                        LogInToTheSystem();
+                                        if (!logInSystem)
+                                            return;
+                                    }
+                                    else return;
+                                }
                                 CompletedOrder completedOrder = new(id)
                                 {
                                     StartPosition = FormStartPosition.CenterParent,
                                     EnabledPrice = enabledPrice
                                 };
-                                completedOrder.ShowDialog();
-                                FocusButton(status);
-                                if (completedOrder.save)
+                                if (completedOrder.ShowDialog() == DialogResult.OK)
                                 {
                                     for (int i = 0; i < completedOrder.countProblem; i++)
                                     {
@@ -556,7 +515,7 @@ namespace WinFormsApp1
                                         ChangeOrder(id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
                                             list[0].DateStartWork, completedOrder.DateComplete, list[0].DateIssue,
                                             list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
-                                            list[0].FactoryNumber, list[0].Equipment, list[0].Diagnosis, list[0].Note,
+                                            list[0].FactoryNumber, list[0].EquipmentId, list[0].DiagnosisId, list[0].Note,
                                             false, list[0].Guarantee, dateEndGuarantee, list[0].Deleted,
                                             list[0].ReturnUnderGuarantee, list[0].DateReturn, list[0].DateCompleted,
                                             list[0].DateIssueReturn, list[0].Issue, list[0].ColorRow,
@@ -567,7 +526,7 @@ namespace WinFormsApp1
                                         ChangeOrder(id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
                                             list[0].DateStartWork, completedOrder.DateComplete, list[0].DateIssue,
                                             list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
-                                            list[0].FactoryNumber, list[0].Equipment, list[0].Diagnosis, list[0].Note,
+                                            list[0].FactoryNumber, list[0].EquipmentId, list[0].DiagnosisId, list[0].Note,
                                             false, list[0].Guarantee, list[0].DateEndGuarantee, list[0].Deleted,
                                             list[0].ReturnUnderGuarantee, list[0].DateReturn, list[0].DateCompletedReturn,
                                             list[0].DateIssueReturn, list[0].Issue, list[0].ColorRow, list[0].DateLastCall,
@@ -576,6 +535,7 @@ namespace WinFormsApp1
                                     }
                                     InProgress();
                                 }
+                                FocusButton(status);
                                 /*if (completedOrder.pressBtnSave)
                                     UpdateDB();*/
                                 break;
@@ -587,14 +547,30 @@ namespace WinFormsApp1
                     switch (status)
                     {
                         case "InRepair":
+                            if (!logInSystem)
+                            {
+                                Warning warning = new()
+                                {
+                                    StartPosition = FormStartPosition.CenterParent,
+                                    LabelText = "Войдите в систему!",
+                                    ButtonYesText = "Войти",
+                                    ButtonNoText = "Отмена",
+                                    ButtonVisible = true
+                                };
+                                if (warning.ShowDialog() == DialogResult.OK)
+                                {
+                                    LogInToTheSystem();
+                                    if (!logInSystem)
+                                        return;
+                                }
+                                else return;
+                            }
                             CompletedOrder completedOrder = new(id)
                             {
                                 StartPosition = FormStartPosition.CenterParent,
                                 EnabledPrice = enabledPrice
                             };
-                            completedOrder.ShowDialog();
-                            FocusButton(status);
-                            if (completedOrder.save)
+                            if (completedOrder.ShowDialog() == DialogResult.OK)
                             {
                                 for (int i = 0; i < completedOrder.countProblem; i++)
                                 {
@@ -625,7 +601,7 @@ namespace WinFormsApp1
                                     ChangeOrder(id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
                                         list[0].DateStartWork, list[0].DateCompleted, list[0].DateIssue,
                                         list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
-                                        list[0].FactoryNumber, list[0].Equipment, list[0].Diagnosis, list[0].Note,
+                                        list[0].FactoryNumber, list[0].EquipmentId, list[0].DiagnosisId, list[0].Note,
                                         false, list[0].Guarantee, dateEndGuarantee, list[0].Deleted,
                                         list[0].ReturnUnderGuarantee, list[0].DateReturn, completedOrder.DateComplete,
                                         list[0].DateIssueReturn, list[0].Issue, list[0].ColorRow,
@@ -635,13 +611,14 @@ namespace WinFormsApp1
                                     ChangeOrder(id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
                                             list[0].DateStartWork, completedOrder.DateComplete, list[0].DateIssue,
                                             list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
-                                            list[0].FactoryNumber, list[0].Equipment, list[0].Diagnosis, list[0].Note,
+                                            list[0].FactoryNumber, list[0].EquipmentId, list[0].DiagnosisId, list[0].Note,
                                             false, list[0].Guarantee, list[0].DateEndGuarantee, list[0].Deleted,
                                             list[0].ReturnUnderGuarantee, list[0].DateReturn, list[0].DateCompletedReturn,
                                             list[0].DateIssueReturn, list[0].Issue, list[0].ColorRow,
                                             list[0].DateLastCall, list[0].PriceAgreed, list[0].MaxPrice);
                                 InProgress();
                             }
+                            FocusButton(status);
                             /*if (completedOrder.pressBtnSave)
                                 UpdateDB();*/
                             break;
@@ -667,32 +644,29 @@ namespace WinFormsApp1
                         {
                             StartPosition = FormStartPosition.CenterParent
                         };
-                        issuingClient.ShowDialog();
-                        FocusButton(status);
-                        if (issuingClient.save)
+                        if (issuingClient.ShowDialog() == DialogResult.OK)
                         {
                             if (list[0].ReturnUnderGuarantee)
                                 ChangeOrder(id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
                                 list[0].DateStartWork, list[0].DateCompleted, issuingClient.DateIssue,
                                 list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
-                                list[0].FactoryNumber, list[0].Equipment, list[0].Diagnosis, list[0].Note,
+                                list[0].FactoryNumber, list[0].EquipmentId, list[0].DiagnosisId, list[0].Note,
                                 list[0].InProgress, issuingClient.GuaranteePeriod, issuingClient.DateEndGuarantee,
                                 list[0].Deleted, list[0].ReturnUnderGuarantee, list[0].DateReturn,
-                                list[0].DateCompletedReturn, list[0].DateIssue, true,
-                                /*list[0].PriceRepair, list[0].FoundProblem,*/ list[0].ColorRow, list[0].DateLastCall,
-                                list[0].PriceAgreed, list[0].MaxPrice);
+                                list[0].DateCompletedReturn, list[0].DateIssue, true, list[0].ColorRow,
+                                list[0].DateLastCall, list[0].PriceAgreed, list[0].MaxPrice);
                             else
                                 ChangeOrder(id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
                                 list[0].DateStartWork, list[0].DateCompleted, issuingClient.DateIssue,
                                 list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
-                                list[0].FactoryNumber, list[0].Equipment, list[0].Diagnosis, list[0].Note,
+                                list[0].FactoryNumber, list[0].EquipmentId, list[0].DiagnosisId, list[0].Note,
                                 list[0].InProgress, issuingClient.GuaranteePeriod, issuingClient.DateEndGuarantee,
                                 list[0].Deleted, list[0].ReturnUnderGuarantee, list[0].DateReturn,
-                                list[0].DateCompletedReturn, list[0].DateIssueReturn, true,
-                                /*list[0].PriceRepair, list[0].FoundProblem,*/ list[0].ColorRow, list[0].DateLastCall,
-                                list[0].PriceAgreed, list[0].MaxPrice);
+                                list[0].DateCompletedReturn, list[0].DateIssueReturn, true, list[0].ColorRow,
+                                list[0].DateLastCall, list[0].PriceAgreed, list[0].MaxPrice);
                             OrderСompleted();
                         }
+                        FocusButton(status);
                         break;
                 }
             }
@@ -711,13 +685,11 @@ namespace WinFormsApp1
                 {
                     StartPosition = FormStartPosition.CenterParent,
                     LabelText = "Вы действительно хотите отправить аппарат в доработку?",
-                    ButtonText = "Нет",
+                    ButtonNoText = "Нет",
                     ButtonVisible = true
                 };
-                warning.ShowDialog();
-                FocusButton(status);
 
-                if (warning.pressBtnYes)
+                if (warning.ShowDialog() == DialogResult.OK)
                 {
                     switch (status)
                     {
@@ -726,24 +698,24 @@ namespace WinFormsApp1
                                 ChangeOrder(id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
                                 list[0].DateStartWork, list[0].DateCompleted, list[0].DateIssue, list[0].TypeTechnicId,
                                 list[0].BrandTechnicId, list[0].ModelTechnic, list[0].FactoryNumber,
-                                list[0].Equipment, list[0].Diagnosis, list[0].Note, true, list[0].Guarantee,
+                                list[0].EquipmentId, list[0].DiagnosisId, list[0].Note, true, list[0].Guarantee,
                                 list[0].DateEndGuarantee, list[0].Deleted, list[0].ReturnUnderGuarantee,
                                 list[0].DateReturn, null, list[0].DateIssueReturn, list[0].Issue,
-                                /*list[0].PriceRepair, null,*/ list[0].ColorRow, list[0].DateLastCall,
-                                list[0].PriceAgreed, list[0].MaxPrice);
+                                list[0].ColorRow, list[0].DateLastCall, list[0].PriceAgreed, list[0].MaxPrice);
                             else
                                 ChangeOrder(id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
                                 list[0].DateStartWork, null, list[0].DateIssue, list[0].TypeTechnicId,
                                 list[0].BrandTechnicId, list[0].ModelTechnic, list[0].FactoryNumber,
-                                list[0].Equipment, list[0].Diagnosis, list[0].Note, true, list[0].Guarantee,
+                                list[0].EquipmentId, list[0].DiagnosisId, list[0].Note, true, list[0].Guarantee,
                                 list[0].DateEndGuarantee, list[0].Deleted, list[0].ReturnUnderGuarantee,
                                 list[0].DateReturn, list[0].DateCompletedReturn, list[0].DateIssueReturn,
-                                list[0].Issue, /*0, null,*/ list[0].ColorRow, list[0].DateLastCall,
-                                list[0].PriceAgreed, list[0].MaxPrice);
+                                list[0].Issue, list[0].ColorRow, list[0].DateLastCall, list[0].PriceAgreed,
+                                list[0].MaxPrice);
                             OrderСompleted();
                             break;
                     }
                     /*UpdateDB();*/
+                    FocusButton(status);
                 }
             }
             catch { }
@@ -757,50 +729,33 @@ namespace WinFormsApp1
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
                 int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
                 var list = context.Orders.Where(a => a.Id == id).ToList();
-                /*var listDetails = context.Details.Where(a => a.Id == id).Select(a => new
-                { a.IdWarehouse }).ToList();*/
                 var listWarehouse = context.Warehouse.ToList();
                 Warning warning = new()
                 {
                     StartPosition = FormStartPosition.CenterParent,
                     LabelText = "Вы действительно хотите вернуть аппарат по гарантии?",
-                    ButtonText = "Нет",
+                    ButtonNoText = "Нет",
                     ButtonVisible = true
                 };
-                warning.ShowDialog();
-                FocusButton(status);
 
-                if (warning.pressBtnYes)
+                if (warning.ShowDialog() == DialogResult.OK)
                 {
                     switch (status)
                     {
                         case "GuaranteeIssue":
-                            /*for (int i = 0; i < listDetails[0].IdWarehouse.Count; i++)
-                            {
-                                for (int j = 0; j < listWarehouse.Count; j++)
-                                {
-                                    if (listDetails[0].IdWarehouse[i] == listWarehouse[j].Id)
-                                    {
-                                        CRUD.ChangeWarehouse(listWarehouse[j].Id, listWarehouse[j].NameDetail,
-                                            listWarehouse[j].PricePurchase, listWarehouse[j].PriceSale,
-                                            listWarehouse[j].DatePurchase, true, null);
-                                    }
-                                }
-                            }*/
-                            /**/
                             ChangeOrder(id, list[0].ClientId, list[0].MasterId, DateTime.Now.ToShortDateString(),
                                 DateTime.Now.ToShortDateString(), list[0].DateCompleted, list[0].DateIssue,
                                 list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
-                                list[0].FactoryNumber, list[0].Equipment, list[0].Diagnosis, list[0].Note,
+                                list[0].FactoryNumber, list[0].EquipmentId, list[0].DiagnosisId, list[0].Note,
                                 true, list[0].Guarantee, list[0].DateEndGuarantee, list[0].Deleted,
                                 true, list[0].DateCreation, list[0].DateCompletedReturn,
-                                list[0].DateIssueReturn, false, /*list[0].PriceRepair, null,*/ list[0].ColorRow,
-                                list[0].DateLastCall, list[0].PriceAgreed, list[0].MaxPrice);
-                            /*CRUD.ChangeDetails(id, null);*/
+                                list[0].DateIssueReturn, false, list[0].ColorRow, list[0].DateLastCall, list[0].PriceAgreed,
+                                list[0].MaxPrice);
                             OrderGuarantee();
                             break;
                     }
                     /*UpdateDB();*/
+                    FocusButton(status);
                 }
             }
             catch { }
@@ -815,7 +770,7 @@ namespace WinFormsApp1
                 int idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
                 var list = context.Orders.Where(i => i.Id == idOrder).ToList();
                 int idClient = list[0].ClientId;
-                Message message = new(idClient)
+                MessageToClient message = new(idClient)
                 {
                     StartPosition = FormStartPosition.CenterParent
                 };
@@ -839,10 +794,8 @@ namespace WinFormsApp1
                 {
                     StartPosition = FormStartPosition.CenterParent
                 };
-                featuresClient.ShowDialog();
-                FocusButton(status);
 
-                if (featuresClient.save)
+                if (featuresClient.ShowDialog() == DialogResult.OK)
                 {
                     if (featuresClient.NormalType)
                         typeClient = "normal";
@@ -851,15 +804,20 @@ namespace WinFormsApp1
                     else if (featuresClient.BlackType)
                         typeClient = "black";
 
-                    CRUD.ChangeClient(idClient,
-                        featuresClient.NameClient,
-                        featuresClient.AdressClient,
-                        featuresClient.WorkPhone,
-                        featuresClient.HomePhone,
+                    try
+                    {
+                        String[] splitted = featuresClient.NameAdressClient.Split(",", 2);
+                        CRUD.ChangeClient(idClient,
+                        featuresClient.IdClient,
+                        splitted[0],
+                        splitted[1],
+                        featuresClient.SecondPhone,
                         typeClient);
+                    }
+                    catch { }
                 }
-
                 UpdateTableData();
+                FocusButton(status);
             }
             catch { }
         }
@@ -876,10 +834,10 @@ namespace WinFormsApp1
                 var listClient = context.Clients.Where(i => i.Id == idClient).ToList();
 
                 CRUD.ChangeClient(idClient,
+                    listClient[0].IdClient,
                     listClient[0].NameClient,
                     listClient[0].Address,
-                    listClient[0].NumberPhoneWork,
-                    listClient[0].NumberPhoneHome,
+                    listClient[0].NumberSecondPhone,
                     "white");
             }
             catch { }
@@ -897,10 +855,10 @@ namespace WinFormsApp1
                 var listClient = context.Clients.Where(i => i.Id == idClient).ToList();
 
                 CRUD.ChangeClient(idClient,
+                    listClient[0].IdClient,
                     listClient[0].NameClient,
                     listClient[0].Address,
-                    listClient[0].NumberPhoneWork,
-                    listClient[0].NumberPhoneHome,
+                    listClient[0].NumberSecondPhone,
                     "black");
             }
             catch { }
@@ -918,10 +876,10 @@ namespace WinFormsApp1
                 var listClient = context.Clients.Where(i => i.Id == idClient).ToList();
 
                 CRUD.ChangeClient(idClient,
+                    listClient[0].IdClient,
                     listClient[0].NameClient,
                     listClient[0].Address,
-                    listClient[0].NumberPhoneWork,
-                    listClient[0].NumberPhoneHome,
+                    listClient[0].NumberSecondPhone,
                     "normal");
             }
             catch { }
@@ -955,23 +913,22 @@ namespace WinFormsApp1
                 TypeDevice = list[0].NameTypeTechnic,
                 BrandDevice = list[0].NameBrandTechnic,
                 Model = list[0].ModelTechnic,
-                ClientName = list[0].Client.NameClient,
-                ClientAddress = list[0].Client.Address,
-                ClientWorkPhone = list[0].Client.NumberPhoneWork,
-                ClientHomePhone = list[0].Client.NumberPhoneHome,
+                ClientName = list[0].Client.IdClient,
+                ClientNameAddress = String.Format("{0}, {1}", list[0].Client?.NameClient, list[0].Client?.Address),
+                ClientSecondPhone = list[0].Client.NumberSecondPhone,
                 TypeClient = "Старый клиент",
-                Equipment = list[0].Equipment,
-                Diagnosis = list[0].Diagnosis,
+                Equipment = list[0].Equipment.Name,
+                Diagnosis = list[0].Diagnosis.Name,
                 Note = list[0].Note
             };
 
             if (list[0].MasterId != null)
                 newOrder.MasterName = list[0].Master.NameMaster;
 
-            newOrder.ShowDialog();
-            if (newOrder.pressBtnAdd)
+
+            if (newOrder.ShowDialog() == DialogResult.OK)
             {
-                status = newOrder.status;
+                status = "InRepair";
                 /*UpdateDB();*/
                 UpdateTableData();
             }
@@ -980,12 +937,11 @@ namespace WinFormsApp1
 
         private static void ChangeOrder(int id, int clientId, int? masterId, string? dateCreation,
             string? dateStartWork, string? dateCompleted, string? dateIssue, int typeTechnicId,
-            int brandTechnicId, string? modelTechnic, string? factoryNumber, string? equipment,
-            string? diagnosis, string? note, bool inProgress, int guarantee,
+            int brandTechnicId, string? modelTechnic, string? factoryNumber, int? equipmentId,
+            int? diagnosisId, string? note, bool inProgress, int guarantee,
             string? dateEndGuarantee, bool deleted, bool returnUnderGuarantee, string? dateReturn,
-            string? dateCompletedReturn, string? dateIssueReturn, bool issue, /*int priceRepair,
-            List<string>? foundProblem,*/ string color, string? dateLastCall, bool priceAgreed,
-            int? maxPrice)
+            string? dateCompletedReturn, string? dateIssueReturn, bool issue, string color,
+            string? dateLastCall, bool priceAgreed, int? maxPrice)
         {
             CRUD.ChangeOrder(id,
                        clientId,
@@ -998,8 +954,8 @@ namespace WinFormsApp1
                        brandTechnicId,
                        modelTechnic,
                        factoryNumber,
-                       equipment,
-                       diagnosis,
+                       equipmentId,
+                       diagnosisId,
                        note,
                        inProgress,
                        guarantee,
@@ -1010,18 +966,10 @@ namespace WinFormsApp1
                        dateCompletedReturn,
                        dateIssueReturn,
                        issue,
-                       /*priceRepair,
-                       foundProblem,*/
                        color,
                        dateLastCall,
                        priceAgreed,
                        maxPrice);
-        }
-
-        private void ButtonAccepted_Click(object sender, EventArgs e)
-        {
-            Accepted();
-            ToolStripEnabled();
         }
 
         private void ButtonInProgress_Click(object sender, EventArgs e)
@@ -1061,6 +1009,12 @@ namespace WinFormsApp1
             {
                 int id = Convert.ToInt32(dataGridView1.Rows[i].Cells[0].Value);
                 var list = context.Orders.Where(i => i.Id == id).ToList();
+                if (list[0].MasterId == null)
+                {
+                    dataGridView1.Rows[i].DefaultCellStyle.ForeColor = Color.DimGray;
+                    dataGridView1.Rows[i].DefaultCellStyle.SelectionForeColor = Color.DimGray;
+                    continue;
+                }
                 string hexColor = dataGridView1.Rows[i].Cells[13].Value.ToString();
                 Color color = ColorTranslator.FromHtml(hexColor);
                 if (color != CheckColor(id))
@@ -1069,12 +1023,11 @@ namespace WinFormsApp1
                     ChangeOrder(list[0].Id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
                             list[0].DateStartWork, list[0].DateCompleted, list[0].DateIssue,
                             list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
-                            list[0].FactoryNumber, list[0].Equipment, list[0].Diagnosis, list[0].Note,
+                            list[0].FactoryNumber, list[0].EquipmentId, list[0].DiagnosisId, list[0].Note,
                             list[0].InProgress, list[0].Guarantee, list[0].DateEndGuarantee, list[0].Deleted,
                             list[0].ReturnUnderGuarantee, list[0].DateReturn, list[0].DateCompletedReturn,
-                            list[0].DateIssueReturn, list[0].Issue, /*list[0].PriceRepair, list[0].FoundProblem,*/
-                            ColorTranslator.ToHtml(color), list[0].DateLastCall, list[0].PriceAgreed,
-                            list[0].MaxPrice);
+                            list[0].DateIssueReturn, list[0].Issue, ColorTranslator.ToHtml(color),
+                            list[0].DateLastCall, list[0].PriceAgreed, list[0].MaxPrice);
                 }
                 dataGridView1.Rows[i].DefaultCellStyle.ForeColor = color;
                 dataGridView1.Rows[i].DefaultCellStyle.SelectionForeColor = color;
@@ -1094,9 +1047,6 @@ namespace WinFormsApp1
             var countDays = 0;
             switch (status)
             {
-                case "Accepted":
-                    countDays = (DateTime.Now - DateTime.Parse(list[0].DateCreation)).Days;
-                    break;
                 case "InRepair":
                     countDays = (DateTime.Now - DateTime.Parse(list[0].DateStartWork)).Days;
                     break;
@@ -1118,16 +1068,6 @@ namespace WinFormsApp1
         {
             switch (status)
             {
-                case "Accepted":
-                    buttonDetails.Enabled = false;
-                    buttonDelete.Enabled = true;
-                    buttonRecoveryOrder.Enabled = false;
-                    buttonCompletedTag.Enabled = false;
-                    buttonIssue.Enabled = false;
-                    buttonReturnInRepair.Enabled = false;
-                    buttonReturnGuarantee.Enabled = false;
-                    buttonFeaturesOrder.Enabled = true;
-                    break;
                 case "InRepair":
                     buttonDetails.Enabled = true;
                     buttonDelete.Enabled = true;
@@ -1185,17 +1125,6 @@ namespace WinFormsApp1
         {
             switch (status)
             {
-                case "Accepted":
-                    itemFeaturesOrder.Enabled = true;
-                    itemDetails.Enabled = false;
-                    itemDeleteOrder.Enabled = true;
-                    itemRecoveryOrder.Enabled = false;
-                    itemActionsOrder.Enabled = false;
-                    itemFeaturesClient.Enabled = true;
-                    itemAddToWhitelist.Enabled = true;
-                    itemAddToBlacklist.Enabled = true;
-                    itemRemoveMarks.Enabled = true;
-                    break;
                 case "InRepair":
                     itemFeaturesOrder.Enabled = true;
                     itemDetails.Enabled = true;
@@ -1275,10 +1204,6 @@ namespace WinFormsApp1
         {
             switch (status)
             {
-                case "Accepted":
-                    itemGetting.Enabled = true;
-                    itemIssuing.Enabled = false;
-                    break;
                 case "InRepair":
                     itemGetting.Enabled = true;
                     itemIssuing.Enabled = false;
@@ -1316,13 +1241,6 @@ namespace WinFormsApp1
                 contextMenu1.Show(MousePosition);
                 switch (status)
                 {
-                    case "Accepted":
-                        item1.Enabled = true;
-                        item2.Enabled = false;
-                        item3.Enabled = true;
-                        item4.Enabled = false;
-                        item5.Enabled = false;
-                        break;
                     case "InRepair":
                         item1.Enabled = true;
                         item2.Enabled = true;
@@ -1482,14 +1400,13 @@ namespace WinFormsApp1
             {
                 StartPosition = FormStartPosition.CenterParent,
                 LabelText = "Вы действительно хотите выйти из программы?",
-                ButtonText = "Нет",
+                ButtonNoText = "Нет",
                 ButtonVisible = true
             };
-            warning.ShowDialog();
-            FocusButton(status);
 
-            if (warning.pressBtnYes)
+            if (warning.ShowDialog() == DialogResult.OK)
                 Application.Exit();
+            FocusButton(status);
         }
 
         private void ButtonDetails_Click(object sender, EventArgs e)
@@ -1611,6 +1528,18 @@ namespace WinFormsApp1
             labelView.ForeColor = System.Drawing.Color.Black;
         }
 
+        private void LabelLogIn_MouseEnter(object sender, EventArgs e)
+        {
+            labelLogIn.BackColor = SystemColors.Highlight;
+            labelLogIn.ForeColor = System.Drawing.Color.White;
+        }
+
+        private void LabelLogIn_MouseLeave(object sender, EventArgs e)
+        {
+            labelLogIn.BackColor = SystemColors.Control;
+            labelLogIn.ForeColor = System.Drawing.Color.Black;
+        }
+
         private void LabelDataBase_Click(object sender, EventArgs e)
         {
             var screenPos = labelDataBase.PointToScreen(Point.Empty);
@@ -1693,6 +1622,38 @@ namespace WinFormsApp1
             FocusButton(status);
         }
 
+        private void ItemMalfunction_Click(object sender, EventArgs e)
+        {
+            MalfunctionList malfunctionList = new("malfunction")
+            {
+                StartPosition = FormStartPosition.CenterParent
+            };
+            malfunctionList.ShowDialog();
+            FocusButton(status);
+        }
+
+        private void ItemDiagnosis_Click(object sender, EventArgs e)
+        {
+            MalfunctionList malfunctionList = new("diagnosis")
+            {
+                StartPosition = FormStartPosition.CenterParent,
+                Text = "Диагнозы"
+            };
+            malfunctionList.ShowDialog();
+            FocusButton(status);
+        }
+
+        private void ItemEquipment_Click(object sender, EventArgs e)
+        {
+            MalfunctionList malfunctionList = new("equipment")
+            {
+                StartPosition = FormStartPosition.CenterParent,
+                Text = "Комплектация"
+            };
+            malfunctionList.ShowDialog();
+            FocusButton(status);
+        }
+
         private void ItemCopyBD_Click(object sender, EventArgs e)
         {
             try
@@ -1739,20 +1700,24 @@ namespace WinFormsApp1
             org.ShowDialog();
         }
 
+        private void ItemLogIn_Click(object sender, EventArgs e)
+        {
+            LogInToTheSystem();
+        }
+
         private void ItemExit_Click(object sender, EventArgs e)
         {
             Warning warning = new()
             {
                 StartPosition = FormStartPosition.CenterParent,
                 LabelText = "Вы действительно хотите выйти из программы?",
-                ButtonText = "Нет",
+                ButtonNoText = "Нет",
                 ButtonVisible = true
             };
-            warning.ShowDialog();
-            FocusButton(status);
 
-            if (warning.pressBtnYes)
+            if (warning.ShowDialog() == DialogResult.OK)
                 Application.Exit();
+            FocusButton(status);
         }
 
         private void ItemAddDeviceForRepair_Click(object sender, EventArgs e)
@@ -1872,13 +1837,10 @@ namespace WinFormsApp1
                 var list = context.Orders.Where(i => i.Id == id).Select(i => new
                 {
                     i.Id,
-                    i.Master.NameMaster,
-                    i.Client.NameClient,
-                    i.Client.Address,
-                    i.Client.NumberPhoneHome,
-                    i.Client.NumberPhoneWork,
-                    i.TypeTechnic.NameTypeTechnic,
-                    i.BrandTechnic.NameBrandTechnic,
+                    i.Master,
+                    i.Client,
+                    i.TypeTechnic,
+                    i.BrandTechnic,
                     i.ModelTechnic,
                     i.FactoryNumber,
                     i.Equipment,
@@ -1887,14 +1849,15 @@ namespace WinFormsApp1
                     i.DateCreation,
                 }).ToList();
 
-                string device = String.Format("{0} {1} {2}", list[0].NameTypeTechnic, list[0].NameBrandTechnic, list[0].ModelTechnic);
+                string device = String.Format("{0} {1} {2}", list[0].TypeTechnic?.NameTypeTechnic,
+                    list[0].BrandTechnic?.NameBrandTechnic, list[0].ModelTechnic);
 
                 template.AddVariable("Id", value: list[0].Id);
-                template.AddVariable("MasterName", value: list[0].NameMaster);
-                template.AddVariable("ClientName", value: list[0].NameClient);
-                template.AddVariable("ClientAddress", value: list[0].Address);
-                template.AddVariable("ClientHomePhone", value: list[0].NumberPhoneHome);
-                template.AddVariable("ClientWorkPhone", value: list[0].NumberPhoneWork);
+                template.AddVariable("MasterName", value: list[0].Master?.NameMaster);
+                template.AddVariable("ClientName", value: list[0].Client?.NameClient);
+                template.AddVariable("ClientId", value: list[0].Client?.IdClient);
+                template.AddVariable("ClientAddress", value: list[0].Client?.Address);
+                template.AddVariable("ClientSecondPhone", value: list[0].Client?.NumberSecondPhone);
                 template.AddVariable("Device", value: device);
                 template.AddVariable("FactoryNumber", value: list[0].FactoryNumber);
                 template.AddVariable("Equipment", value: list[0].Equipment);
@@ -1953,13 +1916,10 @@ namespace WinFormsApp1
                 var list = context.Orders.Where(i => i.Id == id).Select(i => new
                 {
                     i.Id,
-                    i.Master.NameMaster,
-                    i.Client.NameClient,
-                    i.Client.Address,
-                    i.Client.NumberPhoneHome,
-                    i.Client.NumberPhoneWork,
-                    i.TypeTechnic.NameTypeTechnic,
-                    i.BrandTechnic.NameBrandTechnic,
+                    i.Master,
+                    i.Client,
+                    i.TypeTechnic,
+                    i.BrandTechnic,
                     i.ModelTechnic,
                     i.FactoryNumber,
                     i.Equipment,
@@ -2029,14 +1989,15 @@ namespace WinFormsApp1
                     priceProblem.Add(String.Format("PriceRepair{0}", i));
                 }
 
-                string device = String.Format("{0} {1} {2}", list[0].NameTypeTechnic, list[0].NameBrandTechnic, list[0].ModelTechnic);
+                string device = String.Format("{0} {1} {2}", list[0].TypeTechnic?.NameTypeTechnic,
+                    list[0].BrandTechnic?.NameBrandTechnic, list[0].ModelTechnic);
 
                 template.AddVariable("Id", value: list[0].Id);
-                template.AddVariable("MasterName", value: list[0].NameMaster);
-                template.AddVariable("ClientName", value: list[0].NameClient);
-                template.AddVariable("ClientAddress", value: list[0].Address);
-                template.AddVariable("ClientHomePhone", value: list[0].NumberPhoneHome);
-                template.AddVariable("ClientWorkPhone", value: list[0].NumberPhoneWork);
+                template.AddVariable("MasterName", value: list[0].Master?.NameMaster);
+                template.AddVariable("ClientName", value: list[0].Client?.NameClient);
+                template.AddVariable("ClientId", value: list[0].Client?.IdClient);
+                template.AddVariable("ClientAddress", value: list[0].Client?.Address);
+                template.AddVariable("ClientSecondPhone", value: list[0].Client?.NumberSecondPhone);
                 template.AddVariable("Device", value: device);
                 template.AddVariable("FactoryNumber", value: list[0].FactoryNumber);
                 template.AddVariable("Equipment", value: list[0].Equipment);
@@ -2111,9 +2072,6 @@ namespace WinFormsApp1
         {
             switch (status)
             {
-                case "Accepted":
-                    buttonAccepted.Focus();
-                    break;
                 case "InRepair":
                     buttonInProgress.Focus();
                     break;
@@ -2174,7 +2132,6 @@ namespace WinFormsApp1
                     nameMonth = "декабрь";
                     break;
             }
-
             return nameMonth;
         }
 
@@ -2380,13 +2337,9 @@ namespace WinFormsApp1
 
         private void SmallWindow()
         {
-
             buttonTrash.Location = new Point(buttonTrash.Location.X, this.Height - buttonTrash.Height
                 - 52);
-            var height = (buttonTrash.Location.Y - buttonAccepted.Location.Y - buttonAccepted.Height * 5) / 5;
-
-            buttonInProgress.Location = new Point(buttonInProgress.Location.X, buttonAccepted.Location.Y +
-                buttonInProgress.Height + height);
+            var height = (buttonTrash.Location.Y - buttonInProgress.Location.Y - buttonInProgress.Height * 4) / 4;
 
             buttonCompleted.Location = new Point(buttonCompleted.Location.X, buttonInProgress.Location.Y +
                 buttonCompleted.Height + height);
@@ -2454,10 +2407,7 @@ namespace WinFormsApp1
             buttonReset.Location = new Point(buttonTrash.Location.X, this.Height - buttonReset.Height
                 - 52);
 
-            var height = (buttonReset.Location.Y - buttonAccepted.Location.Y - buttonAccepted.Height * 6) / 6;
-
-            buttonInProgress.Location = new Point(buttonInProgress.Location.X, buttonAccepted.Location.Y +
-                buttonInProgress.Height + height);
+            var height = (buttonReset.Location.Y - buttonInProgress.Location.Y - buttonInProgress.Height * 5) / 5;
 
             buttonCompleted.Location = new Point(buttonCompleted.Location.X, buttonInProgress.Location.Y +
                 buttonCompleted.Height + height);
@@ -2515,35 +2465,33 @@ namespace WinFormsApp1
             textBoxBrandDevice.Location = new Point(textBoxTypeDevice.Location.X, textBoxDateCreation.Location.Y);
             textBoxBrandDevice.Width = 120;
 
-
             dataGridView1.Height = buttonTrash.Location.Y + buttonTrash.Height -
                 dataGridView1.Location.Y;
         }
 
         private void ChangeSizeAndLocation()
         {
-            buttonAccepted.Location = new Point(this.Width - buttonAccepted.Width - 22,
-                buttonAccepted.Location.Y);
+            labelLogIn.Location = new Point(this.Width - labelLogIn.Width - 22, labelLogIn.Location.Y);
 
-            buttonInProgress.Location = new Point(buttonAccepted.Location.X,
+            buttonInProgress.Location = new Point(this.Width - buttonInProgress.Width - 22,
                 buttonInProgress.Location.Y);
 
-            buttonCompleted.Location = new Point(buttonAccepted.Location.X,
+            buttonCompleted.Location = new Point(buttonInProgress.Location.X,
                 buttonCompleted.Location.Y);
 
-            buttonGuarantee.Location = new Point(buttonAccepted.Location.X,
+            buttonGuarantee.Location = new Point(buttonInProgress.Location.X,
                 buttonGuarantee.Location.Y);
 
-            buttonArchive.Location = new Point(buttonAccepted.Location.X,
+            buttonArchive.Location = new Point(buttonInProgress.Location.X,
                 buttonArchive.Location.Y);
 
-            buttonArchive.Location = new Point(buttonAccepted.Location.X,
+            buttonArchive.Location = new Point(buttonInProgress.Location.X,
                 buttonArchive.Location.Y);
 
-            buttonTrash.Location = new Point(buttonAccepted.Location.X,
+            buttonTrash.Location = new Point(buttonInProgress.Location.X,
                 buttonTrash.Location.Y);
 
-            dataGridView1.Width = buttonAccepted.Location.X - 6 - dataGridView1.Location.X;
+            dataGridView1.Width = buttonInProgress.Location.X - 6 - dataGridView1.Location.X;
 
 
             if (Properties.Settings.Default.Size == "Small")
@@ -2591,6 +2539,77 @@ namespace WinFormsApp1
         private void DataGridView1_MouseMove(object sender, MouseEventArgs e)
         {
 
+        }
+
+        private void Form1_Deactivate(object sender, EventArgs e)
+        {
+            timer1.Interval = 600000;
+            timer1.Enabled = true;
+        }
+
+        private void Timer1_Tick(object sender, EventArgs e)
+        {
+            if (logInSystem)
+            {
+                logInSystem = false;
+                labelLogIn.Text = "Войти";
+            }
+        }
+
+        private void Form1_Activated(object sender, EventArgs e)
+        {
+            timer1.Enabled = false;
+        }
+
+        private void LabelLogIn_Click(object sender, EventArgs e)
+        {
+            if (logInSystem)
+            {
+                var screenPos = labelLogIn.PointToScreen(Point.Empty);
+                contextAccount.Show(new Point(screenPos.X - (contextAccount.Width - labelLogIn.Width),
+                    screenPos.Y + labelLogIn.Height));
+            }
+            else LogInToTheSystem();
+        }
+
+        public void LogInToTheSystem()
+        {
+            LogInSystem logIn = new(true)
+            {
+                StartPosition = FormStartPosition.CenterParent
+            };
+            if (logIn.ShowDialog() == DialogResult.OK)
+            {
+                logInSystem = true;
+                labelLogIn.Text = Properties.Settings.Default.Login;
+            }
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.D)
+            {
+                if (!logInSystem)
+                {
+                    LogInToTheSystem();
+                    e.SuppressKeyPress = true;
+                }
+            }
+        }
+
+        private void ItemChangeData_Click(object sender, EventArgs e)
+        {
+            LogInSystem logInSystem = new(false)
+            {
+                StartPosition = FormStartPosition.CenterParent
+            };
+            logInSystem.ShowDialog();
+        }
+
+        private void ItemLogOut_Click(object sender, EventArgs e)
+        {
+            labelLogIn.Text = "Войти";
+            logInSystem = false;
         }
     }
 }

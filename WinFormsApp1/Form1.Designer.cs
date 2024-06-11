@@ -64,6 +64,7 @@ namespace WinFormsApp1
             toolStripSeparator19 = new ToolStripSeparator();
             item7 = new ToolStripMenuItem();
             toolStrip1 = new ToolStrip();
+            buttonAddDevice = new ToolStripButton();
             buttonMasters = new ToolStripButton();
             buttonDevice = new ToolStripButton();
             toolStripSeparator5 = new ToolStripSeparator();
@@ -87,6 +88,9 @@ namespace WinFormsApp1
             itemAddDevice = new ToolStripMenuItem();
             itemClients = new ToolStripMenuItem();
             itemWarehouse = new ToolStripMenuItem();
+            itemMalfunction = new ToolStripMenuItem();
+            itemDiagnosis = new ToolStripMenuItem();
+            itemEquipment = new ToolStripMenuItem();
             toolStripSeparator9 = new ToolStripSeparator();
             itemCopyBD = new ToolStripMenuItem();
             itemUpdateService = new ToolStripMenuItem();
@@ -95,6 +99,8 @@ namespace WinFormsApp1
             toolStripSeparator18 = new ToolStripSeparator();
             itemOrg = new ToolStripMenuItem();
             toolStripSeparator20 = new ToolStripSeparator();
+            itemLogIn = new ToolStripMenuItem();
+            toolStripSeparator21 = new ToolStripSeparator();
             itemExit = new ToolStripMenuItem();
             contextButton2 = new ContextMenuStrip(components);
             itemAddDeviceForRepair = new ToolStripMenuItem();
@@ -130,7 +136,6 @@ namespace WinFormsApp1
             itemIssuing = new ToolStripMenuItem();
             contextButton4 = new ContextMenuStrip(components);
             itemSalary = new ToolStripMenuItem();
-            buttonAccepted = new Button();
             textBoxIdOrder = new TextBox();
             labelIdOrder = new Label();
             labelDateCreation = new Label();
@@ -156,7 +161,11 @@ namespace WinFormsApp1
             buttonReset = new Button();
             contextPhone = new ContextMenuStrip(components);
             numberPhone = new ToolStripMenuItem();
-            buttonAddDevice = new ToolStripButton();
+            timer1 = new System.Windows.Forms.Timer(components);
+            labelLogIn = new Label();
+            contextAccount = new ContextMenuStrip(components);
+            itemChangeData = new ToolStripMenuItem();
+            itemLogOut = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             contextMenu1.SuspendLayout();
             toolStrip1.SuspendLayout();
@@ -166,6 +175,7 @@ namespace WinFormsApp1
             contextButton4.SuspendLayout();
             contextButton5.SuspendLayout();
             contextPhone.SuspendLayout();
+            contextAccount.SuspendLayout();
             SuspendLayout();
             // 
             // dataGridView1
@@ -185,6 +195,7 @@ namespace WinFormsApp1
             dataGridView1.MultiSelect = false;
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
+            dataGridView1.RowHeadersVisible = false;
             dataGridView1.RowHeadersWidth = 22;
             dataGridView1.ScrollBars = ScrollBars.Vertical;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -206,7 +217,7 @@ namespace WinFormsApp1
             buttonInProgress.BackColor = Color.Transparent;
             buttonInProgress.BackgroundImage = Properties.Resources.p1;
             buttonInProgress.BackgroundImageLayout = ImageLayout.Stretch;
-            buttonInProgress.Location = new Point(1218, 140);
+            buttonInProgress.Location = new Point(1218, 85);
             buttonInProgress.Name = "buttonInProgress";
             buttonInProgress.Size = new Size(110, 120);
             buttonInProgress.TabIndex = 1;
@@ -219,7 +230,7 @@ namespace WinFormsApp1
             // 
             buttonCompleted.BackgroundImage = Properties.Resources.p2;
             buttonCompleted.BackgroundImageLayout = ImageLayout.Stretch;
-            buttonCompleted.Location = new Point(1218, 268);
+            buttonCompleted.Location = new Point(1218, 224);
             buttonCompleted.Name = "buttonCompleted";
             buttonCompleted.Size = new Size(110, 120);
             buttonCompleted.TabIndex = 2;
@@ -232,7 +243,7 @@ namespace WinFormsApp1
             // 
             buttonGuarantee.BackgroundImage = Properties.Resources.p3;
             buttonGuarantee.BackgroundImageLayout = ImageLayout.Stretch;
-            buttonGuarantee.Location = new Point(1218, 396);
+            buttonGuarantee.Location = new Point(1218, 363);
             buttonGuarantee.Name = "buttonGuarantee";
             buttonGuarantee.Size = new Size(110, 120);
             buttonGuarantee.TabIndex = 3;
@@ -245,7 +256,7 @@ namespace WinFormsApp1
             // 
             buttonArchive.BackgroundImage = Properties.Resources.p4;
             buttonArchive.BackgroundImageLayout = ImageLayout.Stretch;
-            buttonArchive.Location = new Point(1218, 524);
+            buttonArchive.Location = new Point(1218, 508);
             buttonArchive.Name = "buttonArchive";
             buttonArchive.Size = new Size(110, 120);
             buttonArchive.TabIndex = 4;
@@ -460,9 +471,20 @@ namespace WinFormsApp1
             toolStrip1.Items.AddRange(new ToolStripItem[] { buttonAddDevice, buttonMasters, buttonDevice, toolStripSeparator5, buttonExit, toolStripSeparator6, buttonDetails, buttonDelete, buttonRecoveryOrder, buttonCompletedTag, buttonIssue, buttonReturnInRepair, buttonReturnGuarantee, toolStripSeparator7, buttonFeaturesOrder, buttonFeaturesClient, toolStripSeparator8 });
             toolStrip1.Location = new Point(20, 43);
             toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(530, 28);
+            toolStrip1.Size = new Size(484, 25);
             toolStrip1.TabIndex = 17;
             toolStrip1.Text = "toolStrip1";
+            // 
+            // buttonAddDevice
+            // 
+            buttonAddDevice.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            buttonAddDevice.Image = Properties.Resources.b2_1;
+            buttonAddDevice.ImageScaling = ToolStripItemImageScaling.None;
+            buttonAddDevice.ImageTransparentColor = Color.Magenta;
+            buttonAddDevice.Name = "buttonAddDevice";
+            buttonAddDevice.Size = new Size(34, 20);
+            buttonAddDevice.Text = "Добавление аппарата";
+            buttonAddDevice.Click += ButtonAddDevice_Click;
             // 
             // buttonMasters
             // 
@@ -471,7 +493,7 @@ namespace WinFormsApp1
             buttonMasters.ImageScaling = ToolStripItemImageScaling.None;
             buttonMasters.ImageTransparentColor = Color.Magenta;
             buttonMasters.Name = "buttonMasters";
-            buttonMasters.Size = new Size(34, 23);
+            buttonMasters.Size = new Size(34, 20);
             buttonMasters.Text = "Работа с данными о мастерах организации";
             buttonMasters.Click += ButtonMasters_Click;
             // 
@@ -482,14 +504,14 @@ namespace WinFormsApp1
             buttonDevice.ImageScaling = ToolStripItemImageScaling.None;
             buttonDevice.ImageTransparentColor = Color.Magenta;
             buttonDevice.Name = "buttonDevice";
-            buttonDevice.Size = new Size(34, 23);
+            buttonDevice.Size = new Size(34, 20);
             buttonDevice.Text = "Тип ремонтируемых устройств";
             buttonDevice.Click += ButtonDevice_Click;
             // 
             // toolStripSeparator5
             // 
             toolStripSeparator5.Name = "toolStripSeparator5";
-            toolStripSeparator5.Size = new Size(6, 28);
+            toolStripSeparator5.Size = new Size(6, 25);
             // 
             // buttonExit
             // 
@@ -498,14 +520,14 @@ namespace WinFormsApp1
             buttonExit.ImageScaling = ToolStripItemImageScaling.None;
             buttonExit.ImageTransparentColor = Color.Magenta;
             buttonExit.Name = "buttonExit";
-            buttonExit.Size = new Size(34, 23);
+            buttonExit.Size = new Size(34, 20);
             buttonExit.Text = "Выход из программы";
             buttonExit.Click += ButtonExit_Click;
             // 
             // toolStripSeparator6
             // 
             toolStripSeparator6.Name = "toolStripSeparator6";
-            toolStripSeparator6.Size = new Size(6, 28);
+            toolStripSeparator6.Size = new Size(6, 25);
             // 
             // buttonDetails
             // 
@@ -514,7 +536,7 @@ namespace WinFormsApp1
             buttonDetails.ImageScaling = ToolStripItemImageScaling.None;
             buttonDetails.ImageTransparentColor = Color.Magenta;
             buttonDetails.Name = "buttonDetails";
-            buttonDetails.Size = new Size(34, 23);
+            buttonDetails.Size = new Size(34, 20);
             buttonDetails.Text = "Детали, использованые в ремонте устройства";
             buttonDetails.Click += ButtonDetails_Click;
             // 
@@ -525,7 +547,7 @@ namespace WinFormsApp1
             buttonDelete.ImageScaling = ToolStripItemImageScaling.None;
             buttonDelete.ImageTransparentColor = Color.Magenta;
             buttonDelete.Name = "buttonDelete";
-            buttonDelete.Size = new Size(34, 23);
+            buttonDelete.Size = new Size(34, 20);
             buttonDelete.Text = "Удаление объекта из базы данных";
             buttonDelete.Click += ButtonDelete_Click;
             // 
@@ -536,7 +558,7 @@ namespace WinFormsApp1
             buttonRecoveryOrder.ImageScaling = ToolStripItemImageScaling.None;
             buttonRecoveryOrder.ImageTransparentColor = Color.Magenta;
             buttonRecoveryOrder.Name = "buttonRecoveryOrder";
-            buttonRecoveryOrder.Size = new Size(34, 23);
+            buttonRecoveryOrder.Size = new Size(34, 20);
             buttonRecoveryOrder.Text = "Восстановление удаленного ранее устройства";
             buttonRecoveryOrder.Click += ButtonRestoring_Click;
             // 
@@ -547,7 +569,7 @@ namespace WinFormsApp1
             buttonCompletedTag.ImageScaling = ToolStripItemImageScaling.None;
             buttonCompletedTag.ImageTransparentColor = Color.Magenta;
             buttonCompletedTag.Name = "buttonCompletedTag";
-            buttonCompletedTag.Size = new Size(34, 23);
+            buttonCompletedTag.Size = new Size(34, 20);
             buttonCompletedTag.Text = "Пометка устройства как отремонтированного";
             buttonCompletedTag.Click += ButtonCompletedTag_Click;
             // 
@@ -558,7 +580,7 @@ namespace WinFormsApp1
             buttonIssue.ImageScaling = ToolStripItemImageScaling.None;
             buttonIssue.ImageTransparentColor = Color.Magenta;
             buttonIssue.Name = "buttonIssue";
-            buttonIssue.Size = new Size(34, 23);
+            buttonIssue.Size = new Size(34, 20);
             buttonIssue.Text = "Выдача устройства клиенту после ремонта";
             buttonIssue.Click += ButtonIssue_Click;
             // 
@@ -569,7 +591,7 @@ namespace WinFormsApp1
             buttonReturnInRepair.ImageScaling = ToolStripItemImageScaling.None;
             buttonReturnInRepair.ImageTransparentColor = Color.Magenta;
             buttonReturnInRepair.Name = "buttonReturnInRepair";
-            buttonReturnInRepair.Size = new Size(34, 23);
+            buttonReturnInRepair.Size = new Size(34, 20);
             buttonReturnInRepair.Text = "Возвращение аппарата в доработку";
             buttonReturnInRepair.Click += ButtonReturnInRepair_Click;
             // 
@@ -580,14 +602,14 @@ namespace WinFormsApp1
             buttonReturnGuarantee.ImageScaling = ToolStripItemImageScaling.None;
             buttonReturnGuarantee.ImageTransparentColor = Color.Magenta;
             buttonReturnGuarantee.Name = "buttonReturnGuarantee";
-            buttonReturnGuarantee.Size = new Size(34, 23);
+            buttonReturnGuarantee.Size = new Size(34, 20);
             buttonReturnGuarantee.Text = "Возвращение устройтсва в ремонт по гарантии";
             buttonReturnGuarantee.Click += ButtonReturnGuarantee_Click;
             // 
             // toolStripSeparator7
             // 
             toolStripSeparator7.Name = "toolStripSeparator7";
-            toolStripSeparator7.Size = new Size(6, 28);
+            toolStripSeparator7.Size = new Size(6, 25);
             // 
             // buttonFeaturesOrder
             // 
@@ -596,7 +618,7 @@ namespace WinFormsApp1
             buttonFeaturesOrder.ImageScaling = ToolStripItemImageScaling.None;
             buttonFeaturesOrder.ImageTransparentColor = Color.Magenta;
             buttonFeaturesOrder.Name = "buttonFeaturesOrder";
-            buttonFeaturesOrder.Size = new Size(34, 23);
+            buttonFeaturesOrder.Size = new Size(34, 20);
             buttonFeaturesOrder.Text = "Свойства и параметры ремонтируемого объекта";
             buttonFeaturesOrder.Click += ButtonFeaturesOrder_Click;
             // 
@@ -607,14 +629,14 @@ namespace WinFormsApp1
             buttonFeaturesClient.ImageScaling = ToolStripItemImageScaling.None;
             buttonFeaturesClient.ImageTransparentColor = Color.Magenta;
             buttonFeaturesClient.Name = "buttonFeaturesClient";
-            buttonFeaturesClient.Size = new Size(34, 23);
+            buttonFeaturesClient.Size = new Size(34, 20);
             buttonFeaturesClient.Text = "Свойства клиента";
             buttonFeaturesClient.Click += ButtonFeaturesClient_Click;
             // 
             // toolStripSeparator8
             // 
             toolStripSeparator8.Name = "toolStripSeparator8";
-            toolStripSeparator8.Size = new Size(6, 28);
+            toolStripSeparator8.Size = new Size(6, 25);
             // 
             // labelDataBase
             // 
@@ -632,9 +654,9 @@ namespace WinFormsApp1
             // contextButton1
             // 
             contextButton1.ImageScalingSize = new Size(24, 24);
-            contextButton1.Items.AddRange(new ToolStripItem[] { itemAddMasters, itemAddBrand, itemAddDevice, itemClients, itemWarehouse, toolStripSeparator9, itemCopyBD, itemUpdateService, toolStripSeparator10, itemPathDB, toolStripSeparator18, itemOrg, toolStripSeparator20, itemExit });
+            contextButton1.Items.AddRange(new ToolStripItem[] { itemAddMasters, itemAddBrand, itemAddDevice, itemClients, itemWarehouse, itemMalfunction, itemDiagnosis, itemEquipment, toolStripSeparator9, itemCopyBD, itemUpdateService, toolStripSeparator10, itemPathDB, toolStripSeparator18, itemOrg, toolStripSeparator20, itemLogIn, toolStripSeparator21, itemExit });
             contextButton1.Name = "contextMenuStripButton1";
-            contextButton1.Size = new Size(364, 348);
+            contextButton1.Size = new Size(364, 482);
             // 
             // itemAddMasters
             // 
@@ -680,6 +702,27 @@ namespace WinFormsApp1
             itemWarehouse.Size = new Size(363, 32);
             itemWarehouse.Text = "Склад";
             itemWarehouse.Click += ItemWarehouse_Click;
+            // 
+            // itemMalfunction
+            // 
+            itemMalfunction.Name = "itemMalfunction";
+            itemMalfunction.Size = new Size(363, 32);
+            itemMalfunction.Text = "Неисправности";
+            itemMalfunction.Click += ItemMalfunction_Click;
+            // 
+            // itemDiagnosis
+            // 
+            itemDiagnosis.Name = "itemDiagnosis";
+            itemDiagnosis.Size = new Size(363, 32);
+            itemDiagnosis.Text = "Диагнозы";
+            itemDiagnosis.Click += ItemDiagnosis_Click;
+            // 
+            // itemEquipment
+            // 
+            itemEquipment.Name = "itemEquipment";
+            itemEquipment.Size = new Size(363, 32);
+            itemEquipment.Text = "Комплектация";
+            itemEquipment.Click += ItemEquipment_Click;
             // 
             // toolStripSeparator9
             // 
@@ -736,6 +779,19 @@ namespace WinFormsApp1
             // 
             toolStripSeparator20.Name = "toolStripSeparator20";
             toolStripSeparator20.Size = new Size(360, 6);
+            // 
+            // itemLogIn
+            // 
+            itemLogIn.Name = "itemLogIn";
+            itemLogIn.ShortcutKeys = Keys.Control | Keys.D;
+            itemLogIn.Size = new Size(363, 32);
+            itemLogIn.Text = "Вход в систему";
+            itemLogIn.Click += ItemLogIn_Click;
+            // 
+            // toolStripSeparator21
+            // 
+            toolStripSeparator21.Name = "toolStripSeparator21";
+            toolStripSeparator21.Size = new Size(360, 6);
             // 
             // itemExit
             // 
@@ -1024,19 +1080,6 @@ namespace WinFormsApp1
             itemSalary.Text = "Расчет зарплаты";
             itemSalary.Click += ItemSalary_Click;
             // 
-            // buttonAccepted
-            // 
-            buttonAccepted.BackgroundImage = Properties.Resources.p0;
-            buttonAccepted.BackgroundImageLayout = ImageLayout.Stretch;
-            buttonAccepted.Location = new Point(1218, 12);
-            buttonAccepted.Name = "buttonAccepted";
-            buttonAccepted.Size = new Size(110, 120);
-            buttonAccepted.TabIndex = 0;
-            buttonAccepted.Text = "Принятые";
-            buttonAccepted.TextAlign = ContentAlignment.BottomCenter;
-            buttonAccepted.UseVisualStyleBackColor = true;
-            buttonAccepted.Click += ButtonAccepted_Click;
-            // 
             // textBoxIdOrder
             // 
             textBoxIdOrder.Location = new Point(168, 786);
@@ -1248,23 +1291,49 @@ namespace WinFormsApp1
             numberPhone.Size = new Size(131, 38);
             numberPhone.Text = "One";
             // 
-            // buttonAddDevice
+            // timer1
             // 
-            buttonAddDevice.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            buttonAddDevice.Image = Properties.Resources.b2_1;
-            buttonAddDevice.ImageScaling = ToolStripItemImageScaling.None;
-            buttonAddDevice.ImageTransparentColor = Color.Magenta;
-            buttonAddDevice.Name = "buttonAddDevice";
-            buttonAddDevice.Size = new Size(34, 23);
-            buttonAddDevice.Text = "Добавление аппарата";
-            buttonAddDevice.Click += ButtonAddDevice_Click;
+            timer1.Tick += Timer1_Tick;
+            // 
+            // labelLogIn
+            // 
+            labelLogIn.Location = new Point(1218, 9);
+            labelLogIn.Name = "labelLogIn";
+            labelLogIn.Size = new Size(107, 34);
+            labelLogIn.TabIndex = 43;
+            labelLogIn.Text = "Войти";
+            labelLogIn.TextAlign = ContentAlignment.MiddleCenter;
+            labelLogIn.Click += LabelLogIn_Click;
+            labelLogIn.MouseEnter += LabelLogIn_MouseEnter;
+            labelLogIn.MouseLeave += LabelLogIn_MouseLeave;
+            // 
+            // contextAccount
+            // 
+            contextAccount.ImageScalingSize = new Size(24, 24);
+            contextAccount.Items.AddRange(new ToolStripItem[] { itemChangeData, itemLogOut });
+            contextAccount.Name = "contextAccount";
+            contextAccount.Size = new Size(282, 68);
+            // 
+            // itemChangeData
+            // 
+            itemChangeData.Name = "itemChangeData";
+            itemChangeData.Size = new Size(281, 32);
+            itemChangeData.Text = "Изменить логин/пароль";
+            itemChangeData.Click += ItemChangeData_Click;
+            // 
+            // itemLogOut
+            // 
+            itemLogOut.Name = "itemLogOut";
+            itemLogOut.Size = new Size(281, 32);
+            itemLogOut.Text = "Выйти из системы";
+            itemLogOut.Click += ItemLogOut_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1337, 879);
-            Controls.Add(buttonAccepted);
+            Controls.Add(labelLogIn);
             Controls.Add(buttonReset);
             Controls.Add(labelView);
             Controls.Add(textBoxNameClient);
@@ -1295,12 +1364,16 @@ namespace WinFormsApp1
             Controls.Add(buttonInProgress);
             Controls.Add(dataGridView1);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            KeyPreview = true;
             MaximizeBox = false;
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "DesktopAppDB";
+            Activated += Form1_Activated;
+            Deactivate += Form1_Deactivate;
             FormClosing += Form1_FormClosing;
             SizeChanged += Form1_SizeChanged;
+            KeyDown += Form1_KeyDown;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             contextMenu1.ResumeLayout(false);
             toolStrip1.ResumeLayout(false);
@@ -1311,6 +1384,7 @@ namespace WinFormsApp1
             contextButton4.ResumeLayout(false);
             contextButton5.ResumeLayout(false);
             contextPhone.ResumeLayout(false);
+            contextAccount.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1408,7 +1482,6 @@ namespace WinFormsApp1
         private ToolStripMenuItem itemGetting;
         private ToolStripMenuItem itemIssuing;
         private ToolStripMenuItem itemUpdateService;
-        private Button buttonAccepted;
         private TextBox textBoxIdOrder;
         private Label labelIdOrder;
         private Label labelDateCreation;
@@ -1442,5 +1515,15 @@ namespace WinFormsApp1
         private ToolStripMenuItem itemOrg;
         private ToolStripSeparator toolStripSeparator20;
         private ToolStripButton buttonAddDevice;
+        private ToolStripMenuItem itemMalfunction;
+        private ToolStripMenuItem itemDiagnosis;
+        private ToolStripMenuItem itemEquipment;
+        private ToolStripMenuItem itemLogIn;
+        private ToolStripSeparator toolStripSeparator21;
+        private System.Windows.Forms.Timer timer1;
+        private Label labelLogIn;
+        private ContextMenuStrip contextAccount;
+        private ToolStripMenuItem itemChangeData;
+        private ToolStripMenuItem itemLogOut;
     }
 }

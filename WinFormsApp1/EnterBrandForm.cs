@@ -1,13 +1,10 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.InkML;
-using WinFormsApp1.Model;
+﻿using WinFormsApp1.Model;
 using Context = WinFormsApp1.Model.Context;
 
 namespace WinFormsApp1
 {
     public partial class EnterBrandForm : Form
     {
-        public bool Add = false;
         public bool New = false;
         public string name;
         public int id;
@@ -40,13 +37,14 @@ namespace WinFormsApp1
             }
             else
             {
-                Add = true;
+                this.DialogResult = DialogResult.OK;
                 this.Close();
             }
         }
 
         private void BtnExit_Click(object sender, EventArgs e)
         {
+            this.DialogResult= DialogResult.Cancel;
             this.Close();
         }
 
@@ -137,7 +135,7 @@ namespace WinFormsApp1
             string _name = "";
             string secondName = "";
             string nameInList = "";
-            int idKey = 0;
+            int idKey = 1;
             switch (name)
             {
                 
@@ -158,15 +156,16 @@ namespace WinFormsApp1
                 LabelSecondName = secondName,
                 LabelNameInList = nameInList
             };
-            enterBrandForm.ShowDialog();
-            if (enterBrandForm.Add)
+            
+            if (enterBrandForm.ShowDialog() == DialogResult.OK)
             {
                 switch (name)
                 {
                     case "type":
                         if(!context.BrandTechnices.Any(a => a.NameBrandTechnic == enterBrandForm.NameTextBox))
                         {
-                            idKey = context.BrandTechnices.OrderBy(i => i.Id).Last().Id + 1;
+                            if(context.BrandTechnices.Any())
+                                idKey = context.BrandTechnices.OrderBy(i => i.Id).Last().Id + 1;
                             CRUD.AddAsyncBrandTechnic(idKey, enterBrandForm.NameTextBox);
                         }
                         if (enterBrandForm.idList != null)
@@ -191,7 +190,8 @@ namespace WinFormsApp1
                     case "brand":
                         if (!context.TypeTechnices.Any(a => a.NameTypeTechnic == enterBrandForm.NameTextBox))
                         {
-                            idKey = context.TypeTechnices.OrderBy(i => i.Id).Last().Id + 1;
+                            if (context.TypeTechnices.Any())
+                                idKey = context.TypeTechnices.OrderBy(i => i.Id).Last().Id + 1;
                             CRUD.AddAsyncTypeTechnic(idKey, enterBrandForm.NameTextBox);
                         }
                         if (enterBrandForm.idList != null)

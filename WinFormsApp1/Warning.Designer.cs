@@ -36,6 +36,7 @@
             buttonYes = new Button();
             label3 = new Label();
             label4 = new Label();
+            linkLabelChangeMaxPrice = new LinkLabel();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -43,7 +44,7 @@
             // 
             label1.Location = new Point(187, 29);
             label1.Name = "label1";
-            label1.Size = new Size(414, 165);
+            label1.Size = new Size(414, 141);
             label1.TabIndex = 0;
             label1.Text = "Вы не заполнили обязательные поля!";
             label1.TextAlign = ContentAlignment.MiddleCenter;
@@ -103,11 +104,25 @@
             label4.Size = new Size(623, 2);
             label4.TabIndex = 9;
             // 
+            // linkLabelChangeMaxPrice
+            // 
+            linkLabelChangeMaxPrice.AutoSize = true;
+            linkLabelChangeMaxPrice.LinkColor = Color.FromArgb(64, 64, 64);
+            linkLabelChangeMaxPrice.Location = new Point(263, 176);
+            linkLabelChangeMaxPrice.Name = "linkLabelChangeMaxPrice";
+            linkLabelChangeMaxPrice.Size = new Size(266, 25);
+            linkLabelChangeMaxPrice.TabIndex = 10;
+            linkLabelChangeMaxPrice.TabStop = true;
+            linkLabelChangeMaxPrice.Text = "Изменить согласованную цену";
+            linkLabelChangeMaxPrice.Visible = false;
+            linkLabelChangeMaxPrice.LinkClicked += LinkLabelChangeMaxPrice_LinkClicked;
+            // 
             // Warning
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(613, 276);
+            Controls.Add(linkLabelChangeMaxPrice);
             Controls.Add(label4);
             Controls.Add(label3);
             Controls.Add(buttonYes);
@@ -123,6 +138,7 @@
             Activated += Warning_Activated;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -134,5 +150,6 @@
         private Button buttonYes;
         private Label label3;
         private Label label4;
+        private LinkLabel linkLabelChangeMaxPrice;
     }
 }

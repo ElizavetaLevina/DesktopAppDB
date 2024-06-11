@@ -54,6 +54,7 @@
             dataGridView1.MultiSelect = false;
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
+            dataGridView1.RowHeadersVisible = false;
             dataGridView1.RowHeadersWidth = 62;
             dataGridView1.ScrollBars = ScrollBars.Vertical;
             dataGridView1.Size = new Size(404, 486);
@@ -91,12 +92,13 @@
             // 
             // btnDeleteBrand
             // 
+            btnDeleteBrand.BackColor = SystemColors.Control;
             btnDeleteBrand.Location = new Point(430, 139);
             btnDeleteBrand.Name = "btnDeleteBrand";
             btnDeleteBrand.Size = new Size(249, 43);
             btnDeleteBrand.TabIndex = 4;
             btnDeleteBrand.Text = "Удалить фирму";
-            btnDeleteBrand.UseVisualStyleBackColor = true;
+            btnDeleteBrand.UseVisualStyleBackColor = false;
             btnDeleteBrand.Click += BtnDeleteBrand_Click;
             // 
             // AddBrand

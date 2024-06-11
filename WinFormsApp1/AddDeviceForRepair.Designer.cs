@@ -64,6 +64,7 @@
             checkId = new ToolStripMenuItem();
             pictureBox5 = new PictureBox();
             panel4 = new Panel();
+            listBoxEquipmentDiagnosis = new ListBox();
             label9 = new Label();
             textBoxMaxPrice = new TextBox();
             label6 = new Label();
@@ -79,13 +80,11 @@
             panel3 = new Panel();
             labelBlackList = new Label();
             listBoxClient = new ListBox();
-            textBoxHomePhone = new TextBox();
-            textBoxWorkPhone = new TextBox();
-            textBoxAddress = new TextBox();
+            textBoxSecondPhone = new TextBox();
+            textBoxNameAddress = new TextBox();
             textBoxNameClient = new TextBox();
             labelTypeClient = new Label();
             label18 = new Label();
-            label17 = new Label();
             label16 = new Label();
             label15 = new Label();
             labelNameClient = new Label();
@@ -283,7 +282,7 @@
             label12.Size = new Size(174, 31);
             label12.TabIndex = 8;
             label12.Text = "Модель";
-            label12.TextAlign = ContentAlignment.MiddleCenter;
+            label12.TextAlign = ContentAlignment.MiddleRight;
             // 
             // linkLabelBrand
             // 
@@ -427,6 +426,7 @@
             // panel4
             // 
             panel4.BorderStyle = BorderStyle.FixedSingle;
+            panel4.Controls.Add(listBoxEquipmentDiagnosis);
             panel4.Controls.Add(label9);
             panel4.Controls.Add(textBoxMaxPrice);
             panel4.Controls.Add(label6);
@@ -444,6 +444,17 @@
             panel4.Size = new Size(876, 377);
             panel4.TabIndex = 4;
             panel4.Visible = false;
+            // 
+            // listBoxEquipmentDiagnosis
+            // 
+            listBoxEquipmentDiagnosis.FormattingEnabled = true;
+            listBoxEquipmentDiagnosis.ItemHeight = 25;
+            listBoxEquipmentDiagnosis.Location = new Point(420, 148);
+            listBoxEquipmentDiagnosis.Name = "listBoxEquipmentDiagnosis";
+            listBoxEquipmentDiagnosis.Size = new Size(415, 129);
+            listBoxEquipmentDiagnosis.TabIndex = 12;
+            listBoxEquipmentDiagnosis.Visible = false;
+            listBoxEquipmentDiagnosis.SelectedIndexChanged += ListBox_SelectedIndexChanged;
             // 
             // label9
             // 
@@ -496,6 +507,9 @@
             textBoxDiagnosis.Name = "textBoxDiagnosis";
             textBoxDiagnosis.Size = new Size(415, 31);
             textBoxDiagnosis.TabIndex = 6;
+            textBoxDiagnosis.Click += TextBoxDiagnosis_Click;
+            textBoxDiagnosis.TextChanged += TextBoxDiagnosis_TextChanged;
+            textBoxDiagnosis.KeyDown += TextBoxDiagnosis_KeyDown;
             // 
             // textBoxEquipment
             // 
@@ -503,6 +517,9 @@
             textBoxEquipment.Name = "textBoxEquipment";
             textBoxEquipment.Size = new Size(415, 31);
             textBoxEquipment.TabIndex = 5;
+            textBoxEquipment.Click += TextBoxEquipment_Click;
+            textBoxEquipment.TextChanged += TextBoxEquipment_TextChanged;
+            textBoxEquipment.KeyDown += TextBoxEquipment_KeyDown;
             // 
             // label21
             // 
@@ -554,13 +571,11 @@
             panel3.BorderStyle = BorderStyle.FixedSingle;
             panel3.Controls.Add(labelBlackList);
             panel3.Controls.Add(listBoxClient);
-            panel3.Controls.Add(textBoxHomePhone);
-            panel3.Controls.Add(textBoxWorkPhone);
-            panel3.Controls.Add(textBoxAddress);
+            panel3.Controls.Add(textBoxSecondPhone);
+            panel3.Controls.Add(textBoxNameAddress);
             panel3.Controls.Add(textBoxNameClient);
             panel3.Controls.Add(labelTypeClient);
             panel3.Controls.Add(label18);
-            panel3.Controls.Add(label17);
             panel3.Controls.Add(label16);
             panel3.Controls.Add(label15);
             panel3.Controls.Add(labelNameClient);
@@ -587,33 +602,26 @@
             // 
             listBoxClient.FormattingEnabled = true;
             listBoxClient.ItemHeight = 25;
-            listBoxClient.Location = new Point(406, 102);
+            listBoxClient.Location = new Point(406, 103);
             listBoxClient.Name = "listBoxClient";
             listBoxClient.Size = new Size(275, 154);
             listBoxClient.TabIndex = 12;
             listBoxClient.Visible = false;
             listBoxClient.SelectedIndexChanged += ListBoxClient_SelectedIndexChanged;
             // 
-            // textBoxHomePhone
+            // textBoxSecondPhone
             // 
-            textBoxHomePhone.Location = new Point(406, 241);
-            textBoxHomePhone.Name = "textBoxHomePhone";
-            textBoxHomePhone.Size = new Size(275, 31);
-            textBoxHomePhone.TabIndex = 11;
+            textBoxSecondPhone.Location = new Point(406, 188);
+            textBoxSecondPhone.Name = "textBoxSecondPhone";
+            textBoxSecondPhone.Size = new Size(275, 31);
+            textBoxSecondPhone.TabIndex = 10;
             // 
-            // textBoxWorkPhone
+            // textBoxNameAddress
             // 
-            textBoxWorkPhone.Location = new Point(406, 198);
-            textBoxWorkPhone.Name = "textBoxWorkPhone";
-            textBoxWorkPhone.Size = new Size(275, 31);
-            textBoxWorkPhone.TabIndex = 10;
-            // 
-            // textBoxAddress
-            // 
-            textBoxAddress.Location = new Point(406, 120);
-            textBoxAddress.Name = "textBoxAddress";
-            textBoxAddress.Size = new Size(442, 31);
-            textBoxAddress.TabIndex = 9;
+            textBoxNameAddress.Location = new Point(406, 133);
+            textBoxNameAddress.Name = "textBoxNameAddress";
+            textBoxNameAddress.Size = new Size(442, 31);
+            textBoxNameAddress.TabIndex = 9;
             // 
             // textBoxNameClient
             // 
@@ -642,31 +650,22 @@
             label18.Text = "Тип клиента";
             label18.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // label17
-            // 
-            label17.Location = new Point(246, 241);
-            label17.Name = "label17";
-            label17.Size = new Size(146, 31);
-            label17.TabIndex = 5;
-            label17.Text = "Дом. телефон";
-            label17.TextAlign = ContentAlignment.MiddleRight;
-            // 
             // label16
             // 
-            label16.Location = new Point(246, 198);
+            label16.Location = new Point(246, 188);
             label16.Name = "label16";
             label16.Size = new Size(146, 31);
             label16.TabIndex = 4;
-            label16.Text = "Раб. телефон";
+            label16.Text = "Доп. телефон";
             label16.TextAlign = ContentAlignment.MiddleRight;
             // 
             // label15
             // 
-            label15.Location = new Point(246, 120);
+            label15.Location = new Point(246, 133);
             label15.Name = "label15";
             label15.Size = new Size(146, 31);
             label15.TabIndex = 3;
-            label15.Text = "Адрес";
+            label15.Text = "ФИО, адрес";
             label15.TextAlign = ContentAlignment.MiddleRight;
             // 
             // labelNameClient
@@ -675,7 +674,7 @@
             labelNameClient.Name = "labelNameClient";
             labelNameClient.Size = new Size(146, 31);
             labelNameClient.TabIndex = 2;
-            labelNameClient.Text = "ФИО заказчика";
+            labelNameClient.Text = "ID заказчика";
             labelNameClient.TextAlign = ContentAlignment.MiddleRight;
             // 
             // label3
@@ -821,13 +820,11 @@
         private Label label15;
         private Label labelNameClient;
         private Label label16;
-        private Label label17;
         private Label label18;
         private TextBox textBoxNameClient;
         private Label labelTypeClient;
-        private TextBox textBoxHomePhone;
-        private TextBox textBoxWorkPhone;
-        private TextBox textBoxAddress;
+        private TextBox textBoxSecondPhone;
+        private TextBox textBoxNameAddress;
         private ListBox listBoxClient;
         private Label label20;
         private Label label19;
@@ -841,5 +838,6 @@
         private TextBox textBoxMaxPrice;
         private Label label6;
         private Label labelBlackList;
+        private ListBox listBoxEquipmentDiagnosis;
     }
 }

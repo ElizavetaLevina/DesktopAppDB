@@ -1,7 +1,4 @@
-﻿using DocumentFormat.OpenXml.Packaging;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using System.Windows.Forms;
-using WinFormsApp1.Model;
+﻿using WinFormsApp1.Model;
 
 namespace WinFormsApp1
 {
@@ -9,12 +6,13 @@ namespace WinFormsApp1
     {
         readonly List<string> nameDetails = [];
         public bool changeDetail = false;
-        public bool pressChangeDetail = false;
         bool loading = true;
-        public AddDetailToWarehouse(bool _changeDetail)
+        readonly int id;
+        public AddDetailToWarehouse(bool _changeDetail, int _id)
         {
             InitializeComponent();
             changeDetail = _changeDetail;
+            id = _id;
             Context context = new();
             var list = context.Warehouse.Select(a => new { a.NameDetail }).ToList();
             listBoxDetails.Visible = false;
@@ -56,19 +54,26 @@ namespace WinFormsApp1
             }
             else
             {
-                pressChangeDetail = true;
-                if (!changeDetail)
+                if (changeDetail)
+                {
+                    CRUD.ChangeWarehouse(id, textBoxNameDetail.Text,
+                        Convert.ToInt32(textBoxPricePurchase.Text),
+                        Convert.ToInt32(textBoxPriceSale.Text), dateTimePicker1.Text, true, null);
+                }
+                else
                 {
                     CRUD.AddAsyncWarehouse(IdDetail(), textBoxNameDetail.Text,
                         Convert.ToInt32(textBoxPricePurchase.Text),
                         Convert.ToInt32(textBoxPriceSale.Text), dateTimePicker1.Text, true, null);
                 }
+                this.DialogResult = DialogResult.OK;
                 this.Close();
             }
         }
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
+            this.DialogResult= DialogResult.Cancel;
             this.Close();
         }
 
@@ -84,7 +89,7 @@ namespace WinFormsApp1
 
             for (int i = 0; i < nameDetails.Count; i++)
             {
-                if (nameDetails[i].StartsWith(textBoxNameDetail.Text) && 
+                if (nameDetails[i].StartsWith(textBoxNameDetail.Text) &&
                     textBoxNameDetail.Text.Length > 0 && !loading)
                 {
                     listBoxDetails.Visible = true;
@@ -132,6 +137,12 @@ namespace WinFormsApp1
         private void AddDetailToWarehouse_Activated(object sender, EventArgs e)
         {
             loading = false;
+        }
+
+        private void TextBoxNameDetail_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if(e.KeyChar == 13 && listBoxDetails.Visible)
+                listBoxDetails.Visible = false;
         }
 
         public string NameDetail

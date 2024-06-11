@@ -67,14 +67,12 @@
             label26 = new Label();
             label25 = new Label();
             textBoxTypeClient = new TextBox();
-            textBoxAddress = new TextBox();
+            textBoxNameAddress = new TextBox();
             label19 = new Label();
-            label14 = new Label();
             label13 = new Label();
             label12 = new Label();
-            textBoxWorkPhone = new TextBox();
-            textBoxHomePhone = new TextBox();
-            textBoxClientName = new TextBox();
+            textBoxSecondPhone = new TextBox();
+            textBoxIdClient = new TextBox();
             tabPageDeviceRepair = new TabPage();
             label29 = new Label();
             textBoxSumPrice = new TextBox();
@@ -444,14 +442,12 @@
             tabPageClient.Controls.Add(label26);
             tabPageClient.Controls.Add(label25);
             tabPageClient.Controls.Add(textBoxTypeClient);
-            tabPageClient.Controls.Add(textBoxAddress);
+            tabPageClient.Controls.Add(textBoxNameAddress);
             tabPageClient.Controls.Add(label19);
-            tabPageClient.Controls.Add(label14);
             tabPageClient.Controls.Add(label13);
             tabPageClient.Controls.Add(label12);
-            tabPageClient.Controls.Add(textBoxWorkPhone);
-            tabPageClient.Controls.Add(textBoxHomePhone);
-            tabPageClient.Controls.Add(textBoxClientName);
+            tabPageClient.Controls.Add(textBoxSecondPhone);
+            tabPageClient.Controls.Add(textBoxIdClient);
             tabPageClient.Location = new Point(4, 34);
             tabPageClient.Name = "tabPageClient";
             tabPageClient.Padding = new Padding(3);
@@ -509,44 +505,34 @@
             textBoxTypeClient.Size = new Size(253, 31);
             textBoxTypeClient.TabIndex = 8;
             // 
-            // textBoxAddress
+            // textBoxNameAddress
             // 
-            textBoxAddress.BackColor = SystemColors.ButtonFace;
-            textBoxAddress.Location = new Point(248, 85);
-            textBoxAddress.Name = "textBoxAddress";
-            textBoxAddress.ReadOnly = true;
-            textBoxAddress.Size = new Size(507, 31);
-            textBoxAddress.TabIndex = 7;
+            textBoxNameAddress.BackColor = SystemColors.ButtonFace;
+            textBoxNameAddress.Location = new Point(248, 90);
+            textBoxNameAddress.Name = "textBoxNameAddress";
+            textBoxNameAddress.ReadOnly = true;
+            textBoxNameAddress.Size = new Size(507, 31);
+            textBoxNameAddress.TabIndex = 7;
             // 
             // label19
             // 
             label19.AutoSize = true;
             label19.ForeColor = Color.FromArgb(105, 101, 148);
-            label19.Location = new Point(171, 88);
+            label19.Location = new Point(100, 93);
             label19.Name = "label19";
-            label19.Size = new Size(62, 25);
+            label19.Size = new Size(111, 25);
             label19.TabIndex = 6;
-            label19.Text = "Адрес";
-            // 
-            // label14
-            // 
-            label14.AutoSize = true;
-            label14.ForeColor = Color.FromArgb(105, 101, 148);
-            label14.Location = new Point(116, 196);
-            label14.Name = "label14";
-            label14.Size = new Size(117, 25);
-            label14.TabIndex = 5;
-            label14.Text = "Раб. телефон";
+            label19.Text = "ФИО, Адрес";
             // 
             // label13
             // 
             label13.AutoSize = true;
             label13.ForeColor = Color.FromArgb(105, 101, 148);
-            label13.Location = new Point(109, 157);
+            label13.Location = new Point(109, 146);
             label13.Name = "label13";
-            label13.Size = new Size(124, 25);
+            label13.Size = new Size(121, 25);
             label13.TabIndex = 4;
-            label13.Text = "Дом. телефон";
+            label13.Text = "Доп. телефон";
             // 
             // label12
             // 
@@ -554,36 +540,27 @@
             label12.ForeColor = Color.FromArgb(105, 101, 148);
             label12.Location = new Point(95, 42);
             label12.Name = "label12";
-            label12.Size = new Size(138, 25);
+            label12.Size = new Size(116, 25);
             label12.TabIndex = 3;
-            label12.Text = "ФИО заказчика";
+            label12.Text = "ID заказчика";
             // 
-            // textBoxWorkPhone
+            // textBoxSecondPhone
             // 
-            textBoxWorkPhone.BackColor = SystemColors.ButtonFace;
-            textBoxWorkPhone.Location = new Point(248, 193);
-            textBoxWorkPhone.Name = "textBoxWorkPhone";
-            textBoxWorkPhone.ReadOnly = true;
-            textBoxWorkPhone.Size = new Size(253, 31);
-            textBoxWorkPhone.TabIndex = 2;
+            textBoxSecondPhone.BackColor = SystemColors.ButtonFace;
+            textBoxSecondPhone.Location = new Point(248, 140);
+            textBoxSecondPhone.Name = "textBoxSecondPhone";
+            textBoxSecondPhone.ReadOnly = true;
+            textBoxSecondPhone.Size = new Size(253, 31);
+            textBoxSecondPhone.TabIndex = 1;
             // 
-            // textBoxHomePhone
+            // textBoxIdClient
             // 
-            textBoxHomePhone.BackColor = SystemColors.ButtonFace;
-            textBoxHomePhone.Location = new Point(248, 151);
-            textBoxHomePhone.Name = "textBoxHomePhone";
-            textBoxHomePhone.ReadOnly = true;
-            textBoxHomePhone.Size = new Size(253, 31);
-            textBoxHomePhone.TabIndex = 1;
-            // 
-            // textBoxClientName
-            // 
-            textBoxClientName.BackColor = SystemColors.ButtonFace;
-            textBoxClientName.Location = new Point(248, 39);
-            textBoxClientName.Name = "textBoxClientName";
-            textBoxClientName.ReadOnly = true;
-            textBoxClientName.Size = new Size(253, 31);
-            textBoxClientName.TabIndex = 0;
+            textBoxIdClient.BackColor = SystemColors.ButtonFace;
+            textBoxIdClient.Location = new Point(248, 39);
+            textBoxIdClient.Name = "textBoxIdClient";
+            textBoxIdClient.ReadOnly = true;
+            textBoxIdClient.Size = new Size(253, 31);
+            textBoxIdClient.TabIndex = 0;
             // 
             // tabPageDeviceRepair
             // 
@@ -1059,9 +1036,8 @@
         private Label label14;
         private Label label13;
         private Label label12;
-        private TextBox textBoxWorkPhone;
-        private TextBox textBoxHomePhone;
-        private TextBox textBoxClientName;
+        private TextBox textBoxSecondPhone;
+        private TextBox textBoxIdClient;
         private Label label17;
         private Label label16;
         private Label label15;
@@ -1084,7 +1060,7 @@
         private TextBox textBoxGuaranteePeriod;
         private ListBox listBox1;
         private Label labelRub1;
-        private TextBox textBoxAddress;
+        private TextBox textBoxNameAddress;
         private Label label19;
         private Label label25;
         private TextBox textBoxTypeClient;

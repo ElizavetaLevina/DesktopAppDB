@@ -1,6 +1,5 @@
 ﻿using System.Data;
 using WinFormsApp1.Model;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace WinFormsApp1
 {
@@ -81,8 +80,7 @@ namespace WinFormsApp1
 
             for (int i = 0; i < dataGridView1.ColumnCount; i++)
             {
-                double width = Convert.ToDouble(dataGridView1.Width -
-                        dataGridView1.RowHeadersWidth) / 100.0 * percent[i];
+                double width = Convert.ToDouble(dataGridView1.Width) / 100.0 * percent[i];
                 dataGridView1.Columns[i].Width = Convert.ToInt32(width);
             }
 
@@ -124,7 +122,7 @@ namespace WinFormsApp1
                 int idRow = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
                 var list = context.Warehouse.Where(i => i.Id == idRow).ToList();
 
-                AddDetailToWarehouse changeDetail = new(true)
+                AddDetailToWarehouse changeDetail = new(true, idRow)
                 {
                     StartPosition = FormStartPosition.CenterParent,
                     Text = "Изменение данных",
@@ -133,9 +131,8 @@ namespace WinFormsApp1
                     PriceSale = list[0].PriceSale,
                     DatePurchase = list[0].DatePurchase
                 };
-                changeDetail.ShowDialog();
-
-                if (changeDetail.pressChangeDetail)
+     
+                if (changeDetail.ShowDialog() == DialogResult.OK)
                 {
                     CRUD.ChangeWarehouse(idRow, changeDetail.NameDetail, changeDetail.PricePurchase,
                         changeDetail.PriceSale, changeDetail.DatePurchase, list[0].Availability,
@@ -153,12 +150,11 @@ namespace WinFormsApp1
                 {
                     StartPosition = FormStartPosition.CenterParent,
                     LabelText = "Вы действительно хотите удалить деталь из заказа?",
-                    ButtonText = "Нет",
+                    ButtonNoText = "Нет",
                     ButtonVisible = true
                 };
-                warning.ShowDialog();
 
-                if (warning.pressBtnYes)
+                if (warning.ShowDialog() == DialogResult.OK)
                 {
                     Context context = new();
                     int numberRow = dataGridView1.CurrentCell.RowIndex;

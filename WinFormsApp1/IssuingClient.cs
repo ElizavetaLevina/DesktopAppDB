@@ -5,7 +5,6 @@ namespace WinFormsApp1
 {
     public partial class IssuingClient : Form
     {
-        public bool save = false;
         public int idOrder;
         readonly DateTime dateСompletion;
         public IssuingClient(int id)
@@ -56,7 +55,7 @@ namespace WinFormsApp1
 
             labelNameClient.Text = list[0].NameClient;
             labelDateCreate.Text = list[0].DateCreation;
-            labelEquipment.Text = list[0].Equipment;
+            labelEquipment.Text = list[0].Equipment?.Name;
 
             for(int i = 0; i < listMalfunctionOrder.Count; i++)
             {
@@ -69,6 +68,7 @@ namespace WinFormsApp1
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
@@ -113,21 +113,20 @@ namespace WinFormsApp1
         {
             if (textBoxGuarantee.Text.Length > 0)
             {
-                save = true;
                 Warning warning = new()
                 {
                     StartPosition = FormStartPosition.CenterParent,
                     LabelText = "Распечатать квитанцию?",
-                    ButtonText = "Нет",
+                    ButtonNoText = "Нет",
                     ButtonVisible = true
                 };
-                warning.ShowDialog();
 
-                if (warning.pressBtnYes)
+                if (warning.ShowDialog() == DialogResult.OK)
                 {
                     Form1 form = new();
                     form.ReportIssuing(idOrder);
                 }
+                this.DialogResult = DialogResult.OK;
                 this.Close();
             }
             else

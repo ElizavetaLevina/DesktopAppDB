@@ -29,8 +29,8 @@ namespace WinFormsApp1
                 LabelSecondName = "Тип устройства",
                 LabelNameInList = "Типы устройств для "
             };
-            enterBrandForm.ShowDialog();
-            if (enterBrandForm.Add)
+            
+            if (enterBrandForm.ShowDialog() == DialogResult.OK)
             {
                 CRUD.AddAsyncBrandTechnic(idKey, enterBrandForm.NameTextBox);
                 if (enterBrandForm.idList != null)
@@ -60,9 +60,8 @@ namespace WinFormsApp1
                     LabelSecondName = "Тип устройства",
                     LabelNameInList = String.Format("Типы устройств для {0}", name)
                 };
-                enterBrandForm.ShowDialog();
 
-                if (enterBrandForm.Add)
+                if (enterBrandForm.ShowDialog() == DialogResult.OK)
                 {
                     CRUD.ChangeBrandTechnic(id, enterBrandForm.NameTextBox);
                     Context context = new();
@@ -118,7 +117,7 @@ namespace WinFormsApp1
             dataGridView1.DataSource = context.BrandTechnices.ToList();
             dataGridView1.Columns["Id"].Visible = false;
             dataGridView1.Columns[1].HeaderText = "Название";
-            dataGridView1.Columns[1].Width = 340;
+            dataGridView1.Columns[1].Width = dataGridView1.Width;
             if (context.BrandTechnices.Any())
             {
                 idKey = context.BrandTechnices.OrderBy(i => i.Id).Last().Id;

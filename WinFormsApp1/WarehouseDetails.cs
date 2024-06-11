@@ -48,8 +48,7 @@ namespace WinFormsApp1
 
                 for (int i = 0; i < dataGridView1.ColumnCount; i++)
                 {
-                    double width = Convert.ToDouble(dataGridView1.Width -
-                        dataGridView1.RowHeadersWidth) / 100.0 * percent[i];
+                    double width = Convert.ToDouble(dataGridView1.Width) / 100.0 * percent[i];
                     dataGridView1.Columns[i].Width = Convert.ToInt32(width);
                 }
 
@@ -73,7 +72,7 @@ namespace WinFormsApp1
         private void ButtonAddDetails_Click(object sender, EventArgs e)
         {
             Context context = new();
-            AddDetailToWarehouse addDetail = new(false)
+            AddDetailToWarehouse addDetail = new(false, 0)
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -91,11 +90,11 @@ namespace WinFormsApp1
             {
                 StartPosition = FormStartPosition.CenterParent,
                 LabelText = "Вы действительно хотите удалить деталь со склада?",
-                ButtonText = "Нет",
+                ButtonNoText = "Нет",
                 ButtonVisible = true
             };
-            warning.ShowDialog();
-            if (warning.pressBtnYes)
+            
+            if (warning.ShowDialog() == DialogResult.OK)
             {
                 CRUD.RemoveWarehouse(id);
                 UpdateTable();
@@ -118,7 +117,7 @@ namespace WinFormsApp1
         private void TextBoxDevice_TextChanged(object sender, EventArgs e)
         {
             Context context = new();
-            list = context.Warehouse.Where(i => i.NameDetail.IndexOf(textBoxDevice.Text) > -1 
+            list = context.Warehouse.Where(i => i.NameDetail.IndexOf(textBoxDevice.Text) > -1
             && i.Availability).OrderByDescending(i => i.DatePurchase).ToList();
             dataGridView1.DataSource = Funcs.ToDataTable(list);
             if (dataGridView1.RowCount > 0)
@@ -131,6 +130,27 @@ namespace WinFormsApp1
                 buttonDeleteDetail.Enabled = false;
                 buttonAdd.Enabled = false;
             }
+        }
+
+        private void ButtonChangeDetail_Click(object sender, EventArgs e)
+        {
+            Context context = new();
+            int numberRow = dataGridView1.CurrentCell.RowIndex;
+            int idRow = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
+            var listChangeDetail = context.Warehouse.Where(i => i.Id == idRow).ToList();
+
+            AddDetailToWarehouse addDetail = new(true, idRow)
+            {
+                StartPosition = FormStartPosition.CenterParent,
+                NameDetail = listChangeDetail[0].NameDetail,
+                PricePurchase = listChangeDetail[0].PricePurchase,
+                PriceSale = listChangeDetail[0].PriceSale,
+                DatePurchase = listChangeDetail[0].DatePurchase
+            };
+            addDetail.ShowDialog();
+            list = context.Warehouse.Where(i => i.Availability).OrderByDescending(i => i.DatePurchase).ToList();
+            dataGridView1.DataSource = Funcs.ToDataTable(list);
+            UpdateTable();
         }
 
         public bool VisibleBtnAdd

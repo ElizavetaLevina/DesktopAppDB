@@ -8,7 +8,6 @@ namespace WinFormsApp1
     {
         public int idOrder;
         public string statusOrder;
-        public bool pressBtnSave = false;
         public bool show = true;
         public FeaturesOrder(int id, string status)
         {
@@ -19,68 +18,50 @@ namespace WinFormsApp1
             Context context = new();
             var list = context.Orders.Where(i => i.Id == id).ToList();
 
-            //IdOrder
+            
             textBoxIdOrder.Text = list[0].Id.ToString();
 
-            //StatusOrder
             if (list[0].InProgress)
                 textBoxStatus.Text = "Находится в ремонте";
             else
                 textBoxStatus.Text = "Отремонтирован";
 
-            //NameMaster
             UpdateComboBox(0);
             var listMaster = context.Masters.Where(i => i.Id == list[0].MasterId).ToList();
             if (listMaster.Count > 0 && listMaster[0].NameMaster != null)
                 comboBoxMaster.SelectedIndex = comboBoxMaster.FindStringExact(listMaster[0].NameMaster);
 
-            //DateCreation
             dateCreation.Value = DateTime.Parse(list[0].DateCreation);
 
-            //Device
             UpdateComboBox(1);
             var listDevice = context.TypeTechnices.Where(i => i.Id == list[0].TypeTechnicId).ToList();
             comboBoxDevice.SelectedIndex = comboBoxDevice.FindStringExact(listDevice[0].NameTypeTechnic);
 
-            //Brand
             UpdateComboBox(2);
             var listBrand = context.BrandTechnices.Where(i => i.Id == list[0].BrandTechnicId).ToList();
             comboBoxBrand.SelectedIndex = comboBoxBrand.FindStringExact(listBrand[0].NameBrandTechnic);
 
-            //Model
             textBoxModel.Text = list[0].ModelTechnic;
 
-            //FactoryNumber
             textBoxFactoryNumber.Text = list[0].FactoryNumber;
 
-            //PriceAgreed
             checkBoxPriceAgreed.Checked = list[0].PriceAgreed;
             textBoxMaxPrice.Text = list[0].MaxPrice.ToString();
             show = !list[0].PriceAgreed;
 
-            //Equipment
-            textBoxEquipment.Text = list[0].Equipment;
+            textBoxEquipment.Text = list[0].Equipment?.Name;
 
-            //Diagnosis
-            textBoxDiagnosis.Text = list[0].Diagnosis;
+            textBoxDiagnosis.Text = list[0].Diagnosis?.Name;
 
-            //Note
             textBoxNote.Text = list[0].Note;
 
-            //NameClient
             var listClient = context.Clients.Where(i => i.Id == list[0].ClientId).ToList();
-            textBoxClientName.Text = listClient[0].NameClient;
+            textBoxIdClient.Text = listClient[0].IdClient;
 
-            //Address
-            textBoxAddress.Text = listClient[0].Address;
+            textBoxNameAddress.Text = String.Format("{0}, {1}", listClient[0].NameClient, listClient[0].Address);
 
-            //HomePhone
-            textBoxHomePhone.Text = listClient[0].NumberPhoneHome;
+            textBoxSecondPhone.Text = listClient[0].NumberSecondPhone;
 
-            //WorkPhone
-            textBoxWorkPhone.Text = listClient[0].NumberPhoneWork;
-
-            //TypeClient
             switch (listClient[0].TypeClient)
             {
                 case "normal":
@@ -168,11 +149,11 @@ namespace WinFormsApp1
                 List<string> listNameS = [];
                 List<int> listPriceSaleS = [];
 
-                for (int i = 0; i < listDetails[0].IdWarehouse.Count; i++)
+                for (int i = 0; i < listDetails[0].IdWarehouse?.Count; i++)
                 {
                     for (int j = 0; j < listWarehouse.Count; j++)
                     {
-                        if (listDetails[0].IdWarehouse[i] == listWarehouse[j].Id)
+                        if (listDetails[0].IdWarehouse?[i] == listWarehouse[j].Id)
                         {
                             listNameS.Add(listWarehouse[j].NameDetail);
                             listPriceSaleS.Add(listWarehouse[j].PriceSale);
@@ -195,7 +176,7 @@ namespace WinFormsApp1
             {
                 problem[i].Enabled = true;
                 price[i].Enabled = true;
-                problem[i].Text = list[i].Malfunction.Name;
+                problem[i].Text = list[i].Malfunction?.Name;
                 price[i].Text = list[i].Price.ToString();
                 lProblem[i].ForeColor = Color.Black;
                 lPrice[i].ForeColor = Color.Black;
@@ -277,6 +258,7 @@ namespace WinFormsApp1
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
@@ -316,24 +298,8 @@ namespace WinFormsApp1
 
             switch (statusOrder)
             {
-                case "Accepted":
-                    var countDay = 0;
-                    if (comboBoxMaster.Text != "-")
-                        countDay = (DateTime.Now - DateTime.Parse(dateStartWork)).Days;
-                    else
-                    {
-                        dateStartWork = null;
-                        countDay = (DateTime.Now - dateCreation.Value).Days;
-                    }
-
-                    if (countDay < Convert.ToInt32(Properties.Settings.Default.FirstLevelText))
-                        color = Properties.Settings.Default.FirstLevelColor;
-                    else if (countDay > Convert.ToInt32(Properties.Settings.Default.SecondLevelText))
-                        color = Properties.Settings.Default.ThirdLevelColor;
-                    else
-                        color = Properties.Settings.Default.SecondLevelColor;
-                    break;
                 case "InRepair":
+                    int countDay = 0;
                     if (comboBoxMaster.Text != "-")
                         countDay = (DateTime.Now - DateTime.Parse(dateStartWork)).Days;
                     else
@@ -384,8 +350,8 @@ namespace WinFormsApp1
                 context.BrandTechnices.Where(a => a.NameBrandTechnic == comboBoxBrand.Text).ToList()[0].Id,
                 textBoxModel.Text,
                 textBoxFactoryNumber.Text,
-                textBoxEquipment.Text,
-                textBoxDiagnosis.Text,
+                context.Equipment.Where(a => a.Name == textBoxEquipment.Text).ToList()[0].Id/*list[0].EquipmentId*/,
+                context.Diagnosis.Where(a => a.Name == textBoxDiagnosis.Text).ToList()[0].Id/*list[0].DiagnosisId*/,
                 textBoxNote.Text,
                 list[0].InProgress,
                 list[0].Guarantee,
@@ -396,13 +362,11 @@ namespace WinFormsApp1
                 list[0].DateCompletedReturn,
                 list[0].DateIssueReturn,
                 list[0].Issue,
-                /*list[0].PriceRepair,
-                list[0].FoundProblem,*/
                 ColorTranslator.ToHtml(color),
                 textBoxDateLastCall.Text,
                 checkBoxPriceAgreed.Checked,
                 maxPrice);
-            pressBtnSave = true;
+            this.DialogResult = DialogResult.OK;
             this.Close();
         }
 

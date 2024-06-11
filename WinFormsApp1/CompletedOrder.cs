@@ -5,9 +5,7 @@ namespace WinFormsApp1
 {
     public partial class CompletedOrder : Form
     {
-        public bool save = false;
         readonly DateTime dateCreate;
-        public bool pressBtnSave = false;
         readonly int id;
         public List<string>? problem = [];
         public List<int>? price = [];
@@ -80,6 +78,7 @@ namespace WinFormsApp1
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
+            this.DialogResult = DialogResult.Cancel;    
             this.Close();
         }
 
@@ -138,12 +137,12 @@ namespace WinFormsApp1
             if (list[0].PriceAgreed && sumPrice > list[0].MaxPrice)
             {
                 warning.LabelText = String.Format("Цена ремонта выше согласованной! \nСогласованная цена: {0} руб.", list[0].MaxPrice);
+                warning.VisibleChangePrice = true;
+                warning.id = id;
                 warning.ShowDialog();
                 return;
             }
-
-            save = true;
-            pressBtnSave = true;
+            this.DialogResult = DialogResult.OK;
             this.Close();
         }
 

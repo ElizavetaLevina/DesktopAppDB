@@ -313,11 +313,16 @@ namespace WinFormsApp1
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
                 idRow = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                FeaturesOrder featuresOrder = new(idRow, status)
+                FeaturesOrder featuresOrder = new(idRow, status, logInSystem)
                 {
                     StartPosition = FormStartPosition.CenterParent
                 };
                 featuresOrder.ShowDialog();
+                if (featuresOrder.logIn)
+                {
+                    logInSystem = true;
+                    labelLogIn.Text = Properties.Settings.Default.Login;
+                }
                 FocusButton(status);
                 UpdateTableData();
                 /*if (featuresOrder.pressBtnSave)
@@ -1450,7 +1455,7 @@ namespace WinFormsApp1
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
                 idRow = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                FeaturesOrder featuresOrder = new(idRow, status)
+                FeaturesOrder featuresOrder = new(idRow, status, logInSystem)
                 {
                     StartPosition = FormStartPosition.CenterParent
                 };

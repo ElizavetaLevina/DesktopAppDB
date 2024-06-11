@@ -59,7 +59,7 @@
 
         private void LinkLabelChangeMaxPrice_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            FeaturesOrder featuresOrder = new(id, "InRepair")
+            FeaturesOrder featuresOrder = new(id, "InRepair", true)
             {
                 StartPosition = FormStartPosition.CenterParent
             };

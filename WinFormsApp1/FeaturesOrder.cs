@@ -9,16 +9,19 @@ namespace WinFormsApp1
         public int idOrder;
         public string statusOrder;
         public bool show = true;
-        public FeaturesOrder(int id, string status)
+        public bool logIn;
+        public FeaturesOrder(int id, string status, bool _logIn)
         {
             InitializeComponent();
+            logIn = _logIn;
+
             idOrder = id;
             statusOrder = status;
             this.Text = String.Format("Свойства устройства (заказ № {0} )", id);
             Context context = new();
             var list = context.Orders.Where(i => i.Id == id).ToList();
 
-            
+
             textBoxIdOrder.Text = list[0].Id.ToString();
 
             if (list[0].InProgress)
@@ -47,6 +50,12 @@ namespace WinFormsApp1
 
             checkBoxPriceAgreed.Checked = list[0].PriceAgreed;
             textBoxMaxPrice.Text = list[0].MaxPrice.ToString();
+
+            if (!logIn)
+            {
+                textBoxMaxPrice.Enabled = false;
+                checkBoxPriceAgreed.Enabled = false;
+            }
             show = !list[0].PriceAgreed;
 
             textBoxEquipment.Text = list[0].Equipment?.Name;
@@ -136,7 +145,7 @@ namespace WinFormsApp1
             List<Label> lProblem = [labelProblem1, labelProblem2, labelProblem3];
             List<Label> lPrice = [labelPrice1, labelPrice2, labelPrice3];
             List<Label> lRub = [labelRub1, labelRub2, labelRub3];
-            
+
 
             var listDetails = context.Details.Where(i => i.Id == idOrder).Select(a => new
             {
@@ -167,12 +176,12 @@ namespace WinFormsApp1
                 }
                 textBoxPriceDetails.Text = String.Format("{0} руб.", summDetails);
                 textBoxCountDetails.Text = String.Format("{0} шт.", listPriceSaleS.Count);
-            }            
-            
+            }
+
 
             var list = context.MalfunctionOrders.Where(i => i.OrderId == idOrder).
-                Select(a => new {a.Malfunction, a.Price}).ToList();
-            for(int i = 0; i < list.Count;i++)
+                Select(a => new { a.Malfunction, a.Price }).ToList();
+            for (int i = 0; i < list.Count; i++)
             {
                 problem[i].Enabled = true;
                 price[i].Enabled = true;
@@ -198,7 +207,8 @@ namespace WinFormsApp1
             label23.ForeColor = Color.FromArgb(105, 101, 148);
             label24.ForeColor = Color.FromArgb(105, 101, 148);
 
-            dateTimePicker1.Enabled = true;
+            if (logIn) dateTimePicker1.Enabled = true;
+            else dateTimePicker1.Enabled = false;
             textBoxAvailabilityGuarantee.Enabled = true;
             textBoxGuaranteePeriod.Enabled = true;
             textBoxEndGuarantee.Enabled = true;
@@ -456,6 +466,29 @@ namespace WinFormsApp1
                 textBoxMaxPrice.Enabled = true;
             else
                 textBoxMaxPrice.Enabled = false;
+        }
+
+        private void FeaturesOrder_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.D)
+            {
+                if (!logIn)
+                {
+                    LogInSystem logInSystem = new(true)
+                    {
+                        StartPosition = FormStartPosition.CenterParent
+                    };
+                    if (logInSystem.ShowDialog() == DialogResult.OK)
+                    {
+                        logIn = true;
+                        textBoxMaxPrice.Enabled = true;
+                        checkBoxPriceAgreed.Enabled = true;
+                        if(statusOrder == "GuaranteeIssue" || statusOrder == "Archive")
+                            dateTimePicker1.Enabled = true;
+                    }
+                    e.SuppressKeyPress = true;
+                }
+            }
         }
     }
 }

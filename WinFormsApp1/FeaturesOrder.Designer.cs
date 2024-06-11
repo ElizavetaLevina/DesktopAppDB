@@ -982,11 +982,13 @@
             Controls.Add(tabControl1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
+            KeyPreview = true;
             MaximizeBox = false;
             Name = "FeaturesOrder";
             Text = "Свойства устройства";
             Activated += FeaturesOrder_Activated;
             Load += FeaturesOrder_Load;
+            KeyDown += FeaturesOrder_KeyDown;
             tabControl1.ResumeLayout(false);
             tabPageOrder.ResumeLayout(false);
             tabPageOrder.PerformLayout();

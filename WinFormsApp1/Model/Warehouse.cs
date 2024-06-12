@@ -15,6 +15,6 @@ namespace WinFormsApp1.Model
         public string DatePurchase { get; set; } = DateTime.Now.ToShortDateString();
         public bool Availability { get; set; }
         public int? IdOrder {  get; set; }
-        public Details? Details { get; set; }
+        public virtual Details? Details { get; set; }
     }
 }

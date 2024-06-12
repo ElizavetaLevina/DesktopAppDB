@@ -10,8 +10,8 @@ namespace WinFormsApp1.Model
     {
         public int Id { get; set; }
         public string? NameBrandTechnic { get; set; }
-        public List<TypeTechnic>? TypeTechnics { get; set; }
-        public List<TypeBrand>? TypeBrands { get; set; }
-        public List<Order>? Order { get; set; }
+        public virtual List<TypeTechnic>? TypeTechnics { get; set; }
+        public virtual List<TypeBrand>? TypeBrands { get; set; }
+        public virtual List<Order>? Order { get; set; }
     }
 }

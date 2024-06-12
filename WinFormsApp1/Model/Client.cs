@@ -15,6 +15,6 @@ namespace WinFormsApp1
         public string? Address { get; set; }
         public string? NumberSecondPhone {  get; set; }
         public string TypeClient { get; set; } = "normal";
-        public List<Order>? Order { get; set; }
+        public virtual List<Order>? Order { get; set; }
     }
 }

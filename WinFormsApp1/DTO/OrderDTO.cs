@@ -1,39 +1,45 @@
-﻿using WinFormsApp1.Model;
+﻿using System.ComponentModel;
+using WinFormsApp1.Model;
 
 namespace WinFormsApp1.DTO
 {
     public class OrderDTO
     {
+        [DisplayName("№")]
         public int Id { get; set; }
-        public string? ClientName { get; set; }
-        public string? MasterName { get; set; }
+        [DisplayName("Дата приема")]
         public string? DateCreation { get; set; }
+        [DisplayName("Дата начала ремонта")] 
         public string? DateStartWork { get; set; }
+        [DisplayName("Дата окончания ремонта")]
         public string? DateCompleted { get; set; }
+        [DisplayName("Дата выдачи аппарата")]
         public string? DateIssue { get; set; }
+        [DisplayName("Мастер")]
+        public string? MasterName { get; set; }
+        [DisplayName("Тип аппарата/Производитель/Модель")]
         public string? NameDevice { get; set; }
-        public int TypeTechnicName { get; set; }
-        public int BrandTechnicName { get; set; }
-        public string? ModelTechnic { get; set; }
-        public string? FactoryNumber { get; set; }
-        public string? Equipment { get; set; }
+        [DisplayName("Заказчик")]
+        public string? IdClient { get; set; }
+        [DisplayName("Диагноз")]
         public string? Diagnosis { get; set; }
-        public string? Note { get; set; }
-        public bool InProgress { get; set; }
-        public int Guarantee { get; set; }
-        public string? DateEndGuarantee { get; set; }
+        [DisplayName("")]
         public bool Deleted { get; set; }
+        [DisplayName("")]
         public bool ReturnUnderGuarantee { get; set; }
-        public string? DateReturn { get; set; }
-        public string? DateCompletedReturn { get; set; }
-        public string? DateIssueReturn { get; set; }
-        public bool Issue { get; set; }
-        public List<Malfunction>? Malfunction { get; set; }
-        public List<MalfunctionOrder>? MalfunctionOrders { get; set; }
+        [DisplayName("")]
+        public int Guarantee { get; set; }
+        [DisplayName("")]
+        public string? DateEndGuarantee { get; set; }
+        //public DateTime? DateEndGuaranteeDT 
+        //{
+        //    get
+        //    {
+        //        return !string.IsNullOrEmpty(DateEndGuarantee) ? DateTime.Parse(DateEndGuarantee) : null;
+        //    }
+        //}
+        [DisplayName("")]
         public string ColorRow { get; set; } = Color.Black.Name;
-        public string? DateLastCall { get; set; }
-        public bool PriceAgreed { get; set; }
-        public int? MaxPrice { get; set; }
 
         public OrderDTO(Order order)
         {
@@ -44,8 +50,8 @@ namespace WinFormsApp1.DTO
             DateIssue = order.DateIssue;
             MasterName = order.Master?.NameMaster;
             NameDevice = String.Format("{0} {1} {2}", order.TypeTechnic?.NameTypeTechnic,
-                order.BrandTechnic?.NameBrandTechnic, ModelTechnic);
-            ClientName = order.Client?.NameClient;
+                order.BrandTechnic?.NameBrandTechnic, order.ModelTechnic);
+            IdClient = order.Client?.IdClient;
             Diagnosis = order.Diagnosis?.Name;
             Deleted = order.Deleted;
             ReturnUnderGuarantee = order.ReturnUnderGuarantee;

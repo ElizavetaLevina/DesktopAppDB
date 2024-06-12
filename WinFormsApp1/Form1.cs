@@ -6,6 +6,7 @@ using System.Net;
 using FluentFTP;
 using Color = System.Drawing.Color;
 using WinFormsApp1.DTO;
+using System.Data.Entity;
 
 namespace WinFormsApp1
 {
@@ -47,30 +48,28 @@ namespace WinFormsApp1
             dataGridView1.Columns[4].HeaderText = "Дата выдачи аппарата";
             dataGridView1.Columns[4].Visible = true;
             dataGridView1.Columns[5].HeaderText = "Мастер";
-            dataGridView1.Columns[6].HeaderText = "Тип аппарата";
-            dataGridView1.Columns[7].HeaderText = "Производитель";
-            dataGridView1.Columns[8].HeaderText = "Модель";
-            dataGridView1.Columns[9].HeaderText = "Заказчик";
-            dataGridView1.Columns[9].Visible = true;
-            dataGridView1.Columns[10].HeaderText = "Диагноз";
+            dataGridView1.Columns[6].HeaderText = "Тип аппарата/Производитель/Модель";
+            dataGridView1.Columns[7].HeaderText = "Заказчик";
+            dataGridView1.Columns[7].Visible = true;
+            dataGridView1.Columns[8].HeaderText = "Диагноз";
+            dataGridView1.Columns[8].Visible = false;
+            dataGridView1.Columns[9].Visible = false;
             dataGridView1.Columns[10].Visible = false;
             dataGridView1.Columns[11].Visible = false;
             dataGridView1.Columns[12].Visible = false;
             dataGridView1.Columns[13].Visible = false;
-            dataGridView1.Columns[14].Visible = false;
-            dataGridView1.Columns[15].Visible = false;
 
-            int[] percentInRepair = [8, 12, 12, 0, 0, 12, 14, 16, 14, 0, 12, 0, 0, 0, 0, 0];
-            int[] percentCompleted = [8, 12, 0, 12, 0, 14, 16, 14, 10, 14, 0, 0, 0, 0, 0, 0];
-            int[] percentOthers = [7, 10, 10, 10, 10, 9, 12, 12, 8, 12, 0, 0, 0, 0, 0, 0];
+            int[] percentInRepair = [8, 12, 12, 0, 0, 12, 44, 0, 12, 0, 0, 0, 0, 0];
+            int[] percentCompleted = [8, 12, 0, 12, 0, 14, 40, 14, 0, 0, 0, 0, 0, 0];
+            int[] percentOthers = [7, 10, 10, 10, 10, 9, 32, 12, 0, 0, 0, 0, 0, 0];
 
             switch (status)
             {
                 case "InRepair":
                     dataGridView1.Columns[3].Visible = false;
                     dataGridView1.Columns[4].Visible = false;
-                    dataGridView1.Columns[9].Visible = false;
-                    dataGridView1.Columns[10].Visible = true;
+                    dataGridView1.Columns[7].Visible = false;
+                    dataGridView1.Columns[8].Visible = true;
                     break;
                 case "Completed":
                     dataGridView1.Columns[2].Visible = false;
@@ -123,26 +122,10 @@ namespace WinFormsApp1
             using Context context = new();
             try
             {
-                var list = context.Orders.Where(i => i.InProgress == true && i.Deleted == false).Select(
-                    a => new //OrderDTO(a)
-                    {
-                        a.Id,
-                        a.DateCreation,
-                        a.DateStartWork,
-                        a.DateCompleted,
-                        a.DateIssue,
-                        a.Master.NameMaster,
-                        a.TypeTechnic.NameTypeTechnic,
-                        a.BrandTechnic.NameBrandTechnic,
-                        a.ModelTechnic,
-                        a.Client.IdClient,
-                        a.Diagnosis.Name,
-                        a.Deleted,
-                        a.ReturnUnderGuarantee,
-                        a.Guarantee,
-                        a.DateEndGuarantee,
-                        a.ColorRow
-                    }).OrderByDescending(i => i.DateStartWork).ToList();
+                var list = context.Orders.Where(i => i.InProgress == true && i.Deleted == false)
+                    .OrderByDescending(i => i.DateStartWork)
+                    .Select(a => new OrderDTO(a))
+                    .ToList();
                 dataGridView1.DataSource = Funcs.ToDataTable(list);
                 UpdateTable();
                 ChangeColorRows();
@@ -156,25 +139,10 @@ namespace WinFormsApp1
             using Context context = new();
             try
             {
-                var list = context.Orders.Where(i => i.InProgress == false && !i.Deleted && i.Issue == false).Select(a => new
-                {
-                    a.Id,
-                    a.DateCreation,
-                    a.DateStartWork,
-                    a.DateCompleted,
-                    a.DateIssue,
-                    a.Master.NameMaster,
-                    a.TypeTechnic.NameTypeTechnic,
-                    a.BrandTechnic.NameBrandTechnic,
-                    a.ModelTechnic,
-                    a.Client.IdClient,
-                    a.Diagnosis.Name,
-                    a.Deleted,
-                    a.ReturnUnderGuarantee,
-                    a.Guarantee,
-                    a.DateEndGuarantee,
-                    a.ColorRow
-                }).OrderByDescending(i => i.DateCompleted).ToList();
+                var list = context.Orders.Where(i => i.InProgress == false && !i.Deleted && i.Issue == false)
+                    .OrderByDescending(i => i.DateCompleted)
+                    .Select(a => new OrderDTO(a))
+                    .ToList();
                 dataGridView1.DataSource = Funcs.ToDataTable(list);
                 UpdateTable();
                 ChangeColorRows();
@@ -188,25 +156,11 @@ namespace WinFormsApp1
             using Context context = new();
             try
             {
-                var list = context.Orders.Where(i => i.Issue == true && !i.Deleted && i.Guarantee > 0).Select(a => new
-                {
-                    a.Id,
-                    a.DateCreation,
-                    a.DateStartWork,
-                    a.DateCompleted,
-                    a.DateIssue,
-                    a.Master.NameMaster,
-                    a.TypeTechnic.NameTypeTechnic,
-                    a.BrandTechnic.NameBrandTechnic,
-                    a.ModelTechnic,
-                    a.Client.IdClient,
-                    a.Diagnosis.Name,
-                    a.Deleted,
-                    a.ReturnUnderGuarantee,
-                    a.Guarantee,
-                    a.DateEndGuarantee,
-                    a.ColorRow
-                }).OrderByDescending(i => i.DateIssue).ToList();
+                var list = context.Orders
+                    .Where(i => i.Issue == true && !i.Deleted && i.Guarantee > 0)
+                    .OrderByDescending(i => i.DateIssue)
+                    .Select(a => new OrderDTO(a))
+                    .ToList();
 
                 for (int i = 0; i < list.Count; i++)
                 {
@@ -226,29 +180,16 @@ namespace WinFormsApp1
             using Context context = new();
             try
             {
-                var list = context.Orders.Where(i => i.Issue == true && i.Guarantee == 0 && !i.Deleted).Select(a => new
-                {
-                    a.Id,
-                    a.DateCreation,
-                    a.DateStartWork,
-                    a.DateCompleted,
-                    a.DateIssue,
-                    a.Master.NameMaster,
-                    a.TypeTechnic.NameTypeTechnic,
-                    a.BrandTechnic.NameBrandTechnic,
-                    a.ModelTechnic,
-                    a.Client.IdClient,
-                    a.Diagnosis.Name,
-                    a.Deleted,
-                    a.ReturnUnderGuarantee,
-                    a.Guarantee,
-                    a.DateEndGuarantee,
-                    a.ColorRow
-                }).OrderByDescending(i => i.DateIssue).ToList();
+                var list = context.Orders
+                    .Where(i => i.Issue == true && i.Guarantee == 0 && !i.Deleted)
+                    .OrderByDescending(i => i.DateIssue)
+                    .Select(a => new OrderDTO(a))
+                    .ToList();
 
                 for (int i = 0; i < list.Count; i++)
                 {
                     if (DateTime.Parse(list[i].DateEndGuarantee) < DateTime.Now)
+                        //if (list[i].DateEndGuaranteeDT < DateTime.Now)
                         list.Remove(list[i]);
                 }
 
@@ -264,25 +205,11 @@ namespace WinFormsApp1
             using Context context = new();
             try
             {
-                var list = context.Orders.Where(i => i.Deleted == true).Select(a => new
-                {
-                    a.Id,
-                    a.DateCreation,
-                    a.DateStartWork,
-                    a.DateCompleted,
-                    a.DateIssue,
-                    a.Master.NameMaster,
-                    a.TypeTechnic.NameTypeTechnic,
-                    a.BrandTechnic.NameBrandTechnic,
-                    a.ModelTechnic,
-                    a.Client.IdClient,
-                    a.Diagnosis.Name,
-                    a.Deleted,
-                    a.ReturnUnderGuarantee,
-                    a.Guarantee,
-                    a.DateEndGuarantee,
-                    a.ColorRow
-                }).OrderByDescending(i => i.Id).ToList();
+                var list = context.Orders
+                    .Where(i => i.Deleted == true)
+                    .OrderByDescending(i => i.Id)
+                    .Select(a => new OrderDTO(a))
+                    .ToList();
                 dataGridView1.DataSource = Funcs.ToDataTable(list);
                 UpdateTable();
                 ChangeColorRows();
@@ -1020,7 +947,7 @@ namespace WinFormsApp1
                     dataGridView1.Rows[i].DefaultCellStyle.SelectionForeColor = Color.DimGray;
                     continue;
                 }
-                string hexColor = dataGridView1.Rows[i].Cells[13].Value.ToString();
+                string hexColor = dataGridView1.Rows[i].Cells[11].Value.ToString();
                 Color color = ColorTranslator.FromHtml(hexColor);
                 if (color != CheckColor(id))
                 {
@@ -1037,7 +964,7 @@ namespace WinFormsApp1
                 dataGridView1.Rows[i].DefaultCellStyle.ForeColor = color;
                 dataGridView1.Rows[i].DefaultCellStyle.SelectionForeColor = color;
 
-                if (Convert.ToBoolean(dataGridView1.Rows[i].Cells[12].Value))
+                if (Convert.ToBoolean(dataGridView1.Rows[i].Cells[10].Value))
                 {
                     dataGridView1.Rows[i].DefaultCellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
                 }
@@ -2518,15 +2445,15 @@ namespace WinFormsApp1
         {
             try
             {
-                if (e.ColumnIndex == 9 && e.RowIndex >= 0)
-                {
-                    var pos = dataGridView1.PointToScreen(dataGridView1.GetCellDisplayRectangle(
-                        e.ColumnIndex, e.RowIndex, false).Location);
-                    contextPhone.Show(new Point(pos.X, pos.Y + dataGridView1.Rows[e.RowIndex].Height));
+                //if (e.ColumnIndex == 7 && e.RowIndex >= 0)
+                //{
+                //    var pos = dataGridView1.PointToScreen(dataGridView1.GetCellDisplayRectangle(
+                //        e.ColumnIndex, e.RowIndex, false).Location);
+                //    contextPhone.Show(new Point(pos.X, pos.Y + dataGridView1.Rows[e.RowIndex].Height));
 
-                    numberPhone.Text = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
-                    dataGridView1.Focus();
-                }
+                //    numberPhone.Text = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+                //    dataGridView1.Focus();
+                //}
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
@@ -2538,7 +2465,22 @@ namespace WinFormsApp1
 
         private void DataGridView1_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
         {
+            //if(dataGridView1.Columns[0].HeaderText == "№")
+            //    dataGridView1.Columns[0].HeaderText = "0";
+            //dataGridView1.Columns[0].HeaderText = (int.Parse(dataGridView1.Columns[0].HeaderText) + 1).ToString(); // TODO: del test // раскомментировать для отлавливания вызова события
+            try
+            {
+                if (e.ColumnIndex == 7 && e.RowIndex >= 0)
+                {
+                    var pos = dataGridView1.PointToScreen(dataGridView1.GetCellDisplayRectangle(
+                        e.ColumnIndex, e.RowIndex, false).Location);
+                    contextPhone.Show(new Point(pos.X+10, pos.Y + 10 + dataGridView1.Rows[e.RowIndex].Height));
+                    numberPhone.Text = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+                    dataGridView1.Focus();
 
+                }
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         private void DataGridView1_MouseMove(object sender, MouseEventArgs e)
@@ -2616,5 +2558,34 @@ namespace WinFormsApp1
             labelLogIn.Text = "Войти";
             logInSystem = false;
         }
+        // Sets the ToolTip text for cells in the Rating column.
+        void DataGridView1_CellFormatting(object sender,
+            DataGridViewCellFormattingEventArgs e)
+        {
+            if ((e.ColumnIndex == 7)
+                && e.Value != null)
+            {
+                DataGridViewCell cell =
+                    this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                cell.ToolTipText = cell.Value?.ToString();
+            }
+        }
+
+        //private void DataGridView1_CellMouseMove(object sender, DataGridViewCellEventArgs e)
+        //{
+        //    try
+        //    {
+        //        if (e.ColumnIndex == 7 && e.RowIndex >= 0)
+        //        {
+        //            var pos = dataGridView1.PointToScreen(dataGridView1.GetCellDisplayRectangle(
+        //                e.ColumnIndex, e.RowIndex, false).Location);
+        //            contextPhone.Show(new Point(pos.X, pos.Y + dataGridView1.Rows[e.RowIndex].Height));
+
+        //            numberPhone.Text = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+        //            dataGridView1.Focus();
+        //        }
+        //    }
+        //    catch (Exception ex) { MessageBox.Show(ex.Message); }
+        //}
     }
 }

@@ -11,7 +11,7 @@ namespace WinFormsApp1.Model
         public int Id { get; set; }
         public string? Name { get; set; }
         public int Price { get; set; }
-        public List<Order>? Orders { get; set; }
-        public List<MalfunctionOrder>? MalfunctionOrders { get; set; }
+        public virtual List<Order>? Orders { get; set; }
+        public virtual List<MalfunctionOrder>? MalfunctionOrders { get; set; }
     }
 }

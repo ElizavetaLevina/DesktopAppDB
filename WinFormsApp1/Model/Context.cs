@@ -60,6 +60,12 @@ namespace WinFormsApp1.Model
                 .WithMany(a => a.Order)
                 .HasForeignKey(b => b.EquipmentId);
 
+            modelBuilder.Entity<Client>()
+                .HasMany(c => c.Order)
+                .WithOne(c => c.Client)
+                .HasForeignKey(c => c.ClientId);
+
+
             modelBuilder.Entity<BrandTechnic>()
                 .HasMany(b => b.TypeTechnics)
                 .WithMany(a => a.BrandTechnics)
@@ -102,6 +108,7 @@ namespace WinFormsApp1.Model
         {
             try
             {
+                optionsBuilder.UseLazyLoadingProxies();
                 optionsBuilder.UseSqlite(String.Format("Data Source={0};Pooling=false", path));
             }
             catch (Exception e)

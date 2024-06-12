@@ -191,7 +191,8 @@ namespace WinFormsApp1
             dataGridViewCellStyle1.SelectionForeColor = SystemColors.ControlText;
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
             dataGridView1.DefaultCellStyle = dataGridViewCellStyle1;
-            dataGridView1.Location = new Point(12, 85);
+            dataGridView1.Location = new Point(8, 51);
+            dataGridView1.Margin = new Padding(2);
             dataGridView1.MultiSelect = false;
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
@@ -199,10 +200,9 @@ namespace WinFormsApp1
             dataGridView1.RowHeadersWidth = 22;
             dataGridView1.ScrollBars = ScrollBars.Vertical;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView1.Size = new Size(1195, 687);
+            dataGridView1.Size = new Size(836, 412);
             dataGridView1.TabIndex = 6;
             dataGridView1.CellMouseClick += DataGridView1_CellMouseClick;
-            dataGridView1.CellMouseEnter += DataGridView1_CellMouseEnter;
             dataGridView1.CellMouseLeave += DataGridView1_CellMouseLeave;
             dataGridView1.CellMouseMove += DataGridView1_CellMouseMove;
             dataGridView1.ColumnHeaderMouseClick += DataGridView1_ColumnHeaderMouseClick;
@@ -217,9 +217,10 @@ namespace WinFormsApp1
             buttonInProgress.BackColor = Color.Transparent;
             buttonInProgress.BackgroundImage = Properties.Resources.p1;
             buttonInProgress.BackgroundImageLayout = ImageLayout.Stretch;
-            buttonInProgress.Location = new Point(1218, 85);
+            buttonInProgress.Location = new Point(853, 51);
+            buttonInProgress.Margin = new Padding(2);
             buttonInProgress.Name = "buttonInProgress";
-            buttonInProgress.Size = new Size(110, 120);
+            buttonInProgress.Size = new Size(77, 72);
             buttonInProgress.TabIndex = 1;
             buttonInProgress.Text = "В ремонте";
             buttonInProgress.TextAlign = ContentAlignment.BottomCenter;
@@ -230,9 +231,10 @@ namespace WinFormsApp1
             // 
             buttonCompleted.BackgroundImage = Properties.Resources.p2;
             buttonCompleted.BackgroundImageLayout = ImageLayout.Stretch;
-            buttonCompleted.Location = new Point(1218, 224);
+            buttonCompleted.Location = new Point(853, 134);
+            buttonCompleted.Margin = new Padding(2);
             buttonCompleted.Name = "buttonCompleted";
-            buttonCompleted.Size = new Size(110, 120);
+            buttonCompleted.Size = new Size(77, 72);
             buttonCompleted.TabIndex = 2;
             buttonCompleted.Text = "Сделанные";
             buttonCompleted.TextAlign = ContentAlignment.BottomCenter;
@@ -243,9 +245,10 @@ namespace WinFormsApp1
             // 
             buttonGuarantee.BackgroundImage = Properties.Resources.p3;
             buttonGuarantee.BackgroundImageLayout = ImageLayout.Stretch;
-            buttonGuarantee.Location = new Point(1218, 363);
+            buttonGuarantee.Location = new Point(853, 218);
+            buttonGuarantee.Margin = new Padding(2);
             buttonGuarantee.Name = "buttonGuarantee";
-            buttonGuarantee.Size = new Size(110, 120);
+            buttonGuarantee.Size = new Size(77, 72);
             buttonGuarantee.TabIndex = 3;
             buttonGuarantee.Text = "Гарантия";
             buttonGuarantee.TextAlign = ContentAlignment.BottomCenter;
@@ -256,9 +259,10 @@ namespace WinFormsApp1
             // 
             buttonArchive.BackgroundImage = Properties.Resources.p4;
             buttonArchive.BackgroundImageLayout = ImageLayout.Stretch;
-            buttonArchive.Location = new Point(1218, 508);
+            buttonArchive.Location = new Point(853, 305);
+            buttonArchive.Margin = new Padding(2);
             buttonArchive.Name = "buttonArchive";
-            buttonArchive.Size = new Size(110, 120);
+            buttonArchive.Size = new Size(77, 72);
             buttonArchive.TabIndex = 4;
             buttonArchive.Text = "Архив";
             buttonArchive.TextAlign = ContentAlignment.BottomCenter;
@@ -269,9 +273,10 @@ namespace WinFormsApp1
             // 
             buttonTrash.BackgroundImage = Properties.Resources.p5;
             buttonTrash.BackgroundImageLayout = ImageLayout.Stretch;
-            buttonTrash.Location = new Point(1218, 652);
+            buttonTrash.Location = new Point(853, 391);
+            buttonTrash.Margin = new Padding(2);
             buttonTrash.Name = "buttonTrash";
-            buttonTrash.Size = new Size(110, 120);
+            buttonTrash.Size = new Size(77, 72);
             buttonTrash.TabIndex = 5;
             buttonTrash.Text = "Корзина";
             buttonTrash.TextAlign = ContentAlignment.BottomCenter;
@@ -283,7 +288,7 @@ namespace WinFormsApp1
             contextMenu1.ImageScalingSize = new Size(24, 24);
             contextMenu1.Items.AddRange(new ToolStripItem[] { item1, toolStripSeparator4, item2, toolStripSeparator1, item3, item4, toolStripSeparator2, item5, item6, toolStripSeparator19, item7 });
             contextMenu1.Name = "contextMenu";
-            contextMenu1.Size = new Size(407, 252);
+            contextMenu1.Size = new Size(290, 182);
             // 
             // item1
             // 
@@ -291,35 +296,35 @@ namespace WinFormsApp1
             item1.Image = Properties.Resources.m1;
             item1.ImageScaling = ToolStripItemImageScaling.None;
             item1.Name = "item1";
-            item1.Size = new Size(406, 32);
+            item1.Size = new Size(289, 22);
             item1.Text = "Свойства аппарата";
             item1.Click += Item1_Click;
             // 
             // toolStripSeparator4
             // 
             toolStripSeparator4.Name = "toolStripSeparator4";
-            toolStripSeparator4.Size = new Size(403, 6);
+            toolStripSeparator4.Size = new Size(286, 6);
             // 
             // item2
             // 
             item2.Image = Properties.Resources.m2;
             item2.ImageScaling = ToolStripItemImageScaling.None;
             item2.Name = "item2";
-            item2.Size = new Size(406, 32);
+            item2.Size = new Size(289, 22);
             item2.Text = "Детали на ремонт аппарата";
             item2.Click += Item2_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(403, 6);
+            toolStripSeparator1.Size = new Size(286, 6);
             // 
             // item3
             // 
             item3.Image = Properties.Resources.m3;
             item3.ImageScaling = ToolStripItemImageScaling.None;
             item3.Name = "item3";
-            item3.Size = new Size(406, 32);
+            item3.Size = new Size(289, 22);
             item3.Text = "Удаление аппарата";
             item3.Click += Item3_Click;
             // 
@@ -328,14 +333,14 @@ namespace WinFormsApp1
             item4.Image = Properties.Resources.m4;
             item4.ImageScaling = ToolStripItemImageScaling.None;
             item4.Name = "item4";
-            item4.Size = new Size(406, 32);
+            item4.Size = new Size(289, 22);
             item4.Text = "Восстановление аппарата из корзины";
             item4.Click += Item4_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(403, 6);
+            toolStripSeparator2.Size = new Size(286, 6);
             // 
             // item5
             // 
@@ -343,7 +348,7 @@ namespace WinFormsApp1
             item5.Image = Properties.Resources.m5;
             item5.ImageScaling = ToolStripItemImageScaling.None;
             item5.Name = "item5";
-            item5.Size = new Size(406, 32);
+            item5.Size = new Size(289, 22);
             item5.Text = "Операции над аппаратом";
             // 
             // item5_1
@@ -351,7 +356,7 @@ namespace WinFormsApp1
             item5_1.Image = Properties.Resources.m5_1;
             item5_1.ImageScaling = ToolStripItemImageScaling.None;
             item5_1.Name = "item5_1";
-            item5_1.Size = new Size(473, 34);
+            item5_1.Size = new Size(315, 22);
             item5_1.Text = "Пометить аппарат как отремонтированный";
             item5_1.Click += Item5_1_Click;
             // 
@@ -360,21 +365,21 @@ namespace WinFormsApp1
             item5_2.Image = Properties.Resources.m5_2;
             item5_2.ImageScaling = ToolStripItemImageScaling.None;
             item5_2.Name = "item5_2";
-            item5_2.Size = new Size(473, 34);
+            item5_2.Size = new Size(315, 22);
             item5_2.Text = "Выдать аппарат клиенту";
             item5_2.Click += Item5_2_Click;
             // 
             // toolStripSeparator3
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new Size(470, 6);
+            toolStripSeparator3.Size = new Size(312, 6);
             // 
             // item5_3
             // 
             item5_3.Image = Properties.Resources.m5_3;
             item5_3.ImageScaling = ToolStripItemImageScaling.None;
             item5_3.Name = "item5_3";
-            item5_3.Size = new Size(473, 34);
+            item5_3.Size = new Size(315, 22);
             item5_3.Text = "Возврат аппарата в доработку";
             item5_3.Click += Item5_3_Click;
             // 
@@ -383,7 +388,7 @@ namespace WinFormsApp1
             item5_4.Image = Properties.Resources.m5_4;
             item5_4.ImageScaling = ToolStripItemImageScaling.None;
             item5_4.Name = "item5_4";
-            item5_4.Size = new Size(473, 34);
+            item5_4.Size = new Size(315, 22);
             item5_4.Text = "Возврат аппарата по гарантии";
             item5_4.Click += Item5_4_Click;
             // 
@@ -393,7 +398,7 @@ namespace WinFormsApp1
             item6.Image = Properties.Resources.m6;
             item6.ImageScaling = ToolStripItemImageScaling.None;
             item6.Name = "item6";
-            item6.Size = new Size(406, 32);
+            item6.Size = new Size(289, 22);
             item6.Text = "Операции над клиентом";
             // 
             // item6_1
@@ -401,7 +406,7 @@ namespace WinFormsApp1
             item6_1.Image = Properties.Resources.m6_1;
             item6_1.ImageScaling = ToolStripItemImageScaling.None;
             item6_1.Name = "item6_1";
-            item6_1.Size = new Size(316, 34);
+            item6_1.Size = new Size(212, 22);
             item6_1.Text = "Свойства клиента";
             item6_1.Click += Item6_1_Click;
             // 
@@ -410,7 +415,7 @@ namespace WinFormsApp1
             item6_2.Image = Properties.Resources.m6_2;
             item6_2.ImageScaling = ToolStripItemImageScaling.None;
             item6_2.Name = "item6_2";
-            item6_2.Size = new Size(316, 34);
+            item6_2.Size = new Size(212, 22);
             item6_2.Text = "Сообщение клиенту";
             item6_2.Click += Item6_2_Click;
             // 
@@ -420,7 +425,7 @@ namespace WinFormsApp1
             item6_3.Image = Properties.Resources.m6_3;
             item6_3.ImageScaling = ToolStripItemImageScaling.None;
             item6_3.Name = "item6_3";
-            item6_3.Size = new Size(316, 34);
+            item6_3.Size = new Size(212, 22);
             item6_3.Text = "Приоритетность клиента";
             // 
             // item6_3_1
@@ -428,7 +433,7 @@ namespace WinFormsApp1
             item6_3_1.Image = Properties.Resources.m6_3_1;
             item6_3_1.ImageScaling = ToolStripItemImageScaling.None;
             item6_3_1.Name = "item6_3_1";
-            item6_3_1.Size = new Size(347, 34);
+            item6_3_1.Size = new Size(233, 22);
             item6_3_1.Text = "Добавить в белый список";
             item6_3_1.Click += Item6_3_1_Click;
             // 
@@ -437,7 +442,7 @@ namespace WinFormsApp1
             item6_3_2.Image = Properties.Resources.m6_3_2;
             item6_3_2.ImageScaling = ToolStripItemImageScaling.None;
             item6_3_2.Name = "item6_3_2";
-            item6_3_2.Size = new Size(347, 34);
+            item6_3_2.Size = new Size(233, 22);
             item6_3_2.Text = "Добавить в черный список";
             item6_3_2.Click += Item6_3_2_Click;
             // 
@@ -446,21 +451,21 @@ namespace WinFormsApp1
             item6_3_3.Image = Properties.Resources.m6_1;
             item6_3_3.ImageScaling = ToolStripItemImageScaling.None;
             item6_3_3.Name = "item6_3_3";
-            item6_3_3.Size = new Size(347, 34);
+            item6_3_3.Size = new Size(233, 22);
             item6_3_3.Text = "Снять с клиента все пометки";
             item6_3_3.Click += Item6_3_3_Click;
             // 
             // toolStripSeparator19
             // 
             toolStripSeparator19.Name = "toolStripSeparator19";
-            toolStripSeparator19.Size = new Size(403, 6);
+            toolStripSeparator19.Size = new Size(286, 6);
             // 
             // item7
             // 
             item7.Image = Properties.Resources.b2_8;
             item7.ImageScaling = ToolStripItemImageScaling.None;
             item7.Name = "item7";
-            item7.Size = new Size(406, 32);
+            item7.Size = new Size(289, 22);
             item7.Text = "Создать квитанцию на основе текущей";
             item7.Click += Item7_Click;
             // 
@@ -469,9 +474,9 @@ namespace WinFormsApp1
             toolStrip1.Dock = DockStyle.None;
             toolStrip1.ImageScalingSize = new Size(24, 24);
             toolStrip1.Items.AddRange(new ToolStripItem[] { buttonAddDevice, buttonMasters, buttonDevice, toolStripSeparator5, buttonExit, toolStripSeparator6, buttonDetails, buttonDelete, buttonRecoveryOrder, buttonCompletedTag, buttonIssue, buttonReturnInRepair, buttonReturnGuarantee, toolStripSeparator7, buttonFeaturesOrder, buttonFeaturesClient, toolStripSeparator8 });
-            toolStrip1.Location = new Point(20, 43);
+            toolStrip1.Location = new Point(14, 26);
             toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(484, 25);
+            toolStrip1.Size = new Size(335, 25);
             toolStrip1.TabIndex = 17;
             toolStrip1.Text = "toolStrip1";
             // 
@@ -482,7 +487,7 @@ namespace WinFormsApp1
             buttonAddDevice.ImageScaling = ToolStripItemImageScaling.None;
             buttonAddDevice.ImageTransparentColor = Color.Magenta;
             buttonAddDevice.Name = "buttonAddDevice";
-            buttonAddDevice.Size = new Size(34, 20);
+            buttonAddDevice.Size = new Size(23, 22);
             buttonAddDevice.Text = "Добавление аппарата";
             buttonAddDevice.Click += ButtonAddDevice_Click;
             // 
@@ -493,7 +498,7 @@ namespace WinFormsApp1
             buttonMasters.ImageScaling = ToolStripItemImageScaling.None;
             buttonMasters.ImageTransparentColor = Color.Magenta;
             buttonMasters.Name = "buttonMasters";
-            buttonMasters.Size = new Size(34, 20);
+            buttonMasters.Size = new Size(23, 22);
             buttonMasters.Text = "Работа с данными о мастерах организации";
             buttonMasters.Click += ButtonMasters_Click;
             // 
@@ -504,7 +509,7 @@ namespace WinFormsApp1
             buttonDevice.ImageScaling = ToolStripItemImageScaling.None;
             buttonDevice.ImageTransparentColor = Color.Magenta;
             buttonDevice.Name = "buttonDevice";
-            buttonDevice.Size = new Size(34, 20);
+            buttonDevice.Size = new Size(23, 22);
             buttonDevice.Text = "Тип ремонтируемых устройств";
             buttonDevice.Click += ButtonDevice_Click;
             // 
@@ -520,7 +525,7 @@ namespace WinFormsApp1
             buttonExit.ImageScaling = ToolStripItemImageScaling.None;
             buttonExit.ImageTransparentColor = Color.Magenta;
             buttonExit.Name = "buttonExit";
-            buttonExit.Size = new Size(34, 20);
+            buttonExit.Size = new Size(23, 22);
             buttonExit.Text = "Выход из программы";
             buttonExit.Click += ButtonExit_Click;
             // 
@@ -536,7 +541,7 @@ namespace WinFormsApp1
             buttonDetails.ImageScaling = ToolStripItemImageScaling.None;
             buttonDetails.ImageTransparentColor = Color.Magenta;
             buttonDetails.Name = "buttonDetails";
-            buttonDetails.Size = new Size(34, 20);
+            buttonDetails.Size = new Size(23, 22);
             buttonDetails.Text = "Детали, использованые в ремонте устройства";
             buttonDetails.Click += ButtonDetails_Click;
             // 
@@ -547,7 +552,7 @@ namespace WinFormsApp1
             buttonDelete.ImageScaling = ToolStripItemImageScaling.None;
             buttonDelete.ImageTransparentColor = Color.Magenta;
             buttonDelete.Name = "buttonDelete";
-            buttonDelete.Size = new Size(34, 20);
+            buttonDelete.Size = new Size(23, 22);
             buttonDelete.Text = "Удаление объекта из базы данных";
             buttonDelete.Click += ButtonDelete_Click;
             // 
@@ -558,7 +563,7 @@ namespace WinFormsApp1
             buttonRecoveryOrder.ImageScaling = ToolStripItemImageScaling.None;
             buttonRecoveryOrder.ImageTransparentColor = Color.Magenta;
             buttonRecoveryOrder.Name = "buttonRecoveryOrder";
-            buttonRecoveryOrder.Size = new Size(34, 20);
+            buttonRecoveryOrder.Size = new Size(23, 22);
             buttonRecoveryOrder.Text = "Восстановление удаленного ранее устройства";
             buttonRecoveryOrder.Click += ButtonRestoring_Click;
             // 
@@ -569,7 +574,7 @@ namespace WinFormsApp1
             buttonCompletedTag.ImageScaling = ToolStripItemImageScaling.None;
             buttonCompletedTag.ImageTransparentColor = Color.Magenta;
             buttonCompletedTag.Name = "buttonCompletedTag";
-            buttonCompletedTag.Size = new Size(34, 20);
+            buttonCompletedTag.Size = new Size(23, 22);
             buttonCompletedTag.Text = "Пометка устройства как отремонтированного";
             buttonCompletedTag.Click += ButtonCompletedTag_Click;
             // 
@@ -580,7 +585,7 @@ namespace WinFormsApp1
             buttonIssue.ImageScaling = ToolStripItemImageScaling.None;
             buttonIssue.ImageTransparentColor = Color.Magenta;
             buttonIssue.Name = "buttonIssue";
-            buttonIssue.Size = new Size(34, 20);
+            buttonIssue.Size = new Size(23, 22);
             buttonIssue.Text = "Выдача устройства клиенту после ремонта";
             buttonIssue.Click += ButtonIssue_Click;
             // 
@@ -591,7 +596,7 @@ namespace WinFormsApp1
             buttonReturnInRepair.ImageScaling = ToolStripItemImageScaling.None;
             buttonReturnInRepair.ImageTransparentColor = Color.Magenta;
             buttonReturnInRepair.Name = "buttonReturnInRepair";
-            buttonReturnInRepair.Size = new Size(34, 20);
+            buttonReturnInRepair.Size = new Size(23, 22);
             buttonReturnInRepair.Text = "Возвращение аппарата в доработку";
             buttonReturnInRepair.Click += ButtonReturnInRepair_Click;
             // 
@@ -602,7 +607,7 @@ namespace WinFormsApp1
             buttonReturnGuarantee.ImageScaling = ToolStripItemImageScaling.None;
             buttonReturnGuarantee.ImageTransparentColor = Color.Magenta;
             buttonReturnGuarantee.Name = "buttonReturnGuarantee";
-            buttonReturnGuarantee.Size = new Size(34, 20);
+            buttonReturnGuarantee.Size = new Size(23, 22);
             buttonReturnGuarantee.Text = "Возвращение устройтсва в ремонт по гарантии";
             buttonReturnGuarantee.Click += ButtonReturnGuarantee_Click;
             // 
@@ -618,7 +623,7 @@ namespace WinFormsApp1
             buttonFeaturesOrder.ImageScaling = ToolStripItemImageScaling.None;
             buttonFeaturesOrder.ImageTransparentColor = Color.Magenta;
             buttonFeaturesOrder.Name = "buttonFeaturesOrder";
-            buttonFeaturesOrder.Size = new Size(34, 20);
+            buttonFeaturesOrder.Size = new Size(23, 22);
             buttonFeaturesOrder.Text = "Свойства и параметры ремонтируемого объекта";
             buttonFeaturesOrder.Click += ButtonFeaturesOrder_Click;
             // 
@@ -629,7 +634,7 @@ namespace WinFormsApp1
             buttonFeaturesClient.ImageScaling = ToolStripItemImageScaling.None;
             buttonFeaturesClient.ImageTransparentColor = Color.Magenta;
             buttonFeaturesClient.Name = "buttonFeaturesClient";
-            buttonFeaturesClient.Size = new Size(34, 20);
+            buttonFeaturesClient.Size = new Size(23, 22);
             buttonFeaturesClient.Text = "Свойства клиента";
             buttonFeaturesClient.Click += ButtonFeaturesClient_Click;
             // 
@@ -641,9 +646,10 @@ namespace WinFormsApp1
             // labelDataBase
             // 
             labelDataBase.BackColor = SystemColors.Control;
-            labelDataBase.Location = new Point(23, 9);
+            labelDataBase.Location = new Point(16, 5);
+            labelDataBase.Margin = new Padding(2, 0, 2, 0);
             labelDataBase.Name = "labelDataBase";
-            labelDataBase.Size = new Size(121, 34);
+            labelDataBase.Size = new Size(85, 20);
             labelDataBase.TabIndex = 18;
             labelDataBase.Text = "База данных";
             labelDataBase.TextAlign = ContentAlignment.MiddleCenter;
@@ -656,14 +662,14 @@ namespace WinFormsApp1
             contextButton1.ImageScalingSize = new Size(24, 24);
             contextButton1.Items.AddRange(new ToolStripItem[] { itemAddMasters, itemAddBrand, itemAddDevice, itemClients, itemWarehouse, itemMalfunction, itemDiagnosis, itemEquipment, toolStripSeparator9, itemCopyBD, itemUpdateService, toolStripSeparator10, itemPathDB, toolStripSeparator18, itemOrg, toolStripSeparator20, itemLogIn, toolStripSeparator21, itemExit });
             contextButton1.Name = "contextMenuStripButton1";
-            contextButton1.Size = new Size(364, 482);
+            contextButton1.Size = new Size(263, 342);
             // 
             // itemAddMasters
             // 
             itemAddMasters.Image = Properties.Resources.main1;
             itemAddMasters.ImageScaling = ToolStripItemImageScaling.None;
             itemAddMasters.Name = "itemAddMasters";
-            itemAddMasters.Size = new Size(363, 32);
+            itemAddMasters.Size = new Size(262, 22);
             itemAddMasters.Text = "Работники организации";
             itemAddMasters.Click += ItemAddMasters_Click;
             // 
@@ -672,7 +678,7 @@ namespace WinFormsApp1
             itemAddBrand.Image = Properties.Resources.b1_2;
             itemAddBrand.ImageScaling = ToolStripItemImageScaling.None;
             itemAddBrand.Name = "itemAddBrand";
-            itemAddBrand.Size = new Size(363, 32);
+            itemAddBrand.Size = new Size(262, 22);
             itemAddBrand.Text = "Фирмы-производители устройств";
             itemAddBrand.Click += ItemAddBrand_Click;
             // 
@@ -681,7 +687,7 @@ namespace WinFormsApp1
             itemAddDevice.Image = Properties.Resources.main2;
             itemAddDevice.ImageScaling = ToolStripItemImageScaling.None;
             itemAddDevice.Name = "itemAddDevice";
-            itemAddDevice.Size = new Size(363, 32);
+            itemAddDevice.Size = new Size(262, 22);
             itemAddDevice.Text = "Типы устройств";
             itemAddDevice.Click += ItemAddDevice_Click;
             // 
@@ -690,7 +696,7 @@ namespace WinFormsApp1
             itemClients.Image = Properties.Resources.men;
             itemClients.ImageScaling = ToolStripItemImageScaling.None;
             itemClients.Name = "itemClients";
-            itemClients.Size = new Size(363, 32);
+            itemClients.Size = new Size(262, 22);
             itemClients.Text = "Справочник клиентов";
             itemClients.Click += ItemClients_Click;
             // 
@@ -699,42 +705,42 @@ namespace WinFormsApp1
             itemWarehouse.Image = Properties.Resources.b2_9;
             itemWarehouse.ImageScaling = ToolStripItemImageScaling.None;
             itemWarehouse.Name = "itemWarehouse";
-            itemWarehouse.Size = new Size(363, 32);
+            itemWarehouse.Size = new Size(262, 22);
             itemWarehouse.Text = "Склад";
             itemWarehouse.Click += ItemWarehouse_Click;
             // 
             // itemMalfunction
             // 
             itemMalfunction.Name = "itemMalfunction";
-            itemMalfunction.Size = new Size(363, 32);
+            itemMalfunction.Size = new Size(262, 22);
             itemMalfunction.Text = "Неисправности";
             itemMalfunction.Click += ItemMalfunction_Click;
             // 
             // itemDiagnosis
             // 
             itemDiagnosis.Name = "itemDiagnosis";
-            itemDiagnosis.Size = new Size(363, 32);
+            itemDiagnosis.Size = new Size(262, 22);
             itemDiagnosis.Text = "Диагнозы";
             itemDiagnosis.Click += ItemDiagnosis_Click;
             // 
             // itemEquipment
             // 
             itemEquipment.Name = "itemEquipment";
-            itemEquipment.Size = new Size(363, 32);
+            itemEquipment.Size = new Size(262, 22);
             itemEquipment.Text = "Комплектация";
             itemEquipment.Click += ItemEquipment_Click;
             // 
             // toolStripSeparator9
             // 
             toolStripSeparator9.Name = "toolStripSeparator9";
-            toolStripSeparator9.Size = new Size(360, 6);
+            toolStripSeparator9.Size = new Size(259, 6);
             // 
             // itemCopyBD
             // 
             itemCopyBD.Image = Properties.Resources.main3_1;
             itemCopyBD.ImageScaling = ToolStripItemImageScaling.None;
             itemCopyBD.Name = "itemCopyBD";
-            itemCopyBD.Size = new Size(363, 32);
+            itemCopyBD.Size = new Size(262, 22);
             itemCopyBD.Text = "Сделать копию бд";
             itemCopyBD.Click += ItemCopyBD_Click;
             // 
@@ -743,62 +749,62 @@ namespace WinFormsApp1
             itemUpdateService.Image = Properties.Resources.main3_2;
             itemUpdateService.ImageScaling = ToolStripItemImageScaling.None;
             itemUpdateService.Name = "itemUpdateService";
-            itemUpdateService.Size = new Size(363, 32);
+            itemUpdateService.Size = new Size(262, 22);
             itemUpdateService.Text = "Обновление бд на сервере";
             itemUpdateService.Click += ItemUpdateService_Click;
             // 
             // toolStripSeparator10
             // 
             toolStripSeparator10.Name = "toolStripSeparator10";
-            toolStripSeparator10.Size = new Size(360, 6);
+            toolStripSeparator10.Size = new Size(259, 6);
             // 
             // itemPathDB
             // 
             itemPathDB.Image = Properties.Resources.main3_3;
             itemPathDB.ImageScaling = ToolStripItemImageScaling.None;
             itemPathDB.Name = "itemPathDB";
-            itemPathDB.Size = new Size(363, 32);
+            itemPathDB.Size = new Size(262, 22);
             itemPathDB.Text = "Путь базы данных";
             itemPathDB.Click += ItemPathDB_Click;
             // 
             // toolStripSeparator18
             // 
             toolStripSeparator18.Name = "toolStripSeparator18";
-            toolStripSeparator18.Size = new Size(360, 6);
+            toolStripSeparator18.Size = new Size(259, 6);
             // 
             // itemOrg
             // 
             itemOrg.Image = Properties.Resources.b2_10;
             itemOrg.ImageScaling = ToolStripItemImageScaling.None;
             itemOrg.Name = "itemOrg";
-            itemOrg.Size = new Size(363, 32);
+            itemOrg.Size = new Size(262, 22);
             itemOrg.Text = "Сведения об организации";
             itemOrg.Click += ItemOrg_Click;
             // 
             // toolStripSeparator20
             // 
             toolStripSeparator20.Name = "toolStripSeparator20";
-            toolStripSeparator20.Size = new Size(360, 6);
+            toolStripSeparator20.Size = new Size(259, 6);
             // 
             // itemLogIn
             // 
             itemLogIn.Name = "itemLogIn";
             itemLogIn.ShortcutKeys = Keys.Control | Keys.D;
-            itemLogIn.Size = new Size(363, 32);
+            itemLogIn.Size = new Size(262, 22);
             itemLogIn.Text = "Вход в систему";
             itemLogIn.Click += ItemLogIn_Click;
             // 
             // toolStripSeparator21
             // 
             toolStripSeparator21.Name = "toolStripSeparator21";
-            toolStripSeparator21.Size = new Size(360, 6);
+            toolStripSeparator21.Size = new Size(259, 6);
             // 
             // itemExit
             // 
             itemExit.Image = Properties.Resources.main5;
             itemExit.ImageScaling = ToolStripItemImageScaling.None;
             itemExit.Name = "itemExit";
-            itemExit.Size = new Size(363, 32);
+            itemExit.Size = new Size(262, 22);
             itemExit.Text = "Выход из программы";
             itemExit.Click += ItemExit_Click;
             // 
@@ -807,14 +813,14 @@ namespace WinFormsApp1
             contextButton2.ImageScalingSize = new Size(24, 24);
             contextButton2.Items.AddRange(new ToolStripItem[] { itemAddDeviceForRepair, itemFeaturesOrder, toolStripSeparator11, itemDetails, toolStripSeparator12, itemDeleteOrder, itemRecoveryOrder, toolStripSeparator13, itemActionsOrder, itemActionsClient, toolStripSeparator17, itemCreateOrder });
             contextButton2.Name = "contextMenuStripButton2";
-            contextButton2.Size = new Size(407, 284);
+            contextButton2.Size = new Size(290, 204);
             // 
             // itemAddDeviceForRepair
             // 
             itemAddDeviceForRepair.Image = Properties.Resources.b2_1;
             itemAddDeviceForRepair.ImageScaling = ToolStripItemImageScaling.None;
             itemAddDeviceForRepair.Name = "itemAddDeviceForRepair";
-            itemAddDeviceForRepair.Size = new Size(406, 32);
+            itemAddDeviceForRepair.Size = new Size(289, 22);
             itemAddDeviceForRepair.Text = "Добавление аппарата";
             itemAddDeviceForRepair.Click += ItemAddDeviceForRepair_Click;
             // 
@@ -823,35 +829,35 @@ namespace WinFormsApp1
             itemFeaturesOrder.Image = Properties.Resources.m1;
             itemFeaturesOrder.ImageScaling = ToolStripItemImageScaling.None;
             itemFeaturesOrder.Name = "itemFeaturesOrder";
-            itemFeaturesOrder.Size = new Size(406, 32);
+            itemFeaturesOrder.Size = new Size(289, 22);
             itemFeaturesOrder.Text = "Свойства аппарата";
             itemFeaturesOrder.Click += ItemFeaturesOrder_Click;
             // 
             // toolStripSeparator11
             // 
             toolStripSeparator11.Name = "toolStripSeparator11";
-            toolStripSeparator11.Size = new Size(403, 6);
+            toolStripSeparator11.Size = new Size(286, 6);
             // 
             // itemDetails
             // 
             itemDetails.Image = Properties.Resources.m2;
             itemDetails.ImageScaling = ToolStripItemImageScaling.None;
             itemDetails.Name = "itemDetails";
-            itemDetails.Size = new Size(406, 32);
+            itemDetails.Size = new Size(289, 22);
             itemDetails.Text = "Детали на ремонт аппарата";
             itemDetails.Click += ItemDetails_Click;
             // 
             // toolStripSeparator12
             // 
             toolStripSeparator12.Name = "toolStripSeparator12";
-            toolStripSeparator12.Size = new Size(403, 6);
+            toolStripSeparator12.Size = new Size(286, 6);
             // 
             // itemDeleteOrder
             // 
             itemDeleteOrder.Image = Properties.Resources.m3;
             itemDeleteOrder.ImageScaling = ToolStripItemImageScaling.None;
             itemDeleteOrder.Name = "itemDeleteOrder";
-            itemDeleteOrder.Size = new Size(406, 32);
+            itemDeleteOrder.Size = new Size(289, 22);
             itemDeleteOrder.Text = "Удаление аппарата";
             itemDeleteOrder.Click += ItemDeleteOrder_Click;
             // 
@@ -860,14 +866,14 @@ namespace WinFormsApp1
             itemRecoveryOrder.Image = Properties.Resources.m4;
             itemRecoveryOrder.ImageScaling = ToolStripItemImageScaling.None;
             itemRecoveryOrder.Name = "itemRecoveryOrder";
-            itemRecoveryOrder.Size = new Size(406, 32);
+            itemRecoveryOrder.Size = new Size(289, 22);
             itemRecoveryOrder.Text = "Восстановление аппарата из корзины";
             itemRecoveryOrder.Click += ItemRecoveryOrder_Click;
             // 
             // toolStripSeparator13
             // 
             toolStripSeparator13.Name = "toolStripSeparator13";
-            toolStripSeparator13.Size = new Size(403, 6);
+            toolStripSeparator13.Size = new Size(286, 6);
             // 
             // itemActionsOrder
             // 
@@ -875,7 +881,7 @@ namespace WinFormsApp1
             itemActionsOrder.Image = Properties.Resources.m5;
             itemActionsOrder.ImageScaling = ToolStripItemImageScaling.None;
             itemActionsOrder.Name = "itemActionsOrder";
-            itemActionsOrder.Size = new Size(406, 32);
+            itemActionsOrder.Size = new Size(289, 22);
             itemActionsOrder.Text = "Операции над аппаратом";
             // 
             // itemOrderCompleted
@@ -883,7 +889,7 @@ namespace WinFormsApp1
             itemOrderCompleted.Image = Properties.Resources.m5_1;
             itemOrderCompleted.ImageScaling = ToolStripItemImageScaling.None;
             itemOrderCompleted.Name = "itemOrderCompleted";
-            itemOrderCompleted.Size = new Size(473, 34);
+            itemOrderCompleted.Size = new Size(315, 22);
             itemOrderCompleted.Text = "Пометить аппарат как отремонтированный";
             itemOrderCompleted.Click += ItemOrderCompleted_Click;
             // 
@@ -892,21 +898,21 @@ namespace WinFormsApp1
             itemOrderIssued.Image = Properties.Resources.m5_2;
             itemOrderIssued.ImageScaling = ToolStripItemImageScaling.None;
             itemOrderIssued.Name = "itemOrderIssued";
-            itemOrderIssued.Size = new Size(473, 34);
+            itemOrderIssued.Size = new Size(315, 22);
             itemOrderIssued.Text = "Выдать аппарат клиенту";
             itemOrderIssued.Click += ItemOrderIssued_Click;
             // 
             // toolStripSeparator14
             // 
             toolStripSeparator14.Name = "toolStripSeparator14";
-            toolStripSeparator14.Size = new Size(470, 6);
+            toolStripSeparator14.Size = new Size(312, 6);
             // 
             // itemReturnToRevision
             // 
             itemReturnToRevision.Image = Properties.Resources.m5_3;
             itemReturnToRevision.ImageScaling = ToolStripItemImageScaling.None;
             itemReturnToRevision.Name = "itemReturnToRevision";
-            itemReturnToRevision.Size = new Size(473, 34);
+            itemReturnToRevision.Size = new Size(315, 22);
             itemReturnToRevision.Text = "Возврат аппарата в доработку";
             itemReturnToRevision.Click += ItemReturnToRevision_Click;
             // 
@@ -915,7 +921,7 @@ namespace WinFormsApp1
             itemReturnUnderGuarantee.Image = Properties.Resources.m5_4;
             itemReturnUnderGuarantee.ImageScaling = ToolStripItemImageScaling.None;
             itemReturnUnderGuarantee.Name = "itemReturnUnderGuarantee";
-            itemReturnUnderGuarantee.Size = new Size(473, 34);
+            itemReturnUnderGuarantee.Size = new Size(315, 22);
             itemReturnUnderGuarantee.Text = "Возврат аппарата по гарантии";
             itemReturnUnderGuarantee.Click += ItemReturnUnderGuarantee_Click;
             // 
@@ -925,7 +931,7 @@ namespace WinFormsApp1
             itemActionsClient.Image = Properties.Resources.m6;
             itemActionsClient.ImageScaling = ToolStripItemImageScaling.None;
             itemActionsClient.Name = "itemActionsClient";
-            itemActionsClient.Size = new Size(406, 32);
+            itemActionsClient.Size = new Size(289, 22);
             itemActionsClient.Text = "Операции над клиентом";
             // 
             // itemFeaturesClient
@@ -933,28 +939,28 @@ namespace WinFormsApp1
             itemFeaturesClient.Image = Properties.Resources.m6_1;
             itemFeaturesClient.ImageScaling = ToolStripItemImageScaling.None;
             itemFeaturesClient.Name = "itemFeaturesClient";
-            itemFeaturesClient.Size = new Size(278, 34);
+            itemFeaturesClient.Size = new Size(187, 22);
             itemFeaturesClient.Text = "Свойства клиента";
             itemFeaturesClient.Click += ItemFeaturesClient_Click;
             // 
             // toolStripSeparator15
             // 
             toolStripSeparator15.Name = "toolStripSeparator15";
-            toolStripSeparator15.Size = new Size(275, 6);
+            toolStripSeparator15.Size = new Size(184, 6);
             // 
             // itemMessageToClient
             // 
             itemMessageToClient.Image = Properties.Resources.m6_2;
             itemMessageToClient.ImageScaling = ToolStripItemImageScaling.None;
             itemMessageToClient.Name = "itemMessageToClient";
-            itemMessageToClient.Size = new Size(278, 34);
+            itemMessageToClient.Size = new Size(187, 22);
             itemMessageToClient.Text = "Сообщение клиенту";
             itemMessageToClient.Click += ItemMessageToClient_Click;
             // 
             // toolStripSeparator16
             // 
             toolStripSeparator16.Name = "toolStripSeparator16";
-            toolStripSeparator16.Size = new Size(275, 6);
+            toolStripSeparator16.Size = new Size(184, 6);
             // 
             // itemPriorityClient
             // 
@@ -962,7 +968,7 @@ namespace WinFormsApp1
             itemPriorityClient.Image = Properties.Resources.m6_3;
             itemPriorityClient.ImageScaling = ToolStripItemImageScaling.None;
             itemPriorityClient.Name = "itemPriorityClient";
-            itemPriorityClient.Size = new Size(278, 34);
+            itemPriorityClient.Size = new Size(187, 22);
             itemPriorityClient.Text = "Приоритет клиента";
             // 
             // itemAddToWhitelist
@@ -970,7 +976,7 @@ namespace WinFormsApp1
             itemAddToWhitelist.Image = Properties.Resources.m6_3_1;
             itemAddToWhitelist.ImageScaling = ToolStripItemImageScaling.None;
             itemAddToWhitelist.Name = "itemAddToWhitelist";
-            itemAddToWhitelist.Size = new Size(406, 34);
+            itemAddToWhitelist.Size = new Size(273, 22);
             itemAddToWhitelist.Text = "Добавить клиента в \"белый список\"";
             itemAddToWhitelist.Click += ItemAddToWhitelist_Click;
             // 
@@ -979,7 +985,7 @@ namespace WinFormsApp1
             itemAddToBlacklist.Image = Properties.Resources.m6_3_2;
             itemAddToBlacklist.ImageScaling = ToolStripItemImageScaling.None;
             itemAddToBlacklist.Name = "itemAddToBlacklist";
-            itemAddToBlacklist.Size = new Size(406, 34);
+            itemAddToBlacklist.Size = new Size(273, 22);
             itemAddToBlacklist.Text = "Добавить в \"черный список\"";
             itemAddToBlacklist.Click += ItemAddToBlacklist_Click;
             // 
@@ -988,30 +994,31 @@ namespace WinFormsApp1
             itemRemoveMarks.Image = Properties.Resources.m6_1;
             itemRemoveMarks.ImageScaling = ToolStripItemImageScaling.None;
             itemRemoveMarks.Name = "itemRemoveMarks";
-            itemRemoveMarks.Size = new Size(406, 34);
+            itemRemoveMarks.Size = new Size(273, 22);
             itemRemoveMarks.Text = "Снять все метки с клиента";
             itemRemoveMarks.Click += ItemRemoveMarks_Click;
             // 
             // toolStripSeparator17
             // 
             toolStripSeparator17.Name = "toolStripSeparator17";
-            toolStripSeparator17.Size = new Size(403, 6);
+            toolStripSeparator17.Size = new Size(286, 6);
             // 
             // itemCreateOrder
             // 
             itemCreateOrder.Image = Properties.Resources.b2_8;
             itemCreateOrder.ImageScaling = ToolStripItemImageScaling.None;
             itemCreateOrder.Name = "itemCreateOrder";
-            itemCreateOrder.Size = new Size(406, 32);
+            itemCreateOrder.Size = new Size(289, 22);
             itemCreateOrder.Text = "Создать квитанцию на основе текущей";
             itemCreateOrder.Click += ItemSearchOrder_Click;
             // 
             // labelWorkData
             // 
             labelWorkData.BackColor = SystemColors.Control;
-            labelWorkData.Location = new Point(144, 9);
+            labelWorkData.Location = new Point(101, 5);
+            labelWorkData.Margin = new Padding(2, 0, 2, 0);
             labelWorkData.Name = "labelWorkData";
-            labelWorkData.Size = new Size(168, 34);
+            labelWorkData.Size = new Size(118, 20);
             labelWorkData.TabIndex = 21;
             labelWorkData.Text = "Работа с данными";
             labelWorkData.TextAlign = ContentAlignment.MiddleCenter;
@@ -1022,9 +1029,10 @@ namespace WinFormsApp1
             // labelDocuments
             // 
             labelDocuments.BackColor = SystemColors.Control;
-            labelDocuments.Location = new Point(312, 9);
+            labelDocuments.Location = new Point(218, 5);
+            labelDocuments.Margin = new Padding(2, 0, 2, 0);
             labelDocuments.Name = "labelDocuments";
-            labelDocuments.Size = new Size(120, 34);
+            labelDocuments.Size = new Size(84, 20);
             labelDocuments.TabIndex = 22;
             labelDocuments.Text = "Документы";
             labelDocuments.TextAlign = ContentAlignment.MiddleCenter;
@@ -1035,9 +1043,10 @@ namespace WinFormsApp1
             // labelReports
             // 
             labelReports.BackColor = SystemColors.Control;
-            labelReports.Location = new Point(432, 9);
+            labelReports.Location = new Point(302, 5);
+            labelReports.Margin = new Padding(2, 0, 2, 0);
             labelReports.Name = "labelReports";
-            labelReports.Size = new Size(88, 34);
+            labelReports.Size = new Size(62, 20);
             labelReports.TabIndex = 23;
             labelReports.Text = "Отчеты";
             labelReports.TextAlign = ContentAlignment.MiddleCenter;
@@ -1050,19 +1059,19 @@ namespace WinFormsApp1
             contextButton3.ImageScalingSize = new Size(24, 24);
             contextButton3.Items.AddRange(new ToolStripItem[] { itemGetting, itemIssuing });
             contextButton3.Name = "contextMenuStripButton3";
-            contextButton3.Size = new Size(361, 68);
+            contextButton3.Size = new Size(260, 48);
             // 
             // itemGetting
             // 
             itemGetting.Name = "itemGetting";
-            itemGetting.Size = new Size(360, 32);
+            itemGetting.Size = new Size(259, 22);
             itemGetting.Text = "Квитанция о получении в ремонт";
             itemGetting.Click += ItemGetting_Click;
             // 
             // itemIssuing
             // 
             itemIssuing.Name = "itemIssuing";
-            itemIssuing.Size = new Size(360, 32);
+            itemIssuing.Size = new Size(259, 22);
             itemIssuing.Text = "Квитанция о выдачи аппарата";
             itemIssuing.Click += ItemIssuing_Click;
             // 
@@ -1071,149 +1080,165 @@ namespace WinFormsApp1
             contextButton4.ImageScalingSize = new Size(24, 24);
             contextButton4.Items.AddRange(new ToolStripItem[] { itemSalary });
             contextButton4.Name = "contextButton4";
-            contextButton4.Size = new Size(219, 36);
+            contextButton4.Size = new Size(167, 26);
             // 
             // itemSalary
             // 
             itemSalary.Name = "itemSalary";
-            itemSalary.Size = new Size(218, 32);
+            itemSalary.Size = new Size(166, 22);
             itemSalary.Text = "Расчет зарплаты";
             itemSalary.Click += ItemSalary_Click;
             // 
             // textBoxIdOrder
             // 
-            textBoxIdOrder.Location = new Point(168, 786);
+            textBoxIdOrder.Location = new Point(118, 472);
+            textBoxIdOrder.Margin = new Padding(2);
             textBoxIdOrder.Name = "textBoxIdOrder";
-            textBoxIdOrder.Size = new Size(148, 31);
+            textBoxIdOrder.Size = new Size(105, 23);
             textBoxIdOrder.TabIndex = 25;
             textBoxIdOrder.TextChanged += TextBoxIdOrder_TextChanged;
             // 
             // labelIdOrder
             // 
-            labelIdOrder.Location = new Point(2, 786);
+            labelIdOrder.Location = new Point(1, 472);
+            labelIdOrder.Margin = new Padding(2, 0, 2, 0);
             labelIdOrder.Name = "labelIdOrder";
-            labelIdOrder.Size = new Size(160, 31);
+            labelIdOrder.Size = new Size(112, 19);
             labelIdOrder.TabIndex = 26;
             labelIdOrder.Text = "Номер квитанции";
             labelIdOrder.TextAlign = ContentAlignment.MiddleRight;
             // 
             // labelDateCreation
             // 
-            labelDateCreation.Location = new Point(2, 833);
+            labelDateCreation.Location = new Point(1, 500);
+            labelDateCreation.Margin = new Padding(2, 0, 2, 0);
             labelDateCreation.Name = "labelDateCreation";
-            labelDateCreation.Size = new Size(160, 32);
+            labelDateCreation.Size = new Size(112, 19);
             labelDateCreation.TabIndex = 27;
             labelDateCreation.Text = "Дата приема";
             labelDateCreation.TextAlign = ContentAlignment.MiddleRight;
             // 
             // textBoxDateCreation
             // 
-            textBoxDateCreation.Location = new Point(168, 834);
+            textBoxDateCreation.Location = new Point(118, 500);
+            textBoxDateCreation.Margin = new Padding(2);
             textBoxDateCreation.Name = "textBoxDateCreation";
-            textBoxDateCreation.Size = new Size(148, 31);
+            textBoxDateCreation.Size = new Size(105, 23);
             textBoxDateCreation.TabIndex = 28;
             textBoxDateCreation.TextChanged += TextBoxDateCreation_TextChanged;
             // 
             // labelDateStartWork
             // 
             labelDateStartWork.Font = new Font("Segoe UI", 9F);
-            labelDateStartWork.Location = new Point(322, 786);
+            labelDateStartWork.Location = new Point(225, 472);
+            labelDateStartWork.Margin = new Padding(2, 0, 2, 0);
             labelDateStartWork.Name = "labelDateStartWork";
-            labelDateStartWork.Size = new Size(177, 31);
+            labelDateStartWork.Size = new Size(124, 19);
             labelDateStartWork.TabIndex = 29;
             labelDateStartWork.Text = "Дата начала работы";
             labelDateStartWork.TextAlign = ContentAlignment.MiddleRight;
             // 
             // labelNameMaster
             // 
-            labelNameMaster.Location = new Point(322, 837);
+            labelNameMaster.Location = new Point(225, 502);
+            labelNameMaster.Margin = new Padding(2, 0, 2, 0);
             labelNameMaster.Name = "labelNameMaster";
-            labelNameMaster.Size = new Size(177, 25);
+            labelNameMaster.Size = new Size(124, 15);
             labelNameMaster.TabIndex = 30;
             labelNameMaster.Text = "Мастер";
             labelNameMaster.TextAlign = ContentAlignment.MiddleRight;
             // 
             // textBoxDateStartWork
             // 
-            textBoxDateStartWork.Location = new Point(505, 786);
+            textBoxDateStartWork.Location = new Point(354, 472);
+            textBoxDateStartWork.Margin = new Padding(2);
             textBoxDateStartWork.Name = "textBoxDateStartWork";
-            textBoxDateStartWork.Size = new Size(150, 31);
+            textBoxDateStartWork.Size = new Size(106, 23);
             textBoxDateStartWork.TabIndex = 31;
             textBoxDateStartWork.TextChanged += TextBoxDateStartWork_TextChanged;
             // 
             // labelTypeDevice
             // 
-            labelTypeDevice.Location = new Point(664, 786);
+            labelTypeDevice.Location = new Point(465, 472);
+            labelTypeDevice.Margin = new Padding(2, 0, 2, 0);
             labelTypeDevice.Name = "labelTypeDevice";
-            labelTypeDevice.Size = new Size(140, 31);
+            labelTypeDevice.Size = new Size(98, 19);
             labelTypeDevice.TabIndex = 32;
             labelTypeDevice.Text = "Тип аппарата";
             labelTypeDevice.TextAlign = ContentAlignment.MiddleRight;
             // 
             // labelBrandDevice
             // 
-            labelBrandDevice.Location = new Point(664, 833);
+            labelBrandDevice.Location = new Point(465, 500);
+            labelBrandDevice.Margin = new Padding(2, 0, 2, 0);
             labelBrandDevice.Name = "labelBrandDevice";
-            labelBrandDevice.Size = new Size(140, 32);
+            labelBrandDevice.Size = new Size(98, 19);
             labelBrandDevice.TabIndex = 33;
             labelBrandDevice.Text = "Производитель";
             labelBrandDevice.TextAlign = ContentAlignment.MiddleRight;
             // 
             // labelModel
             // 
-            labelModel.Location = new Point(967, 786);
+            labelModel.Location = new Point(677, 472);
+            labelModel.Margin = new Padding(2, 0, 2, 0);
             labelModel.Name = "labelModel";
-            labelModel.Size = new Size(86, 31);
+            labelModel.Size = new Size(60, 19);
             labelModel.TabIndex = 34;
             labelModel.Text = "Модель";
             labelModel.TextAlign = ContentAlignment.MiddleRight;
             // 
             // labelNameClient
             // 
-            labelNameClient.Location = new Point(967, 833);
+            labelNameClient.Location = new Point(677, 500);
+            labelNameClient.Margin = new Padding(2, 0, 2, 0);
             labelNameClient.Name = "labelNameClient";
-            labelNameClient.Size = new Size(86, 32);
+            labelNameClient.Size = new Size(60, 19);
             labelNameClient.TabIndex = 35;
             labelNameClient.Text = "Заказчик";
             labelNameClient.TextAlign = ContentAlignment.MiddleRight;
             // 
             // textBoxNameMaster
             // 
-            textBoxNameMaster.Location = new Point(505, 834);
+            textBoxNameMaster.Location = new Point(354, 500);
+            textBoxNameMaster.Margin = new Padding(2);
             textBoxNameMaster.Name = "textBoxNameMaster";
-            textBoxNameMaster.Size = new Size(150, 31);
+            textBoxNameMaster.Size = new Size(106, 23);
             textBoxNameMaster.TabIndex = 36;
             textBoxNameMaster.TextChanged += TextBoxNameMaster_TextChanged;
             // 
             // textBoxTypeDevice
             // 
-            textBoxTypeDevice.Location = new Point(810, 786);
+            textBoxTypeDevice.Location = new Point(567, 472);
+            textBoxTypeDevice.Margin = new Padding(2);
             textBoxTypeDevice.Name = "textBoxTypeDevice";
-            textBoxTypeDevice.Size = new Size(150, 31);
+            textBoxTypeDevice.Size = new Size(106, 23);
             textBoxTypeDevice.TabIndex = 37;
             textBoxTypeDevice.TextChanged += TextBoxTypeDevice_TextChanged;
             // 
             // textBoxBrandDevice
             // 
-            textBoxBrandDevice.Location = new Point(810, 834);
+            textBoxBrandDevice.Location = new Point(567, 500);
+            textBoxBrandDevice.Margin = new Padding(2);
             textBoxBrandDevice.Name = "textBoxBrandDevice";
-            textBoxBrandDevice.Size = new Size(150, 31);
+            textBoxBrandDevice.Size = new Size(106, 23);
             textBoxBrandDevice.TabIndex = 38;
             textBoxBrandDevice.TextChanged += TextBoxBrandDevice_TextChanged;
             // 
             // textBoxModel
             // 
-            textBoxModel.Location = new Point(1057, 786);
+            textBoxModel.Location = new Point(740, 472);
+            textBoxModel.Margin = new Padding(2);
             textBoxModel.Name = "textBoxModel";
-            textBoxModel.Size = new Size(150, 31);
+            textBoxModel.Size = new Size(106, 23);
             textBoxModel.TabIndex = 39;
             textBoxModel.TextChanged += TextBoxModel_TextChanged;
             // 
             // textBoxNameClient
             // 
-            textBoxNameClient.Location = new Point(1057, 833);
+            textBoxNameClient.Location = new Point(740, 500);
+            textBoxNameClient.Margin = new Padding(2);
             textBoxNameClient.Name = "textBoxNameClient";
-            textBoxNameClient.Size = new Size(150, 31);
+            textBoxNameClient.Size = new Size(106, 23);
             textBoxNameClient.TabIndex = 40;
             textBoxNameClient.TextChanged += TextBoxNameClient_TextChanged;
             // 
@@ -1221,9 +1246,10 @@ namespace WinFormsApp1
             // 
             labelView.BackColor = SystemColors.Control;
             labelView.Font = new Font("Segoe UI", 9F);
-            labelView.Location = new Point(520, 9);
+            labelView.Location = new Point(364, 5);
+            labelView.Margin = new Padding(2, 0, 2, 0);
             labelView.Name = "labelView";
-            labelView.Size = new Size(88, 34);
+            labelView.Size = new Size(62, 20);
             labelView.TabIndex = 41;
             labelView.Text = "Вид";
             labelView.TextAlign = ContentAlignment.MiddleCenter;
@@ -1236,12 +1262,12 @@ namespace WinFormsApp1
             contextButton5.ImageScalingSize = new Size(24, 24);
             contextButton5.Items.AddRange(new ToolStripItem[] { itemColor, itemSize });
             contextButton5.Name = "contextButton5";
-            contextButton5.Size = new Size(189, 68);
+            contextButton5.Size = new Size(144, 48);
             // 
             // itemColor
             // 
             itemColor.Name = "itemColor";
-            itemColor.Size = new Size(188, 32);
+            itemColor.Size = new Size(143, 22);
             itemColor.Text = "Цвета";
             itemColor.Click += ItemColor_Click;
             // 
@@ -1249,29 +1275,30 @@ namespace WinFormsApp1
             // 
             itemSize.DropDownItems.AddRange(new ToolStripItem[] { itemSmall, itemMedium });
             itemSize.Name = "itemSize";
-            itemSize.Size = new Size(188, 32);
+            itemSize.Size = new Size(143, 22);
             itemSize.Text = "Размер окна";
             // 
             // itemSmall
             // 
             itemSmall.Name = "itemSmall";
-            itemSmall.Size = new Size(205, 34);
+            itemSmall.Size = new Size(137, 22);
             itemSmall.Text = "Маленький";
             itemSmall.Click += ItemSmall_Click;
             // 
             // itemMedium
             // 
             itemMedium.Name = "itemMedium";
-            itemMedium.Size = new Size(205, 34);
+            itemMedium.Size = new Size(137, 22);
             itemMedium.Text = "Средний";
             itemMedium.Click += ItemMedium_Click;
             // 
             // buttonReset
             // 
             buttonReset.BackColor = SystemColors.Control;
-            buttonReset.Location = new Point(1218, 785);
+            buttonReset.Location = new Point(853, 471);
+            buttonReset.Margin = new Padding(2);
             buttonReset.Name = "buttonReset";
-            buttonReset.Size = new Size(110, 79);
+            buttonReset.Size = new Size(77, 47);
             buttonReset.TabIndex = 42;
             buttonReset.Text = "Сброс фильтров";
             buttonReset.UseVisualStyleBackColor = false;
@@ -1282,13 +1309,13 @@ namespace WinFormsApp1
             contextPhone.ImageScalingSize = new Size(24, 24);
             contextPhone.Items.AddRange(new ToolStripItem[] { numberPhone });
             contextPhone.Name = "contextPhone";
-            contextPhone.Size = new Size(132, 42);
+            contextPhone.Size = new Size(107, 30);
             // 
             // numberPhone
             // 
             numberPhone.Font = new Font("Segoe UI", 12F);
             numberPhone.Name = "numberPhone";
-            numberPhone.Size = new Size(131, 38);
+            numberPhone.Size = new Size(106, 26);
             numberPhone.Text = "One";
             // 
             // timer1
@@ -1297,9 +1324,10 @@ namespace WinFormsApp1
             // 
             // labelLogIn
             // 
-            labelLogIn.Location = new Point(1218, 9);
+            labelLogIn.Location = new Point(850, 11);
+            labelLogIn.Margin = new Padding(2);
             labelLogIn.Name = "labelLogIn";
-            labelLogIn.Size = new Size(107, 34);
+            labelLogIn.Size = new Size(75, 20);
             labelLogIn.TabIndex = 43;
             labelLogIn.Text = "Войти";
             labelLogIn.TextAlign = ContentAlignment.MiddleCenter;
@@ -1312,27 +1340,27 @@ namespace WinFormsApp1
             contextAccount.ImageScalingSize = new Size(24, 24);
             contextAccount.Items.AddRange(new ToolStripItem[] { itemChangeData, itemLogOut });
             contextAccount.Name = "contextAccount";
-            contextAccount.Size = new Size(282, 68);
+            contextAccount.Size = new Size(210, 48);
             // 
             // itemChangeData
             // 
             itemChangeData.Name = "itemChangeData";
-            itemChangeData.Size = new Size(281, 32);
+            itemChangeData.Size = new Size(209, 22);
             itemChangeData.Text = "Изменить логин/пароль";
             itemChangeData.Click += ItemChangeData_Click;
             // 
             // itemLogOut
             // 
             itemLogOut.Name = "itemLogOut";
-            itemLogOut.Size = new Size(281, 32);
+            itemLogOut.Size = new Size(209, 22);
             itemLogOut.Text = "Выйти из системы";
             itemLogOut.Click += ItemLogOut_Click;
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1337, 879);
+            ClientSize = new Size(936, 527);
             Controls.Add(labelLogIn);
             Controls.Add(buttonReset);
             Controls.Add(labelView);
@@ -1365,6 +1393,7 @@ namespace WinFormsApp1
             Controls.Add(dataGridView1);
             Icon = (Icon)resources.GetObject("$this.Icon");
             KeyPreview = true;
+            Margin = new Padding(2);
             MaximizeBox = false;
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;

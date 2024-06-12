@@ -11,23 +11,23 @@ namespace WinFormsApp1.Model
     {
         public int Id { get; set; }
         public int ClientId { get; set; }
-        public Client? Client { get; set; }
+        public virtual Client? Client { get; set; }
         public int? MasterId { get; set; }
-        public Master? Master { get; set; }
+        public virtual Master? Master { get; set; }
         public string? DateCreation { get; set; }
         public string? DateStartWork { get; set; }
         public string? DateCompleted { get; set; }
         public string? DateIssue {  get; set; } 
         public int TypeTechnicId { get; set; }
-        public TypeTechnic? TypeTechnic { get; set; }
+        public virtual TypeTechnic? TypeTechnic { get; set; }
         public int BrandTechnicId { get; set; }
-        public BrandTechnic? BrandTechnic { get; set; }
+        public virtual BrandTechnic? BrandTechnic { get; set; }
         public string? ModelTechnic { get; set; }
         public string? FactoryNumber { get; set; }
         public int? EquipmentId { get; set; }
-        public Equipment? Equipment { get; set; }
+        public virtual Equipment? Equipment { get; set; }
         public int? DiagnosisId { get; set; }
-        public Diagnosis? Diagnosis { get; set; }
+        public virtual Diagnosis? Diagnosis { get; set; }
         public string? Note { get; set; }
         public bool InProgress { get; set; }
         public int Guarantee { get; set; }
@@ -38,8 +38,8 @@ namespace WinFormsApp1.Model
         public string? DateCompletedReturn { get; set; }
         public string? DateIssueReturn { get; set; }
         public bool Issue { get; set; }
-        public List<Malfunction>? Malfunction { get; set; }
-        public List<MalfunctionOrder>? MalfunctionOrders { get; set; }
+        public virtual List<Malfunction>? Malfunction { get; set; }
+        public virtual List<MalfunctionOrder>? MalfunctionOrders { get; set; }
         public string ColorRow { get; set; } = Color.Black.Name;
         public string? DateLastCall { get; set; }
         public bool PriceAgreed { get; set; }

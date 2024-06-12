@@ -17,6 +17,7 @@
   <ItemGroup>
     <PackageReference Include="ClosedXML.Report" Version="0.2.10" />
     <PackageReference Include="FluentFTP" Version="50.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0-preview.4.24267.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0-preview.4.24267.1">
       <PrivateAssets>all</PrivateAssets>

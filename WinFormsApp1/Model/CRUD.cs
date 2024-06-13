@@ -1,5 +1,7 @@
 ﻿
 
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+
 namespace WinFormsApp1.Model
 {
     public class CRUD
@@ -154,12 +156,12 @@ namespace WinFormsApp1.Model
         }
 
         //ORDER
-        public static async void AddAsyncOrder(int id, int idClient, int? idMaster, string? dateCreation,
-            string? dateStartWork, string? dateCompleted, string? dateIssue, int idTypeTechnic,
+        public static async void AddAsyncOrder(int id, int idClient, int? idMaster, DateTime? dateCreation,
+            DateTime? dateStartWork, DateTime? dateCompleted, DateTime? dateIssue, int idTypeTechnic,
             int idBrandTechnic, string? model, string? factoryNumber, int? idEquipment,
             int? idDiagnosis, string? note, bool inProgress, int guarantee,
-            string? dateEndGuarantee, bool deleted, bool returnUnderGuarantee, string? dateReturn, 
-            string? dateCompletedReturn, string? dateIssueReturn, bool issue, string color, string? dateLastCall, 
+            DateTime? dateEndGuarantee, bool deleted, bool returnUnderGuarantee, DateTime? dateReturn,
+            DateTime? dateCompletedReturn, DateTime? dateIssueReturn, bool issue, string color, string? dateLastCall, 
             bool priceAgreed, int? maxPrice)
         {
             using Context db = new();
@@ -194,12 +196,12 @@ namespace WinFormsApp1.Model
             catch (Exception ex) { Console.WriteLine(ex.Message); }
         }
 
-        public static void ChangeOrder(int id, int idClient, int? idMaster, string? dateCreation,
-            string? dateStartWork, string? dateCompleted, string? dateIssue, int idTypeTechnic,
+        public static void ChangeOrder(int id, int idClient, int? idMaster, DateTime? dateCreation,
+            DateTime? dateStartWork, DateTime? dateCompleted, DateTime? dateIssue, int idTypeTechnic,
             int idBrandTechnic, string? model, string? factoryNumber, int? idEquipment,
             int? idDiagnosis, string? note, bool inProgress, int guarantee,
-            string? dateEndGuarantee, bool deleted, bool returnUnderGuarantee, string? dateReturn,
-            string? dateCompletedReturn, string? dateIssueReturn, bool issue, string color, 
+            DateTime? dateEndGuarantee, bool deleted, bool returnUnderGuarantee, DateTime? dateReturn,
+            DateTime? dateCompletedReturn, DateTime? dateIssueReturn, bool issue, string color,
             string? dateLastCall, bool priceAgreed, int? maxPrice)
         {
             using Context db = new();
@@ -259,7 +261,7 @@ namespace WinFormsApp1.Model
 
         //WAREHOUSE
         public static async void AddAsyncWarehouse(int id, string? nameDetail, int pricePurchase, 
-            int priceSale, string datePurchase, bool availability, int? IdOrder)
+            int priceSale, DateTime datePurchase, bool availability, int? IdOrder)
         {
             using Context db = new();
             Warehouse warehouse = new() { Id = id, NameDetail = nameDetail, PricePurchase = pricePurchase, 
@@ -286,7 +288,7 @@ namespace WinFormsApp1.Model
         }
 
         public static void ChangeWarehouse(int id, string? nameDetail, int pricePurchase,
-            int priceSale, string datePurchase, bool availability, int? IdOrder)
+            int priceSale, DateTime datePurchase, bool availability, int? IdOrder)
         {
             using Context db = new();
             Warehouse warehouse = new() { Id = id, NameDetail = nameDetail, PricePurchase = pricePurchase,

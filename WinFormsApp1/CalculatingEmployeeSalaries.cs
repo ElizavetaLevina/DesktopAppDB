@@ -26,9 +26,9 @@ namespace WinFormsApp1
 
             for (int i = 0; i < list.Count; i++)
             {
-                if (comboBoxYears.Items.IndexOf(DateTime.Parse(list[i].DateCompleted).Year) < 0)
+                if (comboBoxYears.Items.IndexOf(list[i].DateCompleted.Value.Year) < 0)
                 {
-                    comboBoxYears.Items.Add(DateTime.Parse(list[i].DateCompleted).Year);
+                    comboBoxYears.Items.Add(list[i].DateCompleted.Value.Year);
                 }
             }
 
@@ -169,16 +169,16 @@ namespace WinFormsApp1
                 {
                     if (list[j].ReturnUnderGuarantee)
                     {
-                        int monthReturn = DateTime.Parse(list[j].DateCreation).Month;
-                        int yearReturn = DateTime.Parse(list[j].DateCreation).Year;
-                        int monthCompleted = DateTime.Parse(list[j].DateCompleted).Month;
-                        int yearCompleted = DateTime.Parse(list[j].DateCompleted).Year;
+                        int monthReturn = list[j].DateCreation.Value.Month;
+                        int yearReturn = list[j].DateCreation.Value.Year;
+                        int monthCompleted = list[j].DateCompleted.Value.Month;
+                        int yearCompleted = list[j].DateCompleted.Value.Year;
                         if(comboBox1.SelectedIndex == 0)
                         {
                             if (list[j].DateCompletedReturn != null)
                             {
-                                monthCompleted = DateTime.Parse(list[j].DateCompletedReturn).Month;
-                                yearCompleted = DateTime.Parse(list[j].DateCompletedReturn).Year;
+                                monthCompleted = list[j].DateCompletedReturn.Value.Month;
+                                yearCompleted = list[j].DateCompletedReturn.Value.Year;
                             }
                         }
                         else
@@ -191,13 +191,13 @@ namespace WinFormsApp1
 
                             if (list[j].DateIssueReturn == null)
                             {
-                                monthCompleted = DateTime.Parse(list[j].DateIssue).Month;
-                                yearCompleted = DateTime.Parse(list[j].DateIssue).Year;
+                                monthCompleted = list[j].DateIssue.Value.Month;
+                                yearCompleted = list[j].DateIssue.Value.Year;
                             }
                             else
                             {
-                                monthCompleted = DateTime.Parse(list[j].DateIssueReturn).Month;
-                                yearCompleted = DateTime.Parse(list[j].DateIssueReturn).Year;
+                                monthCompleted = list[j].DateIssueReturn.Value.Month;
+                                yearCompleted = list[j].DateIssueReturn.Value.Year;
                             }
                         }
                         
@@ -232,8 +232,8 @@ namespace WinFormsApp1
                     }
                     else if (!list[j].InProgress)
                     {
-                        int monthCompleted = DateTime.Parse(list[j].DateCompleted).Month;
-                        int yearCompleted = DateTime.Parse(list[j].DateCompleted).Year;
+                        int monthCompleted = list[j].DateCompleted.Value.Month;
+                        int yearCompleted = list[j].DateCompleted.Value.Year;
 
                         if (comboBox1.SelectedIndex == 1)
                         {
@@ -243,8 +243,8 @@ namespace WinFormsApp1
                                 yearCompleted = 0;
                             } else
                             {
-                                monthCompleted = DateTime.Parse(list[j].DateIssue).Month;
-                                yearCompleted = DateTime.Parse(list[j].DateIssue).Year;
+                                monthCompleted = list[j].DateIssue.Value.Month;
+                                yearCompleted = list[j].DateIssue.Value.Year;
                             }
                         }
                         

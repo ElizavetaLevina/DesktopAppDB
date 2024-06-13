@@ -1,6 +1,4 @@
-﻿
-
-namespace WinFormsApp1.Model
+﻿namespace WinFormsApp1.Model
 {
     public class TypeTechnic
     {

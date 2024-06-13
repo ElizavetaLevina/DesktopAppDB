@@ -1,11 +1,4 @@
-﻿using FluentFTP.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WinFormsApp1.Model
+﻿namespace WinFormsApp1.Model
 {
     public class Order
     {
@@ -14,10 +7,10 @@ namespace WinFormsApp1.Model
         public virtual Client? Client { get; set; }
         public int? MasterId { get; set; }
         public virtual Master? Master { get; set; }
-        public string? DateCreation { get; set; }
-        public string? DateStartWork { get; set; }
-        public string? DateCompleted { get; set; }
-        public string? DateIssue {  get; set; } 
+        public DateTime? DateCreation { get; set; }
+        public DateTime? DateStartWork { get; set; }
+        public DateTime? DateCompleted { get; set; }
+        public DateTime? DateIssue {  get; set; } 
         public int TypeTechnicId { get; set; }
         public virtual TypeTechnic? TypeTechnic { get; set; }
         public int BrandTechnicId { get; set; }
@@ -31,12 +24,12 @@ namespace WinFormsApp1.Model
         public string? Note { get; set; }
         public bool InProgress { get; set; }
         public int Guarantee { get; set; }
-        public string? DateEndGuarantee { get; set; }
+        public DateTime? DateEndGuarantee { get; set; }
         public bool Deleted { get; set; }
         public bool ReturnUnderGuarantee { get; set; }
-        public string? DateReturn { get; set; }
-        public string? DateCompletedReturn { get; set; }
-        public string? DateIssueReturn { get; set; }
+        public DateTime? DateReturn { get; set; }
+        public DateTime? DateCompletedReturn { get; set; }
+        public DateTime? DateIssueReturn { get; set; }
         public bool Issue { get; set; }
         public virtual List<Malfunction>? Malfunction { get; set; }
         public virtual List<MalfunctionOrder>? MalfunctionOrders { get; set; }

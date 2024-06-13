@@ -142,13 +142,13 @@ namespace WinFormsApp1
                 list[id].MasterId != null)
             {
                 status = "InRepair";
-                date = DateTime.Parse(list[id].DateStartWork);
+                date = list[id].DateStartWork.Value;
             }
             else if (list[id].InProgress == false && !list[id].Deleted &&
                 list[id].Issue == false)
             {
                 status = "Completed";
-                date = DateTime.Parse(list[id].DateCompleted);
+                date = list[id].DateCompleted.Value;
             }
 
             if (status == "InRepair" || status == "Completed")

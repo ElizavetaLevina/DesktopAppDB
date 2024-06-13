@@ -6,7 +6,7 @@ using System.Net;
 using FluentFTP;
 using Color = System.Drawing.Color;
 using WinFormsApp1.DTO;
-using System.Data.Entity;
+using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
 {
@@ -66,14 +66,14 @@ namespace WinFormsApp1
             switch (status)
             {
                 case "InRepair":
-                    dataGridView1.Columns[3].Visible = false;
-                    dataGridView1.Columns[4].Visible = false;
-                    dataGridView1.Columns[7].Visible = false;
-                    dataGridView1.Columns[8].Visible = true;
+                    dataGridView1.Columns["DateCompleted"].Visible = false;
+                    dataGridView1.Columns["DateIssue"].Visible = false;
+                    dataGridView1.Columns["IdClient"].Visible = false;
+                    dataGridView1.Columns["Diagnosis"].Visible = true;
                     break;
                 case "Completed":
-                    dataGridView1.Columns[2].Visible = false;
-                    dataGridView1.Columns[4].Visible = false;
+                    dataGridView1.Columns["DateStartWork"].Visible = false;
+                    dataGridView1.Columns["DateIssue"].Visible = false;
                     break;
             }
             for (int i = 0; i < dataGridView1.Columns.Count; i++)
@@ -119,13 +119,11 @@ namespace WinFormsApp1
         private void InProgress()
         {
             status = "InRepair";
-            using Context context = new();
+            OrderRepository order = new();
             try
             {
-                var list = context.Orders.Where(i => i.InProgress == true && i.Deleted == false)
-                    .OrderByDescending(i => i.DateStartWork)
-                    .Select(a => new OrderDTO(a))
-                    .ToList();
+                List<OrderDTO> list = order.GetOrders(inProgress: true, deleted: false, issue: false,
+                    dateStartWork: true, dateCompleted: null, dateIssue: null, id: null);
                 dataGridView1.DataSource = Funcs.ToDataTable(list);
                 UpdateTable();
                 ChangeColorRows();
@@ -136,13 +134,11 @@ namespace WinFormsApp1
         private void OrderÑompleted()
         {
             status = "Completed";
-            using Context context = new();
+            OrderRepository order = new();
             try
             {
-                var list = context.Orders.Where(i => i.InProgress == false && !i.Deleted && i.Issue == false)
-                    .OrderByDescending(i => i.DateCompleted)
-                    .Select(a => new OrderDTO(a))
-                    .ToList();
+                List<OrderDTO> list = order.GetOrders(inProgress: false, deleted: false, issue: false,
+                    dateStartWork: null, dateCompleted: true, dateIssue: null, id: null);
                 dataGridView1.DataSource = Funcs.ToDataTable(list);
                 UpdateTable();
                 ChangeColorRows();
@@ -153,18 +149,15 @@ namespace WinFormsApp1
         private void OrderGuarantee()
         {
             status = "GuaranteeIssue";
-            using Context context = new();
+            OrderRepository order = new();
             try
             {
-                var list = context.Orders
-                    .Where(i => i.Issue == true && !i.Deleted && i.Guarantee > 0)
-                    .OrderByDescending(i => i.DateIssue)
-                    .Select(a => new OrderDTO(a))
-                    .ToList();
+                List<OrderDTO> list = order.GetOrders(inProgress: false, deleted: false, issue: true,
+                    dateStartWork: null, dateCompleted: null, dateIssue: true, id: null);
 
                 for (int i = 0; i < list.Count; i++)
                 {
-                    if (DateTime.Parse(list[i].DateEndGuarantee) < DateTime.Now)
+                    if (list[i].DateEndGuarantee.Value.Date < DateTime.Now.Date)
                         list.Remove(list[i]);
                 }
 
@@ -177,18 +170,16 @@ namespace WinFormsApp1
         private void OrderArchive()
         {
             status = "Archive";
-            using Context context = new();
+            OrderRepository order = new();
             try
             {
-                var list = context.Orders
-                    .Where(i => i.Issue == true && i.Guarantee == 0 && !i.Deleted)
-                    .OrderByDescending(i => i.DateIssue)
-                    .Select(a => new OrderDTO(a))
-                    .ToList();
+                List<OrderDTO> list = order.GetOrders(inProgress: false, deleted: false, issue: true,
+                    dateStartWork: null, dateCompleted: null, dateIssue: true, id: null);
+                dataGridView1.DataSource = Funcs.ToDataTable(list);
 
                 for (int i = 0; i < list.Count; i++)
                 {
-                    if (DateTime.Parse(list[i].DateEndGuarantee) < DateTime.Now)
+                    if (list[i].DateEndGuarantee.Value.Date >= DateTime.Now.Date)
                         //if (list[i].DateEndGuaranteeDT < DateTime.Now)
                         list.Remove(list[i]);
                 }
@@ -202,14 +193,11 @@ namespace WinFormsApp1
         private void Trash()
         {
             status = "Trash";
-            using Context context = new();
+            OrderRepository order = new();
             try
             {
-                var list = context.Orders
-                    .Where(i => i.Deleted == true)
-                    .OrderByDescending(i => i.Id)
-                    .Select(a => new OrderDTO(a))
-                    .ToList();
+                List<OrderDTO> list = order.GetOrders(inProgress: null, deleted: true, issue: null,
+                    dateStartWork: null, dateCompleted: true, dateIssue: null, id: null);
                 dataGridView1.DataSource = Funcs.ToDataTable(list);
                 UpdateTable();
                 ChangeColorRows();
@@ -442,8 +430,8 @@ namespace WinFormsApp1
                                     if (list[0].ReturnUnderGuarantee)
                                     {
                                         /**/
-                                        int countDayInRepair = (DateTime.Parse(list[0].DateCompletedReturn) - DateTime.Parse(list[0].DateReturn)).Days;
-                                        var dateEndGuarantee = DateTime.Parse(list[0].DateEndGuarantee).AddDays(countDayInRepair).ToShortDateString();
+                                        int countDayInRepair = (list[0].DateCompletedReturn.Value - list[0].DateReturn.Value).Days;
+                                        DateTime? dateEndGuarantee = list[0].DateEndGuarantee.Value.AddDays(countDayInRepair);
                                         ChangeOrder(id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
                                             list[0].DateStartWork, completedOrder.DateComplete, list[0].DateIssue,
                                             list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
@@ -528,8 +516,8 @@ namespace WinFormsApp1
                                 }
                                 if (list[0].ReturnUnderGuarantee)
                                 {
-                                    int countDayInRepair = (DateTime.Parse(completedOrder.DateComplete) - DateTime.Parse(list[0].DateReturn)).Days;
-                                    var dateEndGuarantee = DateTime.Parse(list[0].DateEndGuarantee).AddDays(countDayInRepair).ToShortDateString();
+                                    int countDayInRepair = (completedOrder.DateComplete - list[0].DateReturn.Value).Days;
+                                    DateTime? dateEndGuarantee = list[0].DateEndGuarantee.Value.AddDays(countDayInRepair);
                                     ChangeOrder(id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
                                         list[0].DateStartWork, list[0].DateCompleted, list[0].DateIssue,
                                         list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
@@ -675,8 +663,8 @@ namespace WinFormsApp1
                     switch (status)
                     {
                         case "GuaranteeIssue":
-                            ChangeOrder(id, list[0].ClientId, list[0].MasterId, DateTime.Now.ToShortDateString(),
-                                DateTime.Now.ToShortDateString(), list[0].DateCompleted, list[0].DateIssue,
+                            ChangeOrder(id, list[0].ClientId, list[0].MasterId, DateTime.Now,
+                                DateTime.Now, list[0].DateCompleted, list[0].DateIssue,
                                 list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
                                 list[0].FactoryNumber, list[0].EquipmentId, list[0].DiagnosisId, list[0].Note,
                                 true, list[0].Guarantee, list[0].DateEndGuarantee, list[0].Deleted,
@@ -867,12 +855,12 @@ namespace WinFormsApp1
             FocusButton(status);
         }
 
-        private static void ChangeOrder(int id, int clientId, int? masterId, string? dateCreation,
-            string? dateStartWork, string? dateCompleted, string? dateIssue, int typeTechnicId,
+        private static void ChangeOrder(int id, int clientId, int? masterId, DateTime? dateCreation,
+            DateTime? dateStartWork, DateTime? dateCompleted, DateTime? dateIssue, int typeTechnicId,
             int brandTechnicId, string? modelTechnic, string? factoryNumber, int? equipmentId,
             int? diagnosisId, string? note, bool inProgress, int guarantee,
-            string? dateEndGuarantee, bool deleted, bool returnUnderGuarantee, string? dateReturn,
-            string? dateCompletedReturn, string? dateIssueReturn, bool issue, string color,
+            DateTime? dateEndGuarantee, bool deleted, bool returnUnderGuarantee, DateTime? dateReturn,
+            DateTime? dateCompletedReturn, DateTime? dateIssueReturn, bool issue, string color,
             string? dateLastCall, bool priceAgreed, int? maxPrice)
         {
             CRUD.ChangeOrder(id,
@@ -939,7 +927,7 @@ namespace WinFormsApp1
             Context context = new();
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
-                int id = Convert.ToInt32(dataGridView1.Rows[i].Cells[0].Value);
+                int id = Convert.ToInt32(dataGridView1.Rows[i].Cells["Id"].Value);
                 var list = context.Orders.Where(i => i.Id == id).ToList();
                 if (list[0].MasterId == null)
                 {
@@ -947,7 +935,7 @@ namespace WinFormsApp1
                     dataGridView1.Rows[i].DefaultCellStyle.SelectionForeColor = Color.DimGray;
                     continue;
                 }
-                string hexColor = dataGridView1.Rows[i].Cells[11].Value.ToString();
+                string hexColor = dataGridView1.Rows[i].Cells["ColorRow"].Value.ToString();
                 Color color = ColorTranslator.FromHtml(hexColor);
                 if (color != CheckColor(id))
                 {
@@ -964,7 +952,7 @@ namespace WinFormsApp1
                 dataGridView1.Rows[i].DefaultCellStyle.ForeColor = color;
                 dataGridView1.Rows[i].DefaultCellStyle.SelectionForeColor = color;
 
-                if (Convert.ToBoolean(dataGridView1.Rows[i].Cells[10].Value))
+                if (Convert.ToBoolean(dataGridView1.Rows[i].Cells["ReturnUnderGuarantee"].Value))
                 {
                     dataGridView1.Rows[i].DefaultCellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
                 }
@@ -980,10 +968,10 @@ namespace WinFormsApp1
             switch (status)
             {
                 case "InRepair":
-                    countDays = (DateTime.Now - DateTime.Parse(list[0].DateStartWork)).Days;
+                    countDays = (DateTime.Now - list[0].DateStartWork.Value).Days;
                     break;
                 case "Completed":
-                    countDays = (DateTime.Now - DateTime.Parse(list[0].DateCompleted)).Days;
+                    countDays = (DateTime.Now - list[0].DateCompleted.Value).Days;
                     break;
             }
 
@@ -2164,9 +2152,9 @@ namespace WinFormsApp1
         {
             using Context context = new();
             var list = context.Orders.Where(i => i.Id.ToString().IndexOf(textBoxIdOrder.Text) > -1 &&
-            i.DateCreation.StartsWith(textBoxDateCreation.Text) &&
+            i.DateCreation.ToString().StartsWith(textBoxDateCreation.Text) &&
             ((i.DateStartWork == null && textBoxDateStartWork.Text == "") ||
-            (i.DateStartWork != null && i.DateStartWork.StartsWith(textBoxDateStartWork.Text))) &&
+            (i.DateStartWork != null && i.DateStartWork.ToString().StartsWith(textBoxDateStartWork.Text))) &&
             ((i.MasterId == null && textBoxNameMaster.Text == "") ||
             (i.MasterId != null && i.Master.NameMaster.StartsWith(textBoxNameMaster.Text))) &&
             i.TypeTechnic.NameTypeTechnic.StartsWith(textBoxTypeDevice.Text) &&

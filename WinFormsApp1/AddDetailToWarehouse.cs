@@ -58,13 +58,13 @@ namespace WinFormsApp1
                 {
                     CRUD.ChangeWarehouse(id, textBoxNameDetail.Text,
                         Convert.ToInt32(textBoxPricePurchase.Text),
-                        Convert.ToInt32(textBoxPriceSale.Text), dateTimePicker1.Text, true, null);
+                        Convert.ToInt32(textBoxPriceSale.Text), dateTimePicker1.Value, true, null);
                 }
                 else
                 {
                     CRUD.AddAsyncWarehouse(IdDetail(), textBoxNameDetail.Text,
                         Convert.ToInt32(textBoxPricePurchase.Text),
-                        Convert.ToInt32(textBoxPriceSale.Text), dateTimePicker1.Text, true, null);
+                        Convert.ToInt32(textBoxPriceSale.Text), dateTimePicker1.Value, true, null);
                 }
                 this.DialogResult = DialogResult.OK;
                 this.Close();
@@ -163,10 +163,10 @@ namespace WinFormsApp1
             set { this.textBoxPriceSale.Text = value.ToString(); }
         }
 
-        public string DatePurchase
+        public DateTime DatePurchase
         {
-            get { return this.dateTimePicker1.Text; }
-            set { this.dateTimePicker1.Value = DateTime.Parse(value); }
+            get { return this.dateTimePicker1.Value; }
+            set { this.dateTimePicker1.Value = value; }
         }
     }
 }

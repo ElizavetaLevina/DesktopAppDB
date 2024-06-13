@@ -34,7 +34,7 @@ namespace WinFormsApp1
             if (listMaster.Count > 0 && listMaster[0].NameMaster != null)
                 comboBoxMaster.SelectedIndex = comboBoxMaster.FindStringExact(listMaster[0].NameMaster);
 
-            dateCreation.Value = DateTime.Parse(list[0].DateCreation);
+            dateCreation.Value = list[0].DateCreation.Value;
 
             UpdateComboBox(1);
             var listDevice = context.TypeTechnices.Where(i => i.Id == list[0].TypeTechnicId).ToList();
@@ -214,11 +214,11 @@ namespace WinFormsApp1
             textBoxEndGuarantee.Enabled = true;
             textBoxGuaranteeLeft.Enabled = true;
 
-            dateTimePicker1.Value = DateTime.Parse(list[0].DateIssue);
+            dateTimePicker1.Value = list[0].DateIssue.Value;
 
             if (list[0].Guarantee > 0)
             {
-                if (DateTime.Now < DateTime.Parse(list[0].DateEndGuarantee))
+                if (DateTime.Now < list[0].DateEndGuarantee.Value)
                     textBoxAvailabilityGuarantee.Text = "Присутствует";
                 else
                     textBoxAvailabilityGuarantee.Text = "Закончилась";
@@ -227,10 +227,11 @@ namespace WinFormsApp1
                 textBoxAvailabilityGuarantee.Text = "Отсутствует";
 
             textBoxGuaranteePeriod.Text = String.Format("{0} мес.", list[0].Guarantee);
-            textBoxEndGuarantee.Text = list[0].DateEndGuarantee;
+            textBoxEndGuarantee.Text = list[0].DateEndGuarantee.ToString();
 
-            if (((int)(DateTime.Parse(list[0].DateEndGuarantee) - DateTime.Now).TotalDays) > 0)
-                textBoxGuaranteeLeft.Text = String.Format("{0} дн.", (int)(DateTime.Parse(list[0].DateEndGuarantee) - DateTime.Now).TotalDays);
+            if (((int)(list[0].DateEndGuarantee.Value - DateTime.Now).TotalDays) > 0)
+                textBoxGuaranteeLeft.Text = String.Format("{0} дн.", 
+                    (int)(list[0].DateEndGuarantee.Value - DateTime.Now).TotalDays);
             else
                 textBoxGuaranteeLeft.Text = "Закончилась";
 
@@ -279,10 +280,10 @@ namespace WinFormsApp1
             var list = context.Orders.Where(a => a.Id == id).ToList();
             string foundProblem = "";
             int priceRepair = 0;
-            string dateIssue = "";
-            string dateEndGuarantee = "";
+            DateTime? dateIssue = null;
+            DateTime? dateEndGuarantee = null;
             int? nameMaster = null;
-            string? dateStartWork = list[0].DateStartWork;
+            DateTime? dateStartWork = list[0].DateStartWork;
             Color color = Color.Black;
             int? maxPrice = null;
 
@@ -303,7 +304,7 @@ namespace WinFormsApp1
             {
                 nameMaster = context.Masters.Where(a => a.NameMaster == comboBoxMaster.Text).ToList()[0].Id;
                 if (list[0].DateStartWork == null)
-                    dateStartWork = DateTime.Now.ToShortDateString();
+                    dateStartWork = DateTime.Now;
             }
 
             switch (statusOrder)
@@ -311,7 +312,7 @@ namespace WinFormsApp1
                 case "InRepair":
                     int countDay = 0;
                     if (comboBoxMaster.Text != "-")
-                        countDay = (DateTime.Now - DateTime.Parse(dateStartWork)).Days;
+                        countDay = (DateTime.Now - dateStartWork.Value).Days;
                     else
                     {
                         dateStartWork = null;
@@ -325,7 +326,7 @@ namespace WinFormsApp1
                         color = Properties.Settings.Default.SecondLevelColor;
                     break;
                 case "Completed":
-                    countDay = (DateTime.Now - DateTime.Parse(list[0].DateCompleted)).Days;
+                    countDay = (DateTime.Now - list[0].DateCompleted.Value).Days;
                     if (countDay < Convert.ToInt32(Properties.Settings.Default.FirstLevelText))
                         color = Properties.Settings.Default.FirstLevelColor;
                     else if (countDay > Convert.ToInt32(Properties.Settings.Default.SecondLevelText))
@@ -338,21 +339,21 @@ namespace WinFormsApp1
                 case "GuaranteeIssue":
                     foundProblem = textBoxProblem1.Text;
                     priceRepair = Convert.ToInt32(textBoxPrice1.Text);
-                    dateIssue = dateTimePicker1.Value.ToString();
-                    dateEndGuarantee = (dateTimePicker1.Value.AddMonths(list[0].Guarantee)).ToString();
+                    dateIssue = dateTimePicker1.Value;
+                    dateEndGuarantee = dateTimePicker1.Value.AddMonths(list[0].Guarantee);
                     break;
                 case "Archive":
                     foundProblem = textBoxProblem1.Text;
                     priceRepair = Convert.ToInt32(textBoxPrice1.Text);
-                    dateIssue = dateTimePicker1.Value.ToString();
-                    dateEndGuarantee = (dateTimePicker1.Value.AddMonths(list[0].Guarantee)).ToString();
+                    dateIssue = dateTimePicker1.Value;
+                    dateEndGuarantee = dateTimePicker1.Value.AddMonths(list[0].Guarantee);
                     break;
             }
 
             CRUD.ChangeOrder(id,
                 list[0].ClientId,
                 nameMaster,
-                dateCreation.Text,
+                dateCreation.Value,
                 dateStartWork,
                 list[0].DateCompleted,
                 dateIssue,
@@ -365,7 +366,7 @@ namespace WinFormsApp1
                 textBoxNote.Text,
                 list[0].InProgress,
                 list[0].Guarantee,
-                textBoxEndGuarantee.Text,
+                DateTime.Parse(textBoxEndGuarantee.Text),
                 list[0].Deleted,
                 list[0].ReturnUnderGuarantee,
                 list[0].DateReturn,
@@ -396,8 +397,8 @@ namespace WinFormsApp1
                 a.DateIssue
             }).ToList();
 
-            if (dateTimePicker1.Value < DateTime.Parse(list[0].DateCompleted))
-                dateTimePicker1.Value = DateTime.Parse(list[0].DateCompleted);
+            if (dateTimePicker1.Value < list[0].DateCompleted.Value)
+                dateTimePicker1.Value = list[0].DateCompleted.Value;
 
             textBoxEndGuarantee.Text = (dateTimePicker1.Value.AddMonths(list[0].Guarantee)).ToShortDateString();
             if (((int)(DateTime.Parse(textBoxEndGuarantee.Text) - DateTime.Now).TotalDays) > 0)

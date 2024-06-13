@@ -178,13 +178,13 @@ namespace WinFormsApp1
                         int idClient = IdKeyClient();
                         int idOrder = Convert.ToInt32(textBoxIdOrder.Text);
                         int? nameMaster = null;
-                        string? dateStartWork = null;
+                        DateTime? dateStartWork = null;
                         string color = "";
                         int? maxPrice = null;
                         if (comboBoxMaster.Text != "-")
                         {
                             nameMaster = context.Masters.Where(a => a.NameMaster == comboBoxMaster.Text).ToList()[0].Id;
-                            dateStartWork = dateTimePicker1.Text;
+                            dateStartWork = dateTimePicker1.Value;
                         }
 
                         if (checkBox1.Checked)
@@ -239,7 +239,7 @@ namespace WinFormsApp1
                             idOrder,
                             context.Clients.Where(a => a.IdClient == textBoxNameClient.Text).ToList()[0].Id,
                             nameMaster,
-                            dateTimePicker1.Text,
+                            dateTimePicker1.Value,
                             dateStartWork,
                             null,
                             null,

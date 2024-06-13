@@ -26,7 +26,7 @@ namespace WinFormsApp1
             }).ToList();
             var listMalfunctionOrder = context.MalfunctionOrders.Where(i => i.OrderId == idOrder).ToList();
 
-            dateСompletion = DateTime.Parse(list[0].DateCompleted);
+            dateСompletion = list[0].DateCompleted.Value;
 
             if (listDetails[0].IdWarehouse != null)
             {
@@ -54,7 +54,7 @@ namespace WinFormsApp1
             }
 
             labelNameClient.Text = list[0].NameClient;
-            labelDateCreate.Text = list[0].DateCreation;
+            labelDateCreate.Text = list[0].DateCreation.ToString();
             labelEquipment.Text = list[0].Equipment?.Name;
 
             for(int i = 0; i < listMalfunctionOrder.Count; i++)
@@ -140,15 +140,15 @@ namespace WinFormsApp1
             }
         }
 
-        public string DateIssue
+        public DateTime DateIssue
         {
             get
             {
-                return this.dateTimePicker1.Text;
+                return this.dateTimePicker1.Value;
             }
             set
             {
-                this.dateTimePicker1.Value = DateTime.Parse(value);
+                this.dateTimePicker1.Value = value;
             }
         }
 
@@ -164,15 +164,15 @@ namespace WinFormsApp1
             }
         }
 
-        public string DateEndGuarantee
+        public DateTime DateEndGuarantee
         {
             get
             {
-                return this.labelGuaranteePeriod.Text;
+                return DateTime.Parse(this.labelGuaranteePeriod.Text);
             }
             set
             {
-                this.labelGuaranteePeriod.Text = value;
+                this.labelGuaranteePeriod.Text = value.ToString();
             }
         }
     }

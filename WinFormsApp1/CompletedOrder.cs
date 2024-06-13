@@ -64,7 +64,7 @@ namespace WinFormsApp1
                     a.ModelTechnic
                 })
                 .ToList();
-            dateCreate = DateTime.Parse(list[0].DateCreation);
+            dateCreate = list[0].DateCreation.Value;
             labelDurationRepair.Text = String.Format("{0} дн.", (int)(DateTime.Now - dateCreate).TotalDays);
             labelIdOrder.Text = list[0].Id.ToString();
             labelNameDevice.Text = String.Format("{0} {1} {2}", list[0].TypeTechnic?.NameTypeTechnic,
@@ -496,10 +496,10 @@ namespace WinFormsApp1
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
-        public string DateComplete
+        public DateTime DateComplete
         {
-            get { return this.dateTimePicker1.Text; }
-            set { this.dateTimePicker1.Value = DateTime.Parse(value); }
+            get { return this.dateTimePicker1.Value; }
+            set { this.dateTimePicker1.Value = value; }
         }
         public bool EnabledPrice
         {

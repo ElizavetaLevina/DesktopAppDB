@@ -8,13 +8,13 @@ namespace WinFormsApp1.DTO
         [DisplayName("№")]
         public int Id { get; set; }
         [DisplayName("Дата приема")]
-        public string? DateCreation { get; set; }
+        public DateTime? DateCreation { get; set; }
         [DisplayName("Дата начала ремонта")] 
-        public string? DateStartWork { get; set; }
+        public DateTime? DateStartWork { get; set; }
         [DisplayName("Дата окончания ремонта")]
-        public string? DateCompleted { get; set; }
+        public DateTime? DateCompleted { get; set; }
         [DisplayName("Дата выдачи аппарата")]
-        public string? DateIssue { get; set; }
+        public DateTime? DateIssue { get; set; }
         [DisplayName("Мастер")]
         public string? MasterName { get; set; }
         [DisplayName("Тип аппарата/Производитель/Модель")]
@@ -30,7 +30,7 @@ namespace WinFormsApp1.DTO
         [DisplayName("")]
         public int Guarantee { get; set; }
         [DisplayName("")]
-        public string? DateEndGuarantee { get; set; }
+        public DateTime? DateEndGuarantee { get; set; }
         //public DateTime? DateEndGuaranteeDT 
         //{
         //    get
@@ -38,6 +38,7 @@ namespace WinFormsApp1.DTO
         //        return !string.IsNullOrEmpty(DateEndGuarantee) ? DateTime.Parse(DateEndGuarantee) : null;
         //    }
         //}
+       
         [DisplayName("")]
         public string ColorRow { get; set; } = Color.Black.Name;
 

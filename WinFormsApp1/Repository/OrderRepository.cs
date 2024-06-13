@@ -1,79 +1,47 @@
-﻿using WinFormsApp1.DTO;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
 
 namespace WinFormsApp1.Repository
 {
     public class OrderRepository
     {
-        public List<OrderDTO> GetOrders(bool? inProgress, bool? deleted, bool? issue, bool? dateStartWork, 
-            bool? dateCompleted, bool? dateIssue, bool? id)
+        /// <summary>
+        /// Получение списка заказов
+        /// </summary>
+        /// <param name="inProgress"></param>
+        /// <param name="deleted"></param>
+        /// <param name="issue"></param>
+        /// <param name="dateStartWork"></param>
+        /// <param name="dateCompleted"></param>
+        /// <param name="dateIssue"></param>
+        /// <param name="id"></param>
+        /// <returns>Список заказов</returns>
+        public List<OrderDTO> GetOrders(bool? inProgress, bool? deleted, bool? issue, bool dateStartWork = false, 
+            bool dateCompleted = false, bool dateIssue = false, bool id = false)
         {
             Context context = new();
 
-            /*var list = context.Orders;
+            var set = context.Orders.Where(c => true);
 
             if(deleted != null)
-                list.Where(i => i.Deleted == deleted);
+                set = set.Where(i => i.Deleted == deleted);
             else
-                list.Where(i => i.InProgress == inProgress && i.Issue == issue);*/
+                set = set.Where(i => i.InProgress == inProgress && i.Issue == issue);
 
-            var list = context.Orders.Where(i => i.InProgress == inProgress &&
-            i.Deleted == deleted && i.Issue == issue);
+            if (dateStartWork == true)
+                set = set.OrderByDescending(i => i.DateStartWork);
+            if(dateCompleted == true)
+                set = set.OrderByDescending(i => i.DateCompleted);
+            if(dateIssue == true)
+                set = set.OrderByDescending(i => i.DateIssue);
+            if(id == true)
+                set = set.OrderByDescending(i => i.Id);
 
-            if (dateStartWork != null)
-                list.OrderByDescending(i => i.DateStartWork);
-            if(dateCompleted != null)
-                list.OrderByDescending(i => i.DateCompleted);
-            if(dateIssue != null)
-                list.OrderByDescending(i => i.DateIssue);
-            if(id != null)
-                list.OrderByDescending(i => i.Id);
-
-            return list
+            return set
                 .Select(a => new OrderDTO(a))
                 .ToList();
 
-        }
-        public static async void AddOrderAsync(List<Order> list)
-        {
-            using Context db = new();
-
-            Order order = new()
-            {
-                Id = list[0].Id,
-                ClientId = list[0].ClientId,
-                MasterId = list[0].MasterId,
-                DateCreation = list[0].DateCreation,
-                DateStartWork = list[0].DateStartWork,
-                DateCompleted = list[0].DateCompleted,
-                DateIssue = list[0].DateIssue,
-                TypeTechnicId = list[0].TypeTechnicId,
-                BrandTechnicId = list[0].BrandTechnicId,
-                ModelTechnic = list[0].ModelTechnic,
-                FactoryNumber = list[0].FactoryNumber,
-                EquipmentId = list[0].EquipmentId,
-                DiagnosisId = list[0].DiagnosisId,
-                Note = list[0].Note,
-                InProgress = list[0].InProgress,
-                Guarantee = list[0].Guarantee,
-                DateEndGuarantee = list[0].DateEndGuarantee,
-                Deleted = list[0].Deleted,
-                ReturnUnderGuarantee = list[0].ReturnUnderGuarantee,
-                DateReturn = list[0].DateReturn,
-                DateCompletedReturn = list[0].DateCompletedReturn,
-                DateIssueReturn = list[0].DateIssueReturn,
-                Issue = list[0].Issue,
-                ColorRow = list[0].ColorRow,
-                DateLastCall = list[0].DateLastCall,
-                PriceAgreed = list[0].PriceAgreed,
-                MaxPrice = list[0].MaxPrice
-            };
-            try
-            {
-                db.Orders.Add(order);
-                await db.SaveChangesAsync();
-            }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         public static void RemoveOrder(List<Order> list)
@@ -88,45 +56,51 @@ namespace WinFormsApp1.Repository
             catch (Exception ex) { Console.WriteLine(ex.Message); }
         }
 
-        public static void ChangeOrder(List<Order> list)
+        public async Task SaveOrderAsync(OrderEditDTO orderDTO, CancellationToken token = default)
         {
             using Context db = new();
             Order order = new()
             {
-                Id = list[0].Id,
-                ClientId = list[0].ClientId,
-                MasterId = list[0].MasterId,
-                DateCreation = list[0].DateCreation,
-                DateStartWork = list[0].DateStartWork,
-                DateCompleted = list[0].DateCompleted,
-                DateIssue = list[0].DateIssue,
-                TypeTechnicId = list[0].TypeTechnicId,
-                BrandTechnicId = list[0].BrandTechnicId,
-                ModelTechnic = list[0].ModelTechnic,
-                FactoryNumber = list[0].FactoryNumber,
-                EquipmentId = list[0].EquipmentId,
-                DiagnosisId = list[0].DiagnosisId,
-                Note = list[0].Note,
-                InProgress = list[0].InProgress,
-                Guarantee = list[0].Guarantee,
-                DateEndGuarantee = list[0].DateEndGuarantee,
-                Deleted = list[0].Deleted,
-                ReturnUnderGuarantee = list[0].ReturnUnderGuarantee,
-                DateReturn = list[0].DateReturn,
-                DateCompletedReturn = list[0].DateCompletedReturn,
-                DateIssueReturn = list[0].DateIssueReturn,
-                Issue = list[0].Issue,
-                ColorRow = list[0].ColorRow,
-                DateLastCall = list[0].DateLastCall,
-                PriceAgreed = list[0].PriceAgreed,
-                MaxPrice = list[0].MaxPrice
+                Id = orderDTO.Id,
+                ClientId = orderDTO.ClientId,
+                MasterId = orderDTO.MasterId,
+                DateCreation = orderDTO.DateCreation,
+                DateStartWork = orderDTO.DateStartWork,
+                DateCompleted = orderDTO.DateCompleted,
+                DateIssue = orderDTO.DateIssue,
+                TypeTechnicId = orderDTO.TypeTechnicId,
+                BrandTechnicId = orderDTO.BrandTechnicId,
+                ModelTechnic = orderDTO.ModelTechnic,
+                FactoryNumber = orderDTO.FactoryNumber,
+                EquipmentId = orderDTO.EquipmentId,
+                DiagnosisId = orderDTO.DiagnosisId,
+                Note = orderDTO.Note,
+                InProgress = orderDTO.InProgress,
+                Guarantee = orderDTO.Guarantee,
+                DateEndGuarantee = orderDTO.DateEndGuarantee,
+                Deleted = orderDTO.Deleted,
+                ReturnUnderGuarantee = orderDTO.ReturnUnderGuarantee,
+                DateReturn = orderDTO.DateReturn,
+                DateCompletedReturn = orderDTO.DateCompletedReturn,
+                DateIssueReturn = orderDTO.DateIssueReturn,
+                Issue = orderDTO.Issue,
+                ColorRow = orderDTO.ColorRow,
+                DateLastCall = orderDTO.DateLastCall,
+                PriceAgreed = orderDTO.PriceAgreed,
+                MaxPrice = orderDTO.MaxPrice
             };
             try
             {
-                db.Orders.Update(order);
-                db.SaveChanges();
+                if (order.Id == 0)
+                    db.Orders.Add(order);
+                else
+                {
+                    db.Orders.Update(order);
+                }
+                
+                await db.SaveChangesAsync(token);
             }
-            catch (Exception ex) { Console.WriteLine(ex.Message); }
+            catch (Exception ex) { Console.WriteLine(ex.Message); throw; }
         }
     }
 }

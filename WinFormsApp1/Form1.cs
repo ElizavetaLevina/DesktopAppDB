@@ -15,6 +15,8 @@ namespace WinFormsApp1
         public int idRow;
         public string status = "";
         public bool logInSystem = false;
+
+        OrderRepository orderRepository = new();
         public Form1()
         {
             InitializeComponent();
@@ -119,11 +121,18 @@ namespace WinFormsApp1
         private void InProgress()
         {
             status = "InRepair";
-            OrderRepository order = new();
             try
             {
-                List<OrderDTO> list = order.GetOrders(inProgress: true, deleted: false, issue: false,
-                    dateStartWork: true, dateCompleted: null, dateIssue: null, id: null);
+                //TODO: del test, пример вызова асинхронного метода в синхронном
+                //Task.Run(async () =>
+                //{
+                //    var orderDTO = new OrderEditDTO() { Id = 3, ClientId = 1, TypeTechnicId = 1, BrandTechnicId = 1, InProgress = true, Guarantee = 0, Deleted = false,
+                //        ReturnUnderGuarantee = false, Issue = false, PriceAgreed = false, DateCreation = DateTime.Now};
+                //    await orderRepository.SaveOrderAsync(orderDTO);
+                //});
+
+                List<OrderDTO> list = orderRepository.GetOrders(inProgress: true, deleted: false, issue: false,
+                    dateStartWork: true);
                 dataGridView1.DataSource = Funcs.ToDataTable(list);
                 UpdateTable();
                 ChangeColorRows();
@@ -134,11 +143,10 @@ namespace WinFormsApp1
         private void OrderСompleted()
         {
             status = "Completed";
-            OrderRepository order = new();
             try
             {
-                List<OrderDTO> list = order.GetOrders(inProgress: false, deleted: false, issue: false,
-                    dateStartWork: null, dateCompleted: true, dateIssue: null, id: null);
+                List<OrderDTO> list = orderRepository.GetOrders(inProgress: false, deleted: false, issue: false,
+                    dateCompleted: true);
                 dataGridView1.DataSource = Funcs.ToDataTable(list);
                 UpdateTable();
                 ChangeColorRows();
@@ -149,11 +157,10 @@ namespace WinFormsApp1
         private void OrderGuarantee()
         {
             status = "GuaranteeIssue";
-            OrderRepository order = new();
             try
             {
-                List<OrderDTO> list = order.GetOrders(inProgress: false, deleted: false, issue: true,
-                    dateStartWork: null, dateCompleted: null, dateIssue: true, id: null);
+                List<OrderDTO> list = orderRepository.GetOrders(inProgress: false, deleted: false, issue: true,
+                    dateIssue: true);
 
                 for (int i = 0; i < list.Count; i++)
                 {
@@ -170,11 +177,10 @@ namespace WinFormsApp1
         private void OrderArchive()
         {
             status = "Archive";
-            OrderRepository order = new();
             try
             {
-                List<OrderDTO> list = order.GetOrders(inProgress: false, deleted: false, issue: true,
-                    dateStartWork: null, dateCompleted: null, dateIssue: true, id: null);
+                List<OrderDTO> list = orderRepository.GetOrders(inProgress: false, deleted: false, issue: true,
+                    dateIssue: true);
                 dataGridView1.DataSource = Funcs.ToDataTable(list);
 
                 for (int i = 0; i < list.Count; i++)
@@ -193,11 +199,10 @@ namespace WinFormsApp1
         private void Trash()
         {
             status = "Trash";
-            OrderRepository order = new();
             try
             {
-                List<OrderDTO> list = order.GetOrders(inProgress: null, deleted: true, issue: null,
-                    dateStartWork: null, dateCompleted: true, dateIssue: null, id: null);
+                List<OrderDTO> list = orderRepository.GetOrders(inProgress: null, deleted: true, issue: null,
+                    dateCompleted: true);
                 dataGridView1.DataSource = Funcs.ToDataTable(list);
                 UpdateTable();
                 ChangeColorRows();

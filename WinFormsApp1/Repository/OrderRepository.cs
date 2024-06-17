@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
-using WinFormsApp1.DTO;
+﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
 
 namespace WinFormsApp1.Repository
@@ -17,7 +16,7 @@ namespace WinFormsApp1.Repository
         /// <param name="dateIssue"></param>
         /// <param name="id"></param>
         /// <returns>Список заказов</returns>
-        public List<OrderDTO> GetOrders(bool? inProgress, bool? deleted, bool? issue, bool dateStartWork = false, 
+        public List<OrderDTO> GetOrders(bool? inProgress = null, bool? deleted = null, bool? issue = null, bool dateCreation = false, 
             bool dateCompleted = false, bool dateIssue = false, bool id = false)
         {
             Context context = new();
@@ -26,11 +25,13 @@ namespace WinFormsApp1.Repository
 
             if(deleted != null)
                 set = set.Where(i => i.Deleted == deleted);
-            else
-                set = set.Where(i => i.InProgress == inProgress && i.Issue == issue);
+            if(inProgress != null)
+                set = set.Where(i => i.InProgress == inProgress);
+            if(issue != null)
+                set = set.Where(i => i.Issue == issue);
 
-            if (dateStartWork == true)
-                set = set.OrderByDescending(i => i.DateStartWork);
+            if (dateCreation == true)
+                set = set.OrderByDescending(i => i.DateCreation);
             if(dateCompleted == true)
                 set = set.OrderByDescending(i => i.DateCompleted);
             if(dateIssue == true)

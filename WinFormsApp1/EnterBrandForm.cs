@@ -1,4 +1,6 @@
-﻿using WinFormsApp1.Model;
+﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Model;
+using WinFormsApp1.Repository;
 using Context = WinFormsApp1.Model.Context;
 
 namespace WinFormsApp1
@@ -10,6 +12,9 @@ namespace WinFormsApp1
         public int id;
         public List<int>? idList = [];
         public List<int>? idRemoveList = [];
+        BrandTechnicRepository brandTechnicRepository = new();
+        TypeTechnicRepository typeTechnicRepository = new();
+        TypeBrandRepository typeBrandRepository = new();
         public EnterBrandForm(string _name, bool _New, int _id)
         {
             InitializeComponent();
@@ -37,15 +42,15 @@ namespace WinFormsApp1
             }
             else
             {
-                this.DialogResult = DialogResult.OK;
-                this.Close();
+                DialogResult = DialogResult.OK;
+                Close();
             }
         }
 
         private void BtnExit_Click(object sender, EventArgs e)
         {
-            this.DialogResult= DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         private void EnterBrandForm_Activated(object sender, EventArgs e)
@@ -60,25 +65,21 @@ namespace WinFormsApp1
             {
                 if (!listBox1.Items.Contains(comboBoxSecondName.Text))
                 {
-                    listBox1.Items.Add(comboBoxSecondName.Text);
                     int id = 0;
-                    using (Context context = new())
-                    {
-                        switch (name)
-                        {
-                            case "type":
-                                var listBrand = context.BrandTechnices.Where(i =>
-                                i.NameBrandTechnic == comboBoxSecondName.Text).ToList();
-                                id = listBrand[0].Id;
-                                break;
-                            case "brand":
-                                var listType = context.TypeTechnices.Where(i =>
-                                i.NameTypeTechnic == comboBoxSecondName.Text).ToList();
-                                id = listType[0].Id;
-                                break;
+                    listBox1.Items.Add(comboBoxSecondName.Text);
 
-                        }
+                    switch (name)
+                    {
+                        case "type":
+                            var listBrand = brandTechnicRepository.GetBrandTechnics(whole: false, name: comboBoxSecondName.Text);
+                            id = listBrand[0].Id;
+                            break;
+                        case "brand":
+                            var listType = typeTechnicRepository.GetTypeTechnics(whole: false, name: comboBoxSecondName.Text);
+                            id = listType[0].Id;
+                            break;
                     }
+
                     idList?.Add(id);
                     if (idRemoveList.Contains(id))
                         idRemoveList.Remove(id);
@@ -91,25 +92,21 @@ namespace WinFormsApp1
         {
             try
             {
-                listBox1.Items.Remove(comboBoxSecondName.Text);
                 int id = 0;
-                using (Context context = new())
+                listBox1.Items.Remove(comboBoxSecondName.Text);
+                
+                switch (name)
                 {
-                    switch (name)
-                    {
-                        case "type":
-                            var listBrand = context.BrandTechnices.Where(i =>
-                            i.NameBrandTechnic == comboBoxSecondName.Text).ToList();
-                            id = listBrand[0].Id;
-                            break;
-                        case "brand":
-                            var listType = context.TypeTechnices.Where(i =>
-                            i.NameTypeTechnic == comboBoxSecondName.Text).ToList();
-                            id = listType[0].Id;
-                            break;
-
-                    }
+                    case "type":
+                        var listBrand = brandTechnicRepository.GetBrandTechnics(whole: false, name: comboBoxSecondName.Text);
+                        id = listBrand[0].Id;
+                        break;
+                    case "brand":
+                        var listType = typeTechnicRepository.GetTypeTechnics(whole: false, name: comboBoxSecondName.Text);
+                        id = listType[0].Id;
+                        break;
                 }
+
                 idList?.Remove(id);
                 idRemoveList?.Add(id);
             }
@@ -135,10 +132,8 @@ namespace WinFormsApp1
             string _name = "";
             string secondName = "";
             string nameInList = "";
-            int idKey = 1;
             switch (name)
             {
-                
                 case "type":
                     _name = "brand";
                     secondName = "Тип устройства";
@@ -162,20 +157,30 @@ namespace WinFormsApp1
                 switch (name)
                 {
                     case "type":
-                        if(!context.BrandTechnices.Any(a => a.NameBrandTechnic == enterBrandForm.NameTextBox))
+                        if (!brandTechnicRepository.GetBrandTechnics(whole: false, name: enterBrandForm.NameTextBox).Any())
                         {
-                            if(context.BrandTechnices.Any())
-                                idKey = context.BrandTechnices.OrderBy(i => i.Id).Last().Id + 1;
-                            CRUD.AddAsyncBrandTechnic(idKey, enterBrandForm.NameTextBox);
+                            Task.Run(async () =>
+                            {
+                                var brandTechnicDTO = new BrandTechnicEditDTO() { Id = 0, Name = enterBrandForm.NameTextBox };
+                                await brandTechnicRepository.SaveBrandTechnicAsync(brandTechnicDTO);
+                            });
                         }
                         if (enterBrandForm.idList != null)
                         {
                             for (int i = 0; i < enterBrandForm.idList.Count; i++)
                             {
-                                if (!context.TypeBrands.Any(a => a.TypeTechnicsId == id &&
-                                a.BrandTechnicsId == enterBrandForm.idList[i]))
+                                if (!typeBrandRepository.GetTypeBrand(idBrand: id, idType: enterBrandForm.idList[i]).Any())
                                 {
-                                    CRUD.AddAsyncTypeBrand(id, enterBrandForm.idList[i]);
+                                    int typeId = enterBrandForm.idList[i];
+                                    Task.Run(async () =>
+                                    {
+                                        var typeBrandDTO = new TypeBrandEditDTO() 
+                                        { 
+                                            BrandTechnicsId = id, 
+                                            TypeTechnicsId = typeId
+                                        };
+                                        await typeBrandRepository.SaveTypeBrandAsync(typeBrandDTO);
+                                    });
                                 }
                             }
                         }
@@ -183,25 +188,41 @@ namespace WinFormsApp1
                         {
                             for (int i = 0; i < enterBrandForm.idRemoveList.Count; i++)
                             {
-                                CRUD.RemoveTypeBrand(id, enterBrandForm.idRemoveList[i]);
+                                var typeBrandDTO = new TypeBrandEditDTO()
+                                {
+                                    BrandTechnicsId = id,
+                                    TypeTechnicsId = enterBrandForm.idRemoveList[i]
+                                };
+                                typeBrandRepository.RemoveTypeBrand(typeBrandDTO);
                             }
                         }
                         break;
                     case "brand":
-                        if (!context.TypeTechnices.Any(a => a.NameTypeTechnic == enterBrandForm.NameTextBox))
+                        if (!typeTechnicRepository.GetTypeTechnics(whole: false, name: enterBrandForm.NameTextBox).Any())
                         {
-                            if (context.TypeTechnices.Any())
-                                idKey = context.TypeTechnices.OrderBy(i => i.Id).Last().Id + 1;
-                            CRUD.AddAsyncTypeTechnic(idKey, enterBrandForm.NameTextBox);
+                            Task.Run(async () =>
+                            {
+                                var typeTechnicDTO = new TypeTechnicEditDTO() { Id = 0, Name = enterBrandForm.NameTextBox };
+                                await typeTechnicRepository.SaveTypeTechnicAsync(typeTechnicDTO);
+                            });
+
                         }
                         if (enterBrandForm.idList != null)
                         {
                             for (int i = 0; i < enterBrandForm.idList.Count; i++)
                             {
-                                if (!context.TypeBrands.Any(a => a.TypeTechnicsId == id &&
-                                a.BrandTechnicsId == enterBrandForm.idList[i]))
+                                if (!typeBrandRepository.GetTypeBrand(idBrand: enterBrandForm.idList[i], idType: id).Any())
                                 {
-                                    CRUD.AddAsyncTypeBrand(enterBrandForm.idList[i], id);
+                                    int brandId = enterBrandForm.idList[i];
+                                    Task.Run(async () =>
+                                    {
+                                        var typeBrandDTO = new TypeBrandEditDTO()
+                                        {
+                                            BrandTechnicsId = brandId,
+                                            TypeTechnicsId = id
+                                        };
+                                        await typeBrandRepository.SaveTypeBrandAsync(typeBrandDTO);
+                                    });
                                 }
                             }
                         }
@@ -209,7 +230,12 @@ namespace WinFormsApp1
                         {
                             for (int i = 0; i < enterBrandForm.idRemoveList.Count; i++)
                             {
-                                CRUD.RemoveTypeBrand(enterBrandForm.idRemoveList[i], id);
+                                var typeBrandDTO = new TypeBrandEditDTO()
+                                {
+                                    BrandTechnicsId = enterBrandForm.idRemoveList[i],
+                                    TypeTechnicsId = id
+                                };
+                                typeBrandRepository.RemoveTypeBrand(typeBrandDTO);
                             }
                         }
                         break;
@@ -220,7 +246,6 @@ namespace WinFormsApp1
 
         private void UpdateComboBox(string name)
         {
-            Context context = new();
             comboBoxSecondName.DataSource = null;
             comboBoxSecondName.Items.Clear();
             switch (name)
@@ -228,10 +253,10 @@ namespace WinFormsApp1
                 case "type":
                     comboBoxSecondName.ValueMember = "Id";
                     comboBoxSecondName.DisplayMember = "NameBrandTechnic";
-                    comboBoxSecondName.DataSource = context.BrandTechnices.ToList();
+                    comboBoxSecondName.DataSource = brandTechnicRepository.GetBrandTechnics();
                     if (!New)
                     {
-                        var list = context.TypeBrands.Where(i => i.TypeTechnicsId == id).ToList();
+                        var list = typeBrandRepository.GetTypeBrand(idType: id);
                         for (int i = 0; i < list.Count; i++)
                         {
                             if (listBox1.Items.IndexOf(list[i].BrandTechnic?.NameBrandTechnic) < 0)
@@ -245,10 +270,10 @@ namespace WinFormsApp1
                 case "brand":
                     comboBoxSecondName.ValueMember = "Id";
                     comboBoxSecondName.DisplayMember = "NameTypeTechnic";
-                    comboBoxSecondName.DataSource = context.TypeTechnices.ToList();
+                    comboBoxSecondName.DataSource = typeTechnicRepository.GetTypeTechnics();
                     if (!New)
                     {
-                        var list = context.TypeBrands.Where(i => i.BrandTechnicsId == id).ToList();
+                        var list = typeBrandRepository.GetTypeBrand(idBrand: id); 
                         for (int i = 0; i < list.Count; i++)
                         {
                             if (listBox1.Items.IndexOf(list[i].TypeTechnic?.NameTypeTechnic) < 0)
@@ -285,7 +310,5 @@ namespace WinFormsApp1
             get { return this.labelNameInList.Text; }
             set { this.labelNameInList.Text = value; }
         }
-
-
     }
 }

@@ -7,6 +7,7 @@ using FluentFTP;
 using Color = System.Drawing.Color;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Repository;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace WinFormsApp1
 {
@@ -26,13 +27,13 @@ namespace WinFormsApp1
                 ToolStripEnabled();
                 if (Properties.Settings.Default.Size == "Small")
                 {
-                    this.Width = Properties.Settings.Default.WidthSmall;
-                    this.Height = Properties.Settings.Default.HeightSmall;
+                    Width = Properties.Settings.Default.WidthSmall;
+                    Height = Properties.Settings.Default.HeightSmall;
                 }
                 else if (Properties.Settings.Default.Size == "Medium")
                 {
-                    this.Width = Properties.Settings.Default.WidthMedium;
-                    this.Height = Properties.Settings.Default.HeightMedium;
+                    Width = Properties.Settings.Default.WidthMedium;
+                    Height = Properties.Settings.Default.HeightMedium;
                 }
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
@@ -130,9 +131,7 @@ namespace WinFormsApp1
                 //        ReturnUnderGuarantee = false, Issue = false, PriceAgreed = false, DateCreation = DateTime.Now};
                 //    await orderRepository.SaveOrderAsync(orderDTO);
                 //});
-
-                List<OrderDTO> list = orderRepository.GetOrders(inProgress: true, deleted: false, issue: false,
-                    dateStartWork: true);
+                List<OrderDTO> list = orderRepository.GetOrders(inProgress: true, deleted: false, dateCreation: true);
                 dataGridView1.DataSource = Funcs.ToDataTable(list);
                 UpdateTable();
                 ChangeColorRows();
@@ -186,7 +185,6 @@ namespace WinFormsApp1
                 for (int i = 0; i < list.Count; i++)
                 {
                     if (list[i].DateEndGuarantee.Value.Date >= DateTime.Now.Date)
-                        //if (list[i].DateEndGuaranteeDT < DateTime.Now)
                         list.Remove(list[i]);
                 }
 
@@ -201,8 +199,7 @@ namespace WinFormsApp1
             status = "Trash";
             try
             {
-                List<OrderDTO> list = orderRepository.GetOrders(inProgress: null, deleted: true, issue: null,
-                    dateCompleted: true);
+                List<OrderDTO> list = orderRepository.GetOrders(deleted: true, dateCompleted: true);
                 dataGridView1.DataSource = Funcs.ToDataTable(list);
                 UpdateTable();
                 ChangeColorRows();

@@ -8,13 +8,13 @@ namespace WinFormsApp1.DTO
         [DisplayName("№")]
         public int Id { get; set; }
         [DisplayName("Дата приема")]
-        public DateTime? DateCreation { get; set; }
+        public string? DateCreation { get; set; }
         [DisplayName("Дата начала ремонта")] 
-        public DateTime? DateStartWork { get; set; }
+        public string? DateStartWork { get; set; }
         [DisplayName("Дата окончания ремонта")]
-        public DateTime? DateCompleted { get; set; }
+        public string? DateCompleted { get; set; }
         [DisplayName("Дата выдачи аппарата")]
-        public DateTime? DateIssue { get; set; }
+        public string? DateIssue { get; set; }
         [DisplayName("Мастер")]
         public string? MasterName { get; set; }
         [DisplayName("Тип аппарата/Производитель/Модель")]
@@ -45,10 +45,10 @@ namespace WinFormsApp1.DTO
         public OrderDTO(Order order)
         {
             Id = order.Id;
-            DateCreation = order.DateCreation;
-            DateStartWork = order.DateStartWork;
-            DateCompleted = order.DateCompleted;
-            DateIssue = order.DateIssue;
+            DateCreation = order.DateCreation?.ToShortDateString();
+            DateStartWork = order.DateStartWork?.ToShortDateString();
+            DateCompleted = order.DateCompleted?.ToShortDateString();
+            DateIssue = order.DateIssue?.ToShortDateString();
             MasterName = order.Master?.NameMaster;
             NameDevice = String.Format("{0} {1} {2}", order.TypeTechnic?.NameTypeTechnic,
                 order.BrandTechnic?.NameBrandTechnic, order.ModelTechnic);

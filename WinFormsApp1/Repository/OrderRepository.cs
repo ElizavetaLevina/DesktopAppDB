@@ -42,15 +42,14 @@ namespace WinFormsApp1.Repository
             return set
                 .Select(a => new OrderDTO(a))
                 .ToList();
-
         }
 
-        public static void RemoveOrder(List<Order> list)
+        public static void RemoveOrder(OrderEditDTO orderDTO)
         {
-            using Context db = new();
-            Order order = new() { Id = list[0].Id };
             try
             {
+                using Context db = new();
+                var order = db.Orders.FirstOrDefault(c => c.Id == orderDTO.Id);
                 db.Orders.Remove(order);
                 db.SaveChanges();
             }

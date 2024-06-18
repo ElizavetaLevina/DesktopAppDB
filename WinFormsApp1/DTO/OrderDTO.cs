@@ -31,14 +31,6 @@ namespace WinFormsApp1.DTO
         public int Guarantee { get; set; }
         [DisplayName("")]
         public DateTime? DateEndGuarantee { get; set; }
-        //public DateTime? DateEndGuaranteeDT 
-        //{
-        //    get
-        //    {
-        //        return !string.IsNullOrEmpty(DateEndGuarantee) ? DateTime.Parse(DateEndGuarantee) : null;
-        //    }
-        //}
-       
         [DisplayName("")]
         public string ColorRow { get; set; } = Color.Black.Name;
 

@@ -16,7 +16,7 @@ namespace WinFormsApp1.Repository
                 .ToList();
         }
 
-        public async Task<TypeTechnic> SaveTypeTechnicAsync(TypeTechnicEditDTO typeTechnicDTO, CancellationToken token = default)
+        public async Task<int> SaveTypeTechnicAsync(TypeTechnicEditDTO typeTechnicDTO, CancellationToken token = default)
         {
             using Context db = new();
             TypeTechnic typeTechnic = new()
@@ -31,20 +31,17 @@ namespace WinFormsApp1.Repository
                 else
                     db.TypeTechnices.Update(typeTechnic);
                 await db.SaveChangesAsync(token);
-                return typeTechnic;
+                return typeTechnic.Id;
             }
             catch (Exception ex) { Console.WriteLine(ex.Message); throw; }
         }
 
         public void RemoveTypeTechnic(TypeTechnicEditDTO typeTechnicDTO)
         {
-            using Context db = new();
-            TypeTechnic typeTechnic = new()
-            {
-                Id = typeTechnicDTO.Id
-            };
             try
             {
+                using Context db = new();
+                var typeTechnic = db.TypeTechnices.FirstOrDefault(c => c.Id == typeTechnicDTO.Id);
                 db.TypeTechnices.Remove(typeTechnic);
                 db.SaveChanges();
             }

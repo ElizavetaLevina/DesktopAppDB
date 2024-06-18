@@ -15,7 +15,7 @@ namespace WinFormsApp1
 
         private void BtnAddBrand_Click(object sender, EventArgs e)
         {
-            EnterBrandForm enterBrandForm = new("brand", true, 0)
+            EnterBrandForm enterBrandForm = new("brand")
             {
                 StartPosition = FormStartPosition.CenterParent,
                 LabelSecondName = "Тип устройства",
@@ -24,29 +24,28 @@ namespace WinFormsApp1
             
             if (enterBrandForm.ShowDialog() == DialogResult.OK)
             {
-                Task.Run(async () =>
+                int brandTechnicId = 0;
+                var task = Task.Run(async () =>
                 {
                     var brandTechnicDTO = new BrandTechnicEditDTO() { Id = 0, Name = enterBrandForm.NameTextBox };
-                    await brandTechnicRepository.SaveBrandTechnicAsync(brandTechnicDTO);
-                });
-
-                var list = brandTechnicRepository.GetBrandTechnics().OrderBy(i => i.Id).Last();
+                    brandTechnicId = await brandTechnicRepository.SaveBrandTechnicAsync(brandTechnicDTO);
+                }); 
+                task.Wait();
 
                 if (enterBrandForm.idList != null)
                 {
-                    for (int i = 0; i < enterBrandForm.idList.Count; i++)
+                    foreach(var typeId in enterBrandForm.idList)
                     {
-                        int brandId = list.Id + 1;
-                        int typeId = enterBrandForm.idList[i];
-                        Task.Run(async () =>
+                        task = Task.Run(async () =>
                         {
                             var typeBrandDTO = new TypeBrandEditDTO()
                             {
-                                BrandTechnicsId = brandId,
+                                BrandTechnicsId = brandTechnicId,
                                 TypeTechnicsId = typeId
                             };
                             await typeBrandRepository.SaveTypeBrandAsync(typeBrandDTO);
                         });
+                        task.Wait();
                     }
                 }
                 UpdateTable();
@@ -58,10 +57,10 @@ namespace WinFormsApp1
             if (dataGridView1.Rows.Count > 0)
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                int brandTechnicId = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
                 string? name = dataGridView1.Rows[numberRow].Cells["NameBrandTechnic"].Value.ToString();
                 List <TypeBrandDTO> list = typeBrandRepository.GetTypeBrand();
-                EnterBrandForm enterBrandForm = new("brand", false, id)
+                EnterBrandForm enterBrandForm = new("brand", false, brandTechnicId)
                 {
                     StartPosition = FormStartPosition.CenterParent,
                     Text = "Изменение названия фирмы",
@@ -73,24 +72,24 @@ namespace WinFormsApp1
 
                 if (enterBrandForm.ShowDialog() == DialogResult.OK)
                 {
-                    Task.Run(async () =>
+                    var task = Task.Run(async () =>
                     {
-                        var brandTechnicDTO = new BrandTechnicEditDTO() { Id = id, Name = enterBrandForm.NameTextBox };
+                        var brandTechnicDTO = new BrandTechnicEditDTO() { Id = brandTechnicId, Name = enterBrandForm.NameTextBox };
                         await brandTechnicRepository.SaveBrandTechnicAsync(brandTechnicDTO);
                     });
+                    task.Wait();
 
                     if (enterBrandForm.idList != null)
                     {
-                        for (int i = 0; i < enterBrandForm.idList.Count; i++)
+                        foreach(var typeId in enterBrandForm.idList)
                         {
-                            if(!list.Any(a => a.TypeTechnicsId == id && a.BrandTechnicsId == enterBrandForm.idList[i]))
+                            if (!list.Any(a => a.TypeTechnicsId == brandTechnicId && a.BrandTechnicsId == typeId))
                             {
-                                int typeId = enterBrandForm.idList[i];
                                 Task.Run(async () =>
                                 {
                                     var typeBrandDTO = new TypeBrandEditDTO()
                                     {
-                                        BrandTechnicsId = id,
+                                        BrandTechnicsId = brandTechnicId,
                                         TypeTechnicsId = typeId
                                     };
                                     await typeBrandRepository.SaveTypeBrandAsync(typeBrandDTO);
@@ -98,14 +97,15 @@ namespace WinFormsApp1
                             }
                         }
                     }
+
                     if(enterBrandForm.idRemoveList != null)
                     {
-                        for (int i = 0; i < enterBrandForm.idRemoveList.Count; i++)
+                        foreach(var typeId in enterBrandForm.idRemoveList)
                         {
-                            var typeBrandDTO = new TypeBrandEditDTO() 
-                            { 
-                                BrandTechnicsId = id, 
-                                TypeTechnicsId = enterBrandForm.idRemoveList[i] 
+                            var typeBrandDTO = new TypeBrandEditDTO()
+                            {
+                                BrandTechnicsId = brandTechnicId,
+                                TypeTechnicsId = typeId
                             };
                             typeBrandRepository.RemoveTypeBrand(typeBrandDTO);
                         }
@@ -139,7 +139,7 @@ namespace WinFormsApp1
 
         private void BtnExit_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void UpdateTable()

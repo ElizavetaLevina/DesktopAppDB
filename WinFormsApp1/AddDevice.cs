@@ -16,7 +16,7 @@ namespace WinFormsApp1
 
         private void BtnAddDevice_Click(object sender, EventArgs e)
         {
-            EnterBrandForm enterBrandForm = new("type", true, 0)
+            EnterBrandForm enterBrandForm = new("type")
             {
                 StartPosition = FormStartPosition.CenterParent,
                 Text = "Добавить тип устройства",
@@ -26,11 +26,11 @@ namespace WinFormsApp1
 
             if (enterBrandForm.ShowDialog() == DialogResult.OK)
             {
-                TypeTechnic? typeTechnic = null;
+                int typeTechnicId = 0;
                 var task = Task.Run(async () =>
                 {
                     var typeTechnicDTO = new TypeTechnicEditDTO() { Id = 0, Name = enterBrandForm.NameTextBox };
-                    typeTechnic = await typeTechnicRepository.SaveTypeTechnicAsync(typeTechnicDTO);
+                    typeTechnicId = await typeTechnicRepository.SaveTypeTechnicAsync(typeTechnicDTO);
                 });
                 task.Wait();
 
@@ -41,7 +41,7 @@ namespace WinFormsApp1
                         var typeBrandDTO = new TypeBrandEditDTO()
                         {
                             BrandTechnicsId = brandId,
-                            TypeTechnicsId = typeTechnic.Id
+                            TypeTechnicsId = typeTechnicId
                         };
                         task = Task.Run(async () =>
                         {
@@ -60,7 +60,7 @@ namespace WinFormsApp1
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
                 int typeTechnicId = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
-                string name = dataGridView1.Rows[numberRow].Cells["NameTypeTechnic"].Value.ToString();
+                string? name = dataGridView1.Rows[numberRow].Cells["NameTypeTechnic"].Value.ToString();
                 List<TypeBrandDTO> list = typeBrandRepository.GetTypeBrand();
                 EnterBrandForm enterBrandForm = new("type", false, typeTechnicId)
                 {
@@ -74,11 +74,12 @@ namespace WinFormsApp1
 
                 if (enterBrandForm.ShowDialog() == DialogResult.OK)
                 {
-                    Task.Run(async () =>
+                    var task = Task.Run(async () =>
                     {
                         var typeTechnicDTO = new TypeTechnicEditDTO() { Id = typeTechnicId, Name = enterBrandForm.NameTextBox };
                         await typeTechnicRepository.SaveTypeTechnicAsync(typeTechnicDTO);
                     });
+                    task.Wait();
 
                     if (enterBrandForm.idList != null)
                     {
@@ -86,16 +87,16 @@ namespace WinFormsApp1
                         {
                             if (!list.Any(a => a.TypeTechnicsId == typeTechnicId && a.BrandTechnicsId == enterBrandForm.idList[i]))
                             {
-                                int typeId = enterBrandForm.idList[i];
-                                Task.Run(async () =>
+                                task = Task.Run(async () =>
                                 {
                                     var typeBrandDTO = new TypeBrandEditDTO()
                                     {
-                                        BrandTechnicsId = typeId,
+                                        BrandTechnicsId = enterBrandForm.idList[i],
                                         TypeTechnicsId = typeTechnicId
                                     };
                                     await typeBrandRepository.SaveTypeBrandAsync(typeBrandDTO);
                                 });
+                                task.Wait();
                             }
                         }
                     }

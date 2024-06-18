@@ -22,7 +22,7 @@ namespace WinFormsApp1.Repository
                 .ToList();
         }
 
-        public async Task SaveBrandTechnicAsync(BrandTechnicEditDTO brandTechnicDTO, CancellationToken token = default)
+        public async Task<int> SaveBrandTechnicAsync(BrandTechnicEditDTO brandTechnicDTO, CancellationToken token = default)
         {
             using Context db = new();
             BrandTechnic brandTechnic = new()
@@ -40,16 +40,17 @@ namespace WinFormsApp1.Repository
                 }
 
                 await db.SaveChangesAsync(token);
+                return brandTechnic.Id;
             }
             catch (Exception ex) { Console.WriteLine(ex.Message); throw; }
         }
 
         public void RemoveBrandTechnic(BrandTechnicEditDTO brandTechnicDTO)
         {
-            using Context db = new();
-            BrandTechnic brandTechnic = new() { Id = brandTechnicDTO.Id };
             try
             {
+                using Context db = new();
+                var brandTechnic = db.BrandTechnices.FirstOrDefault(c => c.Id == brandTechnicDTO.Id);
                 db.BrandTechnices.Remove(brandTechnic);
                 db.SaveChanges();
             }

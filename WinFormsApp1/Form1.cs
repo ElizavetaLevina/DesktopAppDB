@@ -285,7 +285,6 @@ namespace WinFormsApp1
                     if (warning.ShowDialog() == DialogResult.OK)
                     {
                         CRUD.RemoveOrder(id);
-                        CRUD.RemoveDetails(id);
                         Trash();
                     }
                     FocusButton(status);

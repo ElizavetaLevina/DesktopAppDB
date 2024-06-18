@@ -1,4 +1,5 @@
-﻿using WinFormsApp1.Model;
+﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
 {
@@ -8,20 +9,20 @@ namespace WinFormsApp1
         public bool changeDetail = false;
         bool loading = true;
         readonly int id;
-        public AddDetailToWarehouse(bool _changeDetail, int _id)
+        WarehouseRepository warehouseRepository = new();
+        public AddDetailToWarehouse(bool _changeDetail, int _id = 0)
         {
             InitializeComponent();
             changeDetail = _changeDetail;
             id = _id;
-            Context context = new();
-            var list = context.Warehouse.Select(a => new { a.NameDetail }).ToList();
+            var list = warehouseRepository.GetWarehouses();
             listBoxDetails.Visible = false;
             if (list.Count > 0)
             {
-                for (int i = 0; i < list.Count; i++)
+                foreach(var item in list)
                 {
-                    if (!nameDetails.Contains(list[i].NameDetail))
-                        nameDetails.Add(list[i].NameDetail);
+                    if (!nameDetails.Contains(item.NameDetail))
+                        nameDetails.Add(item.NameDetail);
                 }
             }
         }
@@ -54,27 +55,30 @@ namespace WinFormsApp1
             }
             else
             {
-                if (changeDetail)
+                var warehouseDTO = new WarehouseEditDTO()
                 {
-                    CRUD.ChangeWarehouse(id, textBoxNameDetail.Text,
-                        Convert.ToInt32(textBoxPricePurchase.Text),
-                        Convert.ToInt32(textBoxPriceSale.Text), dateTimePicker1.Value, true, null);
-                }
-                else
+                    Id = id,
+                    NameDetail = textBoxNameDetail.Text,
+                    PricePurchase = Convert.ToInt32(textBoxPricePurchase.Text),
+                    PriceSale = Convert.ToInt32(textBoxPriceSale.Text),
+                    DatePurchase = dateTimePicker1.Value,
+                    Availability = true,
+                    IdOrder = null
+                };
+                var task = Task.Run(async () =>
                 {
-                    CRUD.AddAsyncWarehouse(IdDetail(), textBoxNameDetail.Text,
-                        Convert.ToInt32(textBoxPricePurchase.Text),
-                        Convert.ToInt32(textBoxPriceSale.Text), dateTimePicker1.Value, true, null);
-                }
-                this.DialogResult = DialogResult.OK;
-                this.Close();
+                    await warehouseRepository.SaveWarehouseAsync(warehouseDTO);
+                });
+                task.Wait();
+                DialogResult = DialogResult.OK;
+                Close();
             }
         }
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
-            this.DialogResult= DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         private void LinkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -87,13 +91,13 @@ namespace WinFormsApp1
             listBoxDetails.Items.Clear();
             listBoxDetails.Visible = false;
 
-            for (int i = 0; i < nameDetails.Count; i++)
+            foreach(var name in nameDetails)
             {
-                if (nameDetails[i].StartsWith(textBoxNameDetail.Text) &&
+                if (name.StartsWith(textBoxNameDetail.Text) &&
                     textBoxNameDetail.Text.Length > 0 && !loading)
                 {
                     listBoxDetails.Visible = true;
-                    listBoxDetails.Items.Add(nameDetails[i]);
+                    listBoxDetails.Items.Add(name);
                 }
             }
         }
@@ -104,19 +108,10 @@ namespace WinFormsApp1
                 e.Handled = true;
         }
 
-        private static int IdDetail()
+        private void TextBoxPriceSale_KeyPress(object sender, KeyPressEventArgs e)
         {
-            int id;
-            using (Context context = new())
-            {
-                if (context.Warehouse.Any())
-                {
-                    id = context.Warehouse.OrderBy(i => i.Id).Last().Id;
-                    id++;
-                }
-                else { id = 1; }
-            }
-            return id;
+            if ((e.KeyChar <= 47 || e.KeyChar >= 58) && e.KeyChar != 8 && e.KeyChar != 13)
+                e.Handled = true;
         }
 
         private void ListBoxDetails_SelectedIndexChanged(object sender, EventArgs e)
@@ -141,32 +136,32 @@ namespace WinFormsApp1
 
         private void TextBoxNameDetail_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if(e.KeyChar == 13 && listBoxDetails.Visible)
+            if (e.KeyChar == 13 && listBoxDetails.Visible)
                 listBoxDetails.Visible = false;
         }
 
         public string NameDetail
         {
-            get { return this.textBoxNameDetail.Text; }
-            set { this.textBoxNameDetail.Text = value; }
+            get { return textBoxNameDetail.Text; }
+            set { textBoxNameDetail.Text = value; }
         }
 
         public int PricePurchase
         {
-            get { return Convert.ToInt32(this.textBoxPricePurchase.Text); }
-            set { this.textBoxPricePurchase.Text = value.ToString(); }
+            get { return Convert.ToInt32(textBoxPricePurchase.Text); }
+            set { textBoxPricePurchase.Text = value.ToString(); }
         }
 
         public int PriceSale
         {
-            get { return Convert.ToInt32(this.textBoxPriceSale.Text); }
-            set { this.textBoxPriceSale.Text = value.ToString(); }
+            get { return Convert.ToInt32(textBoxPriceSale.Text); }
+            set { textBoxPriceSale.Text = value.ToString(); }
         }
 
         public DateTime DatePurchase
         {
-            get { return this.dateTimePicker1.Value; }
-            set { this.dateTimePicker1.Value = value; }
+            get { return dateTimePicker1.Value; }
+            set { dateTimePicker1.Value = value; }
         }
     }
 }

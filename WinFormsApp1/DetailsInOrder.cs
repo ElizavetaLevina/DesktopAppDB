@@ -14,8 +14,6 @@ namespace WinFormsApp1
         {
             InitializeComponent();
             idOrder = id;
-            list = warehouseRepository.GetWarehousesForTable(idOrder: idOrder);
-            dataGridView1.DataSource = Funcs.ToDataTable(list);
             UpdateTable();
         }
 
@@ -61,6 +59,9 @@ namespace WinFormsApp1
         {
             int summDetails = 0;
             int[] percent = [0, 70, 0, 30, 0, 0, 0];
+
+            list = warehouseRepository.GetWarehousesForTable(idOrder: idOrder);
+            dataGridView1.DataSource = Funcs.ToDataTable(list);
 
             dataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridView1.Columns["Id"].Visible = false;

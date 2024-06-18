@@ -263,7 +263,6 @@ namespace WinFormsApp1
                             null,
                             checkBox1.Checked,
                             maxPrice);
-                        CRUD.AddAsyncDetails(idOrder, null);
                         Warning warning = new()
                         {
                             StartPosition = FormStartPosition.CenterParent,

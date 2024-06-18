@@ -17,8 +17,8 @@ namespace WinFormsApp1.Repository
                 set = set.Where(i => i.Availability == availability);
             if (idOrder != null)
                 set = set.Where(i => i.IdOrder == idOrder);
-            if (name != null)
-                set = set.Where(i => i.NameDetail.IndexOf(name) > -1);
+            /*if (name != null)
+                set = set.Where(i => i.NameDetail.IndexOf(name, StringComparison.OrdinalIgnoreCase) > -1);*/
             if(datePurchase)
                 set = set.OrderByDescending(i => i.DatePurchase);
 

@@ -25,6 +25,8 @@ namespace WinFormsApp1
             }
             dataGridView1.DataSource = Funcs.ToDataTable(list);
             UpdateTable();
+
+            
         }
 
         private void UpdateTable()
@@ -67,7 +69,7 @@ namespace WinFormsApp1
 
         private void ButtonAddDetails_Click(object sender, EventArgs e)
         {
-            AddDetailToWarehouse addDetail = new(false, 0)
+            AddDetailToWarehouse addDetail = new(false)
             {
                 StartPosition = FormStartPosition.CenterParent
             };

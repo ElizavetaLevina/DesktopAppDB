@@ -162,6 +162,7 @@
             textBoxPriceSale.Name = "textBoxPriceSale";
             textBoxPriceSale.Size = new Size(172, 31);
             textBoxPriceSale.TabIndex = 5;
+            textBoxPriceSale.KeyPress += TextBoxPriceSale_KeyPress;
             // 
             // labelPriceSale
             // 

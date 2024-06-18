@@ -497,21 +497,21 @@ namespace WinFormsApp1
 
         private void LinkLabelDevice_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            AddDevice addDevice = new()
+            TypeTechnicEdit typeTechnic = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };
-            addDevice.ShowDialog();
+            typeTechnic.ShowDialog();
             UpdateComboBox(1);
         }
 
         private void LinkLabelBrand_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            AddBrand addBrand = new()
+            BrandTechnicEdit brandTechnic = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };
-            addBrand.ShowDialog();
+            brandTechnic.ShowDialog();
             UpdateComboBox(2);
         }
 

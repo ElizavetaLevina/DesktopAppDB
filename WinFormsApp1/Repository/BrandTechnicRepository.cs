@@ -42,7 +42,7 @@ namespace WinFormsApp1.Repository
                 await db.SaveChangesAsync(token);
                 return brandTechnic.Id;
             }
-            catch (Exception ex) { Console.WriteLine(ex.Message); throw; }
+            catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
 
         public void RemoveBrandTechnic(BrandTechnicEditDTO brandTechnicDTO)
@@ -54,7 +54,7 @@ namespace WinFormsApp1.Repository
                 db.BrandTechnices.Remove(brandTechnic);
                 db.SaveChanges();
             }
-            catch (Exception ex) { Console.WriteLine(ex.Message); throw; }
+            catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
     }
 }

@@ -5,17 +5,23 @@ namespace WinFormsApp1.Repository
 {
     public class TypeBrandRepository
     {
+        /// <summary>
+        /// Получение списка бренд-тип
+        /// </summary>
+        /// <param name="idBrand">Id бренда</param>
+        /// <param name="idType">Id типа</param>
+        /// <returns>Список бренд-тип</returns>
         public List<TypeBrandDTO> GetTypeBrand(int idBrand = 0, int idType = 0)
         {
             Context context = new();
 
             var set = context.TypeBrands.Where(c => true);
 
-            if (idType != 0 && idBrand !=0)
+            if (idBrand != 0 && idType != 0)
                 set = set.Where(i => i.TypeTechnicsId == idType && i.BrandTechnicsId == idBrand);
-            else if (idBrand == 0)
+            else if (idBrand == 0 && idType != 0)
                 set = set.Where(i => i.TypeTechnicsId == idType);
-            else if (idType == 0)
+            else if (idBrand != 0 && idType == 0)
                 set = set.Where(i => i.BrandTechnicsId == idBrand);
 
             return set.Select(a => new TypeBrandDTO(a)).ToList();
@@ -34,7 +40,7 @@ namespace WinFormsApp1.Repository
                 db.TypeBrands.Add(typeBrand);
                 await db.SaveChangesAsync(token);
             }
-            catch (Exception ex) { Console.WriteLine(ex.Message); throw; }
+            catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
 
         public void RemoveTypeBrand(TypeBrandEditDTO typeBrandEditDTO)
@@ -47,7 +53,7 @@ namespace WinFormsApp1.Repository
                 db.TypeBrands.Remove(typeBrand);
                 db.SaveChanges();
             }
-            catch (Exception ex) { Console.WriteLine(ex.Message); throw; }
+            catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
     }
 }

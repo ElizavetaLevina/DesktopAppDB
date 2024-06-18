@@ -6,8 +6,8 @@ namespace WinFormsApp1.DTO
     {
         public int BrandTechnicsId { get; set; }
         public int TypeTechnicsId { get; set; }
-        public virtual BrandTechnic? BrandTechnic { get; set; }
-        public virtual TypeTechnic? TypeTechnic { get; set; }
+        public virtual Model.BrandTechnic? BrandTechnic { get; set; }
+        public virtual Model.TypeTechnic? TypeTechnic { get; set; }
 
 
         public TypeBrandDTO(TypeBrand typeBrand)

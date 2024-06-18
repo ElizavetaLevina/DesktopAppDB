@@ -131,7 +131,7 @@ namespace WinFormsApp1
                 //        ReturnUnderGuarantee = false, Issue = false, PriceAgreed = false, DateCreation = DateTime.Now};
                 //    await orderRepository.SaveOrderAsync(orderDTO);
                 //});
-                List<OrderDTO> list = orderRepository.GetOrders(inProgress: true, deleted: false, dateCreation: true);
+                List<OrderTableDTO> list = orderRepository.GetOrdersForTable(inProgress: true, deleted: false, dateCreation: true);
                 dataGridView1.DataSource = Funcs.ToDataTable(list);
                 UpdateTable();
                 ChangeColorRows();
@@ -144,7 +144,7 @@ namespace WinFormsApp1
             status = "Completed";
             try
             {
-                List<OrderDTO> list = orderRepository.GetOrders(inProgress: false, deleted: false, issue: false,
+                List<OrderTableDTO> list = orderRepository.GetOrdersForTable(inProgress: false, deleted: false, issue: false,
                     dateCompleted: true);
                 dataGridView1.DataSource = Funcs.ToDataTable(list);
                 UpdateTable();
@@ -158,7 +158,7 @@ namespace WinFormsApp1
             status = "GuaranteeIssue";
             try
             {
-                List<OrderDTO> list = orderRepository.GetOrders(inProgress: false, deleted: false, issue: true,
+                List<OrderTableDTO> list = orderRepository.GetOrdersForTable(inProgress: false, deleted: false, issue: true,
                     dateIssue: true);
 
                 for (int i = 0; i < list.Count; i++)
@@ -178,7 +178,7 @@ namespace WinFormsApp1
             status = "Archive";
             try
             {
-                List<OrderDTO> list = orderRepository.GetOrders(inProgress: false, deleted: false, issue: true,
+                List<OrderTableDTO> list = orderRepository.GetOrdersForTable(inProgress: false, deleted: false, issue: true,
                     dateIssue: true);
                 dataGridView1.DataSource = Funcs.ToDataTable(list);
 
@@ -199,7 +199,7 @@ namespace WinFormsApp1
             status = "Trash";
             try
             {
-                List<OrderDTO> list = orderRepository.GetOrders(deleted: true, dateCompleted: true);
+                List<OrderTableDTO> list = orderRepository.GetOrdersForTable(deleted: true, dateCompleted: true);
                 dataGridView1.DataSource = Funcs.ToDataTable(list);
                 UpdateTable();
                 ChangeColorRows();
@@ -254,11 +254,11 @@ namespace WinFormsApp1
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
                 idRow = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                AddDetails addDetails = new(idRow)
+                DetailsInOrder detailsInOrder = new(idRow)
                 {
                     StartPosition = FormStartPosition.CenterParent
                 };
-                addDetails.ShowDialog();
+                detailsInOrder.ShowDialog();
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
@@ -370,11 +370,11 @@ namespace WinFormsApp1
 
                     if (warning.ShowDialog() == DialogResult.OK)
                     {
-                        AddDetails addDetails = new(id)
+                        DetailsInOrder detailsInOrder = new(id)
                         {
                             StartPosition = FormStartPosition.CenterParent
                         };
-                        addDetails.ShowDialog();
+                        detailsInOrder.ShowDialog();
                         FocusButton(status);
                     }
                     else
@@ -1308,7 +1308,7 @@ namespace WinFormsApp1
 
         private void ButtonDevice_Click(object sender, EventArgs e)
         {
-            AddDevice addDevice = new()
+            TypeTechnicEdit addDevice = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -1506,7 +1506,7 @@ namespace WinFormsApp1
 
         private void ItemAddBrand_Click(object sender, EventArgs e)
         {
-            AddBrand addBrand = new()
+            BrandTechnicEdit addBrand = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -1515,7 +1515,7 @@ namespace WinFormsApp1
         }
         private void ItemAddDevice_Click(object sender, EventArgs e)
         {
-            AddDevice addDevice = new()
+            TypeTechnicEdit addDevice = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -1535,7 +1535,7 @@ namespace WinFormsApp1
 
         private void ItemWarehouse_Click(object sender, EventArgs e)
         {
-            WarehouseDetails details = new(true, "")
+            WarehouseDetails details = new(true)
             {
                 StartPosition = FormStartPosition.CenterParent,
                 VisibleBtnAdd = false

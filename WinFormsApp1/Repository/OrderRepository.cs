@@ -8,15 +8,15 @@ namespace WinFormsApp1.Repository
         /// <summary>
         /// Получение списка заказов
         /// </summary>
-        /// <param name="inProgress"></param>
-        /// <param name="deleted"></param>
-        /// <param name="issue"></param>
-        /// <param name="dateStartWork"></param>
-        /// <param name="dateCompleted"></param>
-        /// <param name="dateIssue"></param>
-        /// <param name="id"></param>
+        /// <param name="inProgress">В ремонте</param>
+        /// <param name="deleted">Удален</param>
+        /// <param name="issue">Выдан</param>
+        /// <param name="dateCreation">Дата создания заказа</param>
+        /// <param name="dateCompleted">Дата выполнения заказа</param>
+        /// <param name="dateIssue">Дата выдачи</param>
+        /// <param name="id">Номер заказа</param>
         /// <returns>Список заказов</returns>
-        public List<OrderDTO> GetOrders(bool? inProgress = null, bool? deleted = null, bool? issue = null, bool dateCreation = false, 
+        public List<OrderTableDTO> GetOrdersForTable(bool? inProgress = null, bool? deleted = null, bool? issue = null, bool dateCreation = false, 
             bool dateCompleted = false, bool dateIssue = false, bool id = false)
         {
             Context context = new();
@@ -40,20 +40,22 @@ namespace WinFormsApp1.Repository
                 set = set.OrderByDescending(i => i.Id);
 
             return set
-                .Select(a => new OrderDTO(a))
+                .Select(a => new OrderTableDTO(a))
                 .ToList();
         }
 
-        public static void RemoveOrder(OrderEditDTO orderDTO)
+        public List<OrderDTO> GetOrders(int? id = null)
         {
-            try
-            {
-                using Context db = new();
-                var order = db.Orders.FirstOrDefault(c => c.Id == orderDTO.Id);
-                db.Orders.Remove(order);
-                db.SaveChanges();
-            }
-            catch (Exception ex) { Console.WriteLine(ex.Message); }
+            Context context = new();
+
+            var set = context.Orders.Where(c => true);
+
+            if (id != null)
+                set = set.Where(i => i.Id == id);
+
+            return set
+                .Select(a => new OrderDTO(a))
+                .ToList();
         }
 
         public async Task SaveOrderAsync(OrderEditDTO orderDTO, CancellationToken token = default)
@@ -100,7 +102,19 @@ namespace WinFormsApp1.Repository
                 
                 await db.SaveChangesAsync(token);
             }
-            catch (Exception ex) { Console.WriteLine(ex.Message); throw; }
+            catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
+        }
+
+        public static void RemoveOrder(OrderEditDTO orderDTO)
+        {
+            try
+            {
+                using Context db = new();
+                var order = db.Orders.FirstOrDefault(c => c.Id == orderDTO.Id);
+                db.Orders.Remove(order);
+                db.SaveChanges();
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
     }
 }

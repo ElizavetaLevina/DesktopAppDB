@@ -249,7 +249,7 @@ namespace WinFormsApp1
 
         private void LinkLabelDevice_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            AddDevice addDevice = new()
+            TypeTechnicEdit addDevice = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -259,7 +259,7 @@ namespace WinFormsApp1
 
         private void LinkLabelBrand_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            AddBrand addBrand = new()
+            BrandTechnicEdit addBrand = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };

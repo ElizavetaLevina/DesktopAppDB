@@ -1,6 +1,6 @@
 ﻿namespace WinFormsApp1
 {
-    partial class AddDetails
+    partial class DetailsInOrder
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddDetails));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DetailsInOrder));
             dataGridView1 = new DataGridView();
             buttonAddDetail = new Button();
             buttonChangeDetail = new Button();

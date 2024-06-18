@@ -1,31 +1,28 @@
-﻿using DocumentFormat.OpenXml.InkML;
-using System.Data;
-using WinFormsApp1.Model;
-using Context = WinFormsApp1.Model.Context;
+﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
 {
     public partial class WarehouseDetails : Form
     {
-        public bool Add = false;
-        public int id = 0;
-        public string? device;
+        public int idDetail = 0;
+        public string? brandDevice;
         public bool newDetail;
-        List<Warehouse> list;
-        public WarehouseDetails(bool _newDetail, string? _device)
+        List<WarehouseTableDTO> list;
+        WarehouseRepository warehouseRepository = new();
+        public WarehouseDetails(bool _newDetail, string? _brandDevice = null)
         {
             InitializeComponent();
-            device = _device;
+            brandDevice = _brandDevice;
             newDetail = _newDetail;
-            Context context = new();
-            if (!newDetail)
+            if (newDetail)
+                list = warehouseRepository.GetWarehousesForTable(availability: true, datePurchase: true);
+            else
             {
                 textBoxDevice.Visible = true;
-                textBoxDevice.Text = device;
-                list = context.Warehouse.Where(i => i.NameDetail.IndexOf(device) > -1 && i.Availability).OrderByDescending(i => i.DatePurchase).ToList();
+                textBoxDevice.Text = brandDevice;
+                list = warehouseRepository.GetWarehousesForTable(availability: true, datePurchase: true, name: brandDevice);
             }
-            else
-                list = context.Warehouse.Where(i => i.Availability).OrderByDescending(i => i.DatePurchase).ToList();
             dataGridView1.DataSource = Funcs.ToDataTable(list);
             UpdateTable();
         }
@@ -34,17 +31,16 @@ namespace WinFormsApp1
         {
             try
             {
-                int[] percent = [10, 40, 17, 17, 16, 0, 0, 0];
+                int[] percent = [10, 40, 17, 17, 16, 0, 0];
 
                 dataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                dataGridView1.Columns[0].HeaderText = "№";
-                dataGridView1.Columns[1].HeaderText = "Название детали";
-                dataGridView1.Columns[2].HeaderText = "Цена покупки";
-                dataGridView1.Columns[3].HeaderText = "Цена продажи";
-                dataGridView1.Columns[4].HeaderText = "Дата покупки";
-                dataGridView1.Columns[5].Visible = false;
-                dataGridView1.Columns[6].Visible = false;
-                dataGridView1.Columns[7].Visible = false;
+                dataGridView1.Columns["Id"].HeaderText = "№";
+                dataGridView1.Columns["NameDetail"].HeaderText = "Название детали";
+                dataGridView1.Columns["PricePurchase"].HeaderText = "Цена покупки";
+                dataGridView1.Columns["PriceSale"].HeaderText = "Цена продажи";
+                dataGridView1.Columns["DatePurchase"].HeaderText = "Дата покупки";
+                dataGridView1.Columns["Availability"].Visible = false;
+                dataGridView1.Columns["IdOrder"].Visible = false;
 
                 for (int i = 0; i < dataGridView1.ColumnCount; i++)
                 {
@@ -71,13 +67,12 @@ namespace WinFormsApp1
 
         private void ButtonAddDetails_Click(object sender, EventArgs e)
         {
-            Context context = new();
             AddDetailToWarehouse addDetail = new(false, 0)
             {
                 StartPosition = FormStartPosition.CenterParent
             };
             addDetail.ShowDialog();
-            list = context.Warehouse.Where(i => i.Availability).OrderByDescending(i => i.DatePurchase).ToList();
+            list = warehouseRepository.GetWarehousesForTable(availability: true, datePurchase: true);
             dataGridView1.DataSource = Funcs.ToDataTable(list);
             UpdateTable();
         }
@@ -93,32 +88,31 @@ namespace WinFormsApp1
                 ButtonNoText = "Нет",
                 ButtonVisible = true
             };
-            
+
             if (warning.ShowDialog() == DialogResult.OK)
             {
-                CRUD.RemoveWarehouse(id);
+                var warehouseDTO = new WarehouseEditDTO() { Id = id };
+                warehouseRepository.RemoveWarehouse(warehouseDTO);
                 UpdateTable();
             }
         }
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void ButtonAdd_Click(object sender, EventArgs e)
         {
-            Add = true;
             int numberRow = dataGridView1.CurrentCell.RowIndex;
-            id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-            this.Close();
+            idDetail = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void TextBoxDevice_TextChanged(object sender, EventArgs e)
         {
-            Context context = new();
-            list = context.Warehouse.Where(i => i.NameDetail.IndexOf(textBoxDevice.Text) > -1
-            && i.Availability).OrderByDescending(i => i.DatePurchase).ToList();
+            list = warehouseRepository.GetWarehousesForTable(availability: true, datePurchase: true, name: textBoxDevice.Text);
             dataGridView1.DataSource = Funcs.ToDataTable(list);
             if (dataGridView1.RowCount > 0)
             {
@@ -134,12 +128,11 @@ namespace WinFormsApp1
 
         private void ButtonChangeDetail_Click(object sender, EventArgs e)
         {
-            Context context = new();
             int numberRow = dataGridView1.CurrentCell.RowIndex;
-            int idRow = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-            var listChangeDetail = context.Warehouse.Where(i => i.Id == idRow).ToList();
+            int idDetail = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
+            List<WarehouseDTO> listChangeDetail = warehouseRepository.GetWarehouses(id: idDetail);
 
-            AddDetailToWarehouse addDetail = new(true, idRow)
+            AddDetailToWarehouse addDetail = new(true, idDetail)
             {
                 StartPosition = FormStartPosition.CenterParent,
                 NameDetail = listChangeDetail[0].NameDetail,
@@ -148,15 +141,15 @@ namespace WinFormsApp1
                 DatePurchase = listChangeDetail[0].DatePurchase
             };
             addDetail.ShowDialog();
-            list = context.Warehouse.Where(i => i.Availability).OrderByDescending(i => i.DatePurchase).ToList();
+            list = warehouseRepository.GetWarehousesForTable(availability: true, datePurchase: true);
             dataGridView1.DataSource = Funcs.ToDataTable(list);
             UpdateTable();
         }
 
         public bool VisibleBtnAdd
         {
-            get { return this.buttonAdd.Visible; }
-            set { this.buttonAdd.Visible = value; }
+            get { return buttonAdd.Visible; }
+            set { buttonAdd.Visible = value; }
         }
     }
 }

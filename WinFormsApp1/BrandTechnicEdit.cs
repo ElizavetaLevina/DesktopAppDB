@@ -3,11 +3,11 @@ using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
 {
-    public partial class AddBrand : Form
+    public partial class BrandTechnicEdit : Form
     {
         BrandTechnicRepository brandTechnicRepository = new();
         TypeBrandRepository typeBrandRepository = new();
-        public AddBrand()
+        public BrandTechnicEdit()
         {
             InitializeComponent();
             UpdateTable();
@@ -123,16 +123,6 @@ namespace WinFormsApp1
                 int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
                 var brandTechnicDTO = new BrandTechnicEditDTO() { Id = id };
                 brandTechnicRepository.RemoveBrandTechnic(brandTechnicDTO);
-                List<TypeBrandDTO> list = typeBrandRepository.GetTypeBrand();
-                for(int i = 0; i < list.Count; i++)
-                {
-                    var typeBrandDTO = new TypeBrandEditDTO()
-                    {
-                        BrandTechnicsId = id,
-                        TypeTechnicsId = list[i].TypeTechnicsId
-                    };
-                    typeBrandRepository.RemoveTypeBrand(typeBrandDTO);
-                }
                 UpdateTable();
             }
         }

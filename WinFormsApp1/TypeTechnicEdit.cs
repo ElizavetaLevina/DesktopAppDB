@@ -1,14 +1,13 @@
 ﻿using WinFormsApp1.DTO;
-using WinFormsApp1.Model;
 using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
 {
-    public partial class AddDevice : Form
+    public partial class TypeTechnicEdit : Form
     {
         TypeTechnicRepository typeTechnicRepository = new();
         TypeBrandRepository typeBrandRepository = new();
-        public AddDevice()
+        public TypeTechnicEdit()
         {
             InitializeComponent();
             UpdateTable();
@@ -83,15 +82,15 @@ namespace WinFormsApp1
 
                     if (enterBrandForm.idList != null)
                     {
-                        for (int i = 0; i < enterBrandForm.idList.Count; i++)
+                        foreach(var brandId in enterBrandForm.idList)
                         {
-                            if (!list.Any(a => a.TypeTechnicsId == typeTechnicId && a.BrandTechnicsId == enterBrandForm.idList[i]))
+                            if (!list.Any(a => a.BrandTechnicsId == brandId && a.TypeTechnicsId == typeTechnicId))
                             {
                                 task = Task.Run(async () =>
                                 {
                                     var typeBrandDTO = new TypeBrandEditDTO()
                                     {
-                                        BrandTechnicsId = enterBrandForm.idList[i],
+                                        BrandTechnicsId = brandId,
                                         TypeTechnicsId = typeTechnicId
                                     };
                                     await typeBrandRepository.SaveTypeBrandAsync(typeBrandDTO);
@@ -102,11 +101,11 @@ namespace WinFormsApp1
                     }
                     if (enterBrandForm.idRemoveList != null)
                     {
-                        for (int i = 0; i < enterBrandForm.idRemoveList.Count; i++)
+                        foreach(var brandId in enterBrandForm.idRemoveList)
                         {
                             var typeBrandDTO = new TypeBrandEditDTO()
                             {
-                                BrandTechnicsId = enterBrandForm.idRemoveList[i],
+                                BrandTechnicsId = brandId,
                                 TypeTechnicsId = typeTechnicId
                             };
                             typeBrandRepository.RemoveTypeBrand(typeBrandDTO);
@@ -122,19 +121,9 @@ namespace WinFormsApp1
             if (dataGridView1.Rows.Count > 0)
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
-                var typeTechnicDTO = new TypeTechnicEditDTO() { Id = id };
+                int typeTechnicId = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                var typeTechnicDTO = new TypeTechnicEditDTO() { Id = typeTechnicId };
                 typeTechnicRepository.RemoveTypeTechnic(typeTechnicDTO);
-                List<TypeBrandDTO> list = typeBrandRepository.GetTypeBrand();
-                for (int i = 0; i < list.Count; i++)
-                {
-                    var typeBrandDTO = new TypeBrandEditDTO()
-                    {
-                        BrandTechnicsId = list[i].BrandTechnicsId,
-                        TypeTechnicsId = id
-                    };
-                    typeBrandRepository.RemoveTypeBrand(typeBrandDTO);
-                }
                 UpdateTable();
             }
         }

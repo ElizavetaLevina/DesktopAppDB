@@ -33,7 +33,7 @@ namespace WinFormsApp1.Repository
                 await db.SaveChangesAsync(token);
                 return typeTechnic.Id;
             }
-            catch (Exception ex) { Console.WriteLine(ex.Message); throw; }
+            catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
 
         public void RemoveTypeTechnic(TypeTechnicEditDTO typeTechnicDTO)
@@ -45,7 +45,7 @@ namespace WinFormsApp1.Repository
                 db.TypeTechnices.Remove(typeTechnic);
                 db.SaveChanges();
             }
-            catch (Exception ex) { Console.WriteLine(ex.Message); throw; }
+            catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
     }
 }

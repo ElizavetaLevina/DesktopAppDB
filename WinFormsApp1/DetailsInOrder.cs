@@ -34,21 +34,13 @@ namespace WinFormsApp1
 
             if (details.ShowDialog() == DialogResult.OK)
             {
-                var detail = warehouseRepository.GetWarehouses(id: details.idDetail);
-                var warehouseDTO = new WarehouseEditDTO()
-                {
-                    Id = details.idDetail,
-                    NameDetail = detail[0].NameDetail,
-                    PricePurchase = detail[0].PricePurchase,
-                    PriceSale = detail[0].PriceSale,
-                    DatePurchase = detail[0].DatePurchase,
-                    Availability = false,
-                    IdOrder = idOrder
-                };
+                var warehouse = warehouseRepository.GetWarehouse(id: details.idDetail);
+                warehouse.Availability = false;
+                warehouse.IdOrder = idOrder;
 
                 var task = Task.Run(async () => 
                 {
-                    await warehouseRepository.SaveWarehouseAsync(warehouseDTO);
+                    await warehouseRepository.SaveWarehouseAsync(warehouse);
                 });
                 task.Wait();
                 UpdateTable();
@@ -95,34 +87,28 @@ namespace WinFormsApp1
                 Context context = new();
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
                 int idDetail = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                var detail = warehouseRepository.GetWarehouses(id: idDetail);
+                var warehouse = warehouseRepository.GetWarehouse(id: idDetail);
 
                 AddDetailToWarehouse changeDetail = new(true, idDetail)
                 {
                     StartPosition = FormStartPosition.CenterParent,
                     Text = "Изменение данных",
-                    NameDetail = detail[0].NameDetail,
-                    PricePurchase = detail[0].PricePurchase,
-                    PriceSale = detail[0].PriceSale,
-                    DatePurchase = detail[0].DatePurchase
+                    NameDetail = warehouse.NameDetail,
+                    PricePurchase = warehouse.PricePurchase,
+                    PriceSale = warehouse.PriceSale,
+                    DatePurchase = warehouse.DatePurchase
                 };
      
                 if (changeDetail.ShowDialog() == DialogResult.OK)
                 {
-                    var warehouseDTO = new WarehouseEditDTO()
-                    {
-                        Id = idDetail,
-                        NameDetail = changeDetail.NameDetail,
-                        PricePurchase = changeDetail.PricePurchase,
-                        PriceSale = changeDetail.PriceSale,
-                        DatePurchase = changeDetail.DatePurchase,
-                        Availability = detail[0].Availability,
-                        IdOrder = detail[0].IdOrder
-                    };
+                    warehouse.NameDetail = changeDetail.NameDetail;
+                    warehouse.PricePurchase = changeDetail.PricePurchase;
+                    warehouse.PriceSale = changeDetail.PriceSale;
+                    warehouse.DatePurchase = changeDetail.DatePurchase;
 
                     var task = Task.Run(async () =>
                     {
-                        await warehouseRepository.SaveWarehouseAsync(warehouseDTO);
+                        await warehouseRepository.SaveWarehouseAsync(warehouse);
                     });
                     task.Wait();
                     UpdateTable();
@@ -146,21 +132,13 @@ namespace WinFormsApp1
                 {
                     int numberRow = dataGridView1.CurrentCell.RowIndex;
                     int idDetail = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                    var detail = warehouseRepository.GetWarehouses(id: idDetail);
-                    var warehouseDTO = new WarehouseEditDTO()
-                    {
-                        Id = idDetail,
-                        NameDetail = detail[0].NameDetail,
-                        PricePurchase = detail[0].PricePurchase,
-                        PriceSale = detail[0].PriceSale,
-                        DatePurchase = detail[0].DatePurchase,
-                        Availability = true,
-                        IdOrder = null
-                    };
+                    var warehouse = warehouseRepository.GetWarehouse(id: idDetail);
+                    warehouse.Availability = true;
+                    warehouse.IdOrder = null;
 
                     var task = Task.Run(async () =>
                     {
-                        await warehouseRepository.SaveWarehouseAsync(warehouseDTO);
+                        await warehouseRepository.SaveWarehouseAsync(warehouse);
                     });
                     task.Wait();
                     UpdateTable();

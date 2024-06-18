@@ -15,24 +15,24 @@ namespace WinFormsApp1
             InitializeComponent();
             brandDevice = _brandDevice;
             newDetail = _newDetail;
-            if (newDetail)
-                list = warehouseRepository.GetWarehousesForTable(availability: true, datePurchase: true);
-            else
-            {
-                textBoxDevice.Visible = true;
-                textBoxDevice.Text = brandDevice;
-                list = warehouseRepository.GetWarehousesForTable(availability: true, datePurchase: true, name: brandDevice);
-            }
-            dataGridView1.DataSource = Funcs.ToDataTable(list);
-            UpdateTable();
-
             
+            UpdateTable();
         }
 
         private void UpdateTable()
         {
             try
             {
+                if (newDetail)
+                    list = warehouseRepository.GetWarehousesForTable(availability: true, datePurchase: true);
+                else
+                {
+                    textBoxDevice.Visible = true;
+                    textBoxDevice.Text = brandDevice;
+                    list = warehouseRepository.GetWarehousesForTable(availability: true, datePurchase: true, name: brandDevice);
+                }
+                dataGridView1.DataSource = Funcs.ToDataTable(list);
+
                 int[] percent = [10, 40, 17, 17, 16, 0, 0];
 
                 dataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -132,15 +132,15 @@ namespace WinFormsApp1
         {
             int numberRow = dataGridView1.CurrentCell.RowIndex;
             int idDetail = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-            List<WarehouseDTO> listChangeDetail = warehouseRepository.GetWarehouses(id: idDetail);
+            var warehouse = warehouseRepository.GetWarehouse(id: idDetail);
 
             AddDetailToWarehouse addDetail = new(true, idDetail)
             {
                 StartPosition = FormStartPosition.CenterParent,
-                NameDetail = listChangeDetail[0].NameDetail,
-                PricePurchase = listChangeDetail[0].PricePurchase,
-                PriceSale = listChangeDetail[0].PriceSale,
-                DatePurchase = listChangeDetail[0].DatePurchase
+                NameDetail = warehouse.NameDetail,
+                PricePurchase = warehouse.PricePurchase,
+                PriceSale = warehouse.PriceSale,
+                DatePurchase = warehouse.DatePurchase
             };
             addDetail.ShowDialog();
             list = warehouseRepository.GetWarehousesForTable(availability: true, datePurchase: true);

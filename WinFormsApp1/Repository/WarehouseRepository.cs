@@ -1,4 +1,5 @@
-﻿using WinFormsApp1.DTO;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
 
 namespace WinFormsApp1.Repository
@@ -17,8 +18,8 @@ namespace WinFormsApp1.Repository
                 set = set.Where(i => i.Availability == availability);
             if (idOrder != null)
                 set = set.Where(i => i.IdOrder == idOrder);
-            /*if (name != null)
-                set = set.Where(i => i.NameDetail.IndexOf(name, StringComparison.OrdinalIgnoreCase) > -1);*/
+            if (name != null)
+                set = set.Where(i => i.NameDetail.ToLower().Contains(name.ToLower()));
             if(datePurchase)
                 set = set.OrderByDescending(i => i.DatePurchase);
 
@@ -27,19 +28,19 @@ namespace WinFormsApp1.Repository
                 .ToList();
         }
 
-
-        public List<WarehouseDTO> GetWarehouses(int? id = null)
+        public List<WarehouseDTO> GetWarehouses()
         {
             Context context = new();
-            var set = context.Warehouse.Where(c => true);
-
-            if (id != null)
-                set = set.Where(i => i.Id == id);
-
-            return set
-                .Select(a => new WarehouseDTO(a))
-                .ToList();
+            return context.Warehouse.Select(c => new WarehouseDTO(c)).ToList();
         }
+
+
+        public WarehouseEditDTO GetWarehouse(int id)
+        {
+            Context context = new();
+            return new WarehouseEditDTO(context.Warehouse.First(i => i.Id == id));
+        }
+
         public async Task SaveWarehouseAsync(WarehouseEditDTO warehouseDTO, CancellationToken token = default)
         {
             try

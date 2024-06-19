@@ -1,5 +1,4 @@
 ﻿using WinFormsApp1.DTO;
-using WinFormsApp1.Model;
 using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
@@ -24,9 +23,9 @@ namespace WinFormsApp1
 
         private void ButtonAddDetail_Click(object sender, EventArgs e)
         {
-            var listOrder = orderRepository.GetOrders(id: idOrder);
+            var order = orderRepository.GetOrder(id: idOrder);
 
-            WarehouseDetails details = new(false, listOrder[0].BrandTechnic?.NameBrandTechnic)
+            DetailsInWarehouse details = new(false, order.BrandTechnic?.NameBrandTechnic)
             {
                 StartPosition = FormStartPosition.CenterParent,
                 VisibleBtnAdd = true
@@ -64,10 +63,9 @@ namespace WinFormsApp1
             dataGridView1.Columns["Availability"].Visible = false;
             dataGridView1.Columns["IdOrder"].Visible = false;
 
-
-            for(int i = 0; i < list.Count; i++)
+            foreach(var detail in list)
             {
-                summDetails += list[i].PriceSale;
+                summDetails += detail.PriceSale;
             }
 
             labelCount.Text = String.Format("{0} шт.", list.Count);
@@ -84,12 +82,11 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count > 0)
             {
-                Context context = new();
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
                 int idDetail = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
                 var warehouse = warehouseRepository.GetWarehouse(id: idDetail);
 
-                AddDetailToWarehouse changeDetail = new(true, idDetail)
+                DetailEdit changeDetail = new(true, idDetail)
                 {
                     StartPosition = FormStartPosition.CenterParent,
                     Text = "Изменение данных",

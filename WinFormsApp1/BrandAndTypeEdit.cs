@@ -3,7 +3,7 @@ using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
 {
-    public partial class EnterBrandForm : Form
+    public partial class BrandAndTypeEdit : Form
     {
         public bool newEntry = false;
         public string name;
@@ -13,7 +13,7 @@ namespace WinFormsApp1
         BrandTechnicRepository brandTechnicRepository = new();
         TypeTechnicRepository typeTechnicRepository = new();
         TypeBrandRepository typeBrandRepository = new();
-        public EnterBrandForm(string _name, bool _newEntry = true, int _id = 0)
+        public BrandAndTypeEdit(string _name, bool _newEntry = true, int _id = 0)
         {
             InitializeComponent();
             name = _name;
@@ -69,12 +69,12 @@ namespace WinFormsApp1
                     switch (name)
                     {
                         case "type":
-                            var listBrand = brandTechnicRepository.GetBrandTechnics(whole: false, name: comboBoxSecondName.Text);
-                            id = listBrand[0].Id;
+                            var brand = brandTechnicRepository.GetBrandTechnic(comboBoxSecondName.Text);
+                            id = brand.Id;
                             break;
                         case "brand":
-                            var listType = typeTechnicRepository.GetTypeTechnics(whole: false, name: comboBoxSecondName.Text);
-                            id = listType[0].Id;
+                            var type = typeTechnicRepository.GetTypeTechnic(comboBoxSecondName.Text);
+                            id = type.Id;
                             break;
                     }
 
@@ -96,12 +96,12 @@ namespace WinFormsApp1
                 switch (name)
                 {
                     case "type":
-                        var listBrand = brandTechnicRepository.GetBrandTechnics(whole: false, name: comboBoxSecondName.Text);
-                        id = listBrand[0].Id;
+                        var brand = brandTechnicRepository.GetBrandTechnic(comboBoxSecondName.Text);
+                        id = brand.Id;
                         break;
                     case "brand":
-                        var listType = typeTechnicRepository.GetTypeTechnics(whole: false, name: comboBoxSecondName.Text);
-                        id = listType[0].Id;
+                        var listType = typeTechnicRepository.GetTypeTechnic(comboBoxSecondName.Text);
+                        id = listType.Id;
                         break;
                 }
 
@@ -142,7 +142,7 @@ namespace WinFormsApp1
                     nameInList = "Фирмы-производители для ";
                     break;
             }
-            EnterBrandForm enterBrandForm = new(_name)
+            BrandAndTypeEdit enterBrandForm = new(_name)
             {
                 StartPosition = FormStartPosition.CenterParent,
                 LabelSecondName = secondName,
@@ -154,7 +154,7 @@ namespace WinFormsApp1
                 switch (name)
                 {
                     case "type":
-                        if (!brandTechnicRepository.GetBrandTechnics(whole: false, name: enterBrandForm.NameTextBox).Any())
+                        if (brandTechnicRepository.GetBrandTechnic(enterBrandForm.NameTextBox) != null)
                         {
                             Task.Run(async () =>
                             {
@@ -195,7 +195,7 @@ namespace WinFormsApp1
                         }
                         break;
                     case "brand":
-                        if (!typeTechnicRepository.GetTypeTechnics(whole: false, name: enterBrandForm.NameTextBox).Any())
+                        if (typeTechnicRepository.GetTypeTechnic(enterBrandForm.NameTextBox) != null)
                         {
                             Task.Run(async () =>
                             {
@@ -250,7 +250,7 @@ namespace WinFormsApp1
                 case "type":
                     comboBoxSecondName.ValueMember = "Id";
                     comboBoxSecondName.DisplayMember = "NameBrandTechnic";
-                    comboBoxSecondName.DataSource = brandTechnicRepository.GetBrandTechnics();
+                    comboBoxSecondName.DataSource = brandTechnicRepository.GetBrandsTechnic();
                     if (!newEntry)
                     {
                         var list = typeBrandRepository.GetTypeBrand(idType: id);
@@ -267,7 +267,7 @@ namespace WinFormsApp1
                 case "brand":
                     comboBoxSecondName.ValueMember = "Id";
                     comboBoxSecondName.DisplayMember = "NameTypeTechnic";
-                    comboBoxSecondName.DataSource = typeTechnicRepository.GetTypeTechnics();
+                    comboBoxSecondName.DataSource = typeTechnicRepository.GetTypesTechnic();
                     if (!newEntry)
                     {
                         var list = typeBrandRepository.GetTypeBrand(idBrand: id); 

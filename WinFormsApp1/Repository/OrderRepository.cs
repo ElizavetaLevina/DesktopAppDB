@@ -6,7 +6,7 @@ namespace WinFormsApp1.Repository
     public class OrderRepository
     {
         /// <summary>
-        /// Получение списка заказов
+        /// Получение списка заказов для главной таблицы
         /// </summary>
         /// <param name="inProgress">В ремонте</param>
         /// <param name="deleted">Удален</param>
@@ -15,7 +15,7 @@ namespace WinFormsApp1.Repository
         /// <param name="dateCompleted">Дата выполнения заказа</param>
         /// <param name="dateIssue">Дата выдачи</param>
         /// <param name="id">Номер заказа</param>
-        /// <returns>Список заказов</returns>
+        /// <returns>Список заказов для главной таблицы</returns>
         public List<OrderTableDTO> GetOrdersForTable(bool? inProgress = null, bool? deleted = null, bool? issue = null, bool dateCreation = false, 
             bool dateCompleted = false, bool dateIssue = false, bool id = false)
         {
@@ -44,18 +44,15 @@ namespace WinFormsApp1.Repository
                 .ToList();
         }
 
-        public List<OrderDTO> GetOrders(int? id = null)
+        /// <summary>
+        /// Получение записи по идентификатору
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <returns>Запись</returns>
+        public OrderEditDTO GetOrder(int id)
         {
             Context context = new();
-
-            var set = context.Orders.Where(c => true);
-
-            if (id != null)
-                set = set.Where(i => i.Id == id);
-
-            return set
-                .Select(a => new OrderDTO(a))
-                .ToList();
+            return new OrderEditDTO(context.Orders.First(i => i.Id == id));
         }
 
         public async Task SaveOrderAsync(OrderEditDTO orderDTO, CancellationToken token = default)

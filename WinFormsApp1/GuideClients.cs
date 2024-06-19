@@ -39,7 +39,7 @@ namespace WinFormsApp1
         private void TextBoxEnterName_TextChanged(object sender, EventArgs e)
         {
             using Context context = new();
-            var list = context.Clients.Where(i => i.NameClient.IndexOf(textBoxEnterName.Text) > -1).ToList();
+            var list = context.Clients.Where(i => i.NameAndAddressClient.IndexOf(textBoxEnterName.Text) > -1).ToList();
             dataGridView1.DataSource = list;
         }
 

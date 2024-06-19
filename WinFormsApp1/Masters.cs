@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using WinFormsApp1.Model;
+﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
 {
-    public partial class AddMaster : Form
+    public partial class Masters : Form
     {
-        public int idKey;
-        public AddMaster()
+        MasterRepository masterRepository = new();
+        public Masters()
         {
             InitializeComponent();
             UpdateTable();
@@ -22,7 +14,7 @@ namespace WinFormsApp1
 
         private void BtnAddMaster_Click(object sender, EventArgs e)
         {
-            AddMasterForm addMasterForm = new(true, 0)
+            MasterEdit addMasterForm = new(true)
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -32,11 +24,10 @@ namespace WinFormsApp1
 
         private void BtnChangeMaster_Click(object sender, EventArgs e)
         {
-            using Context context = new();
             int numberRow = dataGridView1.CurrentCell.RowIndex;
             int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
 
-            AddMasterForm addMasterForm = new(false, id) 
+            MasterEdit addMasterForm = new(false, id) 
             {
                 StartPosition = FormStartPosition.CenterParent,
                 Text = "Изменение информации о мастере"
@@ -51,24 +42,24 @@ namespace WinFormsApp1
             if (dataGridView1.Rows.Count > 0)
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                CRUD.RemoveMaster(id);
+                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                var masterDTO = new MasterEditDTO() { Id = id };
+                masterRepository.RemoveMaster(masterDTO);
                 UpdateTable();
             }
         }
 
         private void BtnExit_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void UpdateTable()
         {
-            using Context context = new();
-            dataGridView1.DataSource = context.Masters.Select(i => new { i.Id, i.NameMaster, i.NumberPhone}).ToList();
-            dataGridView1.Columns[0].Visible = false;
-            dataGridView1.Columns[1].HeaderText = "ФИО";
-            dataGridView1.Columns[2].HeaderText = "Телефон";
+            dataGridView1.DataSource = masterRepository.GetMasters();
+            dataGridView1.Columns["Id"].Visible = false;
+            dataGridView1.Columns["NameMaster"].HeaderText = "ФИО";
+            dataGridView1.Columns["NumberPhone"].HeaderText = "Телефон";
 
             int[] percent = [0, 40, 60];
             for (int i = 0; i < dataGridView1.ColumnCount; i++)
@@ -76,12 +67,6 @@ namespace WinFormsApp1
                 double width = Convert.ToDouble(dataGridView1.Width) / 100.0 * percent[i];
                 dataGridView1.Columns[i].Width = Convert.ToInt32(width);
             }
-            if (context.Masters.Any())
-            {
-                idKey = context.Masters.OrderBy(i => i.Id).Last().Id;
-                idKey++;
-            }
-            else { idKey = 1; }
         }
     }
 }

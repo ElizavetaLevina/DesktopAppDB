@@ -194,9 +194,9 @@ namespace WinFormsApp1
                         {
                             try
                             {
-                                String[] splitted = textBoxNameAddress.Text.Split(",", 2);
+                                /*String[] splitted = textBoxNameAddress.Text.Split(",", 2);
                                 CRUD.AddAsyncClient(idClient, textBoxNameClient.Text, splitted[0],
-                                    splitted[splitted.Length - 1], textBoxSecondPhone.Text, "normal");
+                                    splitted[splitted.Length - 1], textBoxSecondPhone.Text, "normal");*/
                             }
                             catch { }
                         }
@@ -310,7 +310,7 @@ namespace WinFormsApp1
 
         private void LinkLabelListMaster_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            AddMaster addMaster = new()
+            Masters addMaster = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -496,7 +496,7 @@ namespace WinFormsApp1
 
         private void LinkLabelDevice_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            TypeTechnicEdit typeTechnic = new()
+            TypesTechnic typeTechnic = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -506,7 +506,7 @@ namespace WinFormsApp1
 
         private void LinkLabelBrand_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            BrandTechnicEdit brandTechnic = new()
+            BrandsTechnic brandTechnic = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -633,74 +633,74 @@ namespace WinFormsApp1
 
         public string MasterName
         {
-            get { return this.comboBoxMaster.Text; }
-            set { this.comboBoxMaster.Text = value; }
+            get { return comboBoxMaster.Text; }
+            set { comboBoxMaster.Text = value; }
         }
 
         public string TypeDevice
         {
-            get { return this.comboBoxDevice.Text; }
-            set { this.comboBoxDevice.Text = value; }
+            get { return comboBoxDevice.Text; }
+            set { comboBoxDevice.Text = value; }
         }
 
         public string BrandDevice
         {
-            get { return this.comboBoxBrand.Text; }
-            set { this.comboBoxBrand.Text = value; }
+            get { return comboBoxBrand.Text; }
+            set { comboBoxBrand.Text = value; }
         }
 
         public string Model
         {
-            get { return this.textBoxModel.Text; }
-            set { this.textBoxModel.Text = value; }
+            get { return textBoxModel.Text; }
+            set { textBoxModel.Text = value; }
         }
 
         public string FactoryNumber
         {
-            get { return this.textBoxFactoryNumber.Text; }
-            set { this.textBoxFactoryNumber.Text = value; }
+            get { return textBoxFactoryNumber.Text; }
+            set { textBoxFactoryNumber.Text = value; }
         }
 
         public string ClientName
         {
-            get { return this.textBoxNameClient.Text; }
-            set { this.textBoxNameClient.Text = value; }
+            get { return textBoxNameClient.Text; }
+            set { textBoxNameClient.Text = value; }
         }
 
         public string ClientNameAddress
         {
-            get { return this.textBoxNameAddress.Text; }
-            set { this.textBoxNameAddress.Text = value; }
+            get { return textBoxNameAddress.Text; }
+            set { textBoxNameAddress.Text = value; }
         }
 
         public string ClientSecondPhone
         {
-            get { return this.textBoxSecondPhone.Text; }
-            set { this.textBoxSecondPhone.Text = value; }
+            get { return textBoxSecondPhone.Text; }
+            set { textBoxSecondPhone.Text = value; }
         }
 
         public string TypeClient
         {
-            get { return this.labelTypeClient.Text; }
-            set { this.labelTypeClient.Text = value; }
+            get { return labelTypeClient.Text; }
+            set { labelTypeClient.Text = value; }
         }
 
         public string Equipment
         {
-            get { return this.textBoxEquipment.Text; }
-            set { this.textBoxEquipment.Text = value; }
+            get { return textBoxEquipment.Text; }
+            set { textBoxEquipment.Text = value; }
         }
 
         public string Diagnosis
         {
-            get { return this.textBoxDiagnosis.Text; }
-            set { this.textBoxDiagnosis.Text = value; }
+            get { return textBoxDiagnosis.Text; }
+            set { textBoxDiagnosis.Text = value; }
         }
 
         public string Note
         {
-            get { return this.textBoxNote.Text; }
-            set { this.textBoxNote.Text = value; }
+            get { return textBoxNote.Text; }
+            set { textBoxNote.Text = value; }
         }
     }
 }

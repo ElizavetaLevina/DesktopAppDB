@@ -3,14 +3,14 @@ using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
 {
-    public partial class AddDetailToWarehouse : Form
+    public partial class DetailEdit : Form
     {
         readonly List<string> nameDetails = [];
         public bool changeDetail = false;
         bool loading = true;
         readonly int id;
         WarehouseRepository warehouseRepository = new();
-        public AddDetailToWarehouse(bool _changeDetail, int _id = 0)
+        public DetailEdit(bool _changeDetail, int _id = 0)
         {
             InitializeComponent();
             changeDetail = _changeDetail;

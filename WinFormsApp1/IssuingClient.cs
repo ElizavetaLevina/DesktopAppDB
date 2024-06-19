@@ -14,11 +14,11 @@ namespace WinFormsApp1
             int summDetails = 0;
             int sumPrice = 0;
             using Context context = new();
-            var listDetails = context.Details.Where(i => i.Id == idOrder).Select(a => new
-            { a.IdWarehouse }).ToList();
+            /*var listDetails = context.Details.Where(i => i.Id == idOrder).Select(a => new
+            { a.IdWarehouse }).ToList();*/
             var list = context.Orders.Where(i => i.Id == id).Select(a => new
             {
-                a.Client.NameClient,
+                a.Client.NameAndAddressClient,
                 a.DateCreation,
                 a.DateCompleted,
                 a.Equipment,
@@ -28,13 +28,13 @@ namespace WinFormsApp1
 
             dateСompletion = list[0].DateCompleted.Value;
 
-            if (listDetails[0].IdWarehouse != null)
+            if (/*listDetails[0].IdWarehouse != null*/true)
             {
                 var listWarehouse = context.Warehouse.ToList();
                 List<string> listNameS = [];
                 List<int> listPriceSaleS = [];
 
-                for (int i = 0; i < listDetails[0].IdWarehouse.Count; i++)
+                /*for (int i = 0; i < listDetails[0].IdWarehouse.Count; i++)
                 {
                     for (int j = 0; j < listWarehouse.Count; j++)
                     {
@@ -44,7 +44,7 @@ namespace WinFormsApp1
                             listPriceSaleS.Add(listWarehouse[j].PriceSale);
                         }
                     }
-                }
+                }*/
                 for (int i = 0; i < listNameS.Count; i++)
                 {
                     summDetails += listPriceSaleS[i];
@@ -53,7 +53,7 @@ namespace WinFormsApp1
                 labelCountDetails.Text = String.Format("{0} шт.", listPriceSaleS.Count);
             }
 
-            labelNameClient.Text = list[0].NameClient;
+            labelNameClient.Text = list[0].NameAndAddressClient;
             labelDateCreate.Text = list[0].DateCreation.ToString();
             labelEquipment.Text = list[0].Equipment?.Name;
 

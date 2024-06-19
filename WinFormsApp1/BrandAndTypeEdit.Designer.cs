@@ -1,6 +1,6 @@
 ﻿namespace WinFormsApp1
 {
-    partial class EnterBrandForm
+    partial class BrandAndTypeEdit
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EnterBrandForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BrandAndTypeEdit));
             btnAdd = new Button();
             btnExit = new Button();
             label1 = new Label();

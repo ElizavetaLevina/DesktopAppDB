@@ -3,14 +3,14 @@ using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
 {
-    public partial class WarehouseDetails : Form
+    public partial class DetailsInWarehouse : Form
     {
         public int idDetail = 0;
         public string? brandDevice;
         public bool newDetail;
         List<WarehouseTableDTO> list;
         WarehouseRepository warehouseRepository = new();
-        public WarehouseDetails(bool _newDetail, string? _brandDevice = null)
+        public DetailsInWarehouse(bool _newDetail, string? _brandDevice = null)
         {
             InitializeComponent();
             brandDevice = _brandDevice;
@@ -69,7 +69,7 @@ namespace WinFormsApp1
 
         private void ButtonAddDetails_Click(object sender, EventArgs e)
         {
-            AddDetailToWarehouse addDetail = new(false)
+            DetailEdit addDetail = new(false)
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -93,7 +93,7 @@ namespace WinFormsApp1
 
             if (warning.ShowDialog() == DialogResult.OK)
             {
-                var warehouseDTO = new WarehouseEditDTO() { Id = id };
+                var warehouseDTO = warehouseRepository.GetWarehouse(id);/*new WarehouseEditDTO() { Id = id };*/
                 warehouseRepository.RemoveWarehouse(warehouseDTO);
                 UpdateTable();
             }
@@ -134,7 +134,7 @@ namespace WinFormsApp1
             int idDetail = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
             var warehouse = warehouseRepository.GetWarehouse(id: idDetail);
 
-            AddDetailToWarehouse addDetail = new(true, idDetail)
+            DetailEdit addDetail = new(true, idDetail)
             {
                 StartPosition = FormStartPosition.CenterParent,
                 NameDetail = warehouse.NameDetail,

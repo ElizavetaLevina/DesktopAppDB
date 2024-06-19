@@ -28,6 +28,10 @@ namespace WinFormsApp1.Repository
                 .ToList();
         }
 
+        /// <summary>
+        /// Получение списка деталей на складе
+        /// </summary>
+        /// <returns>Список деталей на складе</returns>
         public List<WarehouseDTO> GetWarehouses()
         {
             Context context = new();

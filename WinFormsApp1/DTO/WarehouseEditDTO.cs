@@ -15,8 +15,6 @@ namespace WinFormsApp1.DTO
         public bool Availability { get; set; }
         public int? IdOrder { get; set; }
 
-        public WarehouseEditDTO() { }
-
         public WarehouseEditDTO(Warehouse warehouse)
         {
             Id = warehouse.Id;
@@ -26,6 +24,10 @@ namespace WinFormsApp1.DTO
             DatePurchase = warehouse.DatePurchase;
             Availability = warehouse.Availability;
             IdOrder = warehouse.IdOrder;
+        }
+
+        public WarehouseEditDTO()
+        {
         }
     }
 }

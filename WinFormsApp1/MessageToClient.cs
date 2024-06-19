@@ -22,7 +22,7 @@ namespace WinFormsApp1
             using (Context context = new())
             {
                 var list = context.Clients.Where(i => i.Id == idClient).ToList();
-                textBoxPhone.Text = list[0].NameClient;
+                textBoxPhone.Text = list[0].IdClient;
             }
         }
 

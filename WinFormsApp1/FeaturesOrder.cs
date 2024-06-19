@@ -67,7 +67,7 @@ namespace WinFormsApp1
             var listClient = context.Clients.Where(i => i.Id == list[0].ClientId).ToList();
             textBoxIdClient.Text = listClient[0].IdClient;
 
-            textBoxNameAddress.Text = String.Format("{0}, {1}", listClient[0].NameClient, listClient[0].Address);
+            textBoxNameAddress.Text = listClient[0].NameAndAddressClient;
 
             textBoxSecondPhone.Text = listClient[0].NumberSecondPhone;
 
@@ -147,7 +147,7 @@ namespace WinFormsApp1
             List<Label> lRub = [labelRub1, labelRub2, labelRub3];
 
 
-            var listDetails = context.Details.Where(i => i.Id == idOrder).Select(a => new
+            /*var listDetails = context.Details.Where(i => i.Id == idOrder).Select(a => new
             {
                 a.IdWarehouse
             }).ToList();
@@ -176,7 +176,7 @@ namespace WinFormsApp1
                 }
                 textBoxPriceDetails.Text = String.Format("{0} руб.", summDetails);
                 textBoxCountDetails.Text = String.Format("{0} шт.", listPriceSaleS.Count);
-            }
+            }*/
 
 
             var list = context.MalfunctionOrders.Where(i => i.OrderId == idOrder).
@@ -239,7 +239,7 @@ namespace WinFormsApp1
 
         private void LinkLabelMaster_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            AddMaster addMaster = new()
+            Masters addMaster = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -249,7 +249,7 @@ namespace WinFormsApp1
 
         private void LinkLabelDevice_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            TypeTechnicEdit addDevice = new()
+            TypesTechnic addDevice = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -259,7 +259,7 @@ namespace WinFormsApp1
 
         private void LinkLabelBrand_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            BrandTechnicEdit addBrand = new()
+            BrandsTechnic addBrand = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };

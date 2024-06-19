@@ -1,6 +1,6 @@
 ﻿namespace WinFormsApp1
 {
-    partial class BrandTechnicEdit
+    partial class TypesTechnic
     {
         /// <summary>
         /// Required designer variable.
@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BrandTechnicEdit));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TypesTechnic));
             dataGridView1 = new DataGridView();
-            btnAddBrand = new Button();
-            btnChangeBrand = new Button();
+            btnAddDevice = new Button();
+            btnChangeDevice = new Button();
+            btnDeleteDevice = new Button();
             btnExit = new Button();
-            btnDeleteBrand = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -53,69 +53,67 @@
             dataGridView1.Location = new Point(12, 12);
             dataGridView1.MultiSelect = false;
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.ReadOnly = true;
             dataGridView1.RowHeadersVisible = false;
             dataGridView1.RowHeadersWidth = 62;
             dataGridView1.ScrollBars = ScrollBars.Vertical;
             dataGridView1.Size = new Size(404, 486);
             dataGridView1.TabIndex = 0;
             // 
-            // btnAddBrand
+            // btnAddDevice
             // 
-            btnAddBrand.Location = new Point(430, 15);
-            btnAddBrand.Name = "btnAddBrand";
-            btnAddBrand.Size = new Size(249, 43);
-            btnAddBrand.TabIndex = 1;
-            btnAddBrand.Text = "Добавить фирму";
-            btnAddBrand.UseVisualStyleBackColor = true;
-            btnAddBrand.Click += BtnAddBrand_Click;
+            btnAddDevice.Location = new Point(430, 12);
+            btnAddDevice.Name = "btnAddDevice";
+            btnAddDevice.Size = new Size(249, 43);
+            btnAddDevice.TabIndex = 1;
+            btnAddDevice.Text = "Добавить тип устройства";
+            btnAddDevice.UseVisualStyleBackColor = true;
+            btnAddDevice.Click += BtnAddDevice_Click;
             // 
-            // btnChangeBrand
+            // btnChangeDevice
             // 
-            btnChangeBrand.Location = new Point(430, 75);
-            btnChangeBrand.Name = "btnChangeBrand";
-            btnChangeBrand.Size = new Size(249, 43);
-            btnChangeBrand.TabIndex = 2;
-            btnChangeBrand.Text = "Изменить название фирмы";
-            btnChangeBrand.UseVisualStyleBackColor = true;
-            btnChangeBrand.Click += BtnChangeBrand_Click;
+            btnChangeDevice.Location = new Point(430, 75);
+            btnChangeDevice.Name = "btnChangeDevice";
+            btnChangeDevice.Size = new Size(249, 43);
+            btnChangeDevice.TabIndex = 2;
+            btnChangeDevice.Text = "Изменить тип устройства";
+            btnChangeDevice.UseVisualStyleBackColor = true;
+            btnChangeDevice.Click += BtnChangeDevice_Click;
+            // 
+            // btnDeleteDevice
+            // 
+            btnDeleteDevice.Location = new Point(430, 139);
+            btnDeleteDevice.Name = "btnDeleteDevice";
+            btnDeleteDevice.Size = new Size(249, 43);
+            btnDeleteDevice.TabIndex = 3;
+            btnDeleteDevice.Text = "Удалить тип устройства";
+            btnDeleteDevice.UseVisualStyleBackColor = true;
+            btnDeleteDevice.Click += BtnDeleteDevice_Click;
             // 
             // btnExit
             // 
             btnExit.Location = new Point(430, 455);
             btnExit.Name = "btnExit";
             btnExit.Size = new Size(249, 43);
-            btnExit.TabIndex = 3;
+            btnExit.TabIndex = 4;
             btnExit.Text = "Выход";
             btnExit.UseVisualStyleBackColor = true;
             btnExit.Click += BtnExit_Click;
             // 
-            // btnDeleteBrand
-            // 
-            btnDeleteBrand.BackColor = SystemColors.Control;
-            btnDeleteBrand.Location = new Point(430, 139);
-            btnDeleteBrand.Name = "btnDeleteBrand";
-            btnDeleteBrand.Size = new Size(249, 43);
-            btnDeleteBrand.TabIndex = 4;
-            btnDeleteBrand.Text = "Удалить фирму";
-            btnDeleteBrand.UseVisualStyleBackColor = false;
-            btnDeleteBrand.Click += BtnDeleteBrand_Click;
-            // 
-            // AddBrand
+            // AddDevice
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(688, 510);
-            Controls.Add(btnDeleteBrand);
             Controls.Add(btnExit);
-            Controls.Add(btnChangeBrand);
-            Controls.Add(btnAddBrand);
+            Controls.Add(btnDeleteDevice);
+            Controls.Add(btnChangeDevice);
+            Controls.Add(btnAddDevice);
             Controls.Add(dataGridView1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
-            Name = "AddBrand";
-            Text = "Фирмы-производители устройств";
+            Name = "AddDevice";
+            Text = "Типы устройств";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
         }
@@ -123,9 +121,9 @@
         #endregion
 
         private DataGridView dataGridView1;
-        private Button btnAddBrand;
-        private Button btnChangeBrand;
+        private Button btnAddDevice;
+        private Button btnChangeDevice;
+        private Button btnDeleteDevice;
         private Button btnExit;
-        private Button btnDeleteBrand;
     }
 }

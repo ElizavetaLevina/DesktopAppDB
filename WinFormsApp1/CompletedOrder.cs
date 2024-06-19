@@ -18,10 +18,10 @@ namespace WinFormsApp1
             id = _id;
             int summDetails = 0;
             using Context context = new();
-            var listIdWarehouse = context.Details.Where(i => i.Id == id).Select(a => new
+            /*var listIdWarehouse = context.Details.Where(i => i.Id == id).Select(a => new
             {
                 a.IdWarehouse
-            }).ToList();
+            }).ToList();*/
 
             var listProblem = context.Malfunctions.ToList();
             for (int i = 0; i < listProblem.Count; i++)
@@ -29,13 +29,13 @@ namespace WinFormsApp1
                 nameProblem.Add(listProblem[i].Name);
             }
 
-            if (listIdWarehouse[0].IdWarehouse != null)
+            if (/*listIdWarehouse[0].IdWarehouse != null*/true)
             {
                 var listWarehouse = context.Warehouse.ToList();
                 List<string> listNameS = [];
                 List<int> listPriceSaleS = [];
 
-                for (int i = 0; i < listIdWarehouse[0].IdWarehouse?.Count; i++)
+               /* for (int i = 0; i < listIdWarehouse[0].IdWarehouse?.Count; i++)
                 {
                     for (int j = 0; j < listWarehouse.Count; j++)
                     {
@@ -45,7 +45,7 @@ namespace WinFormsApp1
                             listPriceSaleS.Add(listWarehouse[j].PriceSale);
                         }
                     }
-                }
+                }*/
                 for (int i = 0; i < listPriceSaleS.Count; i++)
                 {
                     summDetails += listPriceSaleS[i];

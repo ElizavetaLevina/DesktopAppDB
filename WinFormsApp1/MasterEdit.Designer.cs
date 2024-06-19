@@ -1,6 +1,6 @@
 ﻿namespace WinFormsApp1
 {
-    partial class AddMasterForm
+    partial class MasterEdit
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddMasterForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MasterEdit));
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();

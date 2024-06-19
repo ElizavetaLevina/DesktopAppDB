@@ -5,15 +5,25 @@ namespace WinFormsApp1.Repository
 {
     public class TypeTechnicRepository
     {
-        public List<TypeTechnicDTO> GetTypeTechnics(bool whole = true, string name = "")
+        /// <summary>
+        /// Получение списка типов
+        /// </summary>
+        /// <returns>Список типов</returns>
+        public List<TypeTechnicDTO> GetTypesTechnic()
         {
             Context context = new();
-            var set = context.TypeTechnices.Where(c => true);
-            if (!whole)
-                set = set.Where(c => c.NameTypeTechnic == name);
-            return set
-                .Select(a => new TypeTechnicDTO(a))
-                .ToList();
+            return context.TypeTechnices.Select(a => new TypeTechnicDTO(a)).ToList();
+        }
+
+        /// <summary>
+        /// Получение записи по названию
+        /// </summary>
+        /// <param name="name">Название</param>
+        /// <returns>Запись</returns>
+        public TypeTechnicDTO GetTypeTechnic(string name)
+        {
+            Context context = new();
+            return new TypeTechnicDTO(context.TypeTechnices.First(i => i.NameTypeTechnic == name));
         }
 
         public async Task<int> SaveTypeTechnicAsync(TypeTechnicEditDTO typeTechnicDTO, CancellationToken token = default)

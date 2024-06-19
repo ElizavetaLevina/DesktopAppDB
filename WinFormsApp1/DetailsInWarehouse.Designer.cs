@@ -1,6 +1,6 @@
 ﻿namespace WinFormsApp1
 {
-    partial class WarehouseDetails
+    partial class DetailsInWarehouse
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WarehouseDetails));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DetailsInWarehouse));
             dataGridView1 = new DataGridView();
             buttonAddDetails = new Button();
             buttonDeleteDetail = new Button();

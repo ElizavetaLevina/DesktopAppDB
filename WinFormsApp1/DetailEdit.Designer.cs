@@ -1,6 +1,6 @@
 ﻿namespace WinFormsApp1
 {
-    partial class AddDetailToWarehouse
+    partial class DetailEdit
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddDetailToWarehouse));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DetailEdit));
             labelName = new Label();
             labelPricePurchase = new Label();
             label3 = new Label();

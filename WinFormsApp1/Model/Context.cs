@@ -12,7 +12,6 @@ namespace WinFormsApp1.Model
         public DbSet<TypeTechnic> TypeTechnices => Set<TypeTechnic>();
         public DbSet<BrandTechnic> BrandTechnices => Set<BrandTechnic>();
         public DbSet<Order> Orders => Set<Order>();
-        public DbSet<Details> Details => Set<Details>();
         public DbSet<Warehouse> Warehouse => Set<Warehouse>();
         public DbSet<TypeBrand> TypeBrands => Set<TypeBrand>();
         public DbSet<Malfunction> Malfunctions => Set<Malfunction>();

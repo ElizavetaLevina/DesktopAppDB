@@ -1,21 +1,23 @@
-﻿using System.Data;
-using WinFormsApp1.Model;
+﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
 {
     public partial class FeaturesClient : Form
     {
-        public FeaturesClient(int id)
+        ClientRepository clientRepository = new();
+        ClientEditDTO client;
+        public int clientId;
+        public FeaturesClient(int id = 0)
         {
             InitializeComponent();
-            Context context = new();
-            var list = context.Clients.Where(i => i.Id == id).ToList();
+            clientId = id;
+            client = clientRepository.GetClient(id);
+            textBoxID.Text = client.IdClient;
+            textBoxNameAddress.Text = client.NameAndAddressClient;
+            textBoxSecondPhone.Text = client.NumberSecondPhone;
 
-            textBoxID.Text = list[0].IdClient;
-            textBoxNameAddress.Text = String.Format("{0}, {1}", list[0].NameClient, list[0].Address);
-            textBoxSecondPhone.Text = list[0].NumberSecondPhone;
-
-            switch (list[0].TypeClient)
+            switch (client.TypeClient)
             {
                 case "normal":
                     radioButtonNormal.Checked = true; break;
@@ -28,50 +30,39 @@ namespace WinFormsApp1
 
         private void ButtonSave_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            if (textBoxID.Text != "")
+            {
+                client.IdClient = textBoxID.Text;
+                client.NameAndAddressClient = textBoxNameAddress.Text;
+                client.NumberSecondPhone = textBoxSecondPhone.Text;
+                client.TypeClient = TypeClient();
+
+                Task.Run(async () =>
+                {
+                    await clientRepository.SaveClientAsync(client);
+                });
+
+                DialogResult = DialogResult.OK;
+                Close();
+            }
         }
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
-        public string IdClient
+        public string TypeClient()
         {
-            get { return this.textBoxID.Text; }
-            set { this.textBoxID.Text = value; }
-        }
+            string typeClient = "normal";
 
-        public string NameAdressClient
-        {
-            get { return this.textBoxNameAddress.Text; }
-            set { this.textBoxNameAddress.Text = value; }
-        }
+            if (radioButtonWhite.Checked)
+                typeClient = "white";
+            else if (radioButtonBlack.Checked)
+                typeClient = "black";
 
-        public string SecondPhone
-        {
-            get { return this.textBoxSecondPhone.Text; }
-            set { this.textBoxSecondPhone.Text = value; }
-        }
-
-        public bool NormalType
-        {
-            get { return radioButtonNormal.Checked; }
-            set { radioButtonNormal.Checked = value; }
-        }
-
-        public bool WhiteType
-        {
-            get { return radioButtonWhite.Checked; }
-            set { radioButtonWhite.Checked = value; }
-        }
-
-        public bool BlackType
-        {
-            get { return radioButtonBlack.Checked; }
-            set { radioButtonBlack.Checked = value; }
+            return typeClient;
         }
     }
 }

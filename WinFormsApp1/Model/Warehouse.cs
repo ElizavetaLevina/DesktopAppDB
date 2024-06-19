@@ -9,6 +9,5 @@
         public DateTime DatePurchase { get; set; } = DateTime.Now;
         public bool Availability { get; set; }
         public int? IdOrder {  get; set; }
-        public virtual Details? Details { get; set; }
     }
 }

@@ -1,17 +1,18 @@
-﻿using System.Data;
-using WinFormsApp1.Model;
+﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
 {
-    public partial class AddMasterForm : Form
+    public partial class MasterEdit : Form
     {
-        public bool add = false;
+        public bool newMaster;
         public int id = 0;
-        public AddMasterForm(bool addMaster, int idMaster)
+        MasterRepository masterRepository = new();
+        public MasterEdit(bool addMaster = false, int idMaster = 0)
         {
             InitializeComponent();
-            this.add = addMaster;
-            this.id = idMaster;
+            newMaster = addMaster;
+            id = idMaster;
         }
 
         private void TrackBarPercent_Scroll(object sender, EventArgs e)
@@ -21,25 +22,24 @@ namespace WinFormsApp1
 
         private void AddMasterForm_Activated(object sender, EventArgs e)
         {
-            if(!add)
+            if(!newMaster)
             {
-                Context context = new();
-                var list = context.Masters.Where(i => i.Id == id).ToList();
+                var masterDTO = masterRepository.GetMaster(id);
 
-                textBoxName.Text = list[0].NameMaster;
+                textBoxName.Text = masterDTO.NameMaster;
                 textBoxName.SelectAll();
-                textBoxAddress.Text = list[0].Address;
-                textBoxNumberPhone.Text = list[0].NumberPhone;
+                textBoxAddress.Text = masterDTO.Address;
+                textBoxNumberPhone.Text = masterDTO.NumberPhone;
                 buttonAdd.Text = "Изменить данные";
 
-                switch (list[0].TypeSalary)
+                switch (masterDTO.TypeSalary)
                 {
                     case "rate":
                         radioButtonRate.Checked = true;
                         radioButtonProfitMaster.Checked = false;
                         radioButtonProfitOrganization.Checked = false;
                         textBoxRate.Enabled = true;
-                        textBoxRate.Text = list[0].Rate.ToString();
+                        textBoxRate.Text = masterDTO.Rate.ToString();
                         labelRate.Enabled = true;
                         trackBarPercent.Enabled = false;
                         labelPercent.Enabled = false;
@@ -52,9 +52,9 @@ namespace WinFormsApp1
                         textBoxRate.Enabled = false;
                         labelRate.Enabled = false;
                         trackBarPercent.Enabled = true;
-                        trackBarPercent.Value = list[0].Rate;
+                        trackBarPercent.Value = masterDTO.Rate;
                         labelPercent.Enabled = true;
-                        labelPercent.Text = list[0].Rate.ToString();
+                        labelPercent.Text = masterDTO.Rate.ToString();
                         labelSymbolPercent.Enabled = true;
                         break;
                     case "percentOrganization":
@@ -64,9 +64,9 @@ namespace WinFormsApp1
                         textBoxRate.Enabled = false;
                         labelRate.Enabled = false;
                         trackBarPercent.Enabled = true;
-                        trackBarPercent.Value = list[0].Rate;
+                        trackBarPercent.Value = masterDTO.Rate;
                         labelPercent.Enabled = true;
-                        labelPercent.Text = list[0].Rate.ToString();
+                        labelPercent.Text = masterDTO.Rate.ToString();
                         labelSymbolPercent.Enabled = true;
                         break;
                 }
@@ -110,47 +110,50 @@ namespace WinFormsApp1
                 };
                 warning.ShowDialog();
             } 
-            else {
-                int idKey = 1;
+            else 
+            {
                 string typeSalary = "";
                 int rate = 0;
-                using Context context = new();
-                if (context.Masters.Any())
-                {
-                    idKey = context.Masters.OrderBy(i => i.Id).Last().Id;
-                    idKey++;
-                }
+
                 if (radioButtonRate.Checked)
                 {
                     typeSalary = "rate";
                     rate = Convert.ToInt32(textBoxRate.Text);
-                } else if (radioButtonProfitMaster.Checked)
+                } 
+                else if (radioButtonProfitMaster.Checked)
                 {
                     typeSalary = "percentMaster";
                     rate = Convert.ToInt32(labelPercent.Text);
 
-                } else if (radioButtonProfitOrganization.Checked)
+                } 
+                else if (radioButtonProfitOrganization.Checked)
                 {
                     typeSalary = "percentOrganization";
                     rate = Convert.ToInt32(labelPercent.Text);
                 }
 
-                if (add)
+                var masterDTO = new MasterEditDTO()
                 {
-                    CRUD.AddAsyncMaster(idKey, textBoxName.Text, textBoxAddress.Text,
-                        textBoxNumberPhone.Text, typeSalary, rate);
-                } else
+                    Id = id,
+                    NameMaster = textBoxName.Text,
+                    Address = textBoxAddress.Text,
+                    NumberPhone = textBoxNumberPhone.Text,
+                    TypeSalary = typeSalary,
+                    Rate = rate
+                };
+
+                var task = Task.Run(async () =>
                 {
-                    CRUD.ChangeMaster(id, textBoxName.Text, textBoxAddress.Text,
-                        textBoxNumberPhone.Text, typeSalary, rate);
-                }
+                    await masterRepository.SaveMasterAsync(masterDTO);
+                });
+                task.Wait();
             }
-            this.Close();
+            Close();
         }
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void TextBoxRate_KeyPress(object sender, KeyPressEventArgs e)

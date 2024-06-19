@@ -350,13 +350,13 @@ namespace WinFormsApp1
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
                 int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
                 var list = context.Orders.Where(a => a.Id == id).ToList();
-                var listDetails = context.Details.Where(a => a.Id == id).ToList();
+                //var listDetails = context.Details.Where(a => a.Id == id).ToList();
                 bool enabledPrice = true;
 
                 if (list[0].ReturnUnderGuarantee)
                     enabledPrice = false;
 
-                if (listDetails[0].IdWarehouse == null)
+                if (/*listDetails[0].IdWarehouse == null*/true)
                 {
                     Warning warning = new()
                     {
@@ -717,27 +717,7 @@ namespace WinFormsApp1
                 };
 
                 if (featuresClient.ShowDialog() == DialogResult.OK)
-                {
-                    if (featuresClient.NormalType)
-                        typeClient = "normal";
-                    else if (featuresClient.WhiteType)
-                        typeClient = "white";
-                    else if (featuresClient.BlackType)
-                        typeClient = "black";
-
-                    try
-                    {
-                        String[] splitted = featuresClient.NameAdressClient.Split(",", 2);
-                        CRUD.ChangeClient(idClient,
-                        featuresClient.IdClient,
-                        splitted[0],
-                        splitted[1],
-                        featuresClient.SecondPhone,
-                        typeClient);
-                    }
-                    catch { }
-                }
-                UpdateTableData();
+                    UpdateTableData();
                 FocusButton(status);
             }
             catch { }
@@ -754,12 +734,12 @@ namespace WinFormsApp1
                 int idClient = list[0].ClientId;
                 var listClient = context.Clients.Where(i => i.Id == idClient).ToList();
 
-                CRUD.ChangeClient(idClient,
+                /*CRUD.ChangeClient(idClient,
                     listClient[0].IdClient,
                     listClient[0].NameClient,
                     listClient[0].Address,
                     listClient[0].NumberSecondPhone,
-                    "white");
+                    "white");*/
             }
             catch { }
         }
@@ -775,12 +755,12 @@ namespace WinFormsApp1
                 int idClient = list[0].ClientId;
                 var listClient = context.Clients.Where(i => i.Id == idClient).ToList();
 
-                CRUD.ChangeClient(idClient,
+                /*CRUD.ChangeClient(idClient,
                     listClient[0].IdClient,
                     listClient[0].NameClient,
                     listClient[0].Address,
                     listClient[0].NumberSecondPhone,
-                    "black");
+                    "black");*/
             }
             catch { }
         }
@@ -796,12 +776,12 @@ namespace WinFormsApp1
                 int idClient = list[0].ClientId;
                 var listClient = context.Clients.Where(i => i.Id == idClient).ToList();
 
-                CRUD.ChangeClient(idClient,
+                /*CRUD.ChangeClient(idClient,
                     listClient[0].IdClient,
                     listClient[0].NameClient,
                     listClient[0].Address,
                     listClient[0].NumberSecondPhone,
-                    "normal");
+                    "normal");*/
             }
             catch { }
         }
@@ -835,7 +815,7 @@ namespace WinFormsApp1
                 BrandDevice = list[0].NameBrandTechnic,
                 Model = list[0].ModelTechnic,
                 ClientName = list[0].Client.IdClient,
-                ClientNameAddress = String.Format("{0}, {1}", list[0].Client?.NameClient, list[0].Client?.Address),
+                ClientNameAddress = list[0].Client?.NameAndAddressClient,
                 ClientSecondPhone = list[0].Client.NumberSecondPhone,
                 TypeClient = "Старый клиент",
                 Equipment = list[0].Equipment.Name,
@@ -1297,7 +1277,7 @@ namespace WinFormsApp1
 
         private void ButtonMasters_Click(object sender, EventArgs e)
         {
-            AddMaster addMaster = new()
+            Masters addMaster = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -1307,7 +1287,7 @@ namespace WinFormsApp1
 
         private void ButtonDevice_Click(object sender, EventArgs e)
         {
-            TypeTechnicEdit addDevice = new()
+            TypesTechnic addDevice = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -1495,7 +1475,7 @@ namespace WinFormsApp1
 
         private void ItemAddMasters_Click(object sender, EventArgs e)
         {
-            AddMaster addMaster = new()
+            Masters addMaster = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -1505,7 +1485,7 @@ namespace WinFormsApp1
 
         private void ItemAddBrand_Click(object sender, EventArgs e)
         {
-            BrandTechnicEdit addBrand = new()
+            BrandsTechnic addBrand = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -1514,7 +1494,7 @@ namespace WinFormsApp1
         }
         private void ItemAddDevice_Click(object sender, EventArgs e)
         {
-            TypeTechnicEdit addDevice = new()
+            TypesTechnic addDevice = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -1534,7 +1514,7 @@ namespace WinFormsApp1
 
         private void ItemWarehouse_Click(object sender, EventArgs e)
         {
-            WarehouseDetails details = new(true)
+            DetailsInWarehouse details = new(true)
             {
                 StartPosition = FormStartPosition.CenterParent,
                 VisibleBtnAdd = false
@@ -1775,9 +1755,9 @@ namespace WinFormsApp1
 
                 template.AddVariable("Id", value: list[0].Id);
                 template.AddVariable("MasterName", value: list[0].Master?.NameMaster);
-                template.AddVariable("ClientName", value: list[0].Client?.NameClient);
+                template.AddVariable("ClientName", value: list[0].Client?.NameAndAddressClient);
                 template.AddVariable("ClientId", value: list[0].Client?.IdClient);
-                template.AddVariable("ClientAddress", value: list[0].Client?.Address);
+                template.AddVariable("ClientAddress", value: list[0].Client?.NameAndAddressClient);
                 template.AddVariable("ClientSecondPhone", value: list[0].Client?.NumberSecondPhone);
                 template.AddVariable("Device", value: device);
                 template.AddVariable("FactoryNumber", value: list[0].FactoryNumber);
@@ -1852,11 +1832,11 @@ namespace WinFormsApp1
                     i.ReturnUnderGuarantee
                 }).ToList();
 
-                var listDetails = context.Details.Where(i => i.Id == id).ToList();
+               /* var listDetails = context.Details.Where(i => i.Id == id).ToList();
                 var listIdWarehouse = context.Details.Where(i => i.Id == id).Select(a => new
                 {
                     a.IdWarehouse
-                }).ToList();
+                }).ToList();*/
 
                 var listFoundProblem = context.MalfunctionOrders.Where(i => i.OrderId == id).
                     Select(a => new { a.Malfunction, a.Price }).ToList();
@@ -1872,7 +1852,7 @@ namespace WinFormsApp1
 
                 List<string> listNameS = [];
                 List<int> listPriceSaleS = [];
-                if (listIdWarehouse[0].IdWarehouse != null)
+                /*if (listIdWarehouse[0].IdWarehouse != null)
                 {
                     var listWarehouse = context.Warehouse.ToList();
                     for (int i = 0; i < listIdWarehouse[0].IdWarehouse.Count; i++)
@@ -1886,7 +1866,7 @@ namespace WinFormsApp1
                             }
                         }
                     }
-                }
+                }*/
                 int detailsSum = 0;
 
                 for (int i = 0; i < listPriceSaleS.Count; i++)
@@ -1915,9 +1895,9 @@ namespace WinFormsApp1
 
                 template.AddVariable("Id", value: list[0].Id);
                 template.AddVariable("MasterName", value: list[0].Master?.NameMaster);
-                template.AddVariable("ClientName", value: list[0].Client?.NameClient);
+                template.AddVariable("ClientName", value: list[0].Client?.NameAndAddressClient);
                 template.AddVariable("ClientId", value: list[0].Client?.IdClient);
-                template.AddVariable("ClientAddress", value: list[0].Client?.Address);
+                template.AddVariable("ClientAddress", value: list[0].Client?.NameAndAddressClient);
                 template.AddVariable("ClientSecondPhone", value: list[0].Client?.NumberSecondPhone);
                 template.AddVariable("Device", value: device);
                 template.AddVariable("FactoryNumber", value: list[0].FactoryNumber);
@@ -2161,7 +2141,7 @@ namespace WinFormsApp1
             i.TypeTechnic.NameTypeTechnic.StartsWith(textBoxTypeDevice.Text) &&
             i.BrandTechnic.NameBrandTechnic.StartsWith(textBoxBrandDevice.Text) &&
             i.ModelTechnic.StartsWith(textBoxModel.Text) &&
-            i.Client.NameClient.IndexOf(textBoxNameClient.Text) > -1).Select(a => new
+            i.Client.NameAndAddressClient.IndexOf(textBoxNameClient.Text) > -1).Select(a => new
             {
                 a.Id,
                 a.DateCreation,
@@ -2170,7 +2150,7 @@ namespace WinFormsApp1
                 a.TypeTechnic.NameTypeTechnic,
                 a.BrandTechnic.NameBrandTechnic,
                 a.ModelTechnic,
-                a.Client.NameClient,
+                a.Client.NameAndAddressClient,
                 a.Deleted,
                 a.ReturnUnderGuarantee,
                 a.ColorRow

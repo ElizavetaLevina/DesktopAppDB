@@ -3,11 +3,11 @@ using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
 {
-    public partial class BrandTechnicEdit : Form
+    public partial class BrandsTechnic : Form
     {
         BrandTechnicRepository brandTechnicRepository = new();
         TypeBrandRepository typeBrandRepository = new();
-        public BrandTechnicEdit()
+        public BrandsTechnic()
         {
             InitializeComponent();
             UpdateTable();
@@ -15,7 +15,7 @@ namespace WinFormsApp1
 
         private void BtnAddBrand_Click(object sender, EventArgs e)
         {
-            EnterBrandForm enterBrandForm = new("brand")
+            BrandAndTypeEdit enterBrandForm = new("brand")
             {
                 StartPosition = FormStartPosition.CenterParent,
                 LabelSecondName = "Тип устройства",
@@ -60,7 +60,7 @@ namespace WinFormsApp1
                 int brandTechnicId = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
                 string? name = dataGridView1.Rows[numberRow].Cells["NameBrandTechnic"].Value.ToString();
                 List <TypeBrandDTO> list = typeBrandRepository.GetTypeBrand();
-                EnterBrandForm enterBrandForm = new("brand", false, brandTechnicId)
+                BrandAndTypeEdit enterBrandForm = new("brand", false, brandTechnicId)
                 {
                     StartPosition = FormStartPosition.CenterParent,
                     Text = "Изменение названия фирмы",
@@ -134,7 +134,7 @@ namespace WinFormsApp1
 
         private void UpdateTable()
         {
-            List<BrandTechnicDTO> list = brandTechnicRepository.GetBrandTechnics();
+            List<BrandTechnicDTO> list = brandTechnicRepository.GetBrandsTechnic();
             dataGridView1.DataSource = list;
             dataGridView1.Columns["Id"].Visible = false;
             dataGridView1.Columns["NameBrandTechnic"].HeaderText = "Название";

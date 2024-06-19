@@ -21,7 +21,9 @@ namespace WinFormsApp1.DTO
         public DateTime? DateCompleted { get; set; }
         public DateTime? DateIssue { get; set; }
         public int TypeTechnicId { get; set; }
+        public virtual TypeTechnic? TypeTechnic { get; set; }
         public int BrandTechnicId { get; set; }
+        public virtual BrandTechnic? BrandTechnic { get; set; }
         public string? ModelTechnic { get; set; }
         public string? FactoryNumber { get; set; }
         public int? EquipmentId { get; set; }
@@ -40,5 +42,15 @@ namespace WinFormsApp1.DTO
         public string? DateLastCall { get; set; }
         public bool PriceAgreed { get; set; }
         public int? MaxPrice { get; set; }
+
+        public OrderEditDTO(Order order)
+        {
+            Id = order.Id;
+            ClientId = order.ClientId;
+
+
+            TypeTechnic = order.TypeTechnic;
+            BrandTechnic = order.BrandTechnic;
+        }
     }
 }

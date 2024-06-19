@@ -3,11 +3,11 @@ using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
 {
-    public partial class TypeTechnicEdit : Form
+    public partial class TypesTechnic : Form
     {
         TypeTechnicRepository typeTechnicRepository = new();
         TypeBrandRepository typeBrandRepository = new();
-        public TypeTechnicEdit()
+        public TypesTechnic()
         {
             InitializeComponent();
             UpdateTable();
@@ -15,7 +15,7 @@ namespace WinFormsApp1
 
         private void BtnAddDevice_Click(object sender, EventArgs e)
         {
-            EnterBrandForm enterBrandForm = new("type")
+            BrandAndTypeEdit enterBrandForm = new("type")
             {
                 StartPosition = FormStartPosition.CenterParent,
                 Text = "Добавить тип устройства",
@@ -61,7 +61,7 @@ namespace WinFormsApp1
                 int typeTechnicId = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
                 string? name = dataGridView1.Rows[numberRow].Cells["NameTypeTechnic"].Value.ToString();
                 List<TypeBrandDTO> list = typeBrandRepository.GetTypeBrand();
-                EnterBrandForm enterBrandForm = new("type", false, typeTechnicId)
+                BrandAndTypeEdit enterBrandForm = new("type", false, typeTechnicId)
                 {
                     StartPosition = FormStartPosition.CenterParent,
                     Text = "Изменение типа устройства",
@@ -135,7 +135,7 @@ namespace WinFormsApp1
 
         private void UpdateTable()
         {
-            List<TypeTechnicDTO> list= typeTechnicRepository.GetTypeTechnics();
+            List<TypeTechnicDTO> list= typeTechnicRepository.GetTypesTechnic();
             dataGridView1.DataSource = list;
             dataGridView1.Columns["Id"].Visible = false;
             dataGridView1.Columns["NameTypeTechnic"].HeaderText = "Тип устройства";

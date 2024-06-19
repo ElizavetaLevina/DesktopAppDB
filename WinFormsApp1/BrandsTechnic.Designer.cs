@@ -1,6 +1,6 @@
 ﻿namespace WinFormsApp1
 {
-    partial class AddMaster
+    partial class BrandsTechnic
     {
         /// <summary>
         /// Required designer variable.
@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddMaster));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BrandsTechnic));
             dataGridView1 = new DataGridView();
-            btnAddMaster = new Button();
-            btnChangeMaster = new Button();
-            btnDeleteMaster = new Button();
+            btnAddBrand = new Button();
+            btnChangeBrand = new Button();
             btnExit = new Button();
+            btnDeleteBrand = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -53,68 +53,69 @@
             dataGridView1.Location = new Point(12, 12);
             dataGridView1.MultiSelect = false;
             dataGridView1.Name = "dataGridView1";
+            dataGridView1.ReadOnly = true;
             dataGridView1.RowHeadersVisible = false;
             dataGridView1.RowHeadersWidth = 62;
             dataGridView1.ScrollBars = ScrollBars.Vertical;
-            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView1.Size = new Size(506, 486);
+            dataGridView1.Size = new Size(404, 486);
             dataGridView1.TabIndex = 0;
             // 
-            // btnAddMaster
+            // btnAddBrand
             // 
-            btnAddMaster.Location = new Point(529, 12);
-            btnAddMaster.Name = "btnAddMaster";
-            btnAddMaster.Size = new Size(249, 43);
-            btnAddMaster.TabIndex = 1;
-            btnAddMaster.Text = "Добавить мастера";
-            btnAddMaster.UseVisualStyleBackColor = true;
-            btnAddMaster.Click += BtnAddMaster_Click;
+            btnAddBrand.Location = new Point(430, 15);
+            btnAddBrand.Name = "btnAddBrand";
+            btnAddBrand.Size = new Size(249, 43);
+            btnAddBrand.TabIndex = 1;
+            btnAddBrand.Text = "Добавить фирму";
+            btnAddBrand.UseVisualStyleBackColor = true;
+            btnAddBrand.Click += BtnAddBrand_Click;
             // 
-            // btnChangeMaster
+            // btnChangeBrand
             // 
-            btnChangeMaster.Location = new Point(529, 75);
-            btnChangeMaster.Name = "btnChangeMaster";
-            btnChangeMaster.Size = new Size(249, 43);
-            btnChangeMaster.TabIndex = 2;
-            btnChangeMaster.Text = "Изменить данные";
-            btnChangeMaster.UseVisualStyleBackColor = true;
-            btnChangeMaster.Click += BtnChangeMaster_Click;
-            // 
-            // btnDeleteMaster
-            // 
-            btnDeleteMaster.Location = new Point(529, 139);
-            btnDeleteMaster.Name = "btnDeleteMaster";
-            btnDeleteMaster.Size = new Size(249, 43);
-            btnDeleteMaster.TabIndex = 3;
-            btnDeleteMaster.Text = "Удалить мастера";
-            btnDeleteMaster.UseVisualStyleBackColor = true;
-            btnDeleteMaster.Click += BtnDeleteMaster_Click;
+            btnChangeBrand.Location = new Point(430, 75);
+            btnChangeBrand.Name = "btnChangeBrand";
+            btnChangeBrand.Size = new Size(249, 43);
+            btnChangeBrand.TabIndex = 2;
+            btnChangeBrand.Text = "Изменить название фирмы";
+            btnChangeBrand.UseVisualStyleBackColor = true;
+            btnChangeBrand.Click += BtnChangeBrand_Click;
             // 
             // btnExit
             // 
-            btnExit.Location = new Point(529, 455);
+            btnExit.Location = new Point(430, 455);
             btnExit.Name = "btnExit";
             btnExit.Size = new Size(249, 43);
-            btnExit.TabIndex = 4;
+            btnExit.TabIndex = 3;
             btnExit.Text = "Выход";
             btnExit.UseVisualStyleBackColor = true;
             btnExit.Click += BtnExit_Click;
             // 
-            // AddMaster
+            // btnDeleteBrand
+            // 
+            btnDeleteBrand.BackColor = SystemColors.Control;
+            btnDeleteBrand.Location = new Point(430, 139);
+            btnDeleteBrand.Name = "btnDeleteBrand";
+            btnDeleteBrand.Size = new Size(249, 43);
+            btnDeleteBrand.TabIndex = 4;
+            btnDeleteBrand.Text = "Удалить фирму";
+            btnDeleteBrand.UseVisualStyleBackColor = false;
+            btnDeleteBrand.Click += BtnDeleteBrand_Click;
+            // 
+            // AddBrand
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(787, 510);
+            ClientSize = new Size(688, 510);
+            Controls.Add(btnDeleteBrand);
             Controls.Add(btnExit);
-            Controls.Add(btnDeleteMaster);
-            Controls.Add(btnChangeMaster);
-            Controls.Add(btnAddMaster);
+            Controls.Add(btnChangeBrand);
+            Controls.Add(btnAddBrand);
             Controls.Add(dataGridView1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
-            Name = "AddMaster";
-            Text = "Мастера";
+            Name = "AddBrand";
+            Text = "Фирмы-производители устройств";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
         }
@@ -122,9 +123,9 @@
         #endregion
 
         private DataGridView dataGridView1;
-        private Button btnAddMaster;
-        private Button btnChangeMaster;
-        private Button btnDeleteMaster;
+        private Button btnAddBrand;
+        private Button btnChangeBrand;
         private Button btnExit;
+        private Button btnDeleteBrand;
     }
 }

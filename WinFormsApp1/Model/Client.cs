@@ -6,8 +6,7 @@ namespace WinFormsApp1
     {
         public int Id { get; set; }
         public string? IdClient {  get; set; }
-        public string? NameClient { get; set; }
-        public string? Address { get; set; }
+        public string? NameAndAddressClient { get; set; }
         public string? NumberSecondPhone {  get; set; }
         public string TypeClient { get; set; } = "normal";
         public virtual List<Order>? Order { get; set; }

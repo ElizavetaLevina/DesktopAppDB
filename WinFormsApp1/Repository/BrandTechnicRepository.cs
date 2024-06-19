@@ -1,4 +1,5 @@
-﻿using WinFormsApp1.DTO;
+﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
 
 namespace WinFormsApp1.Repository
@@ -8,18 +9,22 @@ namespace WinFormsApp1.Repository
         /// <summary>
         /// Получение списка брендов
         /// </summary>
-        /// <param name="whole">Весь список</param>
-        /// <param name="name">Название бренда</param>
         /// <returns>Список брендов</returns>
-        public List<BrandTechnicDTO> GetBrandTechnics(bool whole = true, string name = "")
+        public List<BrandTechnicDTO> GetBrandsTechnic()
         {
             Context context = new();
-            var set = context.BrandTechnices.Where(c => true);
-            if (!whole)
-                set = set.Where(c => c.NameBrandTechnic == name);
-            return set
-                .Select(a => new BrandTechnicDTO(a))
-                .ToList();
+            return context.BrandTechnices.Select(a => new BrandTechnicDTO(a)).ToList();
+        }
+
+        /// <summary>
+        /// Получение записи по названию
+        /// </summary>
+        /// <param name="name">Название бренда</param>
+        /// <returns>Запись</returns>
+        public BrandTechnicDTO GetBrandTechnic(string name)
+        {
+            Context context = new();
+            return new BrandTechnicDTO(context.BrandTechnices.First(i => i.NameBrandTechnic == name));
         }
 
         public async Task<int> SaveBrandTechnicAsync(BrandTechnicEditDTO brandTechnicDTO, CancellationToken token = default)
@@ -35,9 +40,7 @@ namespace WinFormsApp1.Repository
                 if (brandTechnic.Id == 0)
                     db.BrandTechnices.Add(brandTechnic);
                 else
-                {
                     db.BrandTechnices.Update(brandTechnic);
-                }
 
                 await db.SaveChangesAsync(token);
                 return brandTechnic.Id;

@@ -14,7 +14,7 @@
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void ButtonSave_Click(object sender, EventArgs e)
@@ -25,7 +25,7 @@
             Properties.Settings.Default.MailOrg = textBoxMail.Text;
             Properties.Settings.Default.FaxOrg = textBoxFax.Text;
             Properties.Settings.Default.Save();
-            this.Close();
+            Close();
         }
     }
 }

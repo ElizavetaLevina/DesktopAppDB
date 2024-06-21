@@ -8,34 +8,6 @@ namespace WinFormsApp1.Model
     {
 
         //ORDER
-        public static async void AddAsyncOrder(int id, int idClient, int? idMaster, DateTime? dateCreation,
-            DateTime? dateStartWork, DateTime? dateCompleted, DateTime? dateIssue, int idTypeTechnic,
-            int idBrandTechnic, string? model, string? factoryNumber, int? idEquipment,
-            int? idDiagnosis, string? note, bool inProgress, int guarantee,
-            DateTime? dateEndGuarantee, bool deleted, bool returnUnderGuarantee, DateTime? dateReturn,
-            DateTime? dateCompletedReturn, DateTime? dateIssueReturn, bool issue, string color, string? dateLastCall, 
-            bool priceAgreed, int? maxPrice)
-        {
-            using Context db = new();
-
-            Order order = new() { Id = id, ClientId = idClient, MasterId = idMaster, 
-                DateCreation = dateCreation, DateStartWork = dateStartWork, DateCompleted = dateCompleted, 
-                DateIssue = dateIssue, TypeTechnicId = idTypeTechnic, BrandTechnicId = idBrandTechnic, 
-                ModelTechnic = model, FactoryNumber = factoryNumber, EquipmentId = idEquipment, 
-                DiagnosisId = idDiagnosis, Note = note, InProgress = inProgress, Guarantee = guarantee, 
-                DateEndGuarantee = dateEndGuarantee, Deleted = deleted, 
-                ReturnUnderGuarantee = returnUnderGuarantee, DateReturn = dateReturn, 
-                DateCompletedReturn = dateCompletedReturn, DateIssueReturn = dateIssueReturn,
-                Issue = issue, ColorRow = color, DateLastCall = dateLastCall, PriceAgreed = priceAgreed, 
-                MaxPrice = maxPrice };
-            try
-            {
-                db.Orders.Add(order);
-                await db.SaveChangesAsync();
-            }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
-        }
-
         public static void RemoveOrder(int id)
         {
             using Context db = new();

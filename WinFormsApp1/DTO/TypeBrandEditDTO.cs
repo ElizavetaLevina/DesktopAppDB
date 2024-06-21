@@ -1,7 +1,7 @@
 ﻿namespace WinFormsApp1.DTO
 {
     /// <summary>
-    /// Редактирование брендов устройств
+    /// Редактирование тип-бренд устройств
     /// </summary>
     public class TypeBrandEditDTO
     {

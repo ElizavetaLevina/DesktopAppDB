@@ -15,7 +15,6 @@ namespace WinFormsApp1
             InitializeComponent();
             brandDevice = _brandDevice;
             newDetail = _newDetail;
-            
             UpdateTable();
         }
 

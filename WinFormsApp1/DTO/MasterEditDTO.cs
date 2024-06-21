@@ -2,6 +2,9 @@
 {
     public class MasterEditDTO
     {
+        /// <summary>
+        /// Редактирование мастера
+        /// </summary>
         public int Id { get; set; }
         public string? NameMaster { get; set; }
         public string? Address { get; set; }

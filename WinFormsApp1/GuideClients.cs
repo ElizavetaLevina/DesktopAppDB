@@ -1,10 +1,12 @@
-﻿using System.Data;
-using WinFormsApp1.Model;
+﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
 {
     public partial class GuideClients : Form
     {
+        ClientRepository clientRepository = new();
+        List<ClientDTO> clients;
         public GuideClients()
         {
             InitializeComponent();
@@ -12,13 +14,13 @@ namespace WinFormsApp1
 
         private void UpdateTable()
         {
-            dataGridView1.Columns[0].Visible = false;
-            dataGridView1.Columns[1].HeaderText = "ID клиента";
-            dataGridView1.Columns[2].HeaderText = "ФИО";
-            dataGridView1.Columns[3].HeaderText = "Адрес";
-            dataGridView1.Columns[4].HeaderText = "Дополнительный телефон";
+            dataGridView1.DataSource = clients;
+            dataGridView1.Columns["Id"].Visible = false;
+            dataGridView1.Columns["IdClient"].HeaderText = "ID клиента";
+            dataGridView1.Columns["NameAndAddressClient"].HeaderText = "ФИО, адрес";
+            dataGridView1.Columns["NumberSecondPhone"].HeaderText = "Дополнительный телефон";
 
-            int[] percent = [0, 30, 20, 30, 20];
+            int[] percent = [0, 35, 35, 30];
             for (int i = 0; i < dataGridView1.ColumnCount; i++)
             {
                 double width = Convert.ToDouble(dataGridView1.Width) / 100.0 * percent[i];
@@ -30,54 +32,43 @@ namespace WinFormsApp1
         private void GuideClients_Activated(object sender, EventArgs e)
         {
             buttonAll.Focus();
-            using Context context = new();
-            var list = context.Clients.ToList();
-            dataGridView1.DataSource = list;
+            clients = clientRepository.GetClientsForTable();
             UpdateTable();
         }
 
         private void TextBoxEnterName_TextChanged(object sender, EventArgs e)
         {
-            using Context context = new();
-            var list = context.Clients.Where(i => i.NameAndAddressClient.IndexOf(textBoxEnterName.Text) > -1).ToList();
-            dataGridView1.DataSource = list;
+            clients = clientRepository.GetClientsByIdClient(textBoxEnterName.Text);
+            UpdateTable();
         }
 
         private void ButtonAll_Click(object sender, EventArgs e)
         {
-            using Context context = new();
-            var list = context.Clients.ToList();
-            dataGridView1.DataSource = list;
+            clients = clientRepository.GetClientsForTable();
             UpdateTable();
         }
 
         private void ButtonWhite_Click(object sender, EventArgs e)
         {
-            using Context context = new();
-            var list = context.Clients.Where(i => i.TypeClient == "white").ToList();
-            dataGridView1.DataSource = list;
+            clients = clientRepository.GetClientsByType("white");
             UpdateTable();
         }
 
         private void ButtonNormal_Click(object sender, EventArgs e)
         {
-            using Context context = new();
-            var list = context.Clients.Where(i => i.TypeClient == "normal").ToList();
-            dataGridView1.DataSource = list;
+            clients = clientRepository.GetClientsByType("normal");
             UpdateTable();
         }
 
         private void ButtonBlack_Click(object sender, EventArgs e)
         {
-            using Context context = new();
-            var list = context.Clients.Where(i => i.TypeClient == "black").ToList();
-            dataGridView1.DataSource = list;
+            clients = clientRepository.GetClientsByType("black");
             UpdateTable();
         }
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }

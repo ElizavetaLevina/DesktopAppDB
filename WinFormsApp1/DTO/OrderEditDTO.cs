@@ -29,18 +29,18 @@ namespace WinFormsApp1.DTO
         public int? EquipmentId { get; set; }
         public int? DiagnosisId { get; set; }
         public string? Note { get; set; }
-        public bool InProgress { get; set; }
-        public int Guarantee { get; set; }
+        public bool InProgress { get; set; } = true;
+        public int Guarantee { get; set; } = 0;
         public DateTime? DateEndGuarantee { get; set; }
-        public bool Deleted { get; set; }
-        public bool ReturnUnderGuarantee { get; set; }
+        public bool Deleted { get; set; } = false;
+        public bool ReturnUnderGuarantee { get; set; } = false;
         public DateTime? DateReturn { get; set; }
         public DateTime? DateCompletedReturn { get; set; }
         public DateTime? DateIssueReturn { get; set; }
-        public bool Issue { get; set; }
+        public bool Issue { get; set; } = false;
         public string ColorRow { get; set; } = Color.Black.Name;
         public string? DateLastCall { get; set; }
-        public bool PriceAgreed { get; set; }
+        public bool PriceAgreed { get; set; } = false;
         public int? MaxPrice { get; set; }
 
         public OrderEditDTO(Order order)
@@ -51,6 +51,10 @@ namespace WinFormsApp1.DTO
 
             TypeTechnic = order.TypeTechnic;
             BrandTechnic = order.BrandTechnic;
+        }
+
+        public OrderEditDTO()
+        {
         }
     }
 }

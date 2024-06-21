@@ -5,7 +5,7 @@ namespace WinFormsApp1.DTO
     public class MasterDTO
     {
         [DisplayName("Id")]
-        public int Id { get; set; }
+        public int? Id { get; set; }
         [DisplayName("ФИО")]
         public string? NameMaster { get; set; }
         [DisplayName("Телефон")]
@@ -18,5 +18,8 @@ namespace WinFormsApp1.DTO
             NumberPhone = master.NumberPhone;
         }
 
+        public MasterDTO()
+        {
+        }
     }
 }

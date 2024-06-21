@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WinFormsApp1
+﻿namespace WinFormsApp1
 {
     public partial class PathDB : Form
     {
@@ -12,7 +10,7 @@ namespace WinFormsApp1
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void LinkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

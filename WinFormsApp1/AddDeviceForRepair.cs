@@ -1,4 +1,6 @@
-﻿using WinFormsApp1.Model;
+﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Model;
+using WinFormsApp1.Repository;
 using Color = System.Drawing.Color;
 
 namespace WinFormsApp1
@@ -9,11 +11,19 @@ namespace WinFormsApp1
         bool loading = true;
         readonly List<string> oldClients = [];
         readonly List<string> oldClientsType = [];
-        readonly List<string> diagnosis = [];
-        readonly List<string> equipment = [];
-        private readonly List<Diagnosis> listDiagnosis;
-        private readonly List<Equipment> listEquipment;
+        readonly List<string> diagnosisList = [];
+        readonly List<string> equipmentList = [];
+        List<DiagnosisEditDTO> diagnosesDTO;
+        List<EquipmentEditDTO> equipmentsDTO;
         string nameTextBox = "";
+        OrderRepository orderRepository = new();
+        ClientRepository clientRepository = new();
+        DiagnosisRepository diagnosisRepository = new();
+        EquipmentRepository equipmentRepository = new();
+        MasterRepository masterRepository = new();
+        BrandTechnicRepository brandTechnicRepository = new();
+        TypeBrandRepository typeBrandRepository = new();
+        TypeTechnicRepository typeTechnicRepository = new();
         public AddDeviceForRepair()
         {
             InitializeComponent();
@@ -21,70 +31,25 @@ namespace WinFormsApp1
             UpdateComboBox(1);
             UpdateComboBox(2);
             textBoxIdOrder.Text = IdKeyOrder().ToString();
-            Context context = new();
-            var listClient = context.Clients.Select(a => new { a.IdClient, a.TypeClient }).ToList();
-            if (listClient.Count > 0)
+            var clientsDTO = clientRepository.GetClients();
+            foreach (var client in clientsDTO)
             {
-                for (int i = 0; i < listClient.Count; i++)
-                {
-                    oldClients.Add(listClient[i].IdClient);
-                    oldClientsType.Add(listClient[i].TypeClient);
-                }
+                oldClients.Add(client.IdClient);
+                oldClientsType.Add(client.TypeClient);
             }
 
-            listDiagnosis = context.Diagnosis.ToList();
-            for (int i = 0; i < listDiagnosis.Count; i++)
+            diagnosesDTO = diagnosisRepository.GetDiagnosis();
+            foreach (var diagnosis in diagnosesDTO)
             {
-                diagnosis.Add(listDiagnosis[i].Name);
+                diagnosisList.Add(diagnosis.Name);
             }
 
-            listEquipment = context.Equipment.ToList();
-            for (int i = 0; i < listEquipment.Count; i++)
+            equipmentsDTO = equipmentRepository.GetEquipments();
+            foreach (var equipment in equipmentsDTO)
             {
-                equipment.Add(listEquipment[i].Name);
+                equipmentList.Add(equipment.Name);
             }
-
-            foundInTable.Click += FoundInTable_Click;
-            lastId.Click += LastId_Click;
-            checkId.Click += CheckId_Click;
             listBoxClient.Visible = false;
-        }
-
-        private void FoundInTable_Click(object? sender, EventArgs e)
-        {
-            Context context = new();
-            var list = context.Orders.Select(a => new { a.Id }).OrderBy(a => a.Id).ToList();
-            for (int i = 0; i < list.Count; i++)
-            {
-                if ((i + 1) != list[i].Id)
-                {
-                    textBoxIdOrder.Text = (i + 1).ToString();
-                    break;
-                }
-            }
-        }
-
-        private void LastId_Click(object? sender, EventArgs e)
-        {
-            textBoxIdOrder.Text = IdKeyOrder().ToString();
-        }
-
-        private void CheckId_Click(object? sender, EventArgs e)
-        {
-            Context context = new();
-            var list = context.Orders.Select(a => new { a.Id }).ToList();
-
-            if (CheckIdOrder())
-            {
-                Warning warning = new()
-                {
-                    StartPosition = FormStartPosition.CenterParent,
-                    Text = "Проверка номера кватанции",
-                    LabelText = "Квитанция с таким номером уже существует!"
-                };
-                warning.ShowDialog();
-            }
-
         }
 
         private void ButtonBack_Click(object sender, EventArgs e)
@@ -94,23 +59,22 @@ namespace WinFormsApp1
                 case 2:
                     panel2.Visible = false;
                     panel1.Visible = true;
-                    this.numberPage = 1;
+                    numberPage = 1;
                     break;
                 case 3:
                     panel3.Visible = false;
                     panel2.Visible = true;
-                    this.numberPage = 2;
+                    numberPage = 2;
                     break;
                 case 4:
                     panel4.Visible = false;
                     panel3.Visible = true;
-                    this.numberPage = 3;
+                    numberPage = 3;
                     buttonFurther.Text = "Далее";
                     break;
 
             }
             Steps();
-
         }
 
         private void ButtonFurther_Click(object sender, EventArgs e)
@@ -121,167 +85,182 @@ namespace WinFormsApp1
                 case 1:
                     panel1.Visible = false;
                     panel2.Visible = true;
-                    this.numberPage = 2;
+                    numberPage = 2;
                     break;
                 case 2:
                     panel2.Visible = false;
                     panel3.Visible = true;
-                    this.numberPage = 3;
+                    numberPage = 3;
                     break;
                 case 3:
                     panel3.Visible = false;
                     panel4.Visible = true;
-                    this.numberPage = 4;
+                    numberPage = 4;
                     buttonFurther.Text = "Готово";
                     break;
                 case 4:
-                    if (comboBoxDevice.Items.Count == 0 ||
-                          comboBoxBrand.Items.Count == 0)
+                    if (!CheckComboBox())
+                        return;
+                    if (!CheckIdOrder())
+                        return;
+                    int? masterId = null;
+                    DateTime? dateStartWork = null;
+                    int? maxPrice = null;
+                    int clientId = 0;
+                    Task? task;
+                    if (comboBoxMaster.Text != "-")
                     {
-                        Warning warning = new()
-                        {
-                            StartPosition = FormStartPosition.CenterParent
-                        };
-                        warning.ShowDialog();
-
-                        if (comboBoxDevice.Items.Count == 0)
-                            labelDevice.ForeColor = Color.Red;
-                        else
-                            labelDevice.ForeColor = Color.Black;
-                        if (comboBoxBrand.Items.Count == 0)
-                            labelBrand.ForeColor = Color.Red;
-                        else
-                            labelBrand.ForeColor = Color.Black;
+                        masterId = context.Masters.Where(a => a.NameMaster == comboBoxMaster.Text).ToList()[0].Id;
+                        dateStartWork = dateTimePicker1.Value;
                     }
-                    else if (textBoxNameClient.Text == "")
+
+                    if (checkBox1.Checked)
+                        maxPrice = Convert.ToInt32(textBoxMaxPrice.Text);
+
+                    if (!CheckClient())
                     {
-                        labelNameClient.ForeColor = Color.Red;
-                        Warning warning = new()
+                        var clientDTO = new ClientEditDTO()
                         {
-                            StartPosition = FormStartPosition.CenterParent,
-                            LabelText = "Вы не заполнили ФИО заказчика!"
-                        };
-                        warning.ShowDialog();
-                    }
-                    else if (CheckIdOrder())
-                    {
-                        Warning warning = new()
-                        {
-                            StartPosition = FormStartPosition.CenterParent,
-                            Text = "Внимание",
-                            LabelText = "Квитанция с таким номером уже существует!"
-                        };
-                        warning.ShowDialog();
-                    }
-                    else
-                    {
-                        int idClient = IdKeyClient();
-                        int idOrder = Convert.ToInt32(textBoxIdOrder.Text);
-                        int? nameMaster = null;
-                        DateTime? dateStartWork = null;
-                        string color = "";
-                        int? maxPrice = null;
-                        if (comboBoxMaster.Text != "-")
-                        {
-                            nameMaster = context.Masters.Where(a => a.NameMaster == comboBoxMaster.Text).ToList()[0].Id;
-                            dateStartWork = dateTimePicker1.Value;
-                        }
-
-                        if (checkBox1.Checked)
-                            maxPrice = Convert.ToInt32(textBoxMaxPrice.Text);
-
-                        if (!CheckClient())
-                        {
-                            try
-                            {
-                                /*String[] splitted = textBoxNameAddress.Text.Split(",", 2);
-                                CRUD.AddAsyncClient(idClient, textBoxNameClient.Text, splitted[0],
-                                    splitted[splitted.Length - 1], textBoxSecondPhone.Text, "normal");*/
-                            }
-                            catch { }
-                        }
-
-                        if ((DateTime.Now - dateTimePicker1.Value).Days < Convert.ToInt32
-                            (Properties.Settings.Default.FirstLevelText))
-                        {
-                            color = ColorTranslator.ToHtml(Properties.Settings.Default.FirstLevelColor);
-                        }
-                        else if ((DateTime.Now - dateTimePicker1.Value).Days > Convert.ToInt32
-                            (Properties.Settings.Default.SecondLevelText))
-                        {
-                            color = ColorTranslator.ToHtml(Properties.Settings.Default.ThirdLevelColor);
-                        }
-                        else color = ColorTranslator.ToHtml(Properties.Settings.Default.SecondLevelColor);
-
-                        int idDiagnosis = 1;
-                        var listDiagnosis = context.Diagnosis.Where(i => i.Name.IndexOf(textBoxDiagnosis.Text) > -1).ToList();
-                        if (listDiagnosis.Count == 0)
-                        {
-                            if (context.Diagnosis.Any())
-                                idDiagnosis = context.Diagnosis.OrderBy(i => i.Id).Last().Id + 1;
-                            CRUD.AddAsyncDiagnosis(idDiagnosis, textBoxDiagnosis.Text);
-                        }
-                        else
-                            idDiagnosis = listDiagnosis[0].Id;
-
-                        int idEquipment = 1;
-                        var listEquipment = context.Equipment.Where(i => i.Name.IndexOf(textBoxEquipment.Text) > -1).ToList();
-                        if (listEquipment.Count == 0)
-                        {
-                            if (context.Equipment.Any())
-                                idEquipment = context.Equipment.OrderBy(i => i.Id).Last().Id + 1;
-                            CRUD.AddAsyncEquipment(idEquipment, textBoxEquipment.Text);
-                        }
-                        else
-                            idEquipment = listEquipment[0].Id;
-
-                        CRUD.AddAsyncOrder(
-                            idOrder,
-                            context.Clients.Where(a => a.IdClient == textBoxNameClient.Text).ToList()[0].Id,
-                            nameMaster,
-                            dateTimePicker1.Value,
-                            dateStartWork,
-                            null,
-                            null,
-                            context.TypeTechnices.Where(a => a.NameTypeTechnic == comboBoxDevice.Text).ToList()[0].Id,
-                            context.BrandTechnices.Where(a => a.NameBrandTechnic == comboBoxBrand.Text).ToList()[0].Id,
-                            textBoxModel.Text,
-                            textBoxFactoryNumber.Text,
-                            idEquipment,
-                            idDiagnosis,
-                            textBoxNote.Text,
-                            true,
-                            0,
-                            null,
-                            false,
-                            false,
-                            null,
-                            null,
-                            null,
-                            false,
-                            color,
-                            null,
-                            checkBox1.Checked,
-                            maxPrice);
-                        Warning warning = new()
-                        {
-                            StartPosition = FormStartPosition.CenterParent,
-                            LabelText = "Распечатать квитанцию?",
-                            ButtonNoText = "Нет",
-                            ButtonVisible = true
+                            Id = 0,
+                            IdClient = textBoxNameClient.Text,
+                            NameAndAddressClient = textBoxNameAddress.Text,
+                            NumberSecondPhone = textBoxSecondPhone.Text
                         };
 
-                        if (warning.ShowDialog() == DialogResult.OK)
+                        task = Task.Run(async () =>
                         {
-                            Form1 form = new();
-                            form.ReportGetting(idOrder);
-                        }
-                        this.DialogResult = DialogResult.OK;
-                        this.Close();
+                            clientId = await clientRepository.SaveClientAsync(clientDTO);
+                        });
+                        task.Wait();
                     }
+
+                    
+                    var equipmentDTO = equipmentRepository.GetEquipmentByName(textBoxEquipment.Text);
+                    int idEquipment = equipmentDTO.Id;
+                    if (idEquipment == 0)
+                    {
+                        task = Task.Run(async () =>
+                        {
+                            idEquipment = await equipmentRepository.SaveEquipmentAsync(equipmentDTO);
+                        });
+                        task.Wait();
+                    }
+
+                    var diagnosisDTO = diagnosisRepository.GetDiagnosisByName(textBoxDiagnosis.Text);
+                    int idDiagnosis = diagnosisDTO.Id;
+                    if (idDiagnosis == 0)
+                    {
+                        task = Task.Run(async () =>
+                        {
+                            idDiagnosis = await diagnosisRepository.SaveDiagnosisAsync(diagnosisDTO);
+                        });
+                        task.Wait();
+                    }
+
+                    var orderDTO = new OrderEditDTO()
+                    {
+                        Id = 0,
+                        ClientId = clientId,
+                        MasterId = ((MasterDTO)comboBoxMaster.SelectedItem).Id,
+                        DateCreation = dateTimePicker1.Value,
+                        DateStartWork = dateStartWork,
+                        TypeTechnicId = ((TypeTechnicDTO)comboBoxDevice.SelectedItem).Id,
+                        BrandTechnicId = ((BrandTechnicDTO)comboBoxBrand.SelectedItem).Id,
+                        ModelTechnic = textBoxModel.Text,
+                        FactoryNumber = textBoxFactoryNumber.Text,
+                        EquipmentId = idEquipment,
+                        DiagnosisId = idDiagnosis,
+                        Note = textBoxNote.Text,
+                        InProgress = true,
+                        ColorRow = FindColor()
+                    };
+
+                    int idOrder = 0;
+                    task = Task.Run(async () =>
+                    {
+                        idOrder = await orderRepository.SaveOrderAsync(orderDTO);
+                    });
+                    task.Wait();
+
+                    Warning warning = new()
+                    {
+                        StartPosition = FormStartPosition.CenterParent,
+                        LabelText = "Распечатать квитанцию?",
+                        ButtonNoText = "Нет",
+                        ButtonVisible = true
+                    };
+
+                    if (warning.ShowDialog() == DialogResult.OK)
+                    {
+                        Form1 form = new();
+                        form.ReportGetting(idOrder);
+                    }
+                    DialogResult = DialogResult.OK;
+                    Close();
                     break;
             }
             Steps();
+        }
+
+        private bool CheckComboBox()
+        {
+            if (comboBoxDevice.Items.Count == 0 || comboBoxBrand.Items.Count == 0)
+            {
+                ShowWarningForm();
+
+                if (comboBoxDevice.Items.Count == 0)
+                    labelDevice.ForeColor = Color.Red;
+                else
+                    labelDevice.ForeColor = Color.Black;
+                if (comboBoxBrand.Items.Count == 0)
+                    labelBrand.ForeColor = Color.Red;
+                else
+                    labelBrand.ForeColor = Color.Black;
+
+                return false;
+            }
+            else
+                return true;
+        }
+
+
+        private void CheckIdClient()
+        {
+            if (textBoxNameClient.Text == "")
+            {
+                ShowWarningForm("Вы не заполнили Id заказчика!");
+                labelNameClient.ForeColor = Color.Red;
+            }
+            else
+                labelNameClient.ForeColor = Color.Black;
+        }
+
+        private void ShowWarningForm(string text = "Вы не заполнили обязательные поля!")
+        {
+            Warning warning = new()
+            {
+                StartPosition = FormStartPosition.CenterParent,
+                LabelText = text
+            };
+            warning.ShowDialog();
+        }
+
+        private string FindColor()
+        {
+            string color;
+            if ((DateTime.Now - dateTimePicker1.Value).Days < Convert.ToInt32
+                        (Properties.Settings.Default.FirstLevelText))
+            {
+                color = ColorTranslator.ToHtml(Properties.Settings.Default.FirstLevelColor);
+            }
+            else if ((DateTime.Now - dateTimePicker1.Value).Days > Convert.ToInt32
+                (Properties.Settings.Default.SecondLevelText))
+            {
+                color = ColorTranslator.ToHtml(Properties.Settings.Default.ThirdLevelColor);
+            }
+            else color = ColorTranslator.ToHtml(Properties.Settings.Default.SecondLevelColor);
+
+            return color;
         }
 
         private void Steps()
@@ -325,40 +304,31 @@ namespace WinFormsApp1
                 case 0:
                     comboBoxMaster.DataSource = null;
                     comboBoxMaster.Items.Clear();
-                    using (Context context = new())
-                    {
-                        comboBoxMaster.ValueMember = "Id";
-                        comboBoxMaster.DisplayMember = "NameMaster";
-                        var list = context.Masters.ToList();
-                        list.Insert(0, new Master() { Id = -1, NameMaster = "-" });
-                        comboBoxMaster.DataSource = list;
-                    }
+                    comboBoxMaster.ValueMember = nameof(MasterDTO.Id);
+                    comboBoxMaster.DisplayMember = nameof(MasterDTO.NameMaster);
+                    var mastersDTO = masterRepository.GetMasters();
+                    mastersDTO.Insert(0, new MasterDTO() { Id = null, NameMaster = "-" });
+                    comboBoxMaster.DataSource = mastersDTO;
                     break;
                 case 1:
                     comboBoxDevice.DataSource = null;
                     comboBoxDevice.Items.Clear();
-                    using (Context context = new())
-                    {
-                        var list = context.TypeBrands.Where(i =>
-                        i.BrandTechnic.NameBrandTechnic == comboBoxBrand.Text).ToList();
-                        comboBoxDevice.ValueMember = "Id";
-                        comboBoxDevice.DisplayMember = "NameTypeTechnic";
-                        comboBoxDevice.DataSource = context.TypeTechnices.ToList();
-                    }
+                    comboBoxDevice.ValueMember = nameof(TypeTechnicDTO.Id);
+                    comboBoxDevice.DisplayMember = nameof(TypeTechnicDTO.NameTypeTechnic);
+                    comboBoxDevice.DataSource = typeTechnicRepository.GetTypesTechnic();
                     break;
                 case 2:
                     comboBoxBrand.DataSource = null;
                     comboBoxBrand.Items.Clear();
-                    using (Context context = new())
-                    {
-                        var list = context.TypeBrands.Where(i =>
-                        i.TypeTechnic.NameTypeTechnic == comboBoxDevice.Text).Select(a => new
-                        {
-                            a.BrandTechnic.NameBrandTechnic
-                        }).ToList();
-                        comboBoxBrand.DisplayMember = "NameBrandTechnic";
-                        comboBoxBrand.DataSource = list;
-                    }
+                    comboBoxDevice.ValueMember = nameof(BrandTechnicDTO.Id);
+                    comboBoxBrand.DisplayMember = nameof(BrandTechnicDTO.NameBrandTechnic);
+                    comboBoxBrand.DataSource = brandTechnicRepository.GetBrandsTechnic();
+                    //var typeBrandDTO = typeBrandRepository.GetTypeBrand(id)
+                    //var list = context.TypeBrands.Where(i =>
+                    //i.TypeTechnic.NameTypeTechnic == comboBoxDevice.Text).Select(a => new
+                    //{
+                    //    a.BrandTechnic.NameBrandTechnic
+                    //}).ToList();
                     break;
 
             }
@@ -371,66 +341,22 @@ namespace WinFormsApp1
 
         private bool CheckIdOrder()
         {
-            Context context = new();
-            bool matching = false;
-            var list = context.Orders.Select(a => new { a.Id }).ToList();
-
-            for (int i = 0; i < list.Count; i++)
+            if (orderRepository.CheckOrder(Convert.ToInt32(textBoxIdOrder.Text)))
             {
-                if (Convert.ToInt32(textBoxIdOrder.Text) == list[i].Id)
-                {
-                    matching = true;
-                    break;
-                }
+                ShowWarningForm("Квитанция с таким номером уже существует!");
+                return false;
             }
-            return matching;
+            return true;
         }
 
         private bool CheckClient()
         {
-            Context context = new();
-            bool matching = false;
-
-            var list = context.Clients.Select(a => new { a.IdClient }).ToList();
-            for (int i = 0; i < list.Count; i++)
-            {
-                if (textBoxNameClient.Text == list[i].IdClient)
-                {
-                    matching = true;
-                    break;
-                }
-            }
-            return matching;
+            return clientRepository.CheckClientByIdClient(textBoxNameClient.Text);
         }
 
-        private static int IdKeyOrder()
+        private int IdKeyOrder()
         {
-            int idKey;
-            using (Context context = new())
-            {
-                if (context.Orders.Any())
-                {
-                    idKey = context.Orders.OrderBy(i => i.Id).Last().Id;
-                    idKey++;
-                }
-                else { idKey = 1; }
-            }
-            return idKey;
-        }
-
-        private static int IdKeyClient()
-        {
-            int idKey;
-            using (Context context = new())
-            {
-                if (context.Clients.Any())
-                {
-                    idKey = context.Clients.OrderBy(i => i.Id).Last().Id;
-                    idKey++;
-                }
-                else { idKey = 1; }
-            }
-            return idKey;
+            return orderRepository.GetLastId();
         }
 
         private void ListBoxClient_SelectedIndexChanged(object sender, EventArgs e)
@@ -490,8 +416,8 @@ namespace WinFormsApp1
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         private void LinkLabelDevice_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -538,12 +464,13 @@ namespace WinFormsApp1
             listBoxEquipmentDiagnosis.Location = new Point(listBoxEquipmentDiagnosis.Location.X, textBoxEquipment.Location.Y + textBoxEquipment.Height);
             nameTextBox = "equipment";
 
-            for (int i = 0; i < equipment.Count; i++)
+            equipmentsDTO = equipmentRepository.GetEquipmentsByName(textBoxEquipment.Text);
+            foreach(var equipment in equipmentsDTO)
             {
-                if (equipment[i].Contains(textBoxEquipment.Text, StringComparison.OrdinalIgnoreCase) && !loading)
+                if (!loading)
                 {
                     listBoxEquipmentDiagnosis.Visible = true;
-                    listBoxEquipmentDiagnosis.Items.Add(equipment[i]);
+                    listBoxEquipmentDiagnosis.Items.Add(equipment.Name);
                 }
             }
         }
@@ -555,12 +482,13 @@ namespace WinFormsApp1
             listBoxEquipmentDiagnosis.Location = new Point(listBoxEquipmentDiagnosis.Location.X, textBoxDiagnosis.Location.Y + textBoxDiagnosis.Height);
             nameTextBox = "diagnosis";
 
-            for (int i = 0; i < diagnosis.Count; i++)
+            diagnosesDTO = diagnosisRepository.GetDiagnosesByName(textBoxDiagnosis.Text);
+            foreach(var diagnosis in diagnosesDTO)
             {
-                if (diagnosis[i].Contains(textBoxDiagnosis.Text, StringComparison.OrdinalIgnoreCase) && !loading)
+                if (!loading)
                 {
                     listBoxEquipmentDiagnosis.Visible = true;
-                    listBoxEquipmentDiagnosis.Items.Add(diagnosis[i]);
+                    listBoxEquipmentDiagnosis.Items.Add(diagnosis.Name);
                 }
             }
         }
@@ -603,32 +531,70 @@ namespace WinFormsApp1
 
         private void TextBoxEquipment_Click(object sender, EventArgs e)
         {
-            listBoxEquipmentDiagnosis.Items.Clear();
-            listBoxEquipmentDiagnosis.Visible = true;
-            listBoxEquipmentDiagnosis.Location = new Point(listBoxEquipmentDiagnosis.Location.X, textBoxEquipment.Location.Y + textBoxEquipment.Height);
-            nameTextBox = "equipment";
-            for (int i = 0; i < equipment.Count; i++)
+            if (listBoxEquipmentDiagnosis.Visible)
+                listBoxEquipmentDiagnosis.Visible = false;
+            else
             {
-                if (textBoxEquipment.Text == "")
-                    listBoxEquipmentDiagnosis.Items.Add(equipment[i]);
-                else if(equipment[i].Contains(textBoxEquipment.Text, StringComparison.OrdinalIgnoreCase))
-                    listBoxEquipmentDiagnosis.Items.Add(equipment[i]);
+                listBoxEquipmentDiagnosis.Items.Clear();
+                listBoxEquipmentDiagnosis.Visible = true;
+                listBoxEquipmentDiagnosis.Location = new Point(listBoxEquipmentDiagnosis.Location.X, textBoxEquipment.Location.Y + textBoxEquipment.Height);
+                nameTextBox = "equipment";
+
+                equipmentsDTO = equipmentRepository.GetEquipmentsByName(textBoxEquipment.Text);
+                foreach (var equipment in equipmentsDTO)
+                {
+                    listBoxEquipmentDiagnosis.Visible = true;
+                    listBoxEquipmentDiagnosis.Items.Add(equipment.Name);
+                }
             }
         }
 
         private void TextBoxDiagnosis_Click(object sender, EventArgs e)
         {
-            listBoxEquipmentDiagnosis.Items.Clear();
-            listBoxEquipmentDiagnosis.Visible = true;
-            listBoxEquipmentDiagnosis.Location = new Point(listBoxEquipmentDiagnosis.Location.X, textBoxDiagnosis.Location.Y + textBoxDiagnosis.Height);
-            nameTextBox = "diagnosis";
-            for (int i = 0; i < diagnosis.Count; i++)
+            if (listBoxEquipmentDiagnosis.Visible)
+                listBoxEquipmentDiagnosis.Visible = false;
+            else
             {
-                if (textBoxDiagnosis.Text == "")
-                    listBoxEquipmentDiagnosis.Items.Add(diagnosis[i]);
-                else if (diagnosis[i].Contains(textBoxDiagnosis.Text, StringComparison.OrdinalIgnoreCase))
-                    listBoxEquipmentDiagnosis.Items.Add(diagnosis[i]);
+                listBoxEquipmentDiagnosis.Items.Clear();
+                listBoxEquipmentDiagnosis.Visible = true;
+                listBoxEquipmentDiagnosis.Location = new Point(listBoxEquipmentDiagnosis.Location.X, textBoxDiagnosis.Location.Y + textBoxDiagnosis.Height);
+                nameTextBox = "diagnosis";
+
+                diagnosesDTO = diagnosisRepository.GetDiagnosesByName(textBoxDiagnosis.Text);
+                foreach (var diagnosis in diagnosesDTO)
+                {
+                    if (!loading)
+                    {
+                        listBoxEquipmentDiagnosis.Visible = true;
+                        listBoxEquipmentDiagnosis.Items.Add(diagnosis.Name);
+                    }
+                }
             }
+        }
+
+        private void FoundInTable_Click(object sender, EventArgs e)
+        {
+            /*Context context = new();
+            var list = context.Orders.Select(a => new { a.Id }).OrderBy(a => a.Id).ToList();
+            for (int i = 0; i < list.Count; i++)
+            {
+                if ((i + 1) != list[i].Id)
+                {
+                    textBoxIdOrder.Text = (i + 1).ToString();
+                    break;
+                }
+            }*/
+        }
+
+        private void LastId_Click(object sender, EventArgs e)
+        {
+            textBoxIdOrder.Text = IdKeyOrder().ToString();
+        }
+
+        private void CheckId_Click(object sender, EventArgs e)
+        {
+            if (CheckIdOrder())
+                ShowWarningForm("Квитанция с таким номером уже существует!");
         }
 
         public string MasterName

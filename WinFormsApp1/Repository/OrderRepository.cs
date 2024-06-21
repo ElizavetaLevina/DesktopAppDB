@@ -55,7 +55,38 @@ namespace WinFormsApp1.Repository
             return new OrderEditDTO(context.Orders.First(i => i.Id == id));
         }
 
-        public async Task SaveOrderAsync(OrderEditDTO orderDTO, CancellationToken token = default)
+        /// <summary>
+        /// Получение последнего идентификатора в таблице
+        /// </summary>
+        /// <returns>Иднтификатор</returns>
+        public int GetLastId()
+        {
+            Context context = new();
+            return (context.Orders?.OrderBy(i => i.Id).LastOrDefault()?.Id??0) + 1;
+        }
+
+        /// <summary>
+        /// Получение списка заказов
+        /// </summary>
+        /// <returns>Список заказов</returns>
+        public List<OrderEditDTO> GetOrders()
+        {
+            Context context = new();
+            return context.Orders.Select(a => new OrderEditDTO(a)).ToList();
+        }
+
+        /// <summary>
+        /// Проверка, есть ли запись с таким идентификатором
+        /// </summary>
+        /// <param name="id">Идентификатор заказа</param>
+        /// <returns></returns>
+        public bool CheckOrder(int id)
+        {
+            Context context = new();
+            return (context.Orders.Any(i => i.Id == id));
+        }
+
+        public async Task<int> SaveOrderAsync(OrderEditDTO orderDTO, CancellationToken token = default)
         {
             using Context db = new();
             Order order = new()
@@ -93,11 +124,10 @@ namespace WinFormsApp1.Repository
                 if (order.Id == 0)
                     db.Orders.Add(order);
                 else
-                {
                     db.Orders.Update(order);
-                }
-                
+
                 await db.SaveChangesAsync(token);
+                return order.Id;
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }

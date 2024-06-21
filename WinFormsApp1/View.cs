@@ -1,10 +1,12 @@
-﻿using WinFormsApp1.Model;
+﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Repository;
 using Color = System.Drawing.Color;
 
 namespace WinFormsApp1
 {
     public partial class View : Form
     {
+        OrderRepository orderRepository = new OrderRepository();
         public View()
         {
             InitializeComponent();
@@ -38,7 +40,6 @@ namespace WinFormsApp1
             button3.BackColor = colorDialog1.Color;
         }
 
-
         private void ButtonSave_Click(object sender, EventArgs e)
         {
             Warning warning = new()
@@ -66,47 +67,22 @@ namespace WinFormsApp1
                 Properties.Settings.Default.SecondLevelText = textBoxSecondLevelBefore.Text;
                 Properties.Settings.Default.Save();
 
-                Context context = new();
-                var list = context.Orders.ToList();
-
-                for (int i = 0; i < list.Count; i++)
+                var ordersDTO = orderRepository.GetOrders();
+                foreach(var order in ordersDTO)
                 {
-                    CRUD.ChangeOrder(list[i].Id,
-                        list[i].ClientId,
-                        list[i].MasterId,
-                        list[i].DateCreation,
-                        list[i].DateStartWork,
-                        list[i].DateCompleted,
-                        list[i].DateIssue,
-                        list[i].TypeTechnicId,
-                        list[i].BrandTechnicId,
-                        list[i].ModelTechnic,
-                        list[i].FactoryNumber,
-                        list[i].EquipmentId,
-                        list[i].DiagnosisId,
-                        list[i].Note,
-                        list[i].InProgress,
-                        list[i].Guarantee,
-                        list[i].DateEndGuarantee,
-                        list[i].Deleted,
-                        list[i].ReturnUnderGuarantee,
-                        list[i].DateReturn,
-                        list[i].DateCompletedReturn,
-                        list[i].DateIssueReturn,
-                        list[i].Issue,
-                        ColorTranslator.ToHtml(FindColor(i)),
-                        list[i].DateLastCall,
-                        list[i].PriceAgreed,
-                        list[i].MaxPrice);
+                    order.ColorRow = ColorTranslator.ToHtml(FindColor(order));
+                    Task.Run(async () =>
+                    {
+                        await orderRepository.SaveOrderAsync(order);
+                    });
                 }
-                this.Close();
-
+                Close();
             }
         }
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void TextBoxFirstLevel_KeyPress(object sender, KeyPressEventArgs e)
@@ -131,24 +107,20 @@ namespace WinFormsApp1
             textBoxThirdLevel.Text = textBoxSecondLevelBefore.Text;
         }
 
-        private Color FindColor(int id)
+        private Color FindColor(OrderEditDTO order)
         {
-            Context context = new();
             string status = "";
             Color color = Color.Black;
             DateTime date = DateTime.Now;
-            var list = context.Orders.ToList();
-            if (list[id].InProgress == true && list[id].Deleted == false &&
-                list[id].MasterId != null)
+            if (order.InProgress && !order.Deleted && order.MasterId != null)
             {
                 status = "InRepair";
-                date = list[id].DateStartWork.Value;
+                date = order.DateStartWork.Value;
             }
-            else if (list[id].InProgress == false && !list[id].Deleted &&
-                list[id].Issue == false)
+            else if (!order.InProgress && !order.Deleted && !order.Issue)
             {
                 status = "Completed";
-                date = list[id].DateCompleted.Value;
+                date = order.DateCompleted.Value;
             }
 
             if (status == "InRepair" || status == "Completed")
@@ -163,9 +135,7 @@ namespace WinFormsApp1
                 }
                 else color = button2.BackColor;
             }
-
             return color;
-
         }
     }
 }

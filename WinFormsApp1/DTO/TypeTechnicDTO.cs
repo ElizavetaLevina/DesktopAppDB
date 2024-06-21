@@ -10,7 +10,7 @@ namespace WinFormsApp1.DTO
         [DisplayName("Название")]
         public string? NameTypeTechnic { get; set; }
 
-        public TypeTechnicDTO(Model.TypeTechnic typeTechnic)
+        public TypeTechnicDTO(TypeTechnic typeTechnic)
         {
             Id = typeTechnic.Id;
             NameTypeTechnic = typeTechnic.NameTypeTechnic;

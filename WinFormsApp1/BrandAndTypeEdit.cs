@@ -126,118 +126,124 @@ namespace WinFormsApp1
 
         private void LinkLabelChange_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            string _name = "";
-            string secondName = "";
-            string nameInList = "";
-            switch (name)
+            if (Application.OpenForms.OfType<BrandAndTypeEdit>().Count() <= 2)
             {
-                case "type":
-                    _name = "brand";
-                    secondName = "Тип устройства";
-                    nameInList = "Типы устройств для ";
-                    break;
-                case "brand":
-                    _name = "type";
-                    secondName = "Фирма-производитель";
-                    nameInList = "Фирмы-производители для ";
-                    break;
-            }
-            BrandAndTypeEdit enterBrandForm = new(_name)
-            {
-                StartPosition = FormStartPosition.CenterParent,
-                LabelSecondName = secondName,
-                LabelNameInList = nameInList
-            };
-            
-            if (enterBrandForm.ShowDialog() == DialogResult.OK)
-            {
+                string _name = "";
+                string secondName = "";
+                string nameInList = "";
+                string textForm = "";
                 switch (name)
                 {
                     case "type":
-                        if (brandTechnicRepository.GetBrandTechnic(enterBrandForm.NameTextBox) != null)
-                        {
-                            Task.Run(async () =>
+                        _name = "brand";
+                        secondName = "Фирма-производитель";
+                        nameInList = "Фирмы-производители для ";
+                        textForm = "Добавление новой фирмы";
+                        break;
+                    case "brand":
+                        _name = "type";
+                        secondName = "Тип устройства";
+                        nameInList = "Типы устройств для ";
+                        textForm = "Добавление типа устройства";
+                        break;
+                }
+                BrandAndTypeEdit enterBrandForm = new(_name)
+                {
+                    StartPosition = FormStartPosition.CenterParent,
+                    LabelSecondName = secondName,
+                    LabelNameInList = nameInList,
+                    Text = textForm
+                };
+
+                if (enterBrandForm.ShowDialog() == DialogResult.OK)
+                {
+                    switch (name)
+                    {
+                        case "type":
+                            var task = Task.Run(async () =>
                             {
                                 var brandTechnicDTO = new BrandTechnicEditDTO() { Id = 0, Name = enterBrandForm.NameTextBox };
                                 await brandTechnicRepository.SaveBrandTechnicAsync(brandTechnicDTO);
                             });
-                        }
-                        if (enterBrandForm.idList != null)
-                        {
-                            for (int i = 0; i < enterBrandForm.idList.Count; i++)
+                            task.Wait();
+
+                            if (enterBrandForm.idList != null)
                             {
-                                if (!typeBrandRepository.GetTypeBrand(idBrand: id, idType: enterBrandForm.idList[i]).Any())
+                                for (int i = 0; i < enterBrandForm.idList.Count; i++)
                                 {
-                                    int typeId = enterBrandForm.idList[i];
-                                    Task.Run(async () =>
+                                    if (!typeBrandRepository.GetTypeBrand(idBrand: id, idType: enterBrandForm.idList[i]).Any())
                                     {
-                                        var typeBrandDTO = new TypeBrandEditDTO() 
-                                        { 
-                                            BrandTechnicsId = id, 
-                                            TypeTechnicsId = typeId
-                                        };
-                                        await typeBrandRepository.SaveTypeBrandAsync(typeBrandDTO);
-                                    });
+                                        int typeId = enterBrandForm.idList[i];
+                                        task = Task.Run(async () =>
+                                        {
+                                            var typeBrandDTO = new TypeBrandEditDTO()
+                                            {
+                                                BrandTechnicsId = id,
+                                                TypeTechnicsId = typeId
+                                            };
+                                            await typeBrandRepository.SaveTypeBrandAsync(typeBrandDTO);
+                                        });
+                                        task.Wait();
+                                    }
                                 }
                             }
-                        }
-                        if (enterBrandForm.idRemoveList != null)
-                        {
-                            for (int i = 0; i < enterBrandForm.idRemoveList.Count; i++)
+                            if (enterBrandForm.idRemoveList != null)
                             {
-                                var typeBrandDTO = new TypeBrandEditDTO()
+                                for (int i = 0; i < enterBrandForm.idRemoveList.Count; i++)
                                 {
-                                    BrandTechnicsId = id,
-                                    TypeTechnicsId = enterBrandForm.idRemoveList[i]
-                                };
-                                typeBrandRepository.RemoveTypeBrand(typeBrandDTO);
+                                    var typeBrandDTO = new TypeBrandEditDTO()
+                                    {
+                                        BrandTechnicsId = id,
+                                        TypeTechnicsId = enterBrandForm.idRemoveList[i]
+                                    };
+                                    typeBrandRepository.RemoveTypeBrand(typeBrandDTO);
+                                }
                             }
-                        }
-                        break;
-                    case "brand":
-                        if (typeTechnicRepository.GetTypeTechnic(enterBrandForm.NameTextBox) != null)
-                        {
-                            Task.Run(async () =>
+                            break;
+                        case "brand":
+                            task = Task.Run(async () =>
                             {
                                 var typeTechnicDTO = new TypeTechnicEditDTO() { Id = 0, Name = enterBrandForm.NameTextBox };
                                 await typeTechnicRepository.SaveTypeTechnicAsync(typeTechnicDTO);
                             });
+                            task.Wait();
 
-                        }
-                        if (enterBrandForm.idList != null)
-                        {
-                            for (int i = 0; i < enterBrandForm.idList.Count; i++)
+                            if (enterBrandForm.idList != null)
                             {
-                                if (!typeBrandRepository.GetTypeBrand(idBrand: enterBrandForm.idList[i], idType: id).Any())
+                                for (int i = 0; i < enterBrandForm.idList.Count; i++)
                                 {
-                                    int brandId = enterBrandForm.idList[i];
-                                    Task.Run(async () =>
+                                    if (!typeBrandRepository.GetTypeBrand(idBrand: enterBrandForm.idList[i], idType: id).Any())
                                     {
-                                        var typeBrandDTO = new TypeBrandEditDTO()
+                                        int brandId = enterBrandForm.idList[i];
+                                        task = Task.Run(async () =>
                                         {
-                                            BrandTechnicsId = brandId,
-                                            TypeTechnicsId = id
-                                        };
-                                        await typeBrandRepository.SaveTypeBrandAsync(typeBrandDTO);
-                                    });
+                                            var typeBrandDTO = new TypeBrandEditDTO()
+                                            {
+                                                BrandTechnicsId = brandId,
+                                                TypeTechnicsId = id
+                                            };
+                                            await typeBrandRepository.SaveTypeBrandAsync(typeBrandDTO);
+                                        });
+                                        task.Wait();
+                                    }
                                 }
                             }
-                        }
-                        if (enterBrandForm.idRemoveList != null)
-                        {
-                            for (int i = 0; i < enterBrandForm.idRemoveList.Count; i++)
+                            if (enterBrandForm.idRemoveList != null)
                             {
-                                var typeBrandDTO = new TypeBrandEditDTO()
+                                for (int i = 0; i < enterBrandForm.idRemoveList.Count; i++)
                                 {
-                                    BrandTechnicsId = enterBrandForm.idRemoveList[i],
-                                    TypeTechnicsId = id
-                                };
-                                typeBrandRepository.RemoveTypeBrand(typeBrandDTO);
+                                    var typeBrandDTO = new TypeBrandEditDTO()
+                                    {
+                                        BrandTechnicsId = enterBrandForm.idRemoveList[i],
+                                        TypeTechnicsId = id
+                                    };
+                                    typeBrandRepository.RemoveTypeBrand(typeBrandDTO);
+                                }
                             }
-                        }
-                        break;
+                            break;
+                    }
+                    UpdateComboBox(name);
                 }
-                UpdateComboBox(name);
             }
         }
 

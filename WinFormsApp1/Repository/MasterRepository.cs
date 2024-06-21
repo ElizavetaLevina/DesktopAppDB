@@ -27,7 +27,6 @@ namespace WinFormsApp1.Repository
             return new MasterEditDTO(context.Masters.First(i => i.Id == id));
         }
 
-
         public async Task SaveMasterAsync(MasterEditDTO masterDTO, CancellationToken token = default)
         {
             using Context db = new();

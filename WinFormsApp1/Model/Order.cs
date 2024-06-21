@@ -33,6 +33,7 @@
         public bool Issue { get; set; }
         public virtual List<Malfunction>? Malfunction { get; set; }
         public virtual List<MalfunctionOrder>? MalfunctionOrders { get; set; }
+        public virtual List<Warehouse>? Details { get; set; }
         public string ColorRow { get; set; } = Color.Black.Name;
         public string? DateLastCall { get; set; }
         public bool PriceAgreed { get; set; }

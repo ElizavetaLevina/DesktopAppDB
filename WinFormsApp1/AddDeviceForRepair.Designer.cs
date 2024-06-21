@@ -388,19 +388,21 @@
             contextMenuStrip1.ImageScalingSize = new Size(24, 24);
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { foundInTable, lastId, toolStripSeparator1, checkId });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(472, 106);
+            contextMenuStrip1.Size = new Size(472, 139);
             // 
             // foundInTable
             // 
             foundInTable.Name = "foundInTable";
             foundInTable.Size = new Size(471, 32);
             foundInTable.Text = "Найти в пропущенных неиспользуемый номер";
+            foundInTable.Click += FoundInTable_Click;
             // 
             // lastId
             // 
             lastId.Name = "lastId";
             lastId.Size = new Size(471, 32);
             lastId.Text = "На единицу больше, чем последняя квитанция";
+            lastId.Click += LastId_Click;
             // 
             // toolStripSeparator1
             // 
@@ -412,6 +414,7 @@
             checkId.Name = "checkId";
             checkId.Size = new Size(471, 32);
             checkId.Text = "Проверить номер";
+            checkId.Click += CheckId_Click;
             // 
             // pictureBox5
             // 

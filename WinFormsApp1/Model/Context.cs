@@ -59,10 +59,15 @@ namespace WinFormsApp1.Model
                 .WithMany(a => a.Order)
                 .HasForeignKey(b => b.EquipmentId);
 
-            modelBuilder.Entity<Client>()
-                .HasMany(c => c.Order)
-                .WithOne(c => c.Client)
-                .HasForeignKey(c => c.ClientId);
+            modelBuilder.Entity<Order>()
+                .HasOne(b => b.Client)
+                .WithMany(a => a.Order)
+                .HasForeignKey(b => b.ClientId);
+
+            modelBuilder.Entity<Warehouse>()
+                .HasOne(b => b.Order)
+                .WithMany(a => a.Details)
+                .HasForeignKey(b => b.IdOrder);
 
 
             modelBuilder.Entity<BrandTechnic>()

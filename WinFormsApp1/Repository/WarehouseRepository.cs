@@ -38,7 +38,11 @@ namespace WinFormsApp1.Repository
             return context.Warehouse.Select(c => new WarehouseDTO(c)).ToList();
         }
 
-
+        /// <summary>
+        /// Получение записи по идентификатору
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <returns>Запись</returns>
         public WarehouseEditDTO GetWarehouse(int id)
         {
             Context context = new();

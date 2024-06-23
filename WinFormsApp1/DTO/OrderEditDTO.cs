@@ -14,6 +14,7 @@ namespace WinFormsApp1.DTO
     public class OrderEditDTO
     {
         public int Id { get; set; }
+        public int NumberOrder { get; set; }
         public int ClientId { get; set; }
         public int? MasterId { get; set; }
         public DateTime? DateCreation { get; set; }
@@ -46,6 +47,7 @@ namespace WinFormsApp1.DTO
         public OrderEditDTO(Order order)
         {
             Id = order.Id;
+            NumberOrder = order.NumberOrder;
             ClientId = order.ClientId;
 
 

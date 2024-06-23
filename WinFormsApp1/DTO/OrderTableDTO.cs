@@ -5,8 +5,10 @@ namespace WinFormsApp1.DTO
 {
     public class OrderTableDTO
     {
-        [DisplayName("№")]
+        [DisplayName("")]
         public int Id { get; set; }
+        [DisplayName("№")]
+        public int NumberOrder { get; set; }
         [DisplayName("Дата приема")]
         public string? DateCreation { get; set; }
         [DisplayName("Дата начала ремонта")] 

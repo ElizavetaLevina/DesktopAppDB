@@ -7,7 +7,6 @@ using FluentFTP;
 using Color = System.Drawing.Color;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Repository;
-using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace WinFormsApp1
 {
@@ -42,41 +41,40 @@ namespace WinFormsApp1
         private void UpdateTable()
         {
             dataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView1.Columns[0].HeaderText = "№";
-            dataGridView1.Columns[1].HeaderText = "Дата приема";
-            dataGridView1.Columns[2].HeaderText = "Дата начала ремонта";
-            dataGridView1.Columns[2].Visible = true;
-            dataGridView1.Columns[3].HeaderText = "Дата окончания ремонта";
+            dataGridView1.Columns[0].Visible = false;
+            dataGridView1.Columns[1].HeaderText = "№";
+            dataGridView1.Columns[2].HeaderText = "Дата приема";
+            dataGridView1.Columns[3].HeaderText = "Дата начала ремонта";
             dataGridView1.Columns[3].Visible = true;
-            dataGridView1.Columns[4].HeaderText = "Дата выдачи аппарата";
+            dataGridView1.Columns[4].HeaderText = "Дата окончания ремонта";
             dataGridView1.Columns[4].Visible = true;
-            dataGridView1.Columns[5].HeaderText = "Мастер";
-            dataGridView1.Columns[6].HeaderText = "Тип аппарата/Производитель/Модель";
-            dataGridView1.Columns[7].HeaderText = "Заказчик";
-            dataGridView1.Columns[7].Visible = true;
-            dataGridView1.Columns[8].HeaderText = "Диагноз";
-            dataGridView1.Columns[8].Visible = false;
+            dataGridView1.Columns[5].HeaderText = "Дата выдачи аппарата";
+            dataGridView1.Columns[5].Visible = true;
+            dataGridView1.Columns[6].HeaderText = "Мастер";
+            dataGridView1.Columns[7].HeaderText = "Тип аппарата/Производитель/Модель";
+            dataGridView1.Columns[8].HeaderText = "Заказчик";
+            dataGridView1.Columns[9].HeaderText = "Диагноз";
             dataGridView1.Columns[9].Visible = false;
             dataGridView1.Columns[10].Visible = false;
             dataGridView1.Columns[11].Visible = false;
             dataGridView1.Columns[12].Visible = false;
             dataGridView1.Columns[13].Visible = false;
+            dataGridView1.Columns[14].Visible = false;
 
-            int[] percentInRepair = [8, 12, 12, 0, 0, 12, 44, 0, 12, 0, 0, 0, 0, 0];
-            int[] percentCompleted = [8, 12, 0, 12, 0, 14, 40, 14, 0, 0, 0, 0, 0, 0];
-            int[] percentOthers = [7, 10, 10, 10, 10, 9, 32, 12, 0, 0, 0, 0, 0, 0];
+            int[] percentInRepair = [0, 8, 11, 11, 0, 0, 12, 34, 12, 12, 0, 0, 0, 0, 0];
+            int[] percentCompleted = [0, 8, 12, 0, 12, 0, 14, 40, 14, 0, 0, 0, 0, 0, 0];
+            int[] percentOthers = [0, 7, 10, 10, 10, 10, 9, 32, 12, 0, 0, 0, 0, 0, 0];
 
             switch (status)
             {
                 case "InRepair":
-                    dataGridView1.Columns["DateCompleted"].Visible = false;
-                    dataGridView1.Columns["DateIssue"].Visible = false;
-                    dataGridView1.Columns["IdClient"].Visible = false;
-                    dataGridView1.Columns["Diagnosis"].Visible = true;
+                    dataGridView1.Columns[nameof(OrderTableDTO.DateCompleted)].Visible = false;
+                    dataGridView1.Columns[nameof(OrderTableDTO.DateIssue)].Visible = false;
+                    dataGridView1.Columns[nameof(OrderTableDTO.Diagnosis)].Visible = true;
                     break;
                 case "Completed":
-                    dataGridView1.Columns["DateStartWork"].Visible = false;
-                    dataGridView1.Columns["DateIssue"].Visible = false;
+                    dataGridView1.Columns[nameof(OrderTableDTO.DateStartWork)].Visible = false;
+                    dataGridView1.Columns[nameof(OrderTableDTO.DateIssue)].Visible = false;
                     break;
             }
             for (int i = 0; i < dataGridView1.Columns.Count; i++)
@@ -124,13 +122,6 @@ namespace WinFormsApp1
             status = "InRepair";
             try
             {
-                //TODO: del test, пример вызова асинхронного метода в синхронном
-                //Task.Run(async () =>
-                //{
-                //    var orderDTO = new OrderEditDTO() { Id = 3, ClientId = 1, TypeTechnicId = 1, BrandTechnicId = 1, InProgress = true, Guarantee = 0, Deleted = false,
-                //        ReturnUnderGuarantee = false, Issue = false, PriceAgreed = false, DateCreation = DateTime.Now};
-                //    await orderRepository.SaveOrderAsync(orderDTO);
-                //});
                 List<OrderTableDTO> list = orderRepository.GetOrdersForTable(inProgress: true, deleted: false, dateCreation: true);
                 dataGridView1.DataSource = Funcs.ToDataTable(list);
                 UpdateTable();

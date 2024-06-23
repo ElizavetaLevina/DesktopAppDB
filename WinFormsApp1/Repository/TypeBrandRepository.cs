@@ -27,6 +27,12 @@ namespace WinFormsApp1.Repository
             return set.Select(a => new TypeBrandDTO(a)).ToList();
         }
 
+        public List<TypeBrandComboBoxDTO> GetTypeBrandByNameType(string nameType)
+        {
+            Context context = new();
+            return context.TypeBrands.Where(i => i.TypeTechnic.NameTypeTechnic == nameType).Select(a => new TypeBrandComboBoxDTO(a)).ToList();
+        }
+
         public async Task SaveTypeBrandAsync(TypeBrandEditDTO typeBrandEditDTO, CancellationToken token = default)
         {
             using Context db = new();

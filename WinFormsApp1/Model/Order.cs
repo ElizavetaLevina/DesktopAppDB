@@ -3,6 +3,7 @@
     public class Order
     {
         public int Id { get; set; }
+        public int NumberOrder { get; set; }
         public int ClientId { get; set; }
         public virtual Client? Client { get; set; }
         public int? MasterId { get; set; }

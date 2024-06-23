@@ -30,7 +30,8 @@ namespace WinFormsApp1
             UpdateComboBox(0);
             UpdateComboBox(1);
             UpdateComboBox(2);
-            textBoxIdOrder.Text = IdKeyOrder().ToString();
+            textBoxNumberOrder.Text = IdKeyOrder().ToString();
+
             var clientsDTO = clientRepository.GetClients();
             foreach (var client in clientsDTO)
             {
@@ -101,7 +102,7 @@ namespace WinFormsApp1
                 case 4:
                     if (!CheckComboBox())
                         return;
-                    if (!CheckIdOrder())
+                    if (!CheckClient())
                         return;
                     int? masterId = null;
                     DateTime? dateStartWork = null;
@@ -160,6 +161,7 @@ namespace WinFormsApp1
                     var orderDTO = new OrderEditDTO()
                     {
                         Id = 0,
+                        NumberOrder = Convert.ToInt32(textBoxNumberOrder.Text),
                         ClientId = clientId,
                         MasterId = ((MasterDTO)comboBoxMaster.SelectedItem).Id,
                         DateCreation = dateTimePicker1.Value,
@@ -224,15 +226,19 @@ namespace WinFormsApp1
         }
 
 
-        private void CheckIdClient()
+        private bool CheckIdClient()
         {
             if (textBoxNameClient.Text == "")
             {
                 ShowWarningForm("Вы не заполнили Id заказчика!");
                 labelNameClient.ForeColor = Color.Red;
+                return false;
             }
             else
+            {
                 labelNameClient.ForeColor = Color.Black;
+                return true;
+            }
         }
 
         private void ShowWarningForm(string text = "Вы не заполнили обязательные поля!")
@@ -320,10 +326,11 @@ namespace WinFormsApp1
                 case 2:
                     comboBoxBrand.DataSource = null;
                     comboBoxBrand.Items.Clear();
-                    comboBoxDevice.ValueMember = nameof(BrandTechnicDTO.Id);
-                    comboBoxBrand.DisplayMember = nameof(BrandTechnicDTO.NameBrandTechnic);
-                    comboBoxBrand.DataSource = brandTechnicRepository.GetBrandsTechnic();
-                    //var typeBrandDTO = typeBrandRepository.GetTypeBrand(id)
+                    comboBoxBrand.ValueMember = nameof(TypeBrandComboBoxDTO.IdBrand);
+                    comboBoxBrand.DisplayMember = nameof(TypeBrandComboBoxDTO.NameBrandTechnic);
+                    comboBoxBrand.DataSource = typeBrandRepository.GetTypeBrandByNameType(comboBoxDevice.Text);
+
+                    var typeBrandDTO = typeBrandRepository.GetTypeBrandByNameType(comboBoxDevice.Text);
                     //var list = context.TypeBrands.Where(i =>
                     //i.TypeTechnic.NameTypeTechnic == comboBoxDevice.Text).Select(a => new
                     //{
@@ -337,16 +344,6 @@ namespace WinFormsApp1
         private void ButtonNumber_Click(object sender, EventArgs e)
         {
             contextMenuStrip1.Show(MousePosition);
-        }
-
-        private bool CheckIdOrder()
-        {
-            if (orderRepository.CheckOrder(Convert.ToInt32(textBoxIdOrder.Text)))
-            {
-                ShowWarningForm("Квитанция с таким номером уже существует!");
-                return false;
-            }
-            return true;
         }
 
         private bool CheckClient()
@@ -440,7 +437,7 @@ namespace WinFormsApp1
             UpdateComboBox(2);
         }
 
-        private void TextBoxIdOrder_KeyPress(object sender, KeyPressEventArgs e)
+        private void TextBoxNumberOrder_KeyPress(object sender, KeyPressEventArgs e)
         {
             if ((e.KeyChar <= 47 || e.KeyChar >= 58) && e.KeyChar != 8 && e.KeyChar != 13)
                 e.Handled = true;
@@ -572,29 +569,14 @@ namespace WinFormsApp1
             }
         }
 
-        private void FoundInTable_Click(object sender, EventArgs e)
+        private void FirstId_Click(object sender, EventArgs e)
         {
-            /*Context context = new();
-            var list = context.Orders.Select(a => new { a.Id }).OrderBy(a => a.Id).ToList();
-            for (int i = 0; i < list.Count; i++)
-            {
-                if ((i + 1) != list[i].Id)
-                {
-                    textBoxIdOrder.Text = (i + 1).ToString();
-                    break;
-                }
-            }*/
+            textBoxNumberOrder.Text = "1";
         }
 
         private void LastId_Click(object sender, EventArgs e)
         {
-            textBoxIdOrder.Text = IdKeyOrder().ToString();
-        }
-
-        private void CheckId_Click(object sender, EventArgs e)
-        {
-            if (CheckIdOrder())
-                ShowWarningForm("Квитанция с таким номером уже существует!");
+            textBoxNumberOrder.Text = IdKeyOrder().ToString();
         }
 
         public string MasterName

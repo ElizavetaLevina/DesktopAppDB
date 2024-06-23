@@ -62,7 +62,7 @@ namespace WinFormsApp1.Repository
         public int GetLastId()
         {
             Context context = new();
-            return (context.Orders?.OrderBy(i => i.Id).LastOrDefault()?.Id??0) + 1;
+            return (context.Orders?.OrderBy(i => i.Id).LastOrDefault()?.NumberOrder ?? 0) + 1;
         }
 
         /// <summary>
@@ -92,6 +92,7 @@ namespace WinFormsApp1.Repository
             Order order = new()
             {
                 Id = orderDTO.Id,
+                NumberOrder = orderDTO.NumberOrder,
                 ClientId = orderDTO.ClientId,
                 MasterId = orderDTO.MasterId,
                 DateCreation = orderDTO.DateCreation,

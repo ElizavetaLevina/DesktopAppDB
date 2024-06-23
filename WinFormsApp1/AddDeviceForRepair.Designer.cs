@@ -35,7 +35,7 @@
             comboBoxMaster = new ComboBox();
             dateTimePicker1 = new DateTimePicker();
             buttonNumber = new Button();
-            textBoxIdOrder = new TextBox();
+            textBoxNumberOrder = new TextBox();
             linkLabelDateCreation = new LinkLabel();
             labelMaster = new Label();
             label8 = new Label();
@@ -58,10 +58,8 @@
             buttonFurther = new Button();
             buttonBack = new Button();
             contextMenuStrip1 = new ContextMenuStrip(components);
-            foundInTable = new ToolStripMenuItem();
+            firstId = new ToolStripMenuItem();
             lastId = new ToolStripMenuItem();
-            toolStripSeparator1 = new ToolStripSeparator();
-            checkId = new ToolStripMenuItem();
             pictureBox5 = new PictureBox();
             panel4 = new Panel();
             listBoxEquipmentDiagnosis = new ListBox();
@@ -115,7 +113,7 @@
             panel1.Controls.Add(comboBoxMaster);
             panel1.Controls.Add(dateTimePicker1);
             panel1.Controls.Add(buttonNumber);
-            panel1.Controls.Add(textBoxIdOrder);
+            panel1.Controls.Add(textBoxNumberOrder);
             panel1.Controls.Add(linkLabelDateCreation);
             panel1.Controls.Add(labelMaster);
             panel1.Controls.Add(label8);
@@ -165,13 +163,13 @@
             buttonNumber.UseVisualStyleBackColor = true;
             buttonNumber.Click += ButtonNumber_Click;
             // 
-            // textBoxIdOrder
+            // textBoxNumberOrder
             // 
-            textBoxIdOrder.Location = new Point(451, 87);
-            textBoxIdOrder.Name = "textBoxIdOrder";
-            textBoxIdOrder.Size = new Size(136, 31);
-            textBoxIdOrder.TabIndex = 8;
-            textBoxIdOrder.KeyPress += TextBoxIdOrder_KeyPress;
+            textBoxNumberOrder.Location = new Point(451, 87);
+            textBoxNumberOrder.Name = "textBoxNumberOrder";
+            textBoxNumberOrder.Size = new Size(136, 31);
+            textBoxNumberOrder.TabIndex = 8;
+            textBoxNumberOrder.KeyPress += TextBoxNumberOrder_KeyPress;
             // 
             // linkLabelDateCreation
             // 
@@ -386,35 +384,23 @@
             // contextMenuStrip1
             // 
             contextMenuStrip1.ImageScalingSize = new Size(24, 24);
-            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { foundInTable, lastId, toolStripSeparator1, checkId });
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { firstId, lastId });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(472, 139);
+            contextMenuStrip1.Size = new Size(469, 101);
             // 
-            // foundInTable
+            // firstId
             // 
-            foundInTable.Name = "foundInTable";
-            foundInTable.Size = new Size(471, 32);
-            foundInTable.Text = "Найти в пропущенных неиспользуемый номер";
-            foundInTable.Click += FoundInTable_Click;
+            firstId.Name = "firstId";
+            firstId.Size = new Size(468, 32);
+            firstId.Text = "Начать с 1";
+            firstId.Click += FirstId_Click;
             // 
             // lastId
             // 
             lastId.Name = "lastId";
-            lastId.Size = new Size(471, 32);
+            lastId.Size = new Size(468, 32);
             lastId.Text = "На единицу больше, чем последняя квитанция";
             lastId.Click += LastId_Click;
-            // 
-            // toolStripSeparator1
-            // 
-            toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(468, 6);
-            // 
-            // checkId
-            // 
-            checkId.Name = "checkId";
-            checkId.Size = new Size(471, 32);
-            checkId.Text = "Проверить номер";
-            checkId.Click += CheckId_Click;
             // 
             // pictureBox5
             // 
@@ -790,16 +776,14 @@
         private Label label7;
         private Label labelMaster;
         private LinkLabel linkLabelDateCreation;
-        private TextBox textBoxIdOrder;
+        private TextBox textBoxNumberOrder;
         private Button buttonNumber;
         private DateTimePicker dateTimePicker1;
         private ComboBox comboBoxMaster;
         private LinkLabel linkLabelListMaster;
         private ContextMenuStrip contextMenuStrip1;
-        private ToolStripMenuItem foundInTable;
+        private ToolStripMenuItem firstId;
         private ToolStripMenuItem lastId;
-        private ToolStripSeparator toolStripSeparator1;
-        private ToolStripMenuItem checkId;
         private PictureBox pictureBox5;
         private Panel panel4;
         private Label label4;

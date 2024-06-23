@@ -23,7 +23,7 @@ namespace WinFormsApp1
 
         private void ButtonAddDetail_Click(object sender, EventArgs e)
         {
-            var order = orderRepository.GetOrder(id: idOrder);
+            var order = orderRepository.GetOrderById(idOrder);
 
             DetailsInWarehouse details = new(false, order.BrandTechnic?.NameBrandTechnic)
             {

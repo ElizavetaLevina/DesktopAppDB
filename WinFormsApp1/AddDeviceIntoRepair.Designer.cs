@@ -1,6 +1,6 @@
 ﻿namespace WinFormsApp1
 {
-    partial class AddDeviceForRepair
+    partial class AddDeviceIntoRepair
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddDeviceForRepair));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddDeviceIntoRepair));
             panel1 = new Panel();
             linkLabelListMaster = new LinkLabel();
             comboBoxMaster = new ComboBox();

@@ -1,11 +1,10 @@
 ﻿using WinFormsApp1.DTO;
-using WinFormsApp1.Model;
 using WinFormsApp1.Repository;
 using Color = System.Drawing.Color;
 
 namespace WinFormsApp1
 {
-    public partial class AddDeviceForRepair : Form
+    public partial class AddDeviceIntoRepair : Form
     {
         int numberPage = 1;
         bool loading = true;
@@ -24,7 +23,7 @@ namespace WinFormsApp1
         BrandTechnicRepository brandTechnicRepository = new();
         TypeBrandRepository typeBrandRepository = new();
         TypeTechnicRepository typeTechnicRepository = new();
-        public AddDeviceForRepair()
+        public AddDeviceIntoRepair()
         {
             InitializeComponent();
             UpdateComboBox(0);
@@ -80,7 +79,6 @@ namespace WinFormsApp1
 
         private void ButtonFurther_Click(object sender, EventArgs e)
         {
-            Context context = new();
             switch (numberPage)
             {
                 case 1:
@@ -102,7 +100,7 @@ namespace WinFormsApp1
                 case 4:
                     if (!CheckComboBox())
                         return;
-                    if (!CheckClient())
+                    if (!CheckIdClient())
                         return;
                     int? masterId = null;
                     DateTime? dateStartWork = null;
@@ -111,7 +109,7 @@ namespace WinFormsApp1
                     Task? task;
                     if (comboBoxMaster.Text != "-")
                     {
-                        masterId = context.Masters.Where(a => a.NameMaster == comboBoxMaster.Text).ToList()[0].Id;
+                        masterId = ((MasterDTO)comboBoxMaster.SelectedItem).Id; 
                         dateStartWork = dateTimePicker1.Value;
                     }
 
@@ -163,11 +161,11 @@ namespace WinFormsApp1
                         Id = 0,
                         NumberOrder = Convert.ToInt32(textBoxNumberOrder.Text),
                         ClientId = clientId,
-                        MasterId = ((MasterDTO)comboBoxMaster.SelectedItem).Id,
+                        MasterId = masterId,
                         DateCreation = dateTimePicker1.Value,
                         DateStartWork = dateStartWork,
                         TypeTechnicId = ((TypeTechnicDTO)comboBoxDevice.SelectedItem).Id,
-                        BrandTechnicId = ((BrandTechnicDTO)comboBoxBrand.SelectedItem).Id,
+                        BrandTechnicId = ((TypeBrandComboBoxDTO)comboBoxBrand.SelectedItem).IdBrand,
                         ModelTechnic = textBoxModel.Text,
                         FactoryNumber = textBoxFactoryNumber.Text,
                         EquipmentId = idEquipment,
@@ -329,13 +327,6 @@ namespace WinFormsApp1
                     comboBoxBrand.ValueMember = nameof(TypeBrandComboBoxDTO.IdBrand);
                     comboBoxBrand.DisplayMember = nameof(TypeBrandComboBoxDTO.NameBrandTechnic);
                     comboBoxBrand.DataSource = typeBrandRepository.GetTypeBrandByNameType(comboBoxDevice.Text);
-
-                    var typeBrandDTO = typeBrandRepository.GetTypeBrandByNameType(comboBoxDevice.Text);
-                    //var list = context.TypeBrands.Where(i =>
-                    //i.TypeTechnic.NameTypeTechnic == comboBoxDevice.Text).Select(a => new
-                    //{
-                    //    a.BrandTechnic.NameBrandTechnic
-                    //}).ToList();
                     break;
 
             }

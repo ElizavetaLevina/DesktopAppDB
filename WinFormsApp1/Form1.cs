@@ -198,9 +198,9 @@ namespace WinFormsApp1
             catch { }
         }
 
-        private void AddDevice()
+        private void AddDeviceIntoRepair()
         {
-            AddDeviceForRepair addDeviceForRepair = new()
+            AddDeviceIntoRepair addDeviceForRepair = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -424,6 +424,7 @@ namespace WinFormsApp1
                                         /**/
                                         int countDayInRepair = (list[0].DateCompletedReturn.Value - list[0].DateReturn.Value).Days;
                                         DateTime? dateEndGuarantee = list[0].DateEndGuarantee.Value.AddDays(countDayInRepair);
+
                                         ChangeOrder(id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
                                             list[0].DateStartWork, completedOrder.DateComplete, list[0].DateIssue,
                                             list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
@@ -799,7 +800,7 @@ namespace WinFormsApp1
                 a.PriceAgreed
             }).ToList();
 
-            AddDeviceForRepair newOrder = new()
+            AddDeviceIntoRepair newOrder = new()
             {
                 StartPosition = FormStartPosition.CenterParent,
                 TypeDevice = list[0].NameTypeTechnic,
@@ -1263,7 +1264,7 @@ namespace WinFormsApp1
 
         private void ButtonAddDevice_Click(object sender, EventArgs e)
         {
-            AddDevice();
+            AddDeviceIntoRepair();
         }
 
         private void ButtonMasters_Click(object sender, EventArgs e)
@@ -1614,7 +1615,7 @@ namespace WinFormsApp1
 
         private void ItemAddDeviceForRepair_Click(object sender, EventArgs e)
         {
-            AddDevice();
+            AddDeviceIntoRepair();
         }
 
         private void ItemFeaturesOrder_Click(object sender, EventArgs e)

@@ -49,6 +49,17 @@ namespace WinFormsApp1.Repository
             return new WarehouseEditDTO(context.Warehouse.First(i => i.Id == id));
         }
 
+        /// <summary>
+        /// Получение списка деталей заказе по номеру
+        /// </summary>
+        /// <param name="idOrder">Номер заказа</param>
+        /// <returns>Список деталей</returns>
+        public List<WarehouseEditDTO> GetDetailsInOrder(int idOrder)
+        {
+            Context context = new();
+            return context.Warehouse.Where(i => i.IdOrder == idOrder).Select(a => new WarehouseEditDTO(a)).ToList();
+        }
+
         public async Task SaveWarehouseAsync(WarehouseEditDTO warehouseDTO, CancellationToken token = default)
         {
             try

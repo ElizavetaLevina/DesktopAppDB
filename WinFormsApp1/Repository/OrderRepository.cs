@@ -49,7 +49,7 @@ namespace WinFormsApp1.Repository
         /// </summary>
         /// <param name="id">Идентификатор</param>
         /// <returns>Запись</returns>
-        public OrderEditDTO GetOrder(int id)
+        public OrderEditDTO GetOrderById(int id)
         {
             Context context = new();
             return new OrderEditDTO(context.Orders.First(i => i.Id == id));
@@ -130,7 +130,8 @@ namespace WinFormsApp1.Repository
                 await db.SaveChangesAsync(token);
                 return order.Id;
             }
-            catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
+            catch (Exception ex) { 
+                MessageBox.Show(ex.Message); throw; }
         }
 
         public static void RemoveOrder(OrderEditDTO orderDTO)

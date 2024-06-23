@@ -17,6 +17,7 @@ namespace WinFormsApp1
         public bool logInSystem = false;
 
         OrderRepository orderRepository = new();
+        WarehouseRepository warehouseRepository = new();
         public Form1()
         {
             InitializeComponent();
@@ -337,208 +338,73 @@ namespace WinFormsApp1
         {
             try
             {
-                Context context = new();
+                Warning warning = new();
+                if (!logInSystem)
+                {
+                    warning = new()
+                    {
+                        StartPosition = FormStartPosition.CenterParent,
+                        LabelText = "Войдите в систему!",
+                        ButtonYesText = "Войти",
+                        ButtonNoText = "Отмена",
+                        ButtonVisible = true
+                    };
+                    if (warning.ShowDialog() == DialogResult.OK)
+                    {
+                        LogInToTheSystem();
+                        if (!logInSystem)
+                            return;
+                    }
+                    else return;
+                }
+
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                var list = context.Orders.Where(a => a.Id == id).ToList();
-                //var listDetails = context.Details.Where(a => a.Id == id).ToList();
+                int idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
+                var orderDTO = orderRepository.GetOrderById(idOrder);
                 bool enabledPrice = true;
 
-                if (list[0].ReturnUnderGuarantee)
+                if (orderDTO.ReturnUnderGuarantee)
                     enabledPrice = false;
 
-                if (/*listDetails[0].IdWarehouse == null*/true)
+
+                var detailsList = warehouseRepository.GetDetailsInOrder(idOrder);
+                if (detailsList.Count == 0)
                 {
-                    Warning warning = new()
+                    warning = new()
                     {
                         StartPosition = FormStartPosition.CenterParent,
                         LabelText = "Вы не использовали ни одной детали для ремонта данного устройства. " +
-                        "\nХотите ли вы редактировать список деталей?",
+                            "\nХотите ли вы редактировать список деталей?",
                         ButtonNoText = "Нет",
                         ButtonVisible = true
                     };
-
                     if (warning.ShowDialog() == DialogResult.OK)
                     {
-                        DetailsInOrder detailsInOrder = new(id)
+                        DetailsInOrder detailsInOrder = new(idOrder)
                         {
                             StartPosition = FormStartPosition.CenterParent
                         };
                         detailsInOrder.ShowDialog();
-                        FocusButton(status);
-                    }
-                    else
-                    {
-                        switch (status)
-                        {
-                            case "InRepair":
-                                if (!logInSystem)
-                                {
-                                    warning = new()
-                                    {
-                                        StartPosition = FormStartPosition.CenterParent,
-                                        LabelText = "Войдите в систему!",
-                                        ButtonYesText = "Войти",
-                                        ButtonNoText = "Отмена",
-                                        ButtonVisible = true
-                                    };
-                                    if (warning.ShowDialog() == DialogResult.OK)
-                                    {
-                                        LogInToTheSystem();
-                                        if (!logInSystem)
-                                            return;
-                                    }
-                                    else return;
-                                }
-                                CompletedOrder completedOrder = new(id)
-                                {
-                                    StartPosition = FormStartPosition.CenterParent,
-                                    EnabledPrice = enabledPrice
-                                };
-                                if (completedOrder.ShowDialog() == DialogResult.OK)
-                                {
-                                    for (int i = 0; i < completedOrder.countProblem; i++)
-                                    {
-                                        int idKey = 1;
-                                        if (context.Malfunctions.Any(a => a.Name == completedOrder.problem[i]))
-                                        {
-                                            var malfunctions = context.Malfunctions.Where(a => a.Name == completedOrder.problem[i]).ToList();
-                                            if (malfunctions[0].Price != completedOrder.price[i])
-                                                CRUD.ChangeMalfunction(malfunctions[0].Id, malfunctions[0].Name, completedOrder.price[i]);
-                                            idKey = malfunctions[0].Id;
-                                        }
-                                        else
-                                        {
-                                            if (context.Malfunctions.Any())
-                                            {
-                                                idKey = context.Malfunctions.OrderBy(i => i.Id).Last().Id;
-                                                idKey++;
-                                            }
-
-                                            CRUD.AddAsyncMalfunction(idKey, completedOrder.problem[i], completedOrder.price[i]);
-                                        }
-                                        CRUD.AddAsyncMalfunctionOrder(idKey, id, completedOrder.price[i]);
-                                    }
-                                    if (list[0].ReturnUnderGuarantee)
-                                    {
-                                        /**/
-                                        int countDayInRepair = (list[0].DateCompletedReturn.Value - list[0].DateReturn.Value).Days;
-                                        DateTime? dateEndGuarantee = list[0].DateEndGuarantee.Value.AddDays(countDayInRepair);
-
-                                        ChangeOrder(id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
-                                            list[0].DateStartWork, completedOrder.DateComplete, list[0].DateIssue,
-                                            list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
-                                            list[0].FactoryNumber, list[0].EquipmentId, list[0].DiagnosisId, list[0].Note,
-                                            false, list[0].Guarantee, dateEndGuarantee, list[0].Deleted,
-                                            list[0].ReturnUnderGuarantee, list[0].DateReturn, list[0].DateCompleted,
-                                            list[0].DateIssueReturn, list[0].Issue, list[0].ColorRow,
-                                            list[0].DateLastCall, list[0].PriceAgreed, list[0].MaxPrice);
-                                    }
-                                    else
-                                    {
-                                        ChangeOrder(id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
-                                            list[0].DateStartWork, completedOrder.DateComplete, list[0].DateIssue,
-                                            list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
-                                            list[0].FactoryNumber, list[0].EquipmentId, list[0].DiagnosisId, list[0].Note,
-                                            false, list[0].Guarantee, list[0].DateEndGuarantee, list[0].Deleted,
-                                            list[0].ReturnUnderGuarantee, list[0].DateReturn, list[0].DateCompletedReturn,
-                                            list[0].DateIssueReturn, list[0].Issue, list[0].ColorRow, list[0].DateLastCall,
-                                            list[0].PriceAgreed, list[0].MaxPrice);
-
-                                    }
-                                    InProgress();
-                                }
-                                FocusButton(status);
-                                /*if (completedOrder.pressBtnSave)
-                                    UpdateDB();*/
-                                break;
-                        }
                     }
                 }
-                else
+                switch (status)
                 {
-                    switch (status)
-                    {
-                        case "InRepair":
-                            if (!logInSystem)
-                            {
-                                Warning warning = new()
-                                {
-                                    StartPosition = FormStartPosition.CenterParent,
-                                    LabelText = "Войдите в систему!",
-                                    ButtonYesText = "Войти",
-                                    ButtonNoText = "Отмена",
-                                    ButtonVisible = true
-                                };
-                                if (warning.ShowDialog() == DialogResult.OK)
-                                {
-                                    LogInToTheSystem();
-                                    if (!logInSystem)
-                                        return;
-                                }
-                                else return;
-                            }
-                            CompletedOrder completedOrder = new(id)
-                            {
-                                StartPosition = FormStartPosition.CenterParent,
-                                EnabledPrice = enabledPrice
-                            };
-                            if (completedOrder.ShowDialog() == DialogResult.OK)
-                            {
-                                for (int i = 0; i < completedOrder.countProblem; i++)
-                                {
-                                    int idKey = 1;
-                                    if (context.Malfunctions.Any(a => a.Name == completedOrder.problem[i]))
-                                    {
-                                        var malfunctions = context.Malfunctions.Where(a => a.Name == completedOrder.problem[i]).ToList();
-                                        if (malfunctions[0].Price != completedOrder.price[i])
-                                            CRUD.ChangeMalfunction(malfunctions[0].Id, malfunctions[0].Name, completedOrder.price[i]);
-                                        idKey = malfunctions[0].Id;
-                                    }
-                                    else
-                                    {
-                                        if (context.Malfunctions.Any())
-                                        {
-                                            idKey = context.Malfunctions.OrderBy(i => i.Id).Last().Id;
-                                            idKey++;
-                                        }
-
-                                        CRUD.AddAsyncMalfunction(idKey, completedOrder.problem[i], completedOrder.price[i]);
-                                    }
-                                    CRUD.AddAsyncMalfunctionOrder(idKey, id, completedOrder.price[i]);
-                                }
-                                if (list[0].ReturnUnderGuarantee)
-                                {
-                                    int countDayInRepair = (completedOrder.DateComplete - list[0].DateReturn.Value).Days;
-                                    DateTime? dateEndGuarantee = list[0].DateEndGuarantee.Value.AddDays(countDayInRepair);
-                                    ChangeOrder(id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
-                                        list[0].DateStartWork, list[0].DateCompleted, list[0].DateIssue,
-                                        list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
-                                        list[0].FactoryNumber, list[0].EquipmentId, list[0].DiagnosisId, list[0].Note,
-                                        false, list[0].Guarantee, dateEndGuarantee, list[0].Deleted,
-                                        list[0].ReturnUnderGuarantee, list[0].DateReturn, completedOrder.DateComplete,
-                                        list[0].DateIssueReturn, list[0].Issue, list[0].ColorRow,
-                                        list[0].DateLastCall, list[0].PriceAgreed, list[0].MaxPrice);
-                                }
-                                else
-                                    ChangeOrder(id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
-                                            list[0].DateStartWork, completedOrder.DateComplete, list[0].DateIssue,
-                                            list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
-                                            list[0].FactoryNumber, list[0].EquipmentId, list[0].DiagnosisId, list[0].Note,
-                                            false, list[0].Guarantee, list[0].DateEndGuarantee, list[0].Deleted,
-                                            list[0].ReturnUnderGuarantee, list[0].DateReturn, list[0].DateCompletedReturn,
-                                            list[0].DateIssueReturn, list[0].Issue, list[0].ColorRow,
-                                            list[0].DateLastCall, list[0].PriceAgreed, list[0].MaxPrice);
-                                InProgress();
-                            }
-                            FocusButton(status);
-                            /*if (completedOrder.pressBtnSave)
-                                UpdateDB();*/
-                            break;
-                    }
+                    case "InRepair":
+                        CompletedOrder completedOrder = new(idOrder)
+                        {
+                            StartPosition = FormStartPosition.CenterParent,
+                            EnabledPrice = enabledPrice
+                        };
+                        if (completedOrder.ShowDialog() == DialogResult.OK)
+                        {
+                            InProgress();
+                            /*UpdateDB(); */
+                        }
+                        FocusButton(status);
+                        break;
                 }
             }
-            catch { }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         private void IssueToClient()

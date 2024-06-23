@@ -35,7 +35,7 @@ namespace WinFormsApp1.Repository
                 return new MalfunctionEditDTO(name);
         }
 
-        public async Task SaveMalfunctionAsync(MalfunctionEditDTO malfunctionDTO, CancellationToken token = default)
+        public async Task<int> SaveMalfunctionAsync(MalfunctionEditDTO malfunctionDTO, CancellationToken token = default)
         {
             Context db = new();
             Malfunction malfunction = new()
@@ -51,6 +51,7 @@ namespace WinFormsApp1.Repository
                 else
                     db.Malfunctions.Update(malfunction);
                 await db.SaveChangesAsync(token);
+                return malfunction.Id;
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }

@@ -39,6 +39,7 @@ namespace WinFormsApp1.DTO
         public OrderTableDTO(Order order)
         {
             Id = order.Id;
+            NumberOrder = order.NumberOrder;
             DateCreation = order.DateCreation?.ToShortDateString();
             DateStartWork = order.DateStartWork?.ToShortDateString();
             DateCompleted = order.DateCompleted?.ToShortDateString();

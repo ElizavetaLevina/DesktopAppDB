@@ -49,10 +49,33 @@ namespace WinFormsApp1.DTO
             Id = order.Id;
             NumberOrder = order.NumberOrder;
             ClientId = order.ClientId;
-
-
+            MasterId = order.MasterId;
+            DateCreation = order.DateCreation;
+            DateStartWork = order.DateStartWork;
+            DateCompleted = order.DateCompleted;
+            DateIssue = order.DateIssue;
+            TypeTechnicId = order.TypeTechnicId;
             TypeTechnic = order.TypeTechnic;
+            BrandTechnicId = order.BrandTechnicId;
             BrandTechnic = order.BrandTechnic;
+            ModelTechnic = order.ModelTechnic;
+            FactoryNumber = order.FactoryNumber;
+            EquipmentId = order.EquipmentId;
+            DiagnosisId = order.DiagnosisId;
+            Note = order.Note;
+            InProgress = order.InProgress;
+            Guarantee = order.Guarantee;
+            DateEndGuarantee = order.DateEndGuarantee;
+            Deleted = order.Deleted;
+            ReturnUnderGuarantee = order.ReturnUnderGuarantee;
+            DateReturn = order.DateReturn;
+            DateCompletedReturn = order.DateCompletedReturn;
+            DateIssueReturn = order.DateIssueReturn;
+            Issue = order.Issue;
+            ColorRow = order.ColorRow;
+            DateLastCall = order.DateLastCall;
+            PriceAgreed = order.PriceAgreed;
+            MaxPrice = order.MaxPrice;
         }
 
         public OrderEditDTO()

@@ -15,6 +15,7 @@ namespace WinFormsApp1
         MalfunctionRepository malfunctionRepository = new();
         WarehouseRepository warehouseRepository = new();
         OrderRepository orderRepository = new();
+        MalfunctionOrderRepository malfunctionOrderRepository = new();
         OrderEditDTO orderDTO;
         MalfunctionEditDTO malfunctionDTO;
         public CompletedOrder(int id)
@@ -124,19 +125,30 @@ namespace WinFormsApp1
                     break;
             }
 
-            /*Task task;
-            for(int i = 0; i < countProblem; i++)
+            Task task;
+            int idMalfunction = 0;
+            for (int i = 0; i < countProblem; i++)
             {
                 malfunctionDTO = malfunctionRepository.GetMalfunctionByName(problem[i]);
                 malfunctionDTO.Price = price[i];
                 task = Task.Run(async () =>
                 {
-                    await malfunctionRepository.SaveMalfunctionAsync(malfunctionDTO);
+                    idMalfunction = await malfunctionRepository.SaveMalfunctionAsync(malfunctionDTO);
+                });
+                task.Wait();
+
+                var malfunctionOrderDTO = new MalfunctionOrderEditDTO()
+                {
+                    MalfunctionId = idMalfunction,
+                    OrderId = idOrder,
+                    Price = price[i]
+                };
+                task = Task.Run(async () =>
+                {
+                    await malfunctionOrderRepository.SaveMalfunctionOrderAsync(malfunctionOrderDTO);
                 });
                 task.Wait();
             }
-
-            
 
             orderDTO.InProgress = false;
             orderDTO.DateCompleted = dateTimePicker1.Value;
@@ -150,7 +162,7 @@ namespace WinFormsApp1
             {
                 await orderRepository.SaveOrderAsync(orderDTO);
             });
-            task.Wait();*/
+            task.Wait();
             DialogResult = DialogResult.OK;
             Close();
         }

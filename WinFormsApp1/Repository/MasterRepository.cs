@@ -21,10 +21,18 @@ namespace WinFormsApp1.Repository
         /// </summary>
         /// <param name="id">Идентификатор</param>
         /// <returns>Запись</returns>
-        public MasterEditDTO GetMaster(int id)
+        public MasterEditDTO GetMaster(int? id)
         {
             Context context = new();
-            return new MasterEditDTO(context.Masters.First(i => i.Id == id));
+            if (id == null)
+                return new MasterEditDTO();
+            else
+            {
+                var master = context.Masters.FirstOrDefault(i => i.Id == id);
+                if (master == null)
+                    return new MasterEditDTO();
+                else return new MasterEditDTO(master);
+            }
         }
 
         public async Task SaveMasterAsync(MasterEditDTO masterDTO, CancellationToken token = default)

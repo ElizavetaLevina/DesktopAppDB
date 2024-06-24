@@ -16,6 +16,21 @@ namespace WinFormsApp1.Repository
         }
 
         /// <summary>
+        /// Получение записи по идентификатору
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <returns>Запись</returns>
+        public EquipmentEditDTO GetEquipment(int? id)
+        {
+            Context context = new();
+            var equipment = context.Equipment.FirstOrDefault(i => i.Id == id);
+            if(equipment == null)
+                return new EquipmentEditDTO();
+            else 
+                return new EquipmentEditDTO(equipment);
+        }
+
+        /// <summary>
         /// Получение списка комплектаций по названию
         /// </summary>
         /// <param name="name">Название</param>

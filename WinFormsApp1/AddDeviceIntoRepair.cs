@@ -38,7 +38,7 @@ namespace WinFormsApp1
                 oldClientsType.Add(client.TypeClient);
             }
 
-            diagnosesDTO = diagnosisRepository.GetDiagnosis();
+            diagnosesDTO = diagnosisRepository.GetDiagnoses();
             foreach (var diagnosis in diagnosesDTO)
             {
                 diagnosisList.Add(diagnosis.Name);
@@ -135,25 +135,33 @@ namespace WinFormsApp1
 
                     
                     var equipmentDTO = equipmentRepository.GetEquipmentByName(textBoxEquipment.Text);
-                    int idEquipment = equipmentDTO.Id;
+                    int? idEquipment = equipmentDTO.Id;
                     if (idEquipment == 0)
                     {
-                        task = Task.Run(async () =>
+                        if (textBoxEquipment.Text != "")
                         {
-                            idEquipment = await equipmentRepository.SaveEquipmentAsync(equipmentDTO);
-                        });
-                        task.Wait();
+                            task = Task.Run(async () =>
+                            {
+                                idEquipment = await equipmentRepository.SaveEquipmentAsync(equipmentDTO);
+                            });
+                            task.Wait();
+                        }
+                        else idEquipment = null;
                     }
 
                     var diagnosisDTO = diagnosisRepository.GetDiagnosisByName(textBoxDiagnosis.Text);
-                    int idDiagnosis = diagnosisDTO.Id;
+                    int? idDiagnosis = diagnosisDTO.Id;
                     if (idDiagnosis == 0)
                     {
-                        task = Task.Run(async () =>
+                        if (textBoxDiagnosis.Text != "")
                         {
-                            idDiagnosis = await diagnosisRepository.SaveDiagnosisAsync(diagnosisDTO);
-                        });
-                        task.Wait();
+                            task = Task.Run(async () =>
+                            {
+                                idDiagnosis = await diagnosisRepository.SaveDiagnosisAsync(diagnosisDTO);
+                            });
+                            task.Wait();
+                        }
+                        else idDiagnosis = null;
                     }
 
                     var orderDTO = new OrderEditDTO()
@@ -328,7 +336,6 @@ namespace WinFormsApp1
                     comboBoxBrand.DisplayMember = nameof(TypeBrandComboBoxDTO.NameBrandTechnic);
                     comboBoxBrand.DataSource = typeBrandRepository.GetTypeBrandByNameType(comboBoxDevice.Text);
                     break;
-
             }
         }
 
@@ -349,10 +356,10 @@ namespace WinFormsApp1
 
         private void ListBoxClient_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int id = listBoxClient.SelectedIndex;
-            if (id >= 0)
+            int idClient = listBoxClient.SelectedIndex;
+            if (idClient >= 0)
             {
-                textBoxNameClient.Text = listBoxClient.Items[id].ToString();
+                textBoxNameClient.Text = listBoxClient.Items[idClient].ToString();
 
                 listBoxClient.Items.Clear();
                 listBoxClient.Visible = false;
@@ -369,12 +376,12 @@ namespace WinFormsApp1
             listBoxClient.Items.Clear();
             listBoxClient.Visible = false;
 
-            for (int i = 0; i < oldClients.Count; i++)
+            foreach(var client in oldClients)
             {
-                if (oldClients[i].StartsWith(textBoxNameClient.Text) && textBoxNameClient.Text.Length > 0 && !loading)
+                if(client.StartsWith(textBoxNameClient.Text) && textBoxNameClient.Text.Length > 0 && !loading)
                 {
                     listBoxClient.Visible = true;
-                    listBoxClient.Items.Add(oldClients[i]);
+                    listBoxClient.Items.Add(client);
                 }
             }
 
@@ -483,16 +490,15 @@ namespace WinFormsApp1
 
         private void ListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int id = listBoxEquipmentDiagnosis.SelectedIndex;
-            if (id >= 0)
+            if (listBoxEquipmentDiagnosis.SelectedIndex >= 0)
             {
                 switch (nameTextBox)
                 {
                     case "equipment":
-                        textBoxEquipment.Text = listBoxEquipmentDiagnosis.Items[id].ToString();
+                        textBoxEquipment.Text = listBoxEquipmentDiagnosis.Items[listBoxEquipmentDiagnosis.SelectedIndex].ToString();
                         break;
                     case "diagnosis":
-                        textBoxDiagnosis.Text = listBoxEquipmentDiagnosis.Items[id].ToString();
+                        textBoxDiagnosis.Text = listBoxEquipmentDiagnosis.Items[listBoxEquipmentDiagnosis.SelectedIndex].ToString();
                         break;
                 }
 

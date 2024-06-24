@@ -17,6 +17,7 @@ namespace WinFormsApp1.DTO
         public int NumberOrder { get; set; }
         public int ClientId { get; set; }
         public int? MasterId { get; set; }
+        public virtual Master? Master { get; set; }
         public DateTime? DateCreation { get; set; }
         public DateTime? DateStartWork { get; set; }
         public DateTime? DateCompleted { get; set; }

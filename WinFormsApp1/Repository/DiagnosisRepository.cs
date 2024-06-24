@@ -9,31 +9,52 @@ namespace WinFormsApp1.Repository
         /// Получение списка неисправностей со слов клиента
         /// </summary>
         /// <returns>Список неипсравностей</returns>
-        public List<DiagnosisEditDTO> GetDiagnosis()
+        public List<DiagnosisEditDTO> GetDiagnoses()
         {
             Context context = new();
             return context.Diagnosis.Select(a => new DiagnosisEditDTO(a)).ToList();
         }
 
+        /// <summary>
+        /// Получение записи по идентификатору
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <returns>Запись</returns>
+        public DiagnosisEditDTO GetDiagnosis(int? id)
+        {
+            Context context = new();
+            var diagnosis = context.Diagnosis.FirstOrDefault(i => i.Id == id);
+            if (diagnosis == null)
+                return new DiagnosisEditDTO();
+            else
+                return new DiagnosisEditDTO(diagnosis);
+        }
+
+        /// <summary>
+        /// Получение списка неисправностей по подстроке названия
+        /// </summary>
+        /// <param name="name">Название</param>
+        /// <returns>Список неисправностей</returns>
         public List<DiagnosisEditDTO> GetDiagnosesByName(string name)
         {
             Context context = new();
             return context.Diagnosis.Where(i => i.Name.ToLower().Contains(name.ToLower())).Select(a => new DiagnosisEditDTO(a)).ToList();
         }
 
+        /// <summary>
+        /// Получение записи по названию
+        /// </summary>
+        /// <param name="name">Название</param>
+        /// <returns>Запись</returns>
         public DiagnosisEditDTO GetDiagnosisByName(string name)
         {
             Context context = new();
             var diagnosis = context.Diagnosis.FirstOrDefault(i => i.Name == name);
             if (diagnosis != null)
-            {
                 return new DiagnosisEditDTO(diagnosis);
-            }
             else
                 return new DiagnosisEditDTO(name);
         }
-
-
 
 
         public async Task<int> SaveDiagnosisAsync(DiagnosisEditDTO diagnosisDTO, CancellationToken token = default)

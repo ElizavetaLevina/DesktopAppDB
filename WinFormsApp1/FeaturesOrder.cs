@@ -1,5 +1,5 @@
-﻿using System.Data;
-using WinFormsApp1.Model;
+﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Repository;
 using Color = System.Drawing.Color;
 
 namespace WinFormsApp1
@@ -10,68 +10,70 @@ namespace WinFormsApp1
         public string statusOrder;
         public bool show = true;
         public bool logIn;
+        OrderEditDTO orderDTO;
+        OrderRepository orderRepository = new();
+        MasterRepository masterRepository = new();
+        TypeTechnicRepository typeTechnicRepository = new();
+        TypeBrandRepository typeBrandRepository = new();
+        WarehouseRepository warehouseRepository = new();
+        MalfunctionOrderRepository malfunctionOrderRepository = new();
+        ClientRepository clientRepository = new();
+        EquipmentRepository equipmentRepository = new();
+        DiagnosisRepository diagnosisRepository = new();
+        List<DiagnosisEditDTO> diagnosesDTO;
+        List<EquipmentEditDTO> equipmentsDTO;
         public FeaturesOrder(int id, string status, bool _logIn)
         {
             InitializeComponent();
             logIn = _logIn;
-
             idOrder = id;
             statusOrder = status;
-            this.Text = String.Format("Свойства устройства (заказ № {0} )", id);
-            Context context = new();
-            var list = context.Orders.Where(i => i.Id == id).ToList();
+            Text = String.Format("Свойства устройства (заказ № {0} )", id);
+            orderDTO = orderRepository.GetOrderById(idOrder);
+            textBoxIdOrder.Text = idOrder.ToString();
 
-
-            textBoxIdOrder.Text = list[0].Id.ToString();
-
-            if (list[0].InProgress)
+            if (orderDTO.InProgress)
                 textBoxStatus.Text = "Находится в ремонте";
             else
                 textBoxStatus.Text = "Отремонтирован";
 
-            UpdateComboBox(0);
-            var listMaster = context.Masters.Where(i => i.Id == list[0].MasterId).ToList();
-            if (listMaster.Count > 0 && listMaster[0].NameMaster != null)
-                comboBoxMaster.SelectedIndex = comboBoxMaster.FindStringExact(listMaster[0].NameMaster);
+            textBoxEquipment.Text = equipmentRepository.GetEquipment(orderDTO.EquipmentId).Name;
+            textBoxDiagnosis.Text = diagnosisRepository.GetDiagnosis(orderDTO.DiagnosisId).Name;
 
-            dateCreation.Value = list[0].DateCreation.Value;
+            listBoxEquipment.Visible = false;
+            listBoxDiagnosis.Visible = false;
+
+            UpdateComboBox(0);
+
+            var mastersDTO = masterRepository.GetMasters();
+
+            if (mastersDTO.Count > 0 && orderDTO.MasterId != null)
+                comboBoxMaster.SelectedIndex = comboBoxMaster.FindStringExact(orderDTO.Master?.NameMaster);
+
+            dateCreation.Value = orderDTO.DateCreation.Value;
 
             UpdateComboBox(1);
-            var listDevice = context.TypeTechnices.Where(i => i.Id == list[0].TypeTechnicId).ToList();
-            comboBoxDevice.SelectedIndex = comboBoxDevice.FindStringExact(listDevice[0].NameTypeTechnic);
+            comboBoxDevice.SelectedIndex = comboBoxDevice.FindStringExact(orderDTO.TypeTechnic?.NameTypeTechnic);
 
             UpdateComboBox(2);
-            var listBrand = context.BrandTechnices.Where(i => i.Id == list[0].BrandTechnicId).ToList();
-            comboBoxBrand.SelectedIndex = comboBoxBrand.FindStringExact(listBrand[0].NameBrandTechnic);
+            comboBoxBrand.SelectedIndex = comboBoxBrand.FindStringExact(orderDTO.BrandTechnic?.NameBrandTechnic);
 
-            textBoxModel.Text = list[0].ModelTechnic;
+            textBoxModel.Text = orderDTO.ModelTechnic;
 
-            textBoxFactoryNumber.Text = list[0].FactoryNumber;
+            textBoxFactoryNumber.Text = orderDTO.FactoryNumber;
 
-            checkBoxPriceAgreed.Checked = list[0].PriceAgreed;
-            textBoxMaxPrice.Text = list[0].MaxPrice.ToString();
+            checkBoxPriceAgreed.Checked = orderDTO.PriceAgreed;
+            textBoxMaxPrice.Text = orderDTO.MaxPrice.ToString();
 
             if (!logIn)
             {
                 textBoxMaxPrice.Enabled = false;
                 checkBoxPriceAgreed.Enabled = false;
             }
-            show = !list[0].PriceAgreed;
 
-            textBoxEquipment.Text = list[0].Equipment?.Name;
+            var clientDTO = clientRepository.GetClient(orderDTO.ClientId);
 
-            textBoxDiagnosis.Text = list[0].Diagnosis?.Name;
-
-            textBoxNote.Text = list[0].Note;
-
-            var listClient = context.Clients.Where(i => i.Id == list[0].ClientId).ToList();
-            textBoxIdClient.Text = listClient[0].IdClient;
-
-            textBoxNameAddress.Text = listClient[0].NameAndAddressClient;
-
-            textBoxSecondPhone.Text = listClient[0].NumberSecondPhone;
-
-            switch (listClient[0].TypeClient)
+            switch (clientDTO.TypeClient)
             {
                 case "normal":
                     textBoxTypeClient.Text = "Обычный клиент"; break;
@@ -102,43 +104,35 @@ namespace WinFormsApp1
                 case 0:
                     comboBoxMaster.DataSource = null;
                     comboBoxMaster.Items.Clear();
-                    using (Context context = new())
-                    {
-                        comboBoxMaster.ValueMember = "Id";
-                        comboBoxMaster.DisplayMember = "NameMaster";
-                        var list = context.Masters.ToList();
-                        list.Insert(0, new Master() { Id = -1, NameMaster = "-" });
-                        comboBoxMaster.DataSource = list;
-                    }
+                    comboBoxMaster.ValueMember = nameof(MasterDTO.Id);
+                    comboBoxMaster.DisplayMember = nameof(MasterDTO.NameMaster);
+                    var mastersDTO = masterRepository.GetMasters();
+                    mastersDTO.Insert(0, new MasterDTO() { Id = null, NameMaster = "-" });
+                    comboBoxMaster.DataSource = mastersDTO;
                     break;
                 case 1:
                     comboBoxDevice.DataSource = null;
                     comboBoxDevice.Items.Clear();
-                    using (Context context = new())
-                    {
-                        comboBoxDevice.ValueMember = "Id";
-                        comboBoxDevice.DisplayMember = "NameTypeTechnic";
-                        comboBoxDevice.DataSource = context.TypeTechnices.ToList();
-                    }
+                    comboBoxDevice.ValueMember = nameof(TypeTechnicDTO.Id);
+                    comboBoxDevice.DisplayMember = nameof(TypeTechnicDTO.NameTypeTechnic);
+                    comboBoxDevice.DataSource = typeTechnicRepository.GetTypesTechnic();
                     break;
                 case 2:
                     comboBoxBrand.DataSource = null;
                     comboBoxBrand.Items.Clear();
-                    using (Context context = new())
-                    {
-                        comboBoxBrand.ValueMember = "Id";
-                        comboBoxBrand.DisplayMember = "NameBrandTechnic";
-                        comboBoxBrand.DataSource = context.BrandTechnices.ToList();
-                    }
+                    comboBoxBrand.ValueMember = nameof(TypeBrandComboBoxDTO.IdBrand);
+                    comboBoxBrand.DisplayMember = nameof(TypeBrandComboBoxDTO.NameBrandTechnic);
+                    comboBoxBrand.DataSource = typeBrandRepository.GetTypeBrandByNameType(comboBoxDevice.Text);
                     break;
             }
         }
 
         public void OrderComplete()
         {
-            Context context = new();
             int summDetails = 0;
             int sumPrice = 0;
+
+            var detailsDTO = warehouseRepository.GetDetailsInOrder(idOrder);
 
             List<TextBox> problem = [textBoxProblem1, textBoxProblem2, textBoxProblem3];
             List<TextBox> price = [textBoxPrice1, textBoxPrice2, textBoxPrice3];
@@ -146,51 +140,26 @@ namespace WinFormsApp1
             List<Label> lPrice = [labelPrice1, labelPrice2, labelPrice3];
             List<Label> lRub = [labelRub1, labelRub2, labelRub3];
 
-
-            /*var listDetails = context.Details.Where(i => i.Id == idOrder).Select(a => new
+            for (int i = 0; i < detailsDTO.Count; i++)
             {
-                a.IdWarehouse
-            }).ToList();
+                listBox1.Items.Add(String.Format("{0}. {1} ({2} руб.)", i + 1, detailsDTO[i].NameDetail, detailsDTO[i].PriceSale));
+                summDetails += detailsDTO[i].PriceSale;
+            }
+            textBoxPriceDetails.Text = String.Format("{0} руб.", summDetails);
+            textBoxCountDetails.Text = String.Format("{0} шт.", detailsDTO.Count);
 
-            if (listDetails[0].IdWarehouse != null)
-            {
-                var listWarehouse = context.Warehouse.ToList();
-                List<string> listNameS = [];
-                List<int> listPriceSaleS = [];
+            var malfunctionOrderDTO = malfunctionOrderRepository.GetMalfunctionOrdersByIdOrder(idOrder);
 
-                for (int i = 0; i < listDetails[0].IdWarehouse?.Count; i++)
-                {
-                    for (int j = 0; j < listWarehouse.Count; j++)
-                    {
-                        if (listDetails[0].IdWarehouse?[i] == listWarehouse[j].Id)
-                        {
-                            listNameS.Add(listWarehouse[j].NameDetail);
-                            listPriceSaleS.Add(listWarehouse[j].PriceSale);
-                        }
-                    }
-                }
-                for (int i = 0; i < listNameS.Count; i++)
-                {
-                    listBox1.Items.Add(String.Format("{0}. {1} ({2} руб.)", i + 1, listNameS[i], listPriceSaleS[i]));
-                    summDetails += listPriceSaleS[i];
-                }
-                textBoxPriceDetails.Text = String.Format("{0} руб.", summDetails);
-                textBoxCountDetails.Text = String.Format("{0} шт.", listPriceSaleS.Count);
-            }*/
-
-
-            var list = context.MalfunctionOrders.Where(i => i.OrderId == idOrder).
-                Select(a => new { a.Malfunction, a.Price }).ToList();
-            for (int i = 0; i < list.Count; i++)
+            for (int i = 0; i < malfunctionOrderDTO.Count; i++)
             {
                 problem[i].Enabled = true;
                 price[i].Enabled = true;
-                problem[i].Text = list[i].Malfunction?.Name;
-                price[i].Text = list[i].Price.ToString();
+                problem[i].Text = malfunctionOrderDTO[i].Malfunction?.Name;
+                price[i].Text = malfunctionOrderDTO[i].Price.ToString();
                 lProblem[i].ForeColor = Color.Black;
                 lPrice[i].ForeColor = Color.Black;
                 lRub[i].ForeColor = Color.Black;
-                sumPrice += list[i].Price;
+                sumPrice += malfunctionOrderDTO[i].Price;
             }
             textBoxSumPrice.Text = sumPrice.ToString();
         }
@@ -198,8 +167,6 @@ namespace WinFormsApp1
         public void OrderIssue()
         {
             OrderComplete();
-            Context context = new();
-            var list = context.Orders.Where(i => i.Id == idOrder).ToList();
 
             label20.ForeColor = Color.Black;
             label21.ForeColor = Color.FromArgb(105, 101, 148);
@@ -214,11 +181,11 @@ namespace WinFormsApp1
             textBoxEndGuarantee.Enabled = true;
             textBoxGuaranteeLeft.Enabled = true;
 
-            dateTimePicker1.Value = list[0].DateIssue.Value;
+            dateTimePicker1.Value = orderDTO.DateIssue.Value;
 
-            if (list[0].Guarantee > 0)
+            if (orderDTO.Guarantee > 0)
             {
-                if (DateTime.Now < list[0].DateEndGuarantee.Value)
+                if (DateTime.Now < orderDTO.DateEndGuarantee.Value)
                     textBoxAvailabilityGuarantee.Text = "Присутствует";
                 else
                     textBoxAvailabilityGuarantee.Text = "Закончилась";
@@ -226,12 +193,12 @@ namespace WinFormsApp1
             else
                 textBoxAvailabilityGuarantee.Text = "Отсутствует";
 
-            textBoxGuaranteePeriod.Text = String.Format("{0} мес.", list[0].Guarantee);
-            textBoxEndGuarantee.Text = list[0].DateEndGuarantee.ToString();
+            textBoxGuaranteePeriod.Text = String.Format("{0} мес.", orderDTO.Guarantee);
+            textBoxEndGuarantee.Text = orderDTO.DateEndGuarantee.ToString();
 
-            if (((int)(list[0].DateEndGuarantee.Value - DateTime.Now).TotalDays) > 0)
-                textBoxGuaranteeLeft.Text = String.Format("{0} дн.", 
-                    (int)(list[0].DateEndGuarantee.Value - DateTime.Now).TotalDays);
+            if (((int)(orderDTO.DateEndGuarantee.Value - DateTime.Now).TotalDays) > 0)
+                textBoxGuaranteeLeft.Text = String.Format("{0} дн.",
+                    (int)(orderDTO.DateEndGuarantee.Value - DateTime.Now).TotalDays);
             else
                 textBoxGuaranteeLeft.Text = "Закончилась";
 
@@ -269,23 +236,21 @@ namespace WinFormsApp1
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         private void ButtonSave_Click(object sender, EventArgs e)
         {
-            Context context = new();
-            int id = Convert.ToInt32(textBoxIdOrder.Text);
-            var list = context.Orders.Where(a => a.Id == id).ToList();
             string foundProblem = "";
             int priceRepair = 0;
             DateTime? dateIssue = null;
             DateTime? dateEndGuarantee = null;
-            int? nameMaster = null;
-            DateTime? dateStartWork = list[0].DateStartWork;
+            int? masterId = null;
+            DateTime? dateStartWork = orderDTO.DateStartWork;
             Color color = Color.Black;
             int? maxPrice = null;
+            Task task;
 
             if (checkBoxPriceAgreed.Checked && textBoxMaxPrice.TextLength == 0)
             {
@@ -302,8 +267,8 @@ namespace WinFormsApp1
 
             if (comboBoxMaster.Text != "-")
             {
-                nameMaster = context.Masters.Where(a => a.NameMaster == comboBoxMaster.Text).ToList()[0].Id;
-                if (list[0].DateStartWork == null)
+                masterId = ((MasterDTO)comboBoxMaster.SelectedItem).Id;
+                if (orderDTO.DateStartWork == null)
                     dateStartWork = DateTime.Now;
             }
 
@@ -326,7 +291,7 @@ namespace WinFormsApp1
                         color = Properties.Settings.Default.SecondLevelColor;
                     break;
                 case "Completed":
-                    countDay = (DateTime.Now - list[0].DateCompleted.Value).Days;
+                    countDay = (DateTime.Now - orderDTO.DateCompleted.Value).Days;
                     if (countDay < Convert.ToInt32(Properties.Settings.Default.FirstLevelText))
                         color = Properties.Settings.Default.FirstLevelColor;
                     else if (countDay > Convert.ToInt32(Properties.Settings.Default.SecondLevelText))
@@ -340,45 +305,71 @@ namespace WinFormsApp1
                     foundProblem = textBoxProblem1.Text;
                     priceRepair = Convert.ToInt32(textBoxPrice1.Text);
                     dateIssue = dateTimePicker1.Value;
-                    dateEndGuarantee = dateTimePicker1.Value.AddMonths(list[0].Guarantee);
+                    dateEndGuarantee = dateTimePicker1.Value.AddMonths(orderDTO.Guarantee);
                     break;
                 case "Archive":
                     foundProblem = textBoxProblem1.Text;
                     priceRepair = Convert.ToInt32(textBoxPrice1.Text);
                     dateIssue = dateTimePicker1.Value;
-                    dateEndGuarantee = dateTimePicker1.Value.AddMonths(list[0].Guarantee);
+                    dateEndGuarantee = dateTimePicker1.Value.AddMonths(orderDTO.Guarantee);
                     break;
             }
 
-            CRUD.ChangeOrder(id,
-                list[0].ClientId,
-                nameMaster,
-                dateCreation.Value,
-                dateStartWork,
-                list[0].DateCompleted,
-                dateIssue,
-                context.TypeTechnices.Where(a => a.NameTypeTechnic == comboBoxDevice.Text).ToList()[0].Id,
-                context.BrandTechnices.Where(a => a.NameBrandTechnic == comboBoxBrand.Text).ToList()[0].Id,
-                textBoxModel.Text,
-                textBoxFactoryNumber.Text,
-                context.Equipment.Where(a => a.Name == textBoxEquipment.Text).ToList()[0].Id/*list[0].EquipmentId*/,
-                context.Diagnosis.Where(a => a.Name == textBoxDiagnosis.Text).ToList()[0].Id/*list[0].DiagnosisId*/,
-                textBoxNote.Text,
-                list[0].InProgress,
-                list[0].Guarantee,
-                DateTime.Parse(textBoxEndGuarantee.Text),
-                list[0].Deleted,
-                list[0].ReturnUnderGuarantee,
-                list[0].DateReturn,
-                list[0].DateCompletedReturn,
-                list[0].DateIssueReturn,
-                list[0].Issue,
-                ColorTranslator.ToHtml(color),
-                textBoxDateLastCall.Text,
-                checkBoxPriceAgreed.Checked,
-                maxPrice);
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            var equipmentDTO = equipmentRepository.GetEquipmentByName(textBoxEquipment.Text);
+            int? idEquipment = equipmentDTO.Id;
+            if (idEquipment == 0)
+            {
+                if (textBoxEquipment.Text != "")
+                {
+                    task = Task.Run(async () =>
+                    {
+                        idEquipment = await equipmentRepository.SaveEquipmentAsync(equipmentDTO);
+                    });
+                    task.Wait();
+                }
+                else idEquipment = null;
+            }
+
+            var diagnosisDTO = diagnosisRepository.GetDiagnosisByName(textBoxDiagnosis.Text);
+            int? idDiagnosis = diagnosisDTO.Id;
+            if (idDiagnosis == 0)
+            {
+                if (textBoxDiagnosis.Text != "")
+                {
+                    task = Task.Run(async () =>
+                    {
+                        idDiagnosis = await diagnosisRepository.SaveDiagnosisAsync(diagnosisDTO);
+                    });
+                    task.Wait();
+                }
+                else idDiagnosis = null;
+            }
+
+            orderDTO.MasterId = masterId;
+            orderDTO.DateCreation = dateCreation.Value;
+            orderDTO.DateStartWork = dateStartWork;
+            orderDTO.DateIssue = dateIssue;
+            orderDTO.TypeTechnicId = ((TypeTechnicDTO)comboBoxDevice.SelectedItem).Id;
+            orderDTO.BrandTechnicId = ((TypeBrandComboBoxDTO)comboBoxBrand.SelectedItem).IdBrand;
+            orderDTO.ModelTechnic = textBoxModel.Text;
+            orderDTO.FactoryNumber = textBoxFactoryNumber.Text;
+            orderDTO.EquipmentId = idEquipment;
+            orderDTO.DiagnosisId = idDiagnosis;
+            orderDTO.Note = textBoxNote.Text;
+            orderDTO.DateEndGuarantee = dateEndGuarantee;
+            orderDTO.ColorRow = ColorTranslator.ToHtml(color);
+            orderDTO.DateLastCall = textBoxDateLastCall.Text;
+            orderDTO.PriceAgreed = checkBoxPriceAgreed.Checked;
+            orderDTO.MaxPrice = maxPrice;
+
+            task = Task.Run(async () =>
+            {
+                await orderRepository.SaveOrderAsync(orderDTO);
+            });
+            task.Wait();
+
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void TextBoxPriceRepair_KeyPress(object sender, KeyPressEventArgs e)
@@ -389,24 +380,16 @@ namespace WinFormsApp1
 
         private void DateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
-            Context context = new();
-            var list = context.Orders.Where(i => i.Id == idOrder).Select(a => new
-            {
-                a.DateCompleted,
-                a.Guarantee,
-                a.DateIssue
-            }).ToList();
+            if (dateTimePicker1.Value < orderDTO.DateCompleted.Value)
+                dateTimePicker1.Value = orderDTO.DateCompleted.Value;
 
-            if (dateTimePicker1.Value < list[0].DateCompleted.Value)
-                dateTimePicker1.Value = list[0].DateCompleted.Value;
-
-            textBoxEndGuarantee.Text = (dateTimePicker1.Value.AddMonths(list[0].Guarantee)).ToShortDateString();
+            textBoxEndGuarantee.Text = (dateTimePicker1.Value.AddMonths(orderDTO.Guarantee)).ToShortDateString();
             if (((int)(DateTime.Parse(textBoxEndGuarantee.Text) - DateTime.Now).TotalDays) > 0)
                 textBoxGuaranteeLeft.Text = String.Format("{0} дн.", (int)(DateTime.Parse(textBoxEndGuarantee.Text) - DateTime.Now).TotalDays);
             else
                 textBoxGuaranteeLeft.Text = "Закончилась";
 
-            if (list[0].Guarantee > 0)
+            if (orderDTO.Guarantee > 0)
             {
                 if (DateTime.Now < DateTime.Parse(textBoxEndGuarantee.Text))
                     textBoxAvailabilityGuarantee.Text = "Присутствует";
@@ -440,9 +423,7 @@ namespace WinFormsApp1
         {
             if (show)
             {
-                Context context = new();
-                var list = context.Orders.Where(i => i.Id == idOrder).ToList();
-                if (!list[0].PriceAgreed)
+                if (!orderDTO.PriceAgreed)
                 {
                     show = false;
                     Warning warning = new()
@@ -484,11 +465,87 @@ namespace WinFormsApp1
                         logIn = true;
                         textBoxMaxPrice.Enabled = true;
                         checkBoxPriceAgreed.Enabled = true;
-                        if(statusOrder == "GuaranteeIssue" || statusOrder == "Archive")
+                        if (statusOrder == "GuaranteeIssue" || statusOrder == "Archive")
                             dateTimePicker1.Enabled = true;
                     }
                     e.SuppressKeyPress = true;
                 }
+            }
+        }
+
+        private void TextBoxEquipment_Click(object sender, EventArgs e)
+        {
+            if (listBoxEquipment.Visible)
+                listBoxEquipment.Visible = false;
+            else
+                listBoxEquipment.Visible = true;
+        }
+
+        private void TextBoxDiagnosis_Click(object sender, EventArgs e)
+        {
+            if (listBoxDiagnosis.Visible)
+                listBoxDiagnosis.Visible = false;
+            else
+                listBoxDiagnosis.Visible = true;
+        }
+
+        private void TextBoxEquipment_TextChanged(object sender, EventArgs e)
+        {
+            listBoxEquipment.Items.Clear();
+            listBoxEquipment.Visible = false;
+            equipmentsDTO = equipmentRepository.GetEquipmentsByName(textBoxEquipment.Text);
+
+            foreach (var equipment in equipmentsDTO)
+            {
+                listBoxEquipment.Visible = true;
+                listBoxEquipment.Items.Add(equipment.Name);
+            }
+        }
+
+        private void TextBoxDiagnosis_TextChanged(object sender, EventArgs e)
+        {
+            listBoxDiagnosis.Items.Clear();
+            listBoxDiagnosis.Visible = false;
+            diagnosesDTO = diagnosisRepository.GetDiagnosesByName(textBoxDiagnosis.Text);
+
+            foreach (var diagnosis in diagnosesDTO)
+            {
+                listBoxDiagnosis.Visible = true;
+                listBoxDiagnosis.Items.Add(diagnosis.Name);
+            }
+        }
+
+        private void ListBoxEquipment_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listBoxEquipment.SelectedIndex >= 0)
+            {
+                textBoxEquipment.Text = listBoxEquipment.Items[listBoxEquipment.SelectedIndex].ToString();
+                listBoxEquipment.Visible = false;
+            }
+        }
+
+        private void ListBoxDiagnosis_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listBoxDiagnosis.SelectedIndex >= 0)
+            {
+                textBoxDiagnosis.Text = listBoxDiagnosis.Items[listBoxDiagnosis.SelectedIndex].ToString();
+                listBoxDiagnosis.Visible = false;
+            }
+        }
+
+        private void TextBoxEquipment_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter && listBoxEquipment.Visible)
+            {
+                listBoxEquipment.Visible = false;
+            }
+        }
+
+        private void TextBoxDiagnosis_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter && listBoxDiagnosis.Visible)
+            {
+                listBoxDiagnosis.Visible = false;
             }
         }
     }

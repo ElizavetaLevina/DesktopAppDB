@@ -20,5 +20,9 @@ namespace WinFormsApp1.DTO
         {
             Name = name;
         }
+
+        public DiagnosisEditDTO()
+        {
+        }
     }
 }

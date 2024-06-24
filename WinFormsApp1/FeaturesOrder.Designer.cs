@@ -32,6 +32,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FeaturesOrder));
             tabControl1 = new TabControl();
             tabPageOrder = new TabPage();
+            listBoxDiagnosis = new ListBox();
+            listBoxEquipment = new ListBox();
             label28 = new Label();
             textBoxMaxPrice = new TextBox();
             label27 = new Label();
@@ -133,6 +135,8 @@
             // 
             // tabPageOrder
             // 
+            tabPageOrder.Controls.Add(listBoxDiagnosis);
+            tabPageOrder.Controls.Add(listBoxEquipment);
             tabPageOrder.Controls.Add(label28);
             tabPageOrder.Controls.Add(textBoxMaxPrice);
             tabPageOrder.Controls.Add(label27);
@@ -169,6 +173,28 @@
             tabPageOrder.TabIndex = 0;
             tabPageOrder.Text = "Информация о заказе";
             tabPageOrder.UseVisualStyleBackColor = true;
+            // 
+            // listBoxDiagnosis
+            // 
+            listBoxDiagnosis.FormattingEnabled = true;
+            listBoxDiagnosis.ItemHeight = 25;
+            listBoxDiagnosis.Location = new Point(270, 473);
+            listBoxDiagnosis.Name = "listBoxDiagnosis";
+            listBoxDiagnosis.Size = new Size(463, 104);
+            listBoxDiagnosis.TabIndex = 32;
+            listBoxDiagnosis.Visible = false;
+            listBoxDiagnosis.SelectedIndexChanged += ListBoxDiagnosis_SelectedIndexChanged;
+            // 
+            // listBoxEquipment
+            // 
+            listBoxEquipment.FormattingEnabled = true;
+            listBoxEquipment.ItemHeight = 25;
+            listBoxEquipment.Location = new Point(270, 430);
+            listBoxEquipment.Name = "listBoxEquipment";
+            listBoxEquipment.Size = new Size(463, 104);
+            listBoxEquipment.TabIndex = 31;
+            listBoxEquipment.Visible = false;
+            listBoxEquipment.SelectedIndexChanged += ListBoxEquipment_SelectedIndexChanged;
             // 
             // label28
             // 
@@ -246,6 +272,9 @@
             textBoxDiagnosis.Name = "textBoxDiagnosis";
             textBoxDiagnosis.Size = new Size(463, 31);
             textBoxDiagnosis.TabIndex = 21;
+            textBoxDiagnosis.Click += TextBoxDiagnosis_Click;
+            textBoxDiagnosis.TextChanged += TextBoxDiagnosis_TextChanged;
+            textBoxDiagnosis.KeyDown += TextBoxDiagnosis_KeyDown;
             // 
             // textBoxEquipment
             // 
@@ -253,6 +282,9 @@
             textBoxEquipment.Name = "textBoxEquipment";
             textBoxEquipment.Size = new Size(463, 31);
             textBoxEquipment.TabIndex = 20;
+            textBoxEquipment.Click += TextBoxEquipment_Click;
+            textBoxEquipment.TextChanged += TextBoxEquipment_TextChanged;
+            textBoxEquipment.KeyDown += TextBoxEquipment_KeyDown;
             // 
             // textBoxFactoryNumber
             // 
@@ -271,6 +303,7 @@
             // comboBoxBrand
             // 
             comboBoxBrand.BackColor = Color.FromArgb(224, 224, 224);
+            comboBoxBrand.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBoxBrand.FormattingEnabled = true;
             comboBoxBrand.Location = new Point(270, 248);
             comboBoxBrand.Name = "comboBoxBrand";
@@ -280,6 +313,7 @@
             // comboBoxDevice
             // 
             comboBoxDevice.BackColor = Color.FromArgb(224, 224, 224);
+            comboBoxDevice.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBoxDevice.FormattingEnabled = true;
             comboBoxDevice.Location = new Point(270, 205);
             comboBoxDevice.Name = "comboBoxDevice";
@@ -381,6 +415,7 @@
             // comboBoxMaster
             // 
             comboBoxMaster.BackColor = Color.FromArgb(224, 224, 224);
+            comboBoxMaster.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBoxMaster.FormattingEnabled = true;
             comboBoxMaster.Location = new Point(270, 104);
             comboBoxMaster.Name = "comboBoxMaster";
@@ -518,7 +553,7 @@
             // 
             label19.AutoSize = true;
             label19.ForeColor = Color.FromArgb(105, 101, 148);
-            label19.Location = new Point(100, 93);
+            label19.Location = new Point(119, 93);
             label19.Name = "label19";
             label19.Size = new Size(111, 25);
             label19.TabIndex = 6;
@@ -538,7 +573,7 @@
             // 
             label12.AutoSize = true;
             label12.ForeColor = Color.FromArgb(105, 101, 148);
-            label12.Location = new Point(95, 42);
+            label12.Location = new Point(114, 42);
             label12.Name = "label12";
             label12.Size = new Size(116, 25);
             label12.TabIndex = 3;
@@ -1086,5 +1121,7 @@
         private Label label29;
         private TextBox textBoxSumPrice;
         private Label label18;
+        private ListBox listBoxDiagnosis;
+        private ListBox listBoxEquipment;
     }
 }

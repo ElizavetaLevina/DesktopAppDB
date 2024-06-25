@@ -102,37 +102,33 @@ namespace WinFormsApp1
                         return;
                     if (!CheckIdClient())
                         return;
-                    int? masterId = null;
+                    int? idMaster = null;
                     DateTime? dateStartWork = null;
                     int? maxPrice = null;
-                    int clientId = 0;
                     Task? task;
                     if (comboBoxMaster.Text != "-")
                     {
-                        masterId = ((MasterDTO)comboBoxMaster.SelectedItem).Id; 
+                        idMaster = ((MasterDTO)comboBoxMaster.SelectedItem).Id; 
                         dateStartWork = dateTimePicker1.Value;
                     }
 
                     if (checkBox1.Checked)
                         maxPrice = Convert.ToInt32(textBoxMaxPrice.Text);
 
-                    if (!CheckClient())
+                    var clientDTO = clientRepository.GetClientByIdClient(textBoxNameClient.Text);
+                    int idClient = clientDTO.Id;
+                    if (idClient == 0)
                     {
-                        var clientDTO = new ClientEditDTO()
-                        {
-                            Id = 0,
-                            IdClient = textBoxNameClient.Text,
-                            NameAndAddressClient = textBoxNameAddress.Text,
-                            NumberSecondPhone = textBoxSecondPhone.Text
-                        };
+                        clientDTO.IdClient = textBoxNameClient.Text;
+                        clientDTO.NameAndAddressClient = textBoxNameAddress.Text;
+                        clientDTO.NumberSecondPhone = textBoxSecondPhone.Text;
 
                         task = Task.Run(async () =>
                         {
-                            clientId = await clientRepository.SaveClientAsync(clientDTO);
+                            idClient = await clientRepository.SaveClientAsync(clientDTO);
                         });
                         task.Wait();
                     }
-
                     
                     var equipmentDTO = equipmentRepository.GetEquipmentByName(textBoxEquipment.Text);
                     int? idEquipment = equipmentDTO.Id;
@@ -168,8 +164,8 @@ namespace WinFormsApp1
                     {
                         Id = 0,
                         NumberOrder = Convert.ToInt32(textBoxNumberOrder.Text),
-                        ClientId = clientId,
-                        MasterId = masterId,
+                        ClientId = idClient,
+                        MasterId = idMaster,
                         DateCreation = dateTimePicker1.Value,
                         DateStartWork = dateStartWork,
                         TypeTechnicId = ((TypeTechnicDTO)comboBoxDevice.SelectedItem).Id,
@@ -344,10 +340,10 @@ namespace WinFormsApp1
             contextMenuStrip1.Show(MousePosition);
         }
 
-        private bool CheckClient()
+        /*private bool CheckClient()
         {
             return clientRepository.CheckClientByIdClient(textBoxNameClient.Text);
-        }
+        }*/
 
         private int IdKeyOrder()
         {

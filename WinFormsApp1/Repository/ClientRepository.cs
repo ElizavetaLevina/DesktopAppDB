@@ -53,12 +53,11 @@ namespace WinFormsApp1.Repository
                 .ToList();
         }
 
-        public bool CheckClientByIdClient(string idClient)
-        {
-            Context context = new();
-            return context.Clients.Any(a => a.IdClient == idClient);
-        }
-
+        /// <summary>
+        /// Получение списка клиентов по подстроке id клиента
+        /// </summary>
+        /// <param name="idClient">Id клиента</param>
+        /// <returns>Список клиентов</returns>
         public List<ClientDTO> GetClientsByIdClient(string idClient)
         {
             Context context = new();
@@ -66,6 +65,21 @@ namespace WinFormsApp1.Repository
                 .Where(i => i.IdClient.Contains(idClient))
                 .Select(a => new ClientDTO(a))
                 .ToList();
+        }
+
+        /// <summary>
+        /// Получение записи по id клиента
+        /// </summary>
+        /// <param name="idClient">Id клиента</param>
+        /// <returns>Запись</returns>
+        public ClientEditDTO GetClientByIdClient(string idClient)
+        {
+            Context context = new();
+            var client = context.Clients.FirstOrDefault(i => i.IdClient == idClient);
+            if (client == null)
+                return new ClientEditDTO();
+            else
+                return new ClientEditDTO(client);
         }
 
         public async Task<int> SaveClientAsync(ClientEditDTO clientDTO, CancellationToken token = default)

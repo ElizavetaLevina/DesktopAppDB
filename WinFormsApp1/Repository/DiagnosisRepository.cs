@@ -72,7 +72,7 @@ namespace WinFormsApp1.Repository
                 else
                     db.Diagnosis.Update(diagnosis);
                 await db.SaveChangesAsync(token);
-                return diagnosisDTO.Id;
+                return diagnosis.Id;
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }

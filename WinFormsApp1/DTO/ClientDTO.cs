@@ -20,5 +20,9 @@ namespace WinFormsApp1.DTO
             NameAndAddressClient = client.NameAndAddressClient;
             NumberSecondPhone = client.NumberSecondPhone;
         }
+
+        public ClientDTO()
+        {
+        }
     }
 }

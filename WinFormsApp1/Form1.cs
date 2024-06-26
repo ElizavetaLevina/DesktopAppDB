@@ -1370,7 +1370,7 @@ namespace WinFormsApp1
 
         private void ItemMalfunction_Click(object sender, EventArgs e)
         {
-            MalfunctionList malfunctionList = new("malfunction")
+            MalfunctionEquipmentDiagnosisList malfunctionList = new("malfunction")
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -1380,18 +1380,19 @@ namespace WinFormsApp1
 
         private void ItemDiagnosis_Click(object sender, EventArgs e)
         {
-            MalfunctionList malfunctionList = new("diagnosis")
+            MalfunctionEquipmentDiagnosisList malfunctionList = new("diagnosis")
             {
                 StartPosition = FormStartPosition.CenterParent,
                 Text = "Диагнозы"
             };
             malfunctionList.ShowDialog();
+            UpdateTableData();
             FocusButton(status);
         }
 
         private void ItemEquipment_Click(object sender, EventArgs e)
         {
-            MalfunctionList malfunctionList = new("equipment")
+            MalfunctionEquipmentDiagnosisList malfunctionList = new("equipment")
             {
                 StartPosition = FormStartPosition.CenterParent,
                 Text = "Комплектация"

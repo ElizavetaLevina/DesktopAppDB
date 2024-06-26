@@ -78,5 +78,18 @@ namespace WinFormsApp1.Repository
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
+
+        public void RemoveEquipment(EquipmentEditDTO equipmentDTO)
+        {
+            try
+            {
+                Context db = new();
+                var equipment = db.Equipment.FirstOrDefault(c => c.Id == equipmentDTO.Id);
+                db.Equipment.Remove(equipment);
+                db.SaveChanges();
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+
+        }
     }
 }

@@ -76,15 +76,27 @@ namespace WinFormsApp1.Repository
         }
 
         /// <summary>
-        /// Проверка, есть ли запись с таким идентификатором
+        /// Получение списка заказов по диагнозу
         /// </summary>
-        /// <param name="id">Идентификатор заказа</param>
-        /// <returns></returns>
-        public bool CheckOrder(int id)
+        /// <param name="idDiagnosis">Идентификатор диагноза</param>
+        /// <returns>Список заказов</returns>
+        public List<OrderEditDTO> GetOrdersByIdDiagnosis(int idDiagnosis)
         {
             Context context = new();
-            return (context.Orders.Any(i => i.Id == id));
+            return context.Orders.Where(i => i.DiagnosisId == idDiagnosis).Select(a => new OrderEditDTO(a)).ToList();
         }
+
+        /// <summary>
+        /// Получение списка заказов по комплектации
+        /// </summary>
+        /// <param name="idEquipment">Идентификатор комплектации</param>
+        /// <returns>Список заказов</returns>
+        public List<OrderEditDTO> GetOrdersByIdEquipment(int idEquipment)
+        {
+            Context context = new();
+            return context.Orders.Where(i => i.EquipmentId == idEquipment).Select(a => new OrderEditDTO(a)).ToList();
+        }
+
 
         public async Task<int> SaveOrderAsync(OrderEditDTO orderDTO, CancellationToken token = default)
         {
@@ -134,7 +146,7 @@ namespace WinFormsApp1.Repository
                 MessageBox.Show(ex.Message); throw; }
         }
 
-        public static void RemoveOrder(OrderEditDTO orderDTO)
+        public void RemoveOrder(OrderEditDTO orderDTO)
         {
             try
             {

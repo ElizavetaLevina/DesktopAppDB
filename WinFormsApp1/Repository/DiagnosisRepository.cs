@@ -76,5 +76,18 @@ namespace WinFormsApp1.Repository
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
+
+        public void RemoveDiagnosis(DiagnosisEditDTO diagnosisDTO)
+        {
+            try
+            {
+                Context db = new();
+                var diagnosis = db.Diagnosis.FirstOrDefault(c => c.Id == diagnosisDTO.Id);
+                db.Diagnosis.Remove(diagnosis);
+                db.SaveChanges();
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+
+        }
     }
 }

@@ -16,6 +16,17 @@ namespace WinFormsApp1.Repository
         }
 
         /// <summary>
+        /// Получение записи по идентификатору
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <returns>Запись</returns>
+        public MalfunctionEditDTO GetMalfunction(int id)
+        {
+            Context context = new();
+            return new MalfunctionEditDTO(context.Malfunctions.First(i => i.Id == id));
+        }
+
+        /// <summary>
         /// Получение неисправности по названию
         /// </summary>
         /// <param name="name">Название</param>
@@ -54,6 +65,19 @@ namespace WinFormsApp1.Repository
                 return malfunction.Id;
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
+        }
+
+        public void RemoveMalfunction(MalfunctionEditDTO malfunctionDTO)
+        {
+            try
+            {
+                Context db = new();
+                var malfunction = db.Malfunctions.FirstOrDefault(c => c.Id == malfunctionDTO.Id);
+                db.Malfunctions.Remove(malfunction);
+                db.SaveChanges();
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+
         }
     }
 }

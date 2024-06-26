@@ -1,9 +1,9 @@
 ﻿namespace WinFormsApp1
 {
-    public partial class MalfunctionChange : Form
+    public partial class MalfunctionEquipmentDiagnosisEdit : Form
     {
         private readonly string status;
-        public MalfunctionChange(string _status)
+        public MalfunctionEquipmentDiagnosisEdit(string _status)
         {
             InitializeComponent();
             status = _status;
@@ -56,8 +56,8 @@
                 case "malfunction":
                     if (textBoxName.Text != "" && textBoxPrice.Text != "")
                     {
-                        this.DialogResult = DialogResult.OK;
-                        this.Close();
+                        DialogResult = DialogResult.OK;
+                        Close();
                     }
                     else
                         warning.ShowDialog();
@@ -65,8 +65,8 @@
                 case "diagnosis":
                     if (textBoxName.Text != "")
                     {
-                        this.DialogResult = DialogResult.OK;
-                        this.Close();
+                        DialogResult = DialogResult.OK;
+                        Close();
                     }
                     else
                         warning.ShowDialog();
@@ -74,8 +74,8 @@
                 case "equipment":
                     if (textBoxName.Text != "")
                     {
-                        this.DialogResult = DialogResult.OK;
-                        this.Close();
+                        DialogResult = DialogResult.OK;
+                        Close();
                     }
                     else
                         warning.ShowDialog();
@@ -86,8 +86,8 @@
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
     }
 }

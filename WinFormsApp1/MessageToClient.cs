@@ -1,48 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO.Ports;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using WinFormsApp1.Model;
+﻿using System.IO.Ports;
+using WinFormsApp1.DTO;
+using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
 {
     public partial class MessageToClient : Form
     {
         public int idClient;
+        ClientRepository clientRepository = new();
+        ClientEditDTO clientDTO;
         public MessageToClient(int id)
         {
             InitializeComponent();
             idClient = id;
-            using (Context context = new())
-            {
-                var list = context.Clients.Where(i => i.Id == idClient).ToList();
-                textBoxPhone.Text = list[0].IdClient;
-            }
+            clientDTO = clientRepository.GetClient(idClient);
+            textBoxPhone.Text = clientDTO.IdClient;
         }
 
 
         private void Item1_Click(object sender, EventArgs e)
         {
-            using (Context context = new())
-            {
-                var list = context.Clients.Where(i => i.Id == idClient).ToList();
-                textBoxPhone.Text = list[0].IdClient;
-            }
+            textBoxPhone.Text = clientDTO.IdClient;
         }
 
         private void Item2_Click(object sender, EventArgs e)
         {
-            using (Context context = new())
-            {
-                var list = context.Clients.Where(i => i.Id == idClient).ToList();
-                textBoxPhone.Text = list[0].NumberSecondPhone;
-            }
+            textBoxPhone.Text = clientDTO.NumberSecondPhone;
         }
 
         private void ButtonChangeNumber_Click(object sender, EventArgs e)
@@ -96,7 +79,7 @@ namespace WinFormsApp1
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }

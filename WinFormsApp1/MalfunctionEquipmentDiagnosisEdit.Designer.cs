@@ -1,6 +1,6 @@
 ﻿namespace WinFormsApp1
 {
-    partial class MalfunctionChange
+    partial class MalfunctionEquipmentDiagnosisEdit
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MalfunctionChange));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MalfunctionEquipmentDiagnosisEdit));
             label1 = new Label();
             labelPrice = new Label();
             textBoxName = new TextBox();

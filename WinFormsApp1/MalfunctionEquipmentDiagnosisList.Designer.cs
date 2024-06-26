@@ -1,6 +1,6 @@
 ﻿namespace WinFormsApp1
 {
-    partial class MalfunctionList
+    partial class MalfunctionEquipmentDiagnosisList
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MalfunctionList));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MalfunctionEquipmentDiagnosisList));
             dataGridView1 = new DataGridView();
             buttonAdd = new Button();
             buttonChange = new Button();

@@ -23,9 +23,9 @@ namespace WinFormsApp1
 
         private void ButtonAddDetail_Click(object sender, EventArgs e)
         {
-            var order = orderRepository.GetOrderById(idOrder);
+            var order = orderRepository.GetOrder(idOrder);
 
-            DetailsInWarehouse details = new(false, order.BrandTechnic?.NameBrandTechnic)
+            DetailsInWarehouse details = new(false, order.BrandTechnic?.Name)
             {
                 StartPosition = FormStartPosition.CenterParent,
                 VisibleBtnAdd = true

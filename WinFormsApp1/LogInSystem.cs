@@ -10,7 +10,7 @@
             textBoxLogin.Text = Properties.Settings.Default.Login;
             if (!logIn)
             {
-                this.Text = "Изменение логина/пароля";
+                Text = "Изменение логина/пароля";
                 textBoxPassword.Text = Properties.Settings.Default.Password;
                 buttonLogIn.Text = "Сохранить";
                 checkBoxShowPassword.Checked = true;
@@ -24,8 +24,8 @@
                 if (textBoxLogin.Text == Properties.Settings.Default.Login &&
                     textBoxPassword.Text == Properties.Settings.Default.Password)
                 {
-                    this.DialogResult = DialogResult.OK;
-                    this.Close();
+                    DialogResult = DialogResult.OK;
+                    Close();
                 }
                 else
                 {
@@ -44,7 +44,7 @@
                     Properties.Settings.Default.Login = textBoxLogin.Text;
                     Properties.Settings.Default.Password = textBoxPassword.Text;
                     Properties.Settings.Default.Save();
-                    this.Close();
+                    Close();
                 }
                 else
                 {
@@ -59,8 +59,8 @@
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         private void TextBoxPassword_KeyDown(object sender, KeyEventArgs e)
@@ -72,8 +72,8 @@
                     if (textBoxLogin.Text == Properties.Settings.Default.Login &&
                     textBoxPassword.Text == Properties.Settings.Default.Password)
                     {
-                        this.DialogResult = DialogResult.OK;
-                        this.Close();
+                        DialogResult = DialogResult.OK;
+                        Close();
                     }
                     else
                     {
@@ -92,7 +92,7 @@
                         Properties.Settings.Default.Login = textBoxLogin.Text;
                         Properties.Settings.Default.Password = textBoxPassword.Text;
                         Properties.Settings.Default.Save();
-                        this.Close();
+                        Close();
                     }
                     else
                     {
@@ -110,6 +110,12 @@
         {
             if (checkBoxShowPassword.Checked) textBoxPassword.UseSystemPasswordChar = false;
             else textBoxPassword.UseSystemPasswordChar = true;
+        }
+
+        private void LogInSystem_Activated(object sender, EventArgs e)
+        {
+            if (logIn)
+                textBoxPassword.Focus();
         }
     }
 }

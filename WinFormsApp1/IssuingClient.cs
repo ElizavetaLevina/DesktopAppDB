@@ -1,75 +1,52 @@
-﻿using System.Data;
-using WinFormsApp1.Model;
+﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
 {
     public partial class IssuingClient : Form
     {
         public int idOrder;
-        readonly DateTime dateСompletion;
+        readonly DateTime dateСompleted;
+        OrderEditDTO orderDTO;
+        OrderRepository orderRepository = new();
+        MalfunctionOrderRepository malfunctionOrderRepository = new();
+        WarehouseRepository warehouseRepository = new();
         public IssuingClient(int id)
         {
             InitializeComponent();
             idOrder = id;
             int summDetails = 0;
             int sumPrice = 0;
-            using Context context = new();
-            /*var listDetails = context.Details.Where(i => i.Id == idOrder).Select(a => new
-            { a.IdWarehouse }).ToList();*/
-            var list = context.Orders.Where(i => i.Id == id).Select(a => new
+            orderDTO = orderRepository.GetOrder(idOrder);
+            var malfunctionOrderDTO = malfunctionOrderRepository.GetMalfunctionOrdersByIdOrder(idOrder);
+            var detailsDTO = warehouseRepository.GetDetailsInOrder(idOrder);
+
+            foreach(var detail in detailsDTO)
             {
-                a.Client.NameAndAddressClient,
-                a.DateCreation,
-                a.DateCompleted,
-                a.Equipment,
-                a.ReturnUnderGuarantee
-            }).ToList();
-            var listMalfunctionOrder = context.MalfunctionOrders.Where(i => i.OrderId == idOrder).ToList();
-
-            dateСompletion = list[0].DateCompleted.Value;
-
-            if (/*listDetails[0].IdWarehouse != null*/true)
-            {
-                var listWarehouse = context.Warehouse.ToList();
-                List<string> listNameS = [];
-                List<int> listPriceSaleS = [];
-
-                /*for (int i = 0; i < listDetails[0].IdWarehouse.Count; i++)
-                {
-                    for (int j = 0; j < listWarehouse.Count; j++)
-                    {
-                        if (listDetails[0].IdWarehouse[i] == listWarehouse[j].Id)
-                        {
-                            listNameS.Add(listWarehouse[j].NameDetail);
-                            listPriceSaleS.Add(listWarehouse[j].PriceSale);
-                        }
-                    }
-                }*/
-                for (int i = 0; i < listNameS.Count; i++)
-                {
-                    summDetails += listPriceSaleS[i];
-                }
-                labelPriceDetails.Text = String.Format("{0} руб.", summDetails);
-                labelCountDetails.Text = String.Format("{0} шт.", listPriceSaleS.Count);
+                summDetails += detail.PriceSale;
             }
 
-            labelNameClient.Text = list[0].NameAndAddressClient;
-            labelDateCreate.Text = list[0].DateCreation.ToString();
-            labelEquipment.Text = list[0].Equipment?.Name;
+            labelPriceDetails.Text = String.Format("{0} руб.", summDetails);
+            labelCountDetails.Text = String.Format("{0} шт.", detailsDTO.Count);
 
-            for(int i = 0; i < listMalfunctionOrder.Count; i++)
+            foreach(var malfunction in malfunctionOrderDTO)
             {
-                sumPrice += listMalfunctionOrder[i].Price;
+                sumPrice += malfunction.Price;
             }
+
             labelPriceRepair.Text = sumPrice.ToString();
             labelTotalPrice.Text = String.Format("{0} руб.", summDetails + sumPrice);
             labelGuaranteePeriod.Text = DateTime.Now.AddMonths(Convert.ToInt32(textBoxGuarantee.Text)).Date.ToShortDateString();
+            labelNameClient.Text = orderDTO.Client?.NameAndAddressClient;
+            labelDateCreate.Text = orderDTO.DateCreation.Value.ToShortDateString();
+            labelEquipment.Text = orderDTO.Equipment?.Name;
+            
         }
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         private void LinkLabelDateNow_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -85,23 +62,18 @@ namespace WinFormsApp1
 
         private void DateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
-            DateTime dateIssue = dateTimePicker1.Value;
-            if ((int)(dateIssue - dateСompletion).TotalDays < 0)
-            {
-                dateIssue = dateСompletion;
-                dateTimePicker1.Value = dateСompletion;
-            }
+            if ((int)(dateTimePicker1.Value - orderDTO.DateCompleted.Value).TotalDays < 0)
+                dateTimePicker1.Value = orderDTO.DateCompleted.Value;
             if (Convert.ToInt32(textBoxGuarantee.Text) > 0)
-                labelGuaranteePeriod.Text = dateIssue.AddMonths(Convert.ToInt32(textBoxGuarantee.Text)).Date.ToShortDateString();
+                labelGuaranteePeriod.Text = dateTimePicker1.Value.AddMonths(Convert.ToInt32(textBoxGuarantee.Text)).Date.ToShortDateString();
         }
 
         private void TextBoxGuarantee_TextChanged(object sender, EventArgs e)
         {
-            DateTime dateIssue = dateTimePicker1.Value;
             if (Convert.ToInt32(textBoxGuarantee.Text.Length) > 0)
             {
                 labelIsGuarantee.Text = "Гарантия до";
-                labelGuaranteePeriod.Text = dateIssue.AddMonths(Convert.ToInt32(textBoxGuarantee.Text)).Date.ToShortDateString();
+                labelGuaranteePeriod.Text = dateTimePicker1.Value.AddMonths(Convert.ToInt32(textBoxGuarantee.Text)).Date.ToShortDateString();
             } else
             {
                 labelIsGuarantee.Text = "Без гарантии";
@@ -113,6 +85,22 @@ namespace WinFormsApp1
         {
             if (textBoxGuarantee.Text.Length > 0)
             {
+                if (orderDTO.ReturnUnderGuarantee)
+                    orderDTO.DateIssueReturn = orderDTO.DateIssue;
+
+                orderDTO.DateIssue = DateIssue;
+                orderDTO.Guarantee = GuaranteePeriod;
+                orderDTO.DateEndGuarantee = DateEndGuarantee;
+                orderDTO.Issue = true;
+
+
+                var task = Task.Run(async () =>
+                {
+                    await orderRepository.SaveOrderAsync(orderDTO);
+                });
+                task.Wait();
+
+
                 Warning warning = new()
                 {
                     StartPosition = FormStartPosition.CenterParent,
@@ -126,8 +114,8 @@ namespace WinFormsApp1
                     Form1 form = new();
                     form.ReportIssuing(idOrder);
                 }
-                this.DialogResult = DialogResult.OK;
-                this.Close();
+                DialogResult = DialogResult.OK;
+                Close();
             }
             else
             {
@@ -142,38 +130,20 @@ namespace WinFormsApp1
 
         public DateTime DateIssue
         {
-            get
-            {
-                return this.dateTimePicker1.Value;
-            }
-            set
-            {
-                this.dateTimePicker1.Value = value;
-            }
+            get { return dateTimePicker1.Value; }
+            set { dateTimePicker1.Value = value; }
         }
 
         public int GuaranteePeriod
         {
-            get
-            {
-                return Convert.ToInt32(this.textBoxGuarantee.Text);
-            }
-            set
-            {
-                this.textBoxGuarantee.Text = value.ToString();
-            }
+            get { return Convert.ToInt32(textBoxGuarantee.Text); }
+            set { textBoxGuarantee.Text = value.ToString(); }
         }
 
         public DateTime DateEndGuarantee
         {
-            get
-            {
-                return DateTime.Parse(this.labelGuaranteePeriod.Text);
-            }
-            set
-            {
-                this.labelGuaranteePeriod.Text = value.ToString();
-            }
+            get { return DateTime.Parse(labelGuaranteePeriod.Text); }
+            set { labelGuaranteePeriod.Text = value.ToString(); }
         }
     }
 }

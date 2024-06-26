@@ -129,6 +129,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "LogInSystem";
             Text = "Вход в систему";
+            Activated += LogInSystem_Activated;
             ResumeLayout(false);
             PerformLayout();
         }

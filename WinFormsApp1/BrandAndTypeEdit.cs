@@ -262,9 +262,9 @@ namespace WinFormsApp1
                         var list = typeBrandRepository.GetTypeBrand(idType: id);
                         for (int i = 0; i < list.Count; i++)
                         {
-                            if (listBox1.Items.IndexOf(list[i].BrandTechnic?.NameBrandTechnic) < 0)
+                            if (listBox1.Items.IndexOf(list[i].BrandTechnic?.Name) < 0)
                             {
-                                listBox1.Items.Add(list[i].BrandTechnic?.NameBrandTechnic);
+                                listBox1.Items.Add(list[i].BrandTechnic?.Name);
                                 idList?.Add(list[i].BrandTechnicsId);
                             }
                         }
@@ -279,9 +279,9 @@ namespace WinFormsApp1
                         var list = typeBrandRepository.GetTypeBrand(idBrand: id); 
                         for (int i = 0; i < list.Count; i++)
                         {
-                            if (listBox1.Items.IndexOf(list[i].TypeTechnic?.NameTypeTechnic) < 0)
+                            if (listBox1.Items.IndexOf(list[i].TypeTechnic?.Name) < 0)
                             {
-                                listBox1.Items.Add(list[i].TypeTechnic?.NameTypeTechnic);
+                                listBox1.Items.Add(list[i].TypeTechnic?.Name);
                                 idList?.Add(list[i].TypeTechnicsId);
                             }
                         }

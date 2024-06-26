@@ -5,10 +5,10 @@ namespace WinFormsApp1.Repository
 {
     public class MalfunctionOrderRepository
     {
-        public List<MalfunctionOrderEditDTO> GetMalfunctionOrdersByIdOrder(int id)
+        public List<MalfunctionOrderEditDTO> GetMalfunctionOrdersByIdOrder(int idOrder)
         {
             Context context = new();
-            return context.MalfunctionOrders.Where(i => i.OrderId == id).Select(a => new MalfunctionOrderEditDTO(a)).ToList();
+            return context.MalfunctionOrders.Where(i => i.OrderId == idOrder).Select(a => new MalfunctionOrderEditDTO(a)).ToList();
         }
 
         public async Task SaveMalfunctionOrderAsync(MalfunctionOrderEditDTO malfunctionOrderDTO, CancellationToken token = default)

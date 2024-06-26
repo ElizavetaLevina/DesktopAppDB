@@ -338,7 +338,20 @@ namespace WinFormsApp1
         {
             try
             {
+                int numberRow = dataGridView1.CurrentCell.RowIndex;
+                int idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
+                var orderDTO = orderRepository.GetOrder(idOrder);
                 Warning warning = new();
+                if (orderDTO.MasterId == null)
+                {
+                    warning = new()
+                    {
+                        StartPosition = FormStartPosition.CenterParent,
+                        LabelText = "Ã‡ÒÚÂ ‚ Á‡Í‡ÁÂ ÌÂ ÛÍ‡Á‡Ì!"
+                    };
+                    warning.ShowDialog();
+                    return;
+                }
                 if (!logInSystem)
                 {
                     warning = new()
@@ -358,9 +371,7 @@ namespace WinFormsApp1
                     else return;
                 }
 
-                int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
-                var orderDTO = orderRepository.GetOrderById(idOrder);
+                
                 bool enabledPrice = true;
 
                 if (orderDTO.ReturnUnderGuarantee)
@@ -387,21 +398,19 @@ namespace WinFormsApp1
                         detailsInOrder.ShowDialog();
                     }
                 }
-                switch (status)
+                if (status == "InRepair")
                 {
-                    case "InRepair":
-                        CompletedOrder completedOrder = new(idOrder)
-                        {
-                            StartPosition = FormStartPosition.CenterParent,
-                            EnabledPrice = enabledPrice
-                        };
-                        if (completedOrder.ShowDialog() == DialogResult.OK)
-                        {
-                            InProgress();
-                            /*UpdateDB(); */
-                        }
-                        FocusButton(status);
-                        break;
+                    CompletedOrder completedOrder = new(idOrder)
+                    {
+                        StartPosition = FormStartPosition.CenterParent,
+                        EnabledPrice = enabledPrice
+                    };
+                    if (completedOrder.ShowDialog() == DialogResult.OK)
+                    {
+                        InProgress();
+                        /*UpdateDB(); */
+                    }
+                    FocusButton(status);
                 }
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
@@ -411,42 +420,20 @@ namespace WinFormsApp1
         {
             try
             {
-                Context context = new();
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                var list = context.Orders.Where(a => a.Id == id).ToList();
+                int idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
 
-                switch (status)
+                if(status == "Completed")
                 {
-                    case "Completed":
-                        IssuingClient issuingClient = new(id)
-                        {
-                            StartPosition = FormStartPosition.CenterParent
-                        };
-                        if (issuingClient.ShowDialog() == DialogResult.OK)
-                        {
-                            if (list[0].ReturnUnderGuarantee)
-                                ChangeOrder(id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
-                                list[0].DateStartWork, list[0].DateCompleted, issuingClient.DateIssue,
-                                list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
-                                list[0].FactoryNumber, list[0].EquipmentId, list[0].DiagnosisId, list[0].Note,
-                                list[0].InProgress, issuingClient.GuaranteePeriod, issuingClient.DateEndGuarantee,
-                                list[0].Deleted, list[0].ReturnUnderGuarantee, list[0].DateReturn,
-                                list[0].DateCompletedReturn, list[0].DateIssue, true, list[0].ColorRow,
-                                list[0].DateLastCall, list[0].PriceAgreed, list[0].MaxPrice);
-                            else
-                                ChangeOrder(id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
-                                list[0].DateStartWork, list[0].DateCompleted, issuingClient.DateIssue,
-                                list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
-                                list[0].FactoryNumber, list[0].EquipmentId, list[0].DiagnosisId, list[0].Note,
-                                list[0].InProgress, issuingClient.GuaranteePeriod, issuingClient.DateEndGuarantee,
-                                list[0].Deleted, list[0].ReturnUnderGuarantee, list[0].DateReturn,
-                                list[0].DateCompletedReturn, list[0].DateIssueReturn, true, list[0].ColorRow,
-                                list[0].DateLastCall, list[0].PriceAgreed, list[0].MaxPrice);
-                            Order—ompleted();
-                        }
-                        FocusButton(status);
-                        break;
+                    IssuingClient issuingClient = new(idOrder)
+                    {
+                        StartPosition = FormStartPosition.CenterParent
+                    };
+                    if (issuingClient.ShowDialog() == DialogResult.OK)
+                    {
+                        Order—ompleted();
+                    }
+                    FocusButton(status);
                 }
             }
             catch { }

@@ -29,7 +29,7 @@ namespace WinFormsApp1
             idOrder = id;
             statusOrder = status;
             Text = String.Format("Свойства устройства (заказ № {0} )", id);
-            orderDTO = orderRepository.GetOrderById(idOrder);
+            orderDTO = orderRepository.GetOrder(idOrder);
             textBoxIdOrder.Text = idOrder.ToString();
 
             if (orderDTO.InProgress)
@@ -53,10 +53,10 @@ namespace WinFormsApp1
             dateCreation.Value = orderDTO.DateCreation.Value;
 
             UpdateComboBox(1);
-            comboBoxDevice.SelectedIndex = comboBoxDevice.FindStringExact(orderDTO.TypeTechnic?.NameTypeTechnic);
+            comboBoxDevice.SelectedIndex = comboBoxDevice.FindStringExact(orderDTO.TypeTechnic?.Name);
 
             UpdateComboBox(2);
-            comboBoxBrand.SelectedIndex = comboBoxBrand.FindStringExact(orderDTO.BrandTechnic?.NameBrandTechnic);
+            comboBoxBrand.SelectedIndex = comboBoxBrand.FindStringExact(orderDTO.BrandTechnic?.Name);
 
             textBoxModel.Text = orderDTO.ModelTechnic;
 

@@ -16,19 +16,21 @@ namespace WinFormsApp1.DTO
         public int Id { get; set; }
         public int NumberOrder { get; set; }
         public int ClientId { get; set; }
+        public virtual ClientEditDTO? Client { get; set; }
         public int? MasterId { get; set; }
-        public virtual Master? Master { get; set; }
+        public virtual MasterEditDTO? Master { get; set; }
         public DateTime? DateCreation { get; set; }
         public DateTime? DateStartWork { get; set; }
         public DateTime? DateCompleted { get; set; }
         public DateTime? DateIssue { get; set; }
         public int TypeTechnicId { get; set; }
-        public virtual TypeTechnic? TypeTechnic { get; set; }
+        public virtual TypeTechnicEditDTO? TypeTechnic { get; set; }
         public int BrandTechnicId { get; set; }
-        public virtual BrandTechnic? BrandTechnic { get; set; }
+        public virtual BrandTechnicEditDTO? BrandTechnic { get; set; }
         public string? ModelTechnic { get; set; }
         public string? FactoryNumber { get; set; }
         public int? EquipmentId { get; set; }
+        public virtual EquipmentEditDTO? Equipment { get; set; }
         public int? DiagnosisId { get; set; }
         public string? Note { get; set; }
         public bool InProgress { get; set; } = true;
@@ -50,15 +52,17 @@ namespace WinFormsApp1.DTO
             Id = order.Id;
             NumberOrder = order.NumberOrder;
             ClientId = order.ClientId;
+            Client = new ClientEditDTO(order.Client);
             MasterId = order.MasterId;
+            Master = order.Master != null ? new MasterEditDTO(order.Master) : null;
             DateCreation = order.DateCreation;
             DateStartWork = order.DateStartWork;
             DateCompleted = order.DateCompleted;
             DateIssue = order.DateIssue;
             TypeTechnicId = order.TypeTechnicId;
-            TypeTechnic = order.TypeTechnic;
+            TypeTechnic = new TypeTechnicEditDTO(order.TypeTechnic);
             BrandTechnicId = order.BrandTechnicId;
-            BrandTechnic = order.BrandTechnic;
+            BrandTechnic = new BrandTechnicEditDTO(order.BrandTechnic);
             ModelTechnic = order.ModelTechnic;
             FactoryNumber = order.FactoryNumber;
             EquipmentId = order.EquipmentId;

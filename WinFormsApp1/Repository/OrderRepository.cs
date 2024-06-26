@@ -49,7 +49,7 @@ namespace WinFormsApp1.Repository
         /// </summary>
         /// <param name="id">Идентификатор</param>
         /// <returns>Запись</returns>
-        public OrderEditDTO GetOrderById(int id)
+        public OrderEditDTO GetOrder(int id)
         {
             Context context = new();
             return new OrderEditDTO(context.Orders.First(i => i.Id == id));

@@ -23,7 +23,7 @@ namespace WinFormsApp1
             InitializeComponent();
             idOrder = id;
             int summDetails = 0;
-            orderDTO = orderRepository.GetOrderById(idOrder);
+            orderDTO = orderRepository.GetOrder(idOrder);
 
             var malfunctionList = malfunctionRepository.GetMalfunctions();
             foreach(var malfunction in malfunctionList)
@@ -52,8 +52,8 @@ namespace WinFormsApp1
             dateCreate = orderDTO.DateCreation.Value;
             labelDurationRepair.Text = String.Format("{0} дн.", (int)(DateTime.Now - dateCreate).TotalDays);
             labelIdOrder.Text = orderDTO.NumberOrder.ToString();
-            labelNameDevice.Text = String.Format("{0} {1} {2}", orderDTO.TypeTechnic?.NameTypeTechnic,
-                orderDTO.BrandTechnic?.NameBrandTechnic, orderDTO.ModelTechnic);
+            labelNameDevice.Text = String.Format("{0} {1} {2}", orderDTO.TypeTechnic?.Name,
+                orderDTO.BrandTechnic?.Name, orderDTO.ModelTechnic);
         }
 
         private void LinkLabelDateNow_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

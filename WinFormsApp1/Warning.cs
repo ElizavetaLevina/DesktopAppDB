@@ -10,31 +10,31 @@
 
         public string LabelText
         {
-            get { return this.label1.Text; }
-            set { this.label1.Text = value; }
+            get { return label1.Text; }
+            set { label1.Text = value; }
         }
 
         public string ButtonNoText
         {
-            get { return this.buttonExit.Text; }
-            set { this.buttonExit.Text = value; }
+            get { return buttonExit.Text; }
+            set { buttonExit.Text = value; }
         }
 
         public string ButtonYesText
         {
-            get { return this.buttonYes.Text; }
-            set { this.buttonYes.Text = value; }
+            get { return buttonYes.Text; }
+            set { buttonYes.Text = value; }
         }
 
         public bool ButtonVisible
         {
-            get {  return this.buttonYes.Visible; }
-            set {  this.buttonYes.Visible = value; }
+            get {  return buttonYes.Visible; }
+            set {  buttonYes.Visible = value; }
         }
 
         public bool VisibleChangePrice
         {
-            get { return this.linkLabelChangeMaxPrice.Visible; }
+            get { return linkLabelChangeMaxPrice.Visible; }
             set { linkLabelChangeMaxPrice.Visible = value; }
         }
 
@@ -47,14 +47,14 @@
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         private void ButtonYes_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void LinkLabelChangeMaxPrice_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -64,7 +64,8 @@
                 StartPosition = FormStartPosition.CenterParent
             };
             featuresOrder.ShowDialog();
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
     }
 }

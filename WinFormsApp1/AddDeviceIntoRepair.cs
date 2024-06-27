@@ -1,4 +1,5 @@
 ﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Reports;
 using WinFormsApp1.Repository;
 using Color = System.Drawing.Color;
 
@@ -196,8 +197,8 @@ namespace WinFormsApp1
 
                     if (warning.ShowDialog() == DialogResult.OK)
                     {
-                        Form1 form = new();
-                        form.ReportGetting(idOrder);
+                        GettingReport gettingReport = new();
+                        gettingReport.Report(idOrder);
                     }
                     DialogResult = DialogResult.OK;
                     Close();

@@ -32,6 +32,7 @@ namespace WinFormsApp1.DTO
         public int? EquipmentId { get; set; }
         public virtual EquipmentEditDTO? Equipment { get; set; }
         public int? DiagnosisId { get; set; }
+        public virtual DiagnosisEditDTO? Diagnosis { get; set; }
         public string? Note { get; set; }
         public bool InProgress { get; set; } = true;
         public int Guarantee { get; set; } = 0;
@@ -66,7 +67,9 @@ namespace WinFormsApp1.DTO
             ModelTechnic = order.ModelTechnic;
             FactoryNumber = order.FactoryNumber;
             EquipmentId = order.EquipmentId;
+            Equipment = order.Equipment != null ? new EquipmentEditDTO(order.Equipment) : null;
             DiagnosisId = order.DiagnosisId;
+            Diagnosis = order.Diagnosis != null ? new DiagnosisEditDTO(order.Diagnosis) : null;
             Note = order.Note;
             InProgress = order.InProgress;
             Guarantee = order.Guarantee;

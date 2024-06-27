@@ -9,6 +9,7 @@ namespace WinFormsApp1
         readonly int idOrder;
         public List<string>? problem = [];
         public List<int>? price = [];
+        int sumDetails = 0;
         public List<string>? nameProblem = [];
         private int numberProblem = 1;
         public int countProblem = 0;
@@ -22,7 +23,6 @@ namespace WinFormsApp1
         {
             InitializeComponent();
             idOrder = id;
-            int summDetails = 0;
             orderDTO = orderRepository.GetOrder(idOrder);
 
             var malfunctionList = malfunctionRepository.GetMalfunctions();
@@ -41,11 +41,11 @@ namespace WinFormsApp1
                 {
                     detailsListName.Add(detail.NameDetail);
                     detailsListSale.Add(detail.PriceSale);
-                    summDetails += detail.PriceSale;
+                    sumDetails += detail.PriceSale;
 
                 }
 
-                labelPriceDetails.Text = String.Format("{0} руб.", summDetails);
+                labelPriceDetails.Text = String.Format("{0} руб.", sumDetails);
                 labelCountDetails.Text = String.Format("{0} шт.", detailsListName.Count);
             }
 
@@ -71,19 +71,12 @@ namespace WinFormsApp1
         {
             price?.Clear();
             problem?.Clear();
+
             Warning warning = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };
-            int? sumPrice = price?.Sum();
-            if (orderDTO.PriceAgreed && sumPrice > orderDTO.MaxPrice)
-            {
-                warning.LabelText = String.Format("Цена ремонта выше согласованной! \nСогласованная цена: {0} руб.", orderDTO.MaxPrice);
-                warning.VisibleChangePrice = true;
-                warning.id = idOrder;
-                warning.ShowDialog();
-                return;
-            }
+            
             switch (countProblem)
             {
                 case 0:
@@ -123,6 +116,16 @@ namespace WinFormsApp1
                     problem?.Add(textBoxFoundProblem3.Text);
                     price?.Add(Convert.ToInt32(textBoxPrice3.Text));
                     break;
+            }
+            int? sumPrice = price?.Sum() + sumDetails;
+            if (orderDTO.PriceAgreed && sumPrice > orderDTO.MaxPrice)
+            {
+                warning.LabelText = String.Format("Цена ремонта выше согласованной! \nСогласованная цена: {0} руб.", orderDTO.MaxPrice);
+                warning.VisibleChangePrice = true;
+                warning.id = idOrder;
+                if (warning.ShowDialog() == DialogResult.OK)
+                    orderDTO = orderRepository.GetOrder(idOrder);
+                return;
             }
 
             Task task;

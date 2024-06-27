@@ -1,4 +1,4 @@
-using WinFormsApp1.Model;
+//using WinFormsApp1.Model;
 using System.Data;
 using System.Diagnostics;
 using ClosedXML.Report;
@@ -7,17 +7,22 @@ using FluentFTP;
 using Color = System.Drawing.Color;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Repository;
+using WinFormsApp1.Reports;
 
 namespace WinFormsApp1
 {
     public partial class Form1 : Form
     {
-        public int idRow;
+        public int idOrder;
         public string status = "";
         public bool logInSystem = false;
 
         OrderRepository orderRepository = new();
         WarehouseRepository warehouseRepository = new();
+        ClientRepository clientRepository = new();
+        GettingReport gettingReport = new();
+        IssuingReport issuingReport = new();
+        MalfunctionOrderRepository malfunctionOrderRepository = new();
         public Form1()
         {
             InitializeComponent();
@@ -123,8 +128,8 @@ namespace WinFormsApp1
             status = "InRepair";
             try
             {
-                List<OrderTableDTO> list = orderRepository.GetOrdersForTable(inProgress: true, deleted: false, dateCreation: true);
-                dataGridView1.DataSource = Funcs.ToDataTable(list);
+                List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(inProgress: true, deleted: false, dateCreation: true);
+                dataGridView1.DataSource = Funcs.ToDataTable(orders);
                 UpdateTable();
                 ChangeColorRows();
             }
@@ -136,9 +141,9 @@ namespace WinFormsApp1
             status = "Completed";
             try
             {
-                List<OrderTableDTO> list = orderRepository.GetOrdersForTable(inProgress: false, deleted: false, issue: false,
+                List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(inProgress: false, deleted: false, issue: false,
                     dateCompleted: true);
-                dataGridView1.DataSource = Funcs.ToDataTable(list);
+                dataGridView1.DataSource = Funcs.ToDataTable(orders);
                 UpdateTable();
                 ChangeColorRows();
             }
@@ -150,16 +155,16 @@ namespace WinFormsApp1
             status = "GuaranteeIssue";
             try
             {
-                List<OrderTableDTO> list = orderRepository.GetOrdersForTable(inProgress: false, deleted: false, issue: true,
+                List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(inProgress: false, deleted: false, issue: true,
                     dateIssue: true);
 
-                for (int i = 0; i < list.Count; i++)
+                for (int i = 0; i < orders.Count; i++)
                 {
-                    if (list[i].DateEndGuarantee.Value.Date < DateTime.Now.Date)
-                        list.Remove(list[i]);
+                    if (orders[i].DateEndGuarantee.Value.Date < DateTime.Now.Date)
+                        orders.Remove(orders[i]);
                 }
 
-                dataGridView1.DataSource = Funcs.ToDataTable(list);
+                dataGridView1.DataSource = Funcs.ToDataTable(orders);
                 UpdateTable();
             }
             catch { }
@@ -170,17 +175,17 @@ namespace WinFormsApp1
             status = "Archive";
             try
             {
-                List<OrderTableDTO> list = orderRepository.GetOrdersForTable(inProgress: false, deleted: false, issue: true,
+                List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(inProgress: false, deleted: false, issue: true,
                     dateIssue: true);
-                dataGridView1.DataSource = Funcs.ToDataTable(list);
+                dataGridView1.DataSource = Funcs.ToDataTable(orders);
 
-                for (int i = 0; i < list.Count; i++)
+                for (int i = 0; i < orders.Count; i++)
                 {
-                    if (list[i].DateEndGuarantee.Value.Date >= DateTime.Now.Date)
-                        list.Remove(list[i]);
+                    if (orders[i].DateEndGuarantee.Value.Date >= DateTime.Now.Date)
+                        orders.Remove(orders[i]);
                 }
 
-                dataGridView1.DataSource = Funcs.ToDataTable(list);
+                dataGridView1.DataSource = Funcs.ToDataTable(orders);
                 UpdateTable();
             }
             catch { }
@@ -191,8 +196,8 @@ namespace WinFormsApp1
             status = "Trash";
             try
             {
-                List<OrderTableDTO> list = orderRepository.GetOrdersForTable(deleted: true, dateCompleted: true);
-                dataGridView1.DataSource = Funcs.ToDataTable(list);
+                List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(deleted: true, dateCompleted: true);
+                dataGridView1.DataSource = Funcs.ToDataTable(orders);
                 UpdateTable();
                 ChangeColorRows();
             }
@@ -221,8 +226,8 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idRow = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                FeaturesOrder featuresOrder = new(idRow, status, logInSystem)
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                FeaturesOrder featuresOrder = new(idOrder, status, logInSystem)
                 {
                     StartPosition = FormStartPosition.CenterParent
                 };
@@ -245,8 +250,8 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idRow = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                DetailsInOrder detailsInOrder = new(idRow)
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                DetailsInOrder detailsInOrder = new(idOrder)
                 {
                     StartPosition = FormStartPosition.CenterParent
                 };
@@ -259,10 +264,9 @@ namespace WinFormsApp1
         {
             try
             {
-                Context context = new();
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                var list = context.Orders.Where(a => a.Id == id).ToList();
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                var orderDTO = orderRepository.GetOrder(idOrder);
 
                 if (status == "Trash")
                 {
@@ -276,7 +280,7 @@ namespace WinFormsApp1
 
                     if (warning.ShowDialog() == DialogResult.OK)
                     {
-                        CRUD.RemoveOrder(id);
+                        orderRepository.RemoveOrder(orderDTO);
                         Trash();
                     }
                     FocusButton(status);
@@ -293,15 +297,12 @@ namespace WinFormsApp1
 
                     if (warning.ShowDialog() == DialogResult.OK)
                     {
-                        ChangeOrder(id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
-                            list[0].DateStartWork, list[0].DateCompleted, list[0].DateIssue,
-                            list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
-                            list[0].FactoryNumber, list[0].EquipmentId, list[0].DiagnosisId, list[0].Note,
-                            list[0].InProgress, list[0].Guarantee, list[0].DateEndGuarantee, true,
-                            list[0].ReturnUnderGuarantee, list[0].DateReturn, list[0].DateCompletedReturn,
-                            list[0].DateIssueReturn, list[0].Issue, list[0].ColorRow, list[0].DateLastCall,
-                            list[0].PriceAgreed, list[0].MaxPrice);
-
+                        orderDTO.Deleted = true;
+                        var task = Task.Run(async () =>
+                        {
+                            await orderRepository.SaveOrderAsync(orderDTO);
+                        });
+                        task.Wait();
                         UpdateTableData();
                         /*UpdateDB();*/
                     }
@@ -315,19 +316,15 @@ namespace WinFormsApp1
         {
             try
             {
-                Context context = new();
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                var list = context.Orders.Where(a => a.Id == id).ToList();
-                ChangeOrder(
-                    id, list[0].ClientId, list[0].MasterId, list[0].DateCreation, list[0].DateStartWork,
-                    list[0].DateCompleted, list[0].DateIssue, list[0].TypeTechnicId,
-                    list[0].BrandTechnicId, list[0].ModelTechnic, list[0].FactoryNumber,
-                    list[0].EquipmentId, list[0].DiagnosisId, list[0].Note,
-                    list[0].InProgress, list[0].Guarantee, list[0].DateEndGuarantee, false,
-                    list[0].ReturnUnderGuarantee, list[0].DateReturn, list[0].DateCompletedReturn,
-                    list[0].DateIssueReturn, list[0].Issue, list[0].ColorRow, list[0].DateLastCall,
-                    list[0].PriceAgreed, list[0].MaxPrice);
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                var orderDTO = orderRepository.GetOrder(idOrder);
+                orderDTO.Deleted = false;
+                var task = Task.Run(async () =>
+                {
+                    await orderRepository.SaveOrderAsync(orderDTO);
+                });
+                task.Wait();
                 Trash();
                 /*UpdateDB();*/
             }
@@ -339,7 +336,7 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
                 var orderDTO = orderRepository.GetOrder(idOrder);
                 Warning warning = new();
                 if (orderDTO.MasterId == null)
@@ -421,7 +418,7 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
 
                 if(status == "Completed")
                 {
@@ -443,10 +440,10 @@ namespace WinFormsApp1
         {
             try
             {
-                Context context = new();
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                var list = context.Orders.Where(a => a.Id == id).ToList();
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                var orderDTO = orderRepository.GetOrder(idOrder);
+                var malfunctionsOrderDTO = malfunctionOrderRepository.GetMalfunctionOrdersByIdOrder(idOrder);
                 Warning warning = new()
                 {
                     StartPosition = FormStartPosition.CenterParent,
@@ -457,28 +454,24 @@ namespace WinFormsApp1
 
                 if (warning.ShowDialog() == DialogResult.OK)
                 {
-                    switch (status)
+                    if(status == "Completed")
                     {
-                        case "Completed":
-                            if (list[0].ReturnUnderGuarantee)
-                                ChangeOrder(id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
-                                list[0].DateStartWork, list[0].DateCompleted, list[0].DateIssue, list[0].TypeTechnicId,
-                                list[0].BrandTechnicId, list[0].ModelTechnic, list[0].FactoryNumber,
-                                list[0].EquipmentId, list[0].DiagnosisId, list[0].Note, true, list[0].Guarantee,
-                                list[0].DateEndGuarantee, list[0].Deleted, list[0].ReturnUnderGuarantee,
-                                list[0].DateReturn, null, list[0].DateIssueReturn, list[0].Issue,
-                                list[0].ColorRow, list[0].DateLastCall, list[0].PriceAgreed, list[0].MaxPrice);
-                            else
-                                ChangeOrder(id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
-                                list[0].DateStartWork, null, list[0].DateIssue, list[0].TypeTechnicId,
-                                list[0].BrandTechnicId, list[0].ModelTechnic, list[0].FactoryNumber,
-                                list[0].EquipmentId, list[0].DiagnosisId, list[0].Note, true, list[0].Guarantee,
-                                list[0].DateEndGuarantee, list[0].Deleted, list[0].ReturnUnderGuarantee,
-                                list[0].DateReturn, list[0].DateCompletedReturn, list[0].DateIssueReturn,
-                                list[0].Issue, list[0].ColorRow, list[0].DateLastCall, list[0].PriceAgreed,
-                                list[0].MaxPrice);
-                            OrderСompleted();
-                            break;
+                        orderDTO.InProgress = true;
+                        if (orderDTO.ReturnUnderGuarantee)
+                            orderDTO.DateCompletedReturn = null;
+                        else
+                            orderDTO.DateCompleted = null;
+                        var task = Task.Run(async () =>
+                        {
+                            await orderRepository.SaveOrderAsync(orderDTO);
+                        });
+                        task.Wait();
+
+                        foreach(var malfunctionOrder in malfunctionsOrderDTO)
+                        {
+                            malfunctionOrderRepository.RemoveMalfunctionOrder(malfunctionOrder);
+                        }
+                        OrderСompleted();
                     }
                     /*UpdateDB();*/
                     FocusButton(status);
@@ -491,11 +484,9 @@ namespace WinFormsApp1
         {
             try
             {
-                Context context = new();
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                var list = context.Orders.Where(a => a.Id == id).ToList();
-                var listWarehouse = context.Warehouse.ToList();
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                var orderDTO = orderRepository.GetOrder(idOrder);
                 Warning warning = new()
                 {
                     StartPosition = FormStartPosition.CenterParent,
@@ -506,19 +497,20 @@ namespace WinFormsApp1
 
                 if (warning.ShowDialog() == DialogResult.OK)
                 {
-                    switch (status)
+                    if (status == "GuaranteeIssue")
                     {
-                        case "GuaranteeIssue":
-                            ChangeOrder(id, list[0].ClientId, list[0].MasterId, DateTime.Now,
-                                DateTime.Now, list[0].DateCompleted, list[0].DateIssue,
-                                list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
-                                list[0].FactoryNumber, list[0].EquipmentId, list[0].DiagnosisId, list[0].Note,
-                                true, list[0].Guarantee, list[0].DateEndGuarantee, list[0].Deleted,
-                                true, list[0].DateCreation, list[0].DateCompletedReturn,
-                                list[0].DateIssueReturn, false, list[0].ColorRow, list[0].DateLastCall, list[0].PriceAgreed,
-                                list[0].MaxPrice);
-                            OrderGuarantee();
-                            break;
+                        orderDTO.DateCreation = DateTime.Now;
+                        orderDTO.DateStartWork = DateTime.Now;
+                        orderDTO.InProgress = true;
+                        orderDTO.ReturnUnderGuarantee = true;
+                        orderDTO.Issue = false;
+
+                        var task = Task.Run(async () =>
+                        {
+                            await orderRepository.SaveOrderAsync(orderDTO);
+                        });
+                        task.Wait();
+                        OrderGuarantee();
                     }
                     /*UpdateDB();*/
                     FocusButton(status);
@@ -531,11 +523,10 @@ namespace WinFormsApp1
         {
             try
             {
-                Context context = new();
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                var list = context.Orders.Where(i => i.Id == idOrder).ToList();
-                int idClient = list[0].ClientId;
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                var orderDTO = orderRepository.GetOrder(idOrder);
+                int idClient = orderDTO.ClientId;
                 MessageToClient message = new(idClient)
                 {
                     StartPosition = FormStartPosition.CenterParent
@@ -549,12 +540,10 @@ namespace WinFormsApp1
         {
             try
             {
-                string typeClient = "";
-                Context context = new();
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                var list = context.Orders.Where(i => i.Id == idOrder).ToList();
-                int idClient = list[0].ClientId;
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                var orderDTO = orderRepository.GetOrder(idOrder);
+                int idClient = orderDTO.ClientId;
 
                 FeaturesClient featuresClient = new(idClient)
                 {
@@ -572,19 +561,16 @@ namespace WinFormsApp1
         {
             try
             {
-                Context context = new();
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                var list = context.Orders.Where(i => i.Id == idOrder).ToList();
-                int idClient = list[0].ClientId;
-                var listClient = context.Clients.Where(i => i.Id == idClient).ToList();
-
-                /*CRUD.ChangeClient(idClient,
-                    listClient[0].IdClient,
-                    listClient[0].NameClient,
-                    listClient[0].Address,
-                    listClient[0].NumberSecondPhone,
-                    "white");*/
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                var orderDTO = orderRepository.GetOrder(idOrder);
+                var clientDTO = clientRepository.GetClient(orderDTO.ClientId);
+                clientDTO.TypeClient = "white";
+                var task = Task.Run(async () =>
+                {
+                    await clientRepository.SaveClientAsync(clientDTO);
+                });
+                task.Wait();
             }
             catch { }
         }
@@ -593,19 +579,16 @@ namespace WinFormsApp1
         {
             try
             {
-                Context context = new();
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                var list = context.Orders.Where(i => i.Id == idOrder).ToList();
-                int idClient = list[0].ClientId;
-                var listClient = context.Clients.Where(i => i.Id == idClient).ToList();
-
-                /*CRUD.ChangeClient(idClient,
-                    listClient[0].IdClient,
-                    listClient[0].NameClient,
-                    listClient[0].Address,
-                    listClient[0].NumberSecondPhone,
-                    "black");*/
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                var orderDTO = orderRepository.GetOrder(idOrder);
+                var clientDTO = clientRepository.GetClient(orderDTO.ClientId);
+                clientDTO.TypeClient = "black";
+                var task = Task.Run(async () =>
+                {
+                    await clientRepository.SaveClientAsync(clientDTO);
+                });
+                task.Wait();
             }
             catch { }
         }
@@ -614,19 +597,16 @@ namespace WinFormsApp1
         {
             try
             {
-                Context context = new();
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                var list = context.Orders.Where(i => i.Id == idOrder).ToList();
-                int idClient = list[0].ClientId;
-                var listClient = context.Clients.Where(i => i.Id == idClient).ToList();
-
-                /*CRUD.ChangeClient(idClient,
-                    listClient[0].IdClient,
-                    listClient[0].NameClient,
-                    listClient[0].Address,
-                    listClient[0].NumberSecondPhone,
-                    "normal");*/
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                var orderDTO = orderRepository.GetOrder(idOrder);
+                var clientDTO = clientRepository.GetClient(orderDTO.ClientId);
+                clientDTO.TypeClient = "normal";
+                var task = Task.Run(async () =>
+                {
+                    await clientRepository.SaveClientAsync(clientDTO);
+                });
+                task.Wait();
             }
             catch { }
         }
@@ -634,43 +614,26 @@ namespace WinFormsApp1
         private void NewOrder()
         {
             int numberRow = dataGridView1.CurrentCell.RowIndex;
-            int idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-            Context context = new();
-            var list = context.Orders.Where(i => i.Id == idOrder).Select(a => new
-            {
-                a.Id,
-                a.DateCreation,
-                a.MasterId,
-                a.Master,
-                a.TypeTechnic.NameTypeTechnic,
-                a.BrandTechnic.NameBrandTechnic,
-                a.ModelTechnic,
-                a.FactoryNumber,
-                a.Client,
-                a.Equipment,
-                a.Diagnosis,
-                a.Note,
-                a.PriceAgreed
-            }).ToList();
+            idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+            var orderDTO = orderRepository.GetOrder(idOrder);
 
             AddDeviceIntoRepair newOrder = new()
             {
                 StartPosition = FormStartPosition.CenterParent,
-                TypeDevice = list[0].NameTypeTechnic,
-                BrandDevice = list[0].NameBrandTechnic,
-                Model = list[0].ModelTechnic,
-                ClientName = list[0].Client.IdClient,
-                ClientNameAddress = list[0].Client?.NameAndAddressClient,
-                ClientSecondPhone = list[0].Client.NumberSecondPhone,
+                
+                TypeDevice = orderDTO.TypeTechnic.Name,
+                BrandDevice = orderDTO.BrandTechnic.Name,
+                Model = orderDTO.ModelTechnic,
+                ClientName = orderDTO.Client.IdClient,
+                ClientNameAddress = orderDTO.Client?.NameAndAddressClient,
+                ClientSecondPhone = orderDTO.Client.NumberSecondPhone,
                 TypeClient = "Старый клиент",
-                Equipment = list[0].Equipment.Name,
-                Diagnosis = list[0].Diagnosis.Name,
-                Note = list[0].Note
+                Equipment = orderDTO.Equipment?.Name,
+                Diagnosis = orderDTO.Diagnosis?.Name,
+                Note = orderDTO.Note
             };
-
-            if (list[0].MasterId != null)
-                newOrder.MasterName = list[0].Master.NameMaster;
-
+            if(orderDTO.MasterId != null)
+                newOrder.MasterName = orderDTO.Master?.NameMaster;
 
             if (newOrder.ShowDialog() == DialogResult.OK)
             {
@@ -679,43 +642,6 @@ namespace WinFormsApp1
                 UpdateTableData();
             }
             FocusButton(status);
-        }
-
-        private static void ChangeOrder(int id, int clientId, int? masterId, DateTime? dateCreation,
-            DateTime? dateStartWork, DateTime? dateCompleted, DateTime? dateIssue, int typeTechnicId,
-            int brandTechnicId, string? modelTechnic, string? factoryNumber, int? equipmentId,
-            int? diagnosisId, string? note, bool inProgress, int guarantee,
-            DateTime? dateEndGuarantee, bool deleted, bool returnUnderGuarantee, DateTime? dateReturn,
-            DateTime? dateCompletedReturn, DateTime? dateIssueReturn, bool issue, string color,
-            string? dateLastCall, bool priceAgreed, int? maxPrice)
-        {
-            CRUD.ChangeOrder(id,
-                       clientId,
-                       masterId,
-                       dateCreation,
-                       dateStartWork,
-                       dateCompleted,
-                       dateIssue,
-                       typeTechnicId,
-                       brandTechnicId,
-                       modelTechnic,
-                       factoryNumber,
-                       equipmentId,
-                       diagnosisId,
-                       note,
-                       inProgress,
-                       guarantee,
-                       dateEndGuarantee,
-                       deleted,
-                       returnUnderGuarantee,
-                       dateReturn,
-                       dateCompletedReturn,
-                       dateIssueReturn,
-                       issue,
-                       color,
-                       dateLastCall,
-                       priceAgreed,
-                       maxPrice);
         }
 
         private void ButtonInProgress_Click(object sender, EventArgs e)
@@ -750,12 +676,11 @@ namespace WinFormsApp1
 
         private void ChangeColorRows()
         {
-            Context context = new();
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
-                int id = Convert.ToInt32(dataGridView1.Rows[i].Cells["Id"].Value);
-                var list = context.Orders.Where(i => i.Id == id).ToList();
-                if (list[0].MasterId == null)
+                idOrder = Convert.ToInt32(dataGridView1.Rows[i].Cells["Id"].Value);
+                var orderDTO = orderRepository.GetOrder(idOrder);
+                if (orderDTO.MasterId == null)
                 {
                     dataGridView1.Rows[i].DefaultCellStyle.ForeColor = Color.DimGray;
                     dataGridView1.Rows[i].DefaultCellStyle.SelectionForeColor = Color.DimGray;
@@ -763,17 +688,15 @@ namespace WinFormsApp1
                 }
                 string hexColor = dataGridView1.Rows[i].Cells["ColorRow"].Value.ToString();
                 Color color = ColorTranslator.FromHtml(hexColor);
-                if (color != CheckColor(id))
+                if (color != CheckColor(idOrder))
                 {
-                    color = CheckColor(id);
-                    ChangeOrder(list[0].Id, list[0].ClientId, list[0].MasterId, list[0].DateCreation,
-                            list[0].DateStartWork, list[0].DateCompleted, list[0].DateIssue,
-                            list[0].TypeTechnicId, list[0].BrandTechnicId, list[0].ModelTechnic,
-                            list[0].FactoryNumber, list[0].EquipmentId, list[0].DiagnosisId, list[0].Note,
-                            list[0].InProgress, list[0].Guarantee, list[0].DateEndGuarantee, list[0].Deleted,
-                            list[0].ReturnUnderGuarantee, list[0].DateReturn, list[0].DateCompletedReturn,
-                            list[0].DateIssueReturn, list[0].Issue, ColorTranslator.ToHtml(color),
-                            list[0].DateLastCall, list[0].PriceAgreed, list[0].MaxPrice);
+                    color = CheckColor(idOrder);
+                    orderDTO.ColorRow = ColorTranslator.ToHtml(color);
+                    var task = Task.Run(async () =>
+                    {
+                        await orderRepository.SaveOrderAsync(orderDTO);
+                    });
+                    task.Wait();
                 }
                 dataGridView1.Rows[i].DefaultCellStyle.ForeColor = color;
                 dataGridView1.Rows[i].DefaultCellStyle.SelectionForeColor = color;
@@ -785,19 +708,18 @@ namespace WinFormsApp1
             }
         }
 
-        private Color CheckColor(int id)
+        private Color CheckColor(int idOrder)
         {
-            Color color = Color.Black;
-            Context context = new();
-            var list = context.Orders.Where(i => i.Id == id).ToList();
+            Color color;
+            var orderDTO = orderRepository.GetOrder(idOrder);
             var countDays = 0;
             switch (status)
             {
                 case "InRepair":
-                    countDays = (DateTime.Now - list[0].DateStartWork.Value).Days;
+                    countDays = (DateTime.Now - orderDTO.DateStartWork.Value).Days;
                     break;
                 case "Completed":
-                    countDays = (DateTime.Now - list[0].DateCompleted.Value).Days;
+                    countDays = (DateTime.Now - orderDTO.DateCompleted.Value).Days;
                     break;
             }
 
@@ -1195,8 +1117,8 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idRow = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                FeaturesOrder featuresOrder = new(idRow, status, logInSystem)
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
+                FeaturesOrder featuresOrder = new(idOrder, status, logInSystem)
                 {
                     StartPosition = FormStartPosition.CenterParent
                 };
@@ -1370,34 +1292,34 @@ namespace WinFormsApp1
 
         private void ItemMalfunction_Click(object sender, EventArgs e)
         {
-            MalfunctionEquipmentDiagnosisList malfunctionList = new("malfunction")
+            MalfunctionEquipmentDiagnosis malfunctionEquipmentDiagnosis = new("malfunction")
             {
                 StartPosition = FormStartPosition.CenterParent
             };
-            malfunctionList.ShowDialog();
+            malfunctionEquipmentDiagnosis.ShowDialog();
             FocusButton(status);
         }
 
         private void ItemDiagnosis_Click(object sender, EventArgs e)
         {
-            MalfunctionEquipmentDiagnosisList malfunctionList = new("diagnosis")
+            MalfunctionEquipmentDiagnosis malfunctionEquipmentDiagnosis = new("diagnosis")
             {
                 StartPosition = FormStartPosition.CenterParent,
                 Text = "Диагнозы"
             };
-            malfunctionList.ShowDialog();
+            malfunctionEquipmentDiagnosis.ShowDialog();
             UpdateTableData();
             FocusButton(status);
         }
 
         private void ItemEquipment_Click(object sender, EventArgs e)
         {
-            MalfunctionEquipmentDiagnosisList malfunctionList = new("equipment")
+            MalfunctionEquipmentDiagnosis malfunctionEquipmentDiagnosis = new("equipment")
             {
                 StartPosition = FormStartPosition.CenterParent,
                 Text = "Комплектация"
             };
-            malfunctionList.ShowDialog();
+            malfunctionEquipmentDiagnosis.ShowDialog();
             FocusButton(status);
         }
 
@@ -1567,78 +1489,11 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                ReportGetting(id);
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                gettingReport.Report(idOrder);
+                FocusButton(status);
             }
             catch { }
-        }
-
-        public void ReportGetting(int id)
-        {
-            try
-            {
-                const string outputFile = @"Output\reportGetting.xlsx";
-                var template = new XLTemplate(@"Templates\reportGetting.xlsx");
-
-                using Context context = new();
-                var list = context.Orders.Where(i => i.Id == id).Select(i => new
-                {
-                    i.Id,
-                    i.Master,
-                    i.Client,
-                    i.TypeTechnic,
-                    i.BrandTechnic,
-                    i.ModelTechnic,
-                    i.FactoryNumber,
-                    i.Equipment,
-                    i.Diagnosis,
-                    i.Note,
-                    i.DateCreation,
-                }).ToList();
-
-                string device = String.Format("{0} {1} {2}", list[0].TypeTechnic?.NameTypeTechnic,
-                    list[0].BrandTechnic?.NameBrandTechnic, list[0].ModelTechnic);
-
-                template.AddVariable("Id", value: list[0].Id);
-                template.AddVariable("MasterName", value: list[0].Master?.NameMaster);
-                template.AddVariable("ClientName", value: list[0].Client?.NameAndAddressClient);
-                template.AddVariable("ClientId", value: list[0].Client?.IdClient);
-                template.AddVariable("ClientAddress", value: list[0].Client?.NameAndAddressClient);
-                template.AddVariable("ClientSecondPhone", value: list[0].Client?.NumberSecondPhone);
-                template.AddVariable("Device", value: device);
-                template.AddVariable("FactoryNumber", value: list[0].FactoryNumber);
-                template.AddVariable("Equipment", value: list[0].Equipment);
-                template.AddVariable("Diagnosis", value: list[0].Diagnosis);
-                template.AddVariable("Note", value: list[0].Note);
-                template.AddVariable("DateCreation", value: list[0].DateCreation);
-                template.AddVariable("OrgName", value: Properties.Settings.Default.NameOrg);
-                template.AddVariable("OrgAddress", value: Properties.Settings.Default.AddressOrg);
-                template.AddVariable("OrgPhone", value: Properties.Settings.Default.PhoneOrg);
-                template.AddVariable("OrgFax", value: Properties.Settings.Default.FaxOrg);
-                template.AddVariable("OrgMail", value: Properties.Settings.Default.MailOrg);
-
-                template.Generate();
-                try
-                {
-                    template.SaveAs(outputFile);
-                }
-                catch (Exception)
-                {
-                    Warning warning = new()
-                    {
-                        StartPosition = FormStartPosition.CenterParent,
-                        LabelText = "Закройте файл reportGetting.xlsx и повторите попытку!"
-                    };
-                    warning.ShowDialog();
-                    FocusButton(status);
-                }
-
-                Process.Start(new ProcessStartInfo(outputFile) { UseShellExecute = true });
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show(exp.Message);
-            }
         }
 
         private void ItemIssuing_Click(object sender, EventArgs e)
@@ -1646,168 +1501,11 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-                ReportIssuing(id);
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                issuingReport.Report(idOrder);
+                FocusButton(status);
             }
             catch { }
-        }
-
-        public void ReportIssuing(int id)
-        {
-            try
-            {
-                const string outputFile = @"Output\reportIssuing.xlsx";
-                var template = new XLTemplate(@"Templates\reportIssuing.xlsx");
-
-                using Context context = new();
-                var list = context.Orders.Where(i => i.Id == id).Select(i => new
-                {
-                    i.Id,
-                    i.Master,
-                    i.Client,
-                    i.TypeTechnic,
-                    i.BrandTechnic,
-                    i.ModelTechnic,
-                    i.FactoryNumber,
-                    i.Equipment,
-                    i.Diagnosis,
-                    i.Note,
-                    i.DateCreation,
-                    i.DateIssue,
-                    i.DateEndGuarantee,
-                    i.ReturnUnderGuarantee
-                }).ToList();
-
-               /* var listDetails = context.Details.Where(i => i.Id == id).ToList();
-                var listIdWarehouse = context.Details.Where(i => i.Id == id).Select(a => new
-                {
-                    a.IdWarehouse
-                }).ToList();*/
-
-                var listFoundProblem = context.MalfunctionOrders.Where(i => i.OrderId == id).
-                    Select(a => new { a.Malfunction, a.Price }).ToList();
-                List<string> problemS = [];
-                List<int> priceS = [];
-                int problemSum = 0;
-                for (int i = 0; i < listFoundProblem.Count; i++)
-                {
-                    problemS.Add(listFoundProblem[i].Malfunction.Name);
-                    priceS.Add(listFoundProblem[i].Price);
-                    problemSum += listFoundProblem[i].Price;
-                }
-
-                List<string> listNameS = [];
-                List<int> listPriceSaleS = [];
-                /*if (listIdWarehouse[0].IdWarehouse != null)
-                {
-                    var listWarehouse = context.Warehouse.ToList();
-                    for (int i = 0; i < listIdWarehouse[0].IdWarehouse.Count; i++)
-                    {
-                        for (int j = 0; j < listWarehouse.Count; j++)
-                        {
-                            if (listIdWarehouse[0].IdWarehouse[i] == listWarehouse[j].Id)
-                            {
-                                listNameS.Add(listWarehouse[j].NameDetail);
-                                listPriceSaleS.Add(listWarehouse[j].PriceSale);
-                            }
-                        }
-                    }
-                }*/
-                int detailsSum = 0;
-
-                for (int i = 0; i < listPriceSaleS.Count; i++)
-                {
-                    detailsSum += listPriceSaleS[i];
-                }
-
-                List<string> nameDetails = [];
-                List<string> priceDetails = [];
-                List<string> nameProblem = [];
-                List<string> priceProblem = [];
-
-                for (int i = 0; i < 5; i++)
-                {
-                    nameDetails.Add(String.Format("NameDetails{0}", i));
-                    priceDetails.Add(String.Format("PriceDetails{0}", i));
-                }
-                for (int i = 0; i < 3; i++)
-                {
-                    nameProblem.Add(String.Format("FoundProblem{0}", i));
-                    priceProblem.Add(String.Format("PriceRepair{0}", i));
-                }
-
-                string device = String.Format("{0} {1} {2}", list[0].TypeTechnic?.NameTypeTechnic,
-                    list[0].BrandTechnic?.NameBrandTechnic, list[0].ModelTechnic);
-
-                template.AddVariable("Id", value: list[0].Id);
-                template.AddVariable("MasterName", value: list[0].Master?.NameMaster);
-                template.AddVariable("ClientName", value: list[0].Client?.NameAndAddressClient);
-                template.AddVariable("ClientId", value: list[0].Client?.IdClient);
-                template.AddVariable("ClientAddress", value: list[0].Client?.NameAndAddressClient);
-                template.AddVariable("ClientSecondPhone", value: list[0].Client?.NumberSecondPhone);
-                template.AddVariable("Device", value: device);
-                template.AddVariable("FactoryNumber", value: list[0].FactoryNumber);
-                template.AddVariable("Equipment", value: list[0].Equipment);
-                template.AddVariable("Diagnosis", value: list[0].Diagnosis);
-                template.AddVariable("Note", value: list[0].Note);
-                template.AddVariable("DateCreation", value: list[0].DateCreation);
-                template.AddVariable("DetailsSumPrice", value: detailsSum);
-                template.AddVariable("DateEndGuarantee", value: list[0].DateEndGuarantee);
-                template.AddVariable("DateIssuing", value: list[0].DateIssue);
-                for (int i = 0; i < nameDetails.Count; i++)
-                {
-                    if (i < listNameS.Count)
-                    {
-                        template.AddVariable(nameDetails[i], value: listNameS[i]);
-                        template.AddVariable(priceDetails[i], value: listPriceSaleS[i]);
-                    }
-                    else
-                    {
-                        template.AddVariable(nameDetails[i], value: null);
-                        template.AddVariable(priceDetails[i], value: null);
-                    }
-                }
-                for (int i = 0; i < nameProblem.Count; i++)
-                {
-                    if (i < problemS.Count)
-                    {
-                        template.AddVariable(nameProblem[i], value: problemS[i]);
-                        template.AddVariable(priceProblem[i], value: priceS[i]);
-                    }
-                    else
-                    {
-                        template.AddVariable(nameProblem[i], value: null);
-                        template.AddVariable(priceProblem[i], value: null);
-                    }
-                }
-                template.AddVariable("TotalPrice", value: (detailsSum + problemSum));
-                template.AddVariable("OrgName", value: Properties.Settings.Default.NameOrg);
-                template.AddVariable("OrgAddress", value: Properties.Settings.Default.AddressOrg);
-                template.AddVariable("OrgPhone", value: Properties.Settings.Default.PhoneOrg);
-                template.AddVariable("OrgFax", value: Properties.Settings.Default.FaxOrg);
-                template.AddVariable("OrgMail", value: Properties.Settings.Default.MailOrg);
-
-                template.Generate();
-                try
-                {
-                    template.SaveAs(outputFile);
-                }
-                catch (Exception)
-                {
-                    Warning warning = new()
-                    {
-                        StartPosition = FormStartPosition.CenterParent,
-                        LabelText = "Закройте файл reportIssuing.xlsx и повторите попытку!"
-                    };
-                    warning.ShowDialog();
-                    FocusButton(status);
-                }
-                Process.Start(new ProcessStartInfo(outputFile) { UseShellExecute = true });
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show(exp.Message);
-            }
         }
 
         private void DataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -1835,51 +1533,6 @@ namespace WinFormsApp1
                     buttonTrash.Focus();
                     break;
             }
-        }
-
-        public static string NameMonth(int numberMonth)
-        {
-            string nameMonth = "";
-            switch (numberMonth)
-            {
-                case 1:
-                    nameMonth = "январь";
-                    break;
-                case 2:
-                    nameMonth = "февраль";
-                    break;
-                case 3:
-                    nameMonth = "март";
-                    break;
-                case 4:
-                    nameMonth = "апрель";
-                    break;
-                case 5:
-                    nameMonth = "май";
-                    break;
-                case 6:
-                    nameMonth = "июнь";
-                    break;
-                case 7:
-                    nameMonth = "июль";
-                    break;
-                case 8:
-                    nameMonth = "август";
-                    break;
-                case 9:
-                    nameMonth = "сентябрь";
-                    break;
-                case 10:
-                    nameMonth = "октябрь";
-                    break;
-                case 11:
-                    nameMonth = "ноябрь";
-                    break;
-                case 12:
-                    nameMonth = "декабрь";
-                    break;
-            }
-            return nameMonth;
         }
 
         private static void CopyDBForService()
@@ -1977,7 +1630,7 @@ namespace WinFormsApp1
 
         private void Search()
         {
-            using Context context = new();
+            /*using Context context = new();
             var list = context.Orders.Where(i => i.Id.ToString().IndexOf(textBoxIdOrder.Text) > -1 &&
             i.DateCreation.ToString().StartsWith(textBoxDateCreation.Text) &&
             ((i.DateStartWork == null && textBoxDateStartWork.Text == "") ||
@@ -2004,7 +1657,7 @@ namespace WinFormsApp1
             dataGridView1.DataSource = Funcs.ToDataTable(list);
             ChangeColorRows();
             if (CheckNoFilters())
-                UpdateTableData();
+                UpdateTableData();*/
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -2381,7 +2034,7 @@ namespace WinFormsApp1
                 && e.Value != null)
             {
                 DataGridViewCell cell =
-                    this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                    dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 cell.ToolTipText = cell.Value?.ToString();
             }
         }

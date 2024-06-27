@@ -3,7 +3,7 @@ using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
 {
-    public partial class MalfunctionEquipmentDiagnosisList : Form
+    public partial class MalfunctionEquipmentDiagnosis : Form
     {
         public string status;
         MalfunctionRepository malfunctionRepository = new();
@@ -11,7 +11,7 @@ namespace WinFormsApp1
         EquipmentRepository equipmentRepository = new();
         MalfunctionOrderRepository malfunctionOrderRepository = new();
         OrderRepository orderRepository = new();
-        public MalfunctionEquipmentDiagnosisList(string _status)
+        public MalfunctionEquipmentDiagnosis(string _status)
         {
             InitializeComponent();
             status = _status;

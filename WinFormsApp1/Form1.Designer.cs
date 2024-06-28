@@ -166,6 +166,7 @@ namespace WinFormsApp1
             contextAccount = new ContextMenuStrip(components);
             itemChangeData = new ToolStripMenuItem();
             itemLogOut = new ToolStripMenuItem();
+            labelClientId = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             contextMenu1.SuspendLayout();
             toolStrip1.SuspendLayout();
@@ -209,7 +210,6 @@ namespace WinFormsApp1
             dataGridView1.Click += DataGridView1_Click;
             dataGridView1.MouseClick += DataGridView1_MouseClick;
             dataGridView1.MouseDoubleClick += DataGridView1_MouseDoubleClick;
-            dataGridView1.MouseMove += DataGridView1_MouseMove;
             // 
             // buttonInProgress
             // 
@@ -807,7 +807,7 @@ namespace WinFormsApp1
             contextButton2.ImageScalingSize = new Size(24, 24);
             contextButton2.Items.AddRange(new ToolStripItem[] { itemAddDeviceForRepair, itemFeaturesOrder, toolStripSeparator11, itemDetails, toolStripSeparator12, itemDeleteOrder, itemRecoveryOrder, toolStripSeparator13, itemActionsOrder, itemActionsClient, toolStripSeparator17, itemCreateOrder });
             contextButton2.Name = "contextMenuStripButton2";
-            contextButton2.Size = new Size(407, 317);
+            contextButton2.Size = new Size(407, 284);
             // 
             // itemAddDeviceForRepair
             // 
@@ -1329,11 +1329,23 @@ namespace WinFormsApp1
             itemLogOut.Text = "Выйти из системы";
             itemLogOut.Click += ItemLogOut_Click;
             // 
+            // labelClientId
+            // 
+            labelClientId.AutoSize = true;
+            labelClientId.Font = new Font("Segoe UI", 13F);
+            labelClientId.Location = new Point(1216, 90);
+            labelClientId.Name = "labelClientId";
+            labelClientId.Size = new Size(29, 36);
+            labelClientId.TabIndex = 44;
+            labelClientId.Text = "0";
+            labelClientId.Visible = false;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1337, 878);
+            Controls.Add(labelClientId);
             Controls.Add(labelLogIn);
             Controls.Add(buttonReset);
             Controls.Add(labelView);
@@ -1526,5 +1538,6 @@ namespace WinFormsApp1
         private ContextMenuStrip contextAccount;
         private ToolStripMenuItem itemChangeData;
         private ToolStripMenuItem itemLogOut;
+        private Label labelClientId;
     }
 }

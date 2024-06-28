@@ -1860,51 +1860,29 @@ namespace WinFormsApp1
             catch { }
         }
 
-        private void DataGridView1_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
-        {
-            try
-            {
-                //if (e.ColumnIndex == 7 && e.RowIndex >= 0)
-                //{
-                //    var pos = dataGridView1.PointToScreen(dataGridView1.GetCellDisplayRectangle(
-                //        e.ColumnIndex, e.RowIndex, false).Location);
-                //    contextPhone.Show(new Point(pos.X, pos.Y + dataGridView1.Rows[e.RowIndex].Height));
-
-                //    numberPhone.Text = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
-                //    dataGridView1.Focus();
-                //}
-            }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
-        }
-
         private void DataGridView1_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
         {
-            contextPhone.Visible = false;
+            labelClientId.Visible = false;
         }
 
         private void DataGridView1_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
         {
-            //if(dataGridView1.Columns[0].HeaderText == "№")
-            //    dataGridView1.Columns[0].HeaderText = "0";
-            //dataGridView1.Columns[0].HeaderText = (int.Parse(dataGridView1.Columns[0].HeaderText) + 1).ToString(); // TODO: del test // раскомментировать для отлавливания вызова события
             try
             {
-                if (e.ColumnIndex == 7 && e.RowIndex >= 0)
+                if (e.ColumnIndex == 8 && e.RowIndex >= 0)
                 {
-                    var pos = dataGridView1.PointToScreen(dataGridView1.GetCellDisplayRectangle(
-                        e.ColumnIndex, e.RowIndex, false).Location);
-                    contextPhone.Show(new Point(pos.X+10, pos.Y + 10 + dataGridView1.Rows[e.RowIndex].Height));
-                    numberPhone.Text = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
-                    dataGridView1.Focus();
-
+                    labelClientId.Visible = true;
+                    var rectangle = dataGridView1.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true);
+                    labelClientId.Text = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+                    labelClientId.Location = new Point(rectangle.X + dataGridView1.Location.X - labelClientId.Width, 
+                        rectangle.Y + dataGridView1.Location.Y);
+                    /*labelClientId.Location = new Point(rectangle.X + dataGridView1.Location.X,
+                        rectangle.Y + dataGridView1.Location.Y + rectangle.Height);*/
                 }
+                else
+                    labelClientId.Visible = false;
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
-        }
-
-        private void DataGridView1_MouseMove(object sender, MouseEventArgs e)
-        {
-
         }
 
         private void Form1_Deactivate(object sender, EventArgs e)
@@ -1977,34 +1955,5 @@ namespace WinFormsApp1
             labelLogIn.Text = "Войти";
             logInSystem = false;
         }
-        // Sets the ToolTip text for cells in the Rating column.
-        void DataGridView1_CellFormatting(object sender,
-            DataGridViewCellFormattingEventArgs e)
-        {
-            if ((e.ColumnIndex == 7)
-                && e.Value != null)
-            {
-                DataGridViewCell cell =
-                    dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                cell.ToolTipText = cell.Value?.ToString();
-            }
-        }
-
-        //private void DataGridView1_CellMouseMove(object sender, DataGridViewCellEventArgs e)
-        //{
-        //    try
-        //    {
-        //        if (e.ColumnIndex == 7 && e.RowIndex >= 0)
-        //        {
-        //            var pos = dataGridView1.PointToScreen(dataGridView1.GetCellDisplayRectangle(
-        //                e.ColumnIndex, e.RowIndex, false).Location);
-        //            contextPhone.Show(new Point(pos.X, pos.Y + dataGridView1.Rows[e.RowIndex].Height));
-
-        //            numberPhone.Text = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
-        //            dataGridView1.Focus();
-        //        }
-        //    }
-        //    catch (Exception ex) { MessageBox.Show(ex.Message); }
-        //}
     }
 }

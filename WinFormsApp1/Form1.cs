@@ -1,7 +1,3 @@
-//using WinFormsApp1.Model;
-using System.Data;
-using System.Diagnostics;
-using ClosedXML.Report;
 using System.Net;
 using FluentFTP;
 using Color = System.Drawing.Color;
@@ -1246,7 +1242,7 @@ namespace WinFormsApp1
             {
                 StartPosition = FormStartPosition.CenterParent
             };
-            addMaster.ShowDialog(this);
+            addMaster.ShowDialog();
             FocusButton(status);
         }
 
@@ -1630,13 +1626,15 @@ namespace WinFormsApp1
 
         private void Search()
         {
+            var ordersDTO = orderRepository.GetOrdersBySearch(numberOrder: textBoxIdOrder.Text, 
+                dateCreation: textBoxDateCreation.Text, dateStartWork: textBoxDateStartWork.Text, 
+                masterName: textBoxNameMaster.Text, typeTechnic: textBoxTypeDevice.Text, 
+                brandTechnic: textBoxBrandDevice.Text, modelTechnic: textBoxModel.Text, idClient: textBoxNameClient.Text);
             /*using Context context = new();
             var list = context.Orders.Where(i => i.Id.ToString().IndexOf(textBoxIdOrder.Text) > -1 &&
             i.DateCreation.ToString().StartsWith(textBoxDateCreation.Text) &&
-            ((i.DateStartWork == null && textBoxDateStartWork.Text == "") ||
-            (i.DateStartWork != null && i.DateStartWork.ToString().StartsWith(textBoxDateStartWork.Text))) &&
-            ((i.MasterId == null && textBoxNameMaster.Text == "") ||
-            (i.MasterId != null && i.Master.NameMaster.StartsWith(textBoxNameMaster.Text))) &&
+            ((i.DateStartWork == null && textBoxDateStartWork.Text == "") || (i.DateStartWork != null && i.DateStartWork.ToString().StartsWith(textBoxDateStartWork.Text))) &&
+            ((i.MasterId == null && textBoxNameMaster.Text == "") || (i.MasterId != null && i.Master.NameMaster.StartsWith(textBoxNameMaster.Text))) &&
             i.TypeTechnic.NameTypeTechnic.StartsWith(textBoxTypeDevice.Text) &&
             i.BrandTechnic.NameBrandTechnic.StartsWith(textBoxBrandDevice.Text) &&
             i.ModelTechnic.StartsWith(textBoxModel.Text) &&
@@ -1653,25 +1651,25 @@ namespace WinFormsApp1
                 a.Deleted,
                 a.ReturnUnderGuarantee,
                 a.ColorRow
-            }).OrderByDescending(i => i.Id).ToList();
-            dataGridView1.DataSource = Funcs.ToDataTable(list);
+            }).OrderByDescending(i => i.Id).ToList();*/
+            dataGridView1.DataSource = Funcs.ToDataTable(ordersDTO);
             ChangeColorRows();
             if (CheckNoFilters())
-                UpdateTableData();*/
+                UpdateTableData();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (Properties.Settings.Default.Size == "Small")
             {
-                Properties.Settings.Default.WidthSmall = this.Width;
-                Properties.Settings.Default.HeightSmall = this.Height;
+                Properties.Settings.Default.WidthSmall = Width;
+                Properties.Settings.Default.HeightSmall = Height;
                 Properties.Settings.Default.Save();
             }
             else if (Properties.Settings.Default.Size == "Medium")
             {
-                Properties.Settings.Default.WidthMedium = this.Width;
-                Properties.Settings.Default.HeightMedium = this.Height;
+                Properties.Settings.Default.WidthMedium = Width;
+                Properties.Settings.Default.HeightMedium = Height;
                 Properties.Settings.Default.Save();
             }
         }
@@ -1708,200 +1706,153 @@ namespace WinFormsApp1
         {
             if (Properties.Settings.Default.Size == "Medium")
             {
-                Properties.Settings.Default.WidthMedium = this.Width;
-                Properties.Settings.Default.HeightMedium = this.Height;
+                Properties.Settings.Default.WidthMedium = Width;
+                Properties.Settings.Default.HeightMedium = Height;
                 Properties.Settings.Default.Save();
             }
             Properties.Settings.Default.Size = "Small";
             Properties.Settings.Default.Save();
 
-            this.Width = Properties.Settings.Default.WidthSmall;
-            this.Height = Properties.Settings.Default.HeightSmall;
+            Width = Properties.Settings.Default.WidthSmall;
+            Height = Properties.Settings.Default.HeightSmall;
         }
 
         private void ItemMedium_Click(object sender, EventArgs e)
         {
             if (Properties.Settings.Default.Size == "Small")
             {
-                Properties.Settings.Default.WidthSmall = this.Width;
-                Properties.Settings.Default.HeightSmall = this.Height;
+                Properties.Settings.Default.WidthSmall = Width;
+                Properties.Settings.Default.HeightSmall = Height;
                 Properties.Settings.Default.Save();
             }
 
             Properties.Settings.Default.Size = "Medium";
             Properties.Settings.Default.Save();
 
-            this.Width = Properties.Settings.Default.WidthMedium;
-            this.Height = Properties.Settings.Default.HeightMedium;
+            Width = Properties.Settings.Default.WidthMedium;
+            Height = Properties.Settings.Default.HeightMedium;
         }
 
         private void SmallWindow()
         {
-            buttonTrash.Location = new Point(buttonTrash.Location.X, this.Height - buttonTrash.Height
-                - 52);
-            var height = (buttonTrash.Location.Y - buttonInProgress.Location.Y - buttonInProgress.Height * 4) / 4;
+            int buttonMenuX = Width - buttonInProgress.Width - 25;
+            int heightButtonMenu = buttonInProgress.Height;
 
-            buttonCompleted.Location = new Point(buttonCompleted.Location.X, buttonInProgress.Location.Y +
-                buttonCompleted.Height + height);
+            dataGridView1.Width = Width - buttonInProgress.Width - 50;
+            dataGridView1.Height = Height - dataGridView1.Location.Y - heightButtonMenu - 70;
 
-            buttonGuarantee.Location = new Point(buttonGuarantee.Location.X, buttonCompleted.Location.Y +
-                buttonGuarantee.Height + height);
+            int endTable = dataGridView1.Width + dataGridView1.Location.X;
+            int marginHeightMenuX = (dataGridView1.Height - heightButtonMenu * 4) / 3;
 
-            buttonArchive.Location = new Point(buttonArchive.Location.X, buttonGuarantee.Location.Y +
-                buttonArchive.Height + height);
+            labelLogIn.Location = new Point(buttonMenuX, labelLogIn.Location.Y);
+            buttonInProgress.Location = new Point(buttonMenuX, buttonInProgress.Location.Y);
+            buttonCompleted.Location = new Point(buttonMenuX, buttonInProgress.Location.Y + heightButtonMenu + marginHeightMenuX);
+            buttonGuarantee.Location = new Point(buttonMenuX, buttonCompleted.Location.Y + heightButtonMenu + marginHeightMenuX);
+            buttonArchive.Location = new Point(buttonMenuX, buttonGuarantee.Location.Y + heightButtonMenu + marginHeightMenuX);
+            buttonTrash.Location = new Point(buttonMenuX, Height - buttonTrash.Height - 60);
+            buttonReset.Location = new Point(endTable - buttonReset.Width, buttonTrash.Location.Y);
+            buttonReset.Height = heightButtonMenu;
 
+            int widthTextBox = 74;
+            int widthLT = 4;
+            int thirdLine = buttonReset.Location.Y + buttonReset.Height - labelDateCreation.Height;
+            int secondLine = thirdLine - labelDateCreation.Height - 11;
+            int thirdColumn = buttonReset.Location.X - widthTextBox - 15;
+            int marginWidthFilter = ((thirdColumn + textBoxTypeDevice.Width) - (widthTextBox + widthLT) * 3 - 
+                labelIdOrder.Width - labelDateStartWork.Width - labelTypeDevice.Width) / 2;
 
-            dataGridView1.Height = buttonArchive.Location.Y + buttonArchive.Height -
-                dataGridView1.Location.Y;
+            labelIdOrder.Location = new Point(labelIdOrder.Location.X, buttonReset.Location.Y);
+            textBoxIdOrder.Location = new Point(textBoxIdOrder.Location.X, buttonReset.Location.Y);
+            textBoxIdOrder.Width = widthTextBox;
+            int secondColumn = textBoxIdOrder.Location.X + textBoxIdOrder.Width + marginWidthFilter;
+            labelDateStartWork.Location = new Point(secondColumn, buttonReset.Location.Y);
+            textBoxDateStartWork.Location = new Point(secondColumn + labelDateStartWork.Width + widthLT, buttonReset.Location.Y);
+            textBoxDateStartWork.Width = widthTextBox;
+            textBoxTypeDevice.Location = new Point(thirdColumn, buttonReset.Location.Y);
+            textBoxTypeDevice.Width = widthTextBox;
+            labelTypeDevice.Location = new Point(thirdColumn - labelTypeDevice.Width - widthLT, buttonReset.Location.Y);
+            textBoxModel.Location = new Point(textBoxIdOrder.Location.X, thirdLine);
+            textBoxModel.Width = widthTextBox;
+            labelModel.Location = new Point(textBoxModel.Location.X - labelModel.Width - widthLT, thirdLine);
 
-            buttonReset.Location = new Point(buttonTrash.Location.X - 6 - buttonReset.Width,
-                    buttonTrash.Location.Y);
-
-            labelIdOrder.Location = new Point(labelIdOrder.Location.X, buttonTrash.Location.Y);
-            textBoxIdOrder.Location = new Point(textBoxIdOrder.Location.X, buttonTrash.Location.Y);
-            textBoxIdOrder.Width = 74;
-
-            textBoxTypeDevice.Width = 74;
-            textBoxTypeDevice.Location = new Point(buttonReset.Location.X - 11 - textBoxTypeDevice.Width,
-                buttonTrash.Location.Y);
-            labelTypeDevice.Location = new Point(textBoxTypeDevice.Location.X - 6 - labelTypeDevice.Width,
-                buttonTrash.Location.Y);
-
-            labelDateCreation.Location = new Point(labelDateCreation.Location.X, buttonTrash.Location.Y +
-                labelDateCreation.Height + 10);
-            textBoxDateCreation.Location = new Point(textBoxDateCreation.Location.X, labelDateCreation.Location.Y);
-            textBoxDateCreation.Width = 74;
-
-            labelBrandDevice.Location = new Point(labelTypeDevice.Location.X, labelDateCreation.Location.Y);
-            textBoxBrandDevice.Location = new Point(textBoxTypeDevice.Location.X, labelDateCreation.Location.Y);
-            textBoxBrandDevice.Width = 74;
-
-            var width = (labelTypeDevice.Location.X - (textBoxIdOrder.Location.X + textBoxIdOrder.Width) -
-                labelDateStartWork.Width - 6 - textBoxDateStartWork.Width) / 2;
-
-            labelDateStartWork.Location = new Point(textBoxIdOrder.Location.X + textBoxIdOrder.Width +
-                width, buttonTrash.Location.Y);
-            textBoxDateStartWork.Location = new Point(labelDateStartWork.Location.X + labelDateStartWork.Width
-                + 6, buttonTrash.Location.Y);
-            textBoxDateStartWork.Width = 74;
-
-            labelNameMaster.Location = new Point(labelDateStartWork.Location.X, labelDateCreation.Location.Y);
-            textBoxNameMaster.Location = new Point(labelNameMaster.Location.X + labelNameMaster.Width
-                + 6, labelDateCreation.Location.Y);
-            textBoxNameMaster.Width = 74;
-
-            textBoxModel.Location = new Point(textBoxDateCreation.Location.X,
-                labelDateCreation.Location.Y + labelDateCreation.Height + 11);
-            textBoxModel.Width = 74;
-            labelModel.Location = new Point(textBoxModel.Location.X - 6 - labelModel.Width,
-                textBoxModel.Location.Y);
-
-            textBoxNameClient.Location = new Point(textBoxDateStartWork.Location.X, textBoxModel.Location.Y);
-            textBoxNameClient.Width = 74;
-            labelNameClient.Location = new Point(textBoxNameClient.Location.X - 6 - labelNameClient.Width,
-                textBoxModel.Location.Y);
+            labelDateCreation.Location = new Point(labelDateCreation.Location.X, secondLine);
+            textBoxDateCreation.Location = new Point(textBoxDateCreation.Location.X, secondLine);
+            textBoxDateCreation.Width = widthTextBox;
+            labelNameMaster.Location = new Point(secondColumn, secondLine);
+            textBoxNameMaster.Location = new Point(secondColumn + labelNameMaster.Width + widthLT, secondLine);
+            textBoxNameMaster.Width = widthTextBox;
+            textBoxBrandDevice.Location = new Point(thirdColumn, secondLine);
+            textBoxBrandDevice.Width = widthTextBox;
+            labelBrandDevice.Location = new Point(thirdColumn - labelBrandDevice.Width - widthLT, secondLine);
+            textBoxNameClient.Location = new Point(textBoxNameMaster.Location.X, thirdLine);
+            textBoxNameClient.Width = widthTextBox;
+            labelNameClient.Location = new Point(textBoxNameClient.Location.X - labelNameClient.Width - widthLT, thirdLine);
         }
 
         private void MediumWindow()
         {
-            buttonReset.Location = new Point(buttonTrash.Location.X, this.Height - buttonReset.Height
-                - 52);
+            int buttonMenuX = Width - buttonInProgress.Width - 25;
+            int heightButtonMenu = buttonInProgress.Height;
+            int heightReset = 77;
+            
+            dataGridView1.Width = Width - buttonInProgress.Width - 50;
+            dataGridView1.Height = Height - dataGridView1.Location.Y - heightReset - 70;
 
-            var height = (buttonReset.Location.Y - buttonInProgress.Location.Y - buttonInProgress.Height * 5) / 5;
+            int bottomTable = dataGridView1.Height + dataGridView1.Location.Y;
+            int marginHeightMenuX = (dataGridView1.Height - heightButtonMenu * 5) / 4; 
 
-            buttonCompleted.Location = new Point(buttonCompleted.Location.X, buttonInProgress.Location.Y +
-                buttonCompleted.Height + height);
+            labelLogIn.Location = new Point(buttonMenuX, labelLogIn.Location.Y);
+            buttonInProgress.Location = new Point(buttonMenuX, buttonInProgress.Location.Y);
+            buttonCompleted.Location = new Point(buttonMenuX, buttonInProgress.Location.Y + heightButtonMenu + marginHeightMenuX);
+            buttonGuarantee.Location = new Point(buttonMenuX, buttonCompleted.Location.Y + heightButtonMenu + marginHeightMenuX);
+            buttonArchive.Location = new Point(buttonMenuX, buttonGuarantee.Location.Y + heightButtonMenu + marginHeightMenuX);
+            buttonTrash.Location = new Point(buttonMenuX, bottomTable - buttonTrash.Height);
+            buttonReset.Location = new Point(buttonMenuX, Height - heightReset - 60);
+            buttonReset.Height = heightReset;
 
-            buttonGuarantee.Location = new Point(buttonGuarantee.Location.X, buttonCompleted.Location.Y +
-                buttonGuarantee.Height + height);
-
-            buttonArchive.Location = new Point(buttonArchive.Location.X, buttonGuarantee.Location.Y +
-                buttonArchive.Height + height);
-
-            buttonTrash.Location = new Point(buttonTrash.Location.X, buttonArchive.Location.Y +
-                buttonTrash.Height + height);
+            int bottomMargin = buttonReset.Location.Y + buttonReset.Height - labelDateCreation.Height;
+            int endTable = dataGridView1.Width + dataGridView1.Location.X;
+            int widthTextBox = 120;
+            int widthLT = 4;
+            int marginWidthFilter = (endTable - (widthTextBox + widthLT) * 4 - labelIdOrder.Width - labelDateStartWork.Width -
+                labelTypeDevice.Width - labelModel.Width) / 3;
 
             labelIdOrder.Location = new Point(labelIdOrder.Location.X, buttonReset.Location.Y);
             textBoxIdOrder.Location = new Point(textBoxIdOrder.Location.X, buttonReset.Location.Y);
-            textBoxIdOrder.Width = 120;
+            textBoxIdOrder.Width = widthTextBox;
+            int secondColumn = textBoxIdOrder.Location.X + textBoxIdOrder.Width + marginWidthFilter;
+            labelDateStartWork.Location = new Point(secondColumn, buttonReset.Location.Y);
+            textBoxDateStartWork.Location = new Point(secondColumn + labelDateStartWork.Width + widthLT, buttonReset.Location.Y);
+            textBoxDateStartWork.Width = widthTextBox;
+            int thirdColumn = textBoxDateStartWork.Location.X + textBoxDateStartWork.Width + marginWidthFilter;
+            labelTypeDevice.Location = new Point(thirdColumn, buttonReset.Location.Y);
+            textBoxTypeDevice.Location = new Point(thirdColumn + labelTypeDevice.Width + widthLT, buttonReset.Location.Y);
+            textBoxTypeDevice.Width = widthTextBox;
+            textBoxModel.Location = new Point(endTable - widthTextBox, buttonReset.Location.Y);
+            textBoxModel.Width = widthTextBox;
+            labelModel.Location = new Point(textBoxModel.Location.X - labelModel.Width - widthLT, buttonReset.Location.Y);
+            
 
-            textBoxModel.Width = 120;
-            textBoxModel.Location = new Point(buttonReset.Location.X - 6 - textBoxModel.Width,
-                buttonReset.Location.Y);
-            labelModel.Location = new Point(textBoxModel.Location.X - 6 - labelModel.Width,
-                textBoxModel.Location.Y);
-
-            labelDateCreation.Location = new Point(labelDateCreation.Location.X,
-                labelIdOrder.Location.Y + labelIdOrder.Height + 10);
-            textBoxDateCreation.Location = new Point(textBoxDateCreation.Location.X,
-                labelDateCreation.Location.Y);
-            textBoxDateCreation.Width = 120;
-
-
-            labelNameClient.Location = new Point(labelModel.Location.X, labelDateCreation.Location.Y);
-            textBoxNameClient.Location = new Point(textBoxModel.Location.X, labelDateCreation.Location.Y);
-            textBoxNameClient.Width = 120;
-
-            var width = (labelModel.Location.X - (textBoxIdOrder.Location.X + textBoxIdOrder.Width) -
-                labelDateStartWork.Width - labelTypeDevice.Width - 12 - 120 * 2) / 3;
-
-            labelDateStartWork.Location = new Point(textBoxIdOrder.Location.X + textBoxIdOrder.Width +
-                width, textBoxIdOrder.Location.Y);
-            textBoxDateStartWork.Location = new Point(labelDateStartWork.Location.X +
-                labelDateStartWork.Width + 6, textBoxIdOrder.Location.Y);
-            textBoxDateStartWork.Width = 120;
-
-            labelTypeDevice.Location = new Point(textBoxDateStartWork.Location.X + textBoxDateStartWork.Width
-                + width, textBoxIdOrder.Location.Y);
-            textBoxTypeDevice.Location = new Point(labelTypeDevice.Location.X + labelTypeDevice.Width + 6,
-                textBoxIdOrder.Location.Y);
-            textBoxTypeDevice.Width = 120;
-
-            labelNameMaster.Location = new Point(labelDateStartWork.Location.X, textBoxDateCreation.Location.Y);
-            textBoxNameMaster.Location = new Point(textBoxDateStartWork.Location.X, textBoxDateCreation.Location.Y);
-            textBoxNameMaster.Width = 120;
-
-            labelBrandDevice.Location = new Point(labelTypeDevice.Location.X, textBoxDateCreation.Location.Y);
-            textBoxBrandDevice.Location = new Point(textBoxTypeDevice.Location.X, textBoxDateCreation.Location.Y);
-            textBoxBrandDevice.Width = 120;
-
-            dataGridView1.Height = buttonTrash.Location.Y + buttonTrash.Height -
-                dataGridView1.Location.Y;
+            labelDateCreation.Location = new Point(labelDateCreation.Location.X, bottomMargin);
+            textBoxDateCreation.Location = new Point(textBoxDateCreation.Location.X, bottomMargin);
+            textBoxDateCreation.Width = widthTextBox;
+            labelNameMaster.Location = new Point(secondColumn, bottomMargin);
+            textBoxNameMaster.Location = new Point(secondColumn + labelNameMaster.Width + widthLT, bottomMargin);
+            textBoxNameMaster.Width = widthTextBox;
+            labelBrandDevice.Location = new Point(thirdColumn, bottomMargin);
+            textBoxBrandDevice.Location = new Point(thirdColumn + labelBrandDevice.Width + widthLT, bottomMargin);
+            textBoxBrandDevice.Width = widthTextBox;
+            textBoxNameClient.Location = new Point(endTable - widthTextBox, bottomMargin);
+            textBoxNameClient.Width = widthTextBox;
+            labelNameClient.Location = new Point(textBoxNameClient.Location.X - labelNameClient.Width - widthLT, bottomMargin);
         }
 
         private void ChangeSizeAndLocation()
         {
-            labelLogIn.Location = new Point(this.Width - labelLogIn.Width - 22, labelLogIn.Location.Y);
-
-            buttonInProgress.Location = new Point(this.Width - buttonInProgress.Width - 22,
-                buttonInProgress.Location.Y);
-
-            buttonCompleted.Location = new Point(buttonInProgress.Location.X,
-                buttonCompleted.Location.Y);
-
-            buttonGuarantee.Location = new Point(buttonInProgress.Location.X,
-                buttonGuarantee.Location.Y);
-
-            buttonArchive.Location = new Point(buttonInProgress.Location.X,
-                buttonArchive.Location.Y);
-
-            buttonArchive.Location = new Point(buttonInProgress.Location.X,
-                buttonArchive.Location.Y);
-
-            buttonTrash.Location = new Point(buttonInProgress.Location.X,
-                buttonTrash.Location.Y);
-
-            dataGridView1.Width = buttonInProgress.Location.X - 6 - dataGridView1.Location.X;
-
-
             if (Properties.Settings.Default.Size == "Small")
-            {
                 SmallWindow();
-            }
             else if (Properties.Settings.Default.Size == "Medium")
-            {
                 MediumWindow();
-            }
             try
             {
                 UpdateTable();

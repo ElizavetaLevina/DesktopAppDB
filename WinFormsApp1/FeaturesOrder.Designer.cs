@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FeaturesOrder));
             tabControl1 = new TabControl();
             tabPageOrder = new TabPage();
+            linkLabelLogIn = new LinkLabel();
             listBoxDiagnosis = new ListBox();
             listBoxEquipment = new ListBox();
             label28 = new Label();
@@ -105,7 +106,7 @@
             textBoxEndGuarantee = new TextBox();
             textBoxGuaranteePeriod = new TextBox();
             textBoxAvailabilityGuarantee = new TextBox();
-            dateTimePicker1 = new DateTimePicker();
+            dateIssue = new DateTimePicker();
             label24 = new Label();
             label23 = new Label();
             label22 = new Label();
@@ -135,6 +136,7 @@
             // 
             // tabPageOrder
             // 
+            tabPageOrder.Controls.Add(linkLabelLogIn);
             tabPageOrder.Controls.Add(listBoxDiagnosis);
             tabPageOrder.Controls.Add(listBoxEquipment);
             tabPageOrder.Controls.Add(label28);
@@ -173,6 +175,17 @@
             tabPageOrder.TabIndex = 0;
             tabPageOrder.Text = "Информация о заказе";
             tabPageOrder.UseVisualStyleBackColor = true;
+            // 
+            // linkLabelLogIn
+            // 
+            linkLabelLogIn.Location = new Point(639, 10);
+            linkLabelLogIn.Name = "linkLabelLogIn";
+            linkLabelLogIn.Size = new Size(132, 33);
+            linkLabelLogIn.TabIndex = 33;
+            linkLabelLogIn.TabStop = true;
+            linkLabelLogIn.Text = "Войти (Ctrl+D)";
+            linkLabelLogIn.TextAlign = ContentAlignment.MiddleRight;
+            linkLabelLogIn.LinkClicked += LinkLabelLogIn_LinkClicked;
             // 
             // listBoxDiagnosis
             // 
@@ -872,7 +885,7 @@
             tabPageGuarantee.Controls.Add(textBoxEndGuarantee);
             tabPageGuarantee.Controls.Add(textBoxGuaranteePeriod);
             tabPageGuarantee.Controls.Add(textBoxAvailabilityGuarantee);
-            tabPageGuarantee.Controls.Add(dateTimePicker1);
+            tabPageGuarantee.Controls.Add(dateIssue);
             tabPageGuarantee.Controls.Add(label24);
             tabPageGuarantee.Controls.Add(label23);
             tabPageGuarantee.Controls.Add(label22);
@@ -923,15 +936,15 @@
             textBoxAvailabilityGuarantee.Size = new Size(260, 31);
             textBoxAvailabilityGuarantee.TabIndex = 6;
             // 
-            // dateTimePicker1
+            // dateIssue
             // 
-            dateTimePicker1.Enabled = false;
-            dateTimePicker1.Format = DateTimePickerFormat.Short;
-            dateTimePicker1.Location = new Point(270, 30);
-            dateTimePicker1.Name = "dateTimePicker1";
-            dateTimePicker1.Size = new Size(153, 31);
-            dateTimePicker1.TabIndex = 5;
-            dateTimePicker1.ValueChanged += DateTimePicker1_ValueChanged;
+            dateIssue.Enabled = false;
+            dateIssue.Format = DateTimePickerFormat.Short;
+            dateIssue.Location = new Point(270, 30);
+            dateIssue.Name = "dateIssue";
+            dateIssue.Size = new Size(153, 31);
+            dateIssue.TabIndex = 5;
+            dateIssue.ValueChanged += DateIssue_ValueChanged;
             // 
             // label24
             // 
@@ -1090,7 +1103,7 @@
         private Label label23;
         private Label label22;
         private Label label21;
-        private DateTimePicker dateTimePicker1;
+        private DateTimePicker dateIssue;
         private TextBox textBoxAvailabilityGuarantee;
         private TextBox textBoxGuaranteeLeft;
         private TextBox textBoxEndGuarantee;
@@ -1123,5 +1136,6 @@
         private Label label18;
         private ListBox listBoxDiagnosis;
         private ListBox listBoxEquipment;
+        private LinkLabel linkLabelLogIn;
     }
 }

@@ -1,4 +1,5 @@
-﻿using WinFormsApp1.DTO;
+﻿using Microsoft.VisualBasic.Logging;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Repository;
 using Color = System.Drawing.Color;
 
@@ -65,11 +66,7 @@ namespace WinFormsApp1
             checkBoxPriceAgreed.Checked = orderDTO.PriceAgreed;
             textBoxMaxPrice.Text = orderDTO.MaxPrice.ToString();
 
-            if (!logIn)
-            {
-                textBoxMaxPrice.Enabled = false;
-                checkBoxPriceAgreed.Enabled = false;
-            }
+            UpdateData();
 
             var clientDTO = clientRepository.GetClient(orderDTO.ClientId);
 
@@ -174,14 +171,13 @@ namespace WinFormsApp1
             label23.ForeColor = Color.FromArgb(105, 101, 148);
             label24.ForeColor = Color.FromArgb(105, 101, 148);
 
-            if (logIn) dateTimePicker1.Enabled = true;
-            else dateTimePicker1.Enabled = false;
+            
             textBoxAvailabilityGuarantee.Enabled = true;
             textBoxGuaranteePeriod.Enabled = true;
             textBoxEndGuarantee.Enabled = true;
             textBoxGuaranteeLeft.Enabled = true;
 
-            dateTimePicker1.Value = orderDTO.DateIssue.Value;
+            dateIssue.Value = orderDTO.DateIssue.Value;
 
             if (orderDTO.Guarantee > 0)
             {
@@ -201,7 +197,54 @@ namespace WinFormsApp1
                     (int)(orderDTO.DateEndGuarantee.Value - DateTime.Now).TotalDays);
             else
                 textBoxGuaranteeLeft.Text = "Закончилась";
+        }
 
+        private void LogInToTheSystem()
+        {
+            if (logIn)
+            {
+                Warning warning = new Warning()
+                {
+                    StartPosition = FormStartPosition.CenterParent,
+                    LabelText = "Выйти из системы?",
+                    ButtonNoText = "Нет",
+                    ButtonVisible = true
+                };
+                if(warning.ShowDialog() == DialogResult.OK)
+                    logIn = false;
+            }
+            else
+            {
+                LogInSystem logInSystem = new(true)
+                {
+                    StartPosition = FormStartPosition.CenterParent
+                };
+                if (logInSystem.ShowDialog() == DialogResult.OK)
+                    logIn = true;
+            }
+            UpdateData();
+        }
+
+        private void UpdateData()
+        {
+            if (logIn)
+            {
+                dateCreation.Enabled = true;
+                if (statusOrder == "GuaranteeIssue" || statusOrder == "Archive")
+                    dateIssue.Enabled = true;
+                linkLabelLogIn.Text = Properties.Settings.Default.Login;
+                textBoxMaxPrice.Enabled = true;
+                checkBoxPriceAgreed.Enabled = true;
+            }
+            else
+            {
+                dateCreation.Enabled = false;
+                if (statusOrder == "GuaranteeIssue" || statusOrder == "Archive")
+                    dateIssue.Enabled = false;
+                linkLabelLogIn.Text = "Войти (Ctrl+D)";
+                textBoxMaxPrice.Enabled = false;
+                checkBoxPriceAgreed.Enabled = false;
+            }
         }
 
         private void LinkLabelMaster_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -304,14 +347,14 @@ namespace WinFormsApp1
                 case "GuaranteeIssue":
                     foundProblem = textBoxProblem1.Text;
                     priceRepair = Convert.ToInt32(textBoxPrice1.Text);
-                    dateIssue = dateTimePicker1.Value;
-                    dateEndGuarantee = dateTimePicker1.Value.AddMonths(orderDTO.Guarantee);
+                    dateIssue = this.dateIssue.Value;
+                    dateEndGuarantee = this.dateIssue.Value.AddMonths(orderDTO.Guarantee);
                     break;
                 case "Archive":
                     foundProblem = textBoxProblem1.Text;
                     priceRepair = Convert.ToInt32(textBoxPrice1.Text);
-                    dateIssue = dateTimePicker1.Value;
-                    dateEndGuarantee = dateTimePicker1.Value.AddMonths(orderDTO.Guarantee);
+                    dateIssue = this.dateIssue.Value;
+                    dateEndGuarantee = this.dateIssue.Value.AddMonths(orderDTO.Guarantee);
                     break;
             }
 
@@ -378,12 +421,12 @@ namespace WinFormsApp1
                 e.Handled = true;
         }
 
-        private void DateTimePicker1_ValueChanged(object sender, EventArgs e)
+        private void DateIssue_ValueChanged(object sender, EventArgs e)
         {
-            if (dateTimePicker1.Value < orderDTO.DateCompleted.Value)
-                dateTimePicker1.Value = orderDTO.DateCompleted.Value;
+            if (dateIssue.Value < orderDTO.DateCompleted.Value)
+                dateIssue.Value = orderDTO.DateCompleted.Value;
 
-            textBoxEndGuarantee.Text = (dateTimePicker1.Value.AddMonths(orderDTO.Guarantee)).ToShortDateString();
+            textBoxEndGuarantee.Text = (dateIssue.Value.AddMonths(orderDTO.Guarantee)).ToShortDateString();
             if (((int)(DateTime.Parse(textBoxEndGuarantee.Text) - DateTime.Now).TotalDays) > 0)
                 textBoxGuaranteeLeft.Text = String.Format("{0} дн.", (int)(DateTime.Parse(textBoxEndGuarantee.Text) - DateTime.Now).TotalDays);
             else
@@ -454,22 +497,8 @@ namespace WinFormsApp1
         {
             if (e.Control && e.KeyCode == Keys.D)
             {
-                if (!logIn)
-                {
-                    LogInSystem logInSystem = new(true)
-                    {
-                        StartPosition = FormStartPosition.CenterParent
-                    };
-                    if (logInSystem.ShowDialog() == DialogResult.OK)
-                    {
-                        logIn = true;
-                        textBoxMaxPrice.Enabled = true;
-                        checkBoxPriceAgreed.Enabled = true;
-                        if (statusOrder == "GuaranteeIssue" || statusOrder == "Archive")
-                            dateTimePicker1.Enabled = true;
-                    }
-                    e.SuppressKeyPress = true;
-                }
+                LogInToTheSystem();
+                e.SuppressKeyPress = true;
             }
         }
 
@@ -547,6 +576,11 @@ namespace WinFormsApp1
             {
                 listBoxDiagnosis.Visible = false;
             }
+        }
+
+        private void LinkLabelLogIn_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            LogInToTheSystem();
         }
     }
 }

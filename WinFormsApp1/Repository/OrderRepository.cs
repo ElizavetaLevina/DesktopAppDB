@@ -44,6 +44,49 @@ namespace WinFormsApp1.Repository
                 .ToList();
         }
 
+
+        /// <summary>
+        /// Получение списка заказов для поиска
+        /// </summary>
+        /// <param name="numberOrder">Номер заказа</param>
+        /// <param name="dateCreation">Дата создания</param>
+        /// <param name="dateStartWork">Дата начала работы</param>
+        /// <param name="masterName">Имя мастера</param>
+        /// <param name="typeTechnic">Тип устройства</param>
+        /// <param name="brandTechnic">Бренд устройства</param>
+        /// <param name="modelTechnic">Модель устройства</param>
+        /// <param name="idClient"></param>
+        /// <returns>Список заказов</returns>
+        public List<OrderTableDTO> GetOrdersBySearch(string numberOrder, string dateCreation, string dateStartWork, string masterName,
+            string typeTechnic, string brandTechnic, string modelTechnic, string idClient)
+        {
+            Context context = new();
+
+            var set = context.Orders.Where(c => true);
+
+            if(numberOrder != "")
+                set = set.Where(i => i.NumberOrder.ToString().Contains(numberOrder));
+            if (dateCreation != "")
+                set = set.Where(i => i.DateCreation.ToString().StartsWith(dateCreation));
+            if (dateStartWork != "")
+                set = set.Where(i => i.DateStartWork != null && i.DateStartWork.ToString().StartsWith(dateStartWork));
+            if (masterName != "")
+                set = set.Where(i => i.MasterId != null && i.Master.NameMaster.ToLower().Contains(masterName.ToLower()));
+            if (typeTechnic != "")
+                set = set.Where(i => i.TypeTechnic.NameTypeTechnic.ToLower().StartsWith(typeTechnic.ToLower()));
+            if (brandTechnic != "")
+                set = set.Where(i => i.BrandTechnic.NameBrandTechnic.ToLower().StartsWith(brandTechnic.ToLower()));
+            if (modelTechnic != "")
+                set = set.Where(i => i.ModelTechnic.ToLower().StartsWith(modelTechnic.ToLower()));
+            if (idClient != "")
+                set = set.Where(i => i.Client.IdClient.Contains(idClient));
+
+            return set
+                .OrderByDescending(i => i.NumberOrder)
+                .Select(a => new OrderTableDTO(a))
+                .ToList();
+        }
+
         /// <summary>
         /// Получение записи по идентификатору
         /// </summary>

@@ -4,13 +4,14 @@ using Color = System.Drawing.Color;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Repository;
 using WinFormsApp1.Reports;
+using WinFormsApp1.Enum;
 
 namespace WinFormsApp1
 {
     public partial class Form1 : Form
     {
         public int idOrder;
-        public string status = "";
+        StatusOrderEnum status;
         public bool logInSystem = false;
 
         OrderRepository orderRepository = new();
@@ -69,12 +70,12 @@ namespace WinFormsApp1
 
             switch (status)
             {
-                case "InRepair":
+                case StatusOrderEnum.InRepair:
                     dataGridView1.Columns[nameof(OrderTableDTO.DateCompleted)].Visible = false;
                     dataGridView1.Columns[nameof(OrderTableDTO.DateIssue)].Visible = false;
                     dataGridView1.Columns[nameof(OrderTableDTO.Diagnosis)].Visible = true;
                     break;
-                case "Completed":
+                case StatusOrderEnum.Completed:
                     dataGridView1.Columns[nameof(OrderTableDTO.DateStartWork)].Visible = false;
                     dataGridView1.Columns[nameof(OrderTableDTO.DateIssue)].Visible = false;
                     break;
@@ -86,10 +87,10 @@ namespace WinFormsApp1
                     double width = Convert.ToDouble(dataGridView1.Width) / 100.0 * percentOthers[i];
                     switch (status)
                     {
-                        case "InRepair":
+                        case StatusOrderEnum.InRepair:
                             width = Convert.ToDouble(dataGridView1.Width) / 100.0 * percentInRepair[i];
                             break;
-                        case "Completed":
+                        case StatusOrderEnum.Completed:
                             width = Convert.ToDouble(dataGridView1.Width) / 100.0 * percentCompleted[i];
                             break;
                     }
@@ -102,26 +103,26 @@ namespace WinFormsApp1
         {
             switch (status)
             {
-                case "InRepair":
+                case StatusOrderEnum.InRepair:
                     InProgress();
                     break;
-                case "Completed":
+                case StatusOrderEnum.Completed:
                     Order—ompleted();
                     break;
-                case "GuaranteeIssue":
+                case StatusOrderEnum.GuaranteeIssue:
                     OrderGuarantee();
                     break;
-                case "Archive":
+                case StatusOrderEnum.Archive:
                     OrderArchive();
                     break;
-                case "Trash":
+                case StatusOrderEnum.Trash:
                     Trash();
                     break;
             }
         }
         private void InProgress()
         {
-            status = "InRepair";
+            status = StatusOrderEnum.InRepair;
             try
             {
                 List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(inProgress: true, deleted: false, dateCreation: true);
@@ -134,7 +135,7 @@ namespace WinFormsApp1
 
         private void Order—ompleted()
         {
-            status = "Completed";
+            status = StatusOrderEnum.Completed;
             try
             {
                 List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(inProgress: false, deleted: false, issue: false,
@@ -148,7 +149,7 @@ namespace WinFormsApp1
 
         private void OrderGuarantee()
         {
-            status = "GuaranteeIssue";
+            status = StatusOrderEnum.GuaranteeIssue;
             try
             {
                 List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(inProgress: false, deleted: false, issue: true,
@@ -168,7 +169,7 @@ namespace WinFormsApp1
 
         private void OrderArchive()
         {
-            status = "Archive";
+            status = StatusOrderEnum.Archive;
             try
             {
                 List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(inProgress: false, deleted: false, issue: true,
@@ -189,7 +190,7 @@ namespace WinFormsApp1
 
         private void Trash()
         {
-            status = "Trash";
+            status = StatusOrderEnum.Trash;
             try
             {
                 List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(deleted: true, dateCompleted: true);
@@ -209,7 +210,7 @@ namespace WinFormsApp1
 
             if (addDeviceForRepair.ShowDialog() == DialogResult.OK)
             {
-                status = "InRepair";
+                status = StatusOrderEnum.InRepair;
                 /*UpdateDB();*/
                 UpdateTableData();
                 ToolStripEnabled();
@@ -264,7 +265,7 @@ namespace WinFormsApp1
                 idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
                 var orderDTO = orderRepository.GetOrder(idOrder);
 
-                if (status == "Trash")
+                if (status == StatusOrderEnum.Trash)
                 {
                     Warning warning = new()
                     {
@@ -335,7 +336,7 @@ namespace WinFormsApp1
                 idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
                 var orderDTO = orderRepository.GetOrder(idOrder);
                 Warning warning = new();
-                if (orderDTO.MasterId == null)
+                if (orderDTO.MainMasterId == null)
                 {
                     warning = new()
                     {
@@ -391,7 +392,7 @@ namespace WinFormsApp1
                         detailsInOrder.ShowDialog();
                     }
                 }
-                if (status == "InRepair")
+                if (status == StatusOrderEnum.InRepair)
                 {
                     CompletedOrder completedOrder = new(idOrder)
                     {
@@ -416,7 +417,7 @@ namespace WinFormsApp1
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
                 idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
 
-                if(status == "Completed")
+                if(status == StatusOrderEnum.Completed)
                 {
                     IssuingClient issuingClient = new(idOrder)
                     {
@@ -450,7 +451,7 @@ namespace WinFormsApp1
 
                 if (warning.ShowDialog() == DialogResult.OK)
                 {
-                    if(status == "Completed")
+                    if(status == StatusOrderEnum.Completed)
                     {
                         orderDTO.InProgress = true;
                         if (orderDTO.ReturnUnderGuarantee)
@@ -493,7 +494,7 @@ namespace WinFormsApp1
 
                 if (warning.ShowDialog() == DialogResult.OK)
                 {
-                    if (status == "GuaranteeIssue")
+                    if (status == StatusOrderEnum.GuaranteeIssue)
                     {
                         orderDTO.DateCreation = DateTime.Now;
                         orderDTO.DateStartWork = DateTime.Now;
@@ -628,12 +629,12 @@ namespace WinFormsApp1
                 Diagnosis = orderDTO.Diagnosis?.Name,
                 Note = orderDTO.Note
             };
-            if(orderDTO.MasterId != null)
-                newOrder.MasterName = orderDTO.Master?.NameMaster;
+            //if(orderDTO.MasterId != null)
+            //    newOrder.MainMasterName = orderDTO.Master?.NameMaster;
 
             if (newOrder.ShowDialog() == DialogResult.OK)
             {
-                status = "InRepair";
+                status = StatusOrderEnum.InRepair;
                 /*UpdateDB();*/
                 UpdateTableData();
             }
@@ -676,7 +677,7 @@ namespace WinFormsApp1
             {
                 idOrder = Convert.ToInt32(dataGridView1.Rows[i].Cells["Id"].Value);
                 var orderDTO = orderRepository.GetOrder(idOrder);
-                if (orderDTO.MasterId == null)
+                if (orderDTO.MainMasterId == null)
                 {
                     dataGridView1.Rows[i].DefaultCellStyle.ForeColor = Color.DimGray;
                     dataGridView1.Rows[i].DefaultCellStyle.SelectionForeColor = Color.DimGray;
@@ -711,10 +712,10 @@ namespace WinFormsApp1
             var countDays = 0;
             switch (status)
             {
-                case "InRepair":
+                case StatusOrderEnum.InRepair:
                     countDays = (DateTime.Now - orderDTO.DateStartWork.Value).Days;
                     break;
-                case "Completed":
+                case StatusOrderEnum.Completed:
                     countDays = (DateTime.Now - orderDTO.DateCompleted.Value).Days;
                     break;
             }
@@ -723,6 +724,8 @@ namespace WinFormsApp1
                 color = Properties.Settings.Default.FirstLevelColor;
             else if (countDays > Convert.ToInt32(Properties.Settings.Default.SecondLevelText))
                 color = Properties.Settings.Default.ThirdLevelColor;
+            else if (orderDTO.Issue)
+                color = Color.Black;
             else
                 color = Properties.Settings.Default.SecondLevelColor;
             return color;
@@ -732,7 +735,7 @@ namespace WinFormsApp1
         {
             switch (status)
             {
-                case "InRepair":
+                case StatusOrderEnum.InRepair:
                     buttonDetails.Enabled = true;
                     buttonDelete.Enabled = true;
                     buttonRecoveryOrder.Enabled = false;
@@ -742,7 +745,7 @@ namespace WinFormsApp1
                     buttonReturnGuarantee.Enabled = false;
                     buttonFeaturesOrder.Enabled = true;
                     break;
-                case "Completed":
+                case StatusOrderEnum.Completed:
                     buttonDetails.Enabled = false;
                     buttonDelete.Enabled = true;
                     buttonRecoveryOrder.Enabled = false;
@@ -752,7 +755,7 @@ namespace WinFormsApp1
                     buttonReturnGuarantee.Enabled = false;
                     buttonFeaturesOrder.Enabled = true;
                     break;
-                case "GuaranteeIssue":
+                case StatusOrderEnum.GuaranteeIssue:
                     buttonDetails.Enabled = false;
                     buttonDelete.Enabled = true;
                     buttonRecoveryOrder.Enabled = false;
@@ -762,7 +765,7 @@ namespace WinFormsApp1
                     buttonReturnGuarantee.Enabled = true;
                     buttonFeaturesOrder.Enabled = true;
                     break;
-                case "Archive":
+                case StatusOrderEnum.Archive:
                     buttonDetails.Enabled = false;
                     buttonDelete.Enabled = true;
                     buttonRecoveryOrder.Enabled = false;
@@ -772,7 +775,7 @@ namespace WinFormsApp1
                     buttonReturnGuarantee.Enabled = false;
                     buttonFeaturesOrder.Enabled = true;
                     break;
-                case "Trash":
+                case StatusOrderEnum.Trash:
                     buttonDetails.Enabled = false;
                     buttonDelete.Enabled = true;
                     buttonRecoveryOrder.Enabled = true;
@@ -789,7 +792,7 @@ namespace WinFormsApp1
         {
             switch (status)
             {
-                case "InRepair":
+                case StatusOrderEnum.InRepair:
                     itemFeaturesOrder.Enabled = true;
                     itemDetails.Enabled = true;
                     itemDeleteOrder.Enabled = true;
@@ -804,7 +807,7 @@ namespace WinFormsApp1
                     itemAddToBlacklist.Enabled = true;
                     itemRemoveMarks.Enabled = true;
                     break;
-                case "Completed":
+                case StatusOrderEnum.Completed:
                     itemFeaturesOrder.Enabled = true;
                     itemDetails.Enabled = false;
                     itemDeleteOrder.Enabled = true;
@@ -819,7 +822,7 @@ namespace WinFormsApp1
                     itemAddToBlacklist.Enabled = true;
                     itemRemoveMarks.Enabled = true;
                     break;
-                case "GuaranteeIssue":
+                case StatusOrderEnum.GuaranteeIssue:
                     itemFeaturesOrder.Enabled = true;
                     itemDetails.Enabled = false;
                     itemDeleteOrder.Enabled = true;
@@ -834,7 +837,7 @@ namespace WinFormsApp1
                     itemAddToBlacklist.Enabled = true;
                     itemRemoveMarks.Enabled = true;
                     break;
-                case "Archive":
+                case StatusOrderEnum.Archive:
                     itemFeaturesOrder.Enabled = true;
                     itemDetails.Enabled = false;
                     itemDeleteOrder.Enabled = true;
@@ -845,7 +848,7 @@ namespace WinFormsApp1
                     itemAddToBlacklist.Enabled = true;
                     itemRemoveMarks.Enabled = true;
                     break;
-                case "Trash":
+                case StatusOrderEnum.Trash:
                     itemFeaturesOrder.Enabled = false;
                     itemDetails.Enabled = false;
                     itemDeleteOrder.Enabled = true;
@@ -868,23 +871,23 @@ namespace WinFormsApp1
         {
             switch (status)
             {
-                case "InRepair":
+                case StatusOrderEnum.InRepair:
                     itemGetting.Enabled = true;
                     itemIssuing.Enabled = false;
                     break;
-                case "Completed":
+                case StatusOrderEnum.Completed:
                     itemGetting.Enabled = true;
                     itemIssuing.Enabled = false;
                     break;
-                case "GuaranteeIssue":
+                case StatusOrderEnum.GuaranteeIssue:
                     itemGetting.Enabled = true;
                     itemIssuing.Enabled = true;
                     break;
-                case "Archive":
+                case StatusOrderEnum.Archive:
                     itemGetting.Enabled = true;
                     itemIssuing.Enabled = true;
                     break;
-                case "Trash":
+                case StatusOrderEnum.Trash:
                     itemGetting.Enabled = false;
                     itemIssuing.Enabled = false;
                     break;
@@ -905,7 +908,7 @@ namespace WinFormsApp1
                 contextMenu1.Show(MousePosition);
                 switch (status)
                 {
-                    case "InRepair":
+                    case StatusOrderEnum.InRepair:
                         item1.Enabled = true;
                         item2.Enabled = true;
                         item3.Enabled = true;
@@ -916,7 +919,7 @@ namespace WinFormsApp1
                         item5_3.Enabled = false;
                         item5_4.Enabled = false;
                         break;
-                    case "Completed":
+                    case StatusOrderEnum.Completed:
                         item1.Enabled = true;
                         item2.Enabled = false;
                         item3.Enabled = true;
@@ -927,7 +930,7 @@ namespace WinFormsApp1
                         item5_3.Enabled = true;
                         item5_4.Enabled = false;
                         break;
-                    case "GuaranteeIssue":
+                    case StatusOrderEnum.GuaranteeIssue:
                         item1.Enabled = true;
                         item2.Enabled = false;
                         item3.Enabled = true;
@@ -938,14 +941,14 @@ namespace WinFormsApp1
                         item5_3.Enabled = false;
                         item5_4.Enabled = true;
                         break;
-                    case "Archive":
+                    case StatusOrderEnum.Archive:
                         item1.Enabled = true;
                         item2.Enabled = false;
                         item3.Enabled = true;
                         item4.Enabled = false;
                         item5.Enabled = false;
                         break;
-                    case "Trash":
+                    case StatusOrderEnum.Trash:
                         item1.Enabled = false;
                         item2.Enabled = false;
                         item3.Enabled = true;
@@ -1288,7 +1291,7 @@ namespace WinFormsApp1
 
         private void ItemMalfunction_Click(object sender, EventArgs e)
         {
-            MalfunctionEquipmentDiagnosis malfunctionEquipmentDiagnosis = new("malfunction")
+            MalfunctionEquipmentDiagnosis malfunctionEquipmentDiagnosis = new(NameTableToEditEnum.Malfunction)
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -1298,7 +1301,7 @@ namespace WinFormsApp1
 
         private void ItemDiagnosis_Click(object sender, EventArgs e)
         {
-            MalfunctionEquipmentDiagnosis malfunctionEquipmentDiagnosis = new("diagnosis")
+            MalfunctionEquipmentDiagnosis malfunctionEquipmentDiagnosis = new(NameTableToEditEnum.Diagnosis)
             {
                 StartPosition = FormStartPosition.CenterParent,
                 Text = "ƒË‡„ÌÓÁ˚"
@@ -1310,7 +1313,7 @@ namespace WinFormsApp1
 
         private void ItemEquipment_Click(object sender, EventArgs e)
         {
-            MalfunctionEquipmentDiagnosis malfunctionEquipmentDiagnosis = new("equipment")
+            MalfunctionEquipmentDiagnosis malfunctionEquipmentDiagnosis = new(NameTableToEditEnum.Equipment)
             {
                 StartPosition = FormStartPosition.CenterParent,
                 Text = " ÓÏÔÎÂÍÚ‡ˆËˇ"
@@ -1509,23 +1512,23 @@ namespace WinFormsApp1
             ChangeColorRows();
         }
 
-        public void FocusButton(string status)
+        public void FocusButton(StatusOrderEnum status)
         {
             switch (status)
             {
-                case "InRepair":
+                case StatusOrderEnum.InRepair:
                     buttonInProgress.Focus();
                     break;
-                case "Completed":
+                case StatusOrderEnum.Completed:
                     buttonCompleted.Focus();
                     break;
-                case "GuaranteeIssue":
+                case StatusOrderEnum.GuaranteeIssue:
                     buttonGuarantee.Focus();
                     break;
-                case "Archive":
+                case StatusOrderEnum.Archive:
                     buttonArchive.Focus();
                     break;
-                case "Trash":
+                case StatusOrderEnum.Trash:
                     buttonTrash.Focus();
                     break;
             }
@@ -1630,28 +1633,7 @@ namespace WinFormsApp1
                 dateCreation: textBoxDateCreation.Text, dateStartWork: textBoxDateStartWork.Text, 
                 masterName: textBoxNameMaster.Text, typeTechnic: textBoxTypeDevice.Text, 
                 brandTechnic: textBoxBrandDevice.Text, modelTechnic: textBoxModel.Text, idClient: textBoxNameClient.Text);
-            /*using Context context = new();
-            var list = context.Orders.Where(i => i.Id.ToString().IndexOf(textBoxIdOrder.Text) > -1 &&
-            i.DateCreation.ToString().StartsWith(textBoxDateCreation.Text) &&
-            ((i.DateStartWork == null && textBoxDateStartWork.Text == "") || (i.DateStartWork != null && i.DateStartWork.ToString().StartsWith(textBoxDateStartWork.Text))) &&
-            ((i.MasterId == null && textBoxNameMaster.Text == "") || (i.MasterId != null && i.Master.NameMaster.StartsWith(textBoxNameMaster.Text))) &&
-            i.TypeTechnic.NameTypeTechnic.StartsWith(textBoxTypeDevice.Text) &&
-            i.BrandTechnic.NameBrandTechnic.StartsWith(textBoxBrandDevice.Text) &&
-            i.ModelTechnic.StartsWith(textBoxModel.Text) &&
-            i.Client.NameAndAddressClient.IndexOf(textBoxNameClient.Text) > -1).Select(a => new
-            {
-                a.Id,
-                a.DateCreation,
-                a.DateStartWork,
-                a.Master.NameMaster,
-                a.TypeTechnic.NameTypeTechnic,
-                a.BrandTechnic.NameBrandTechnic,
-                a.ModelTechnic,
-                a.Client.NameAndAddressClient,
-                a.Deleted,
-                a.ReturnUnderGuarantee,
-                a.ColorRow
-            }).OrderByDescending(i => i.Id).ToList();*/
+  
             dataGridView1.DataSource = Funcs.ToDataTable(ordersDTO);
             ChangeColorRows();
             if (CheckNoFilters())

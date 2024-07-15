@@ -11,6 +11,7 @@ namespace WinFormsApp1
         public string TypeSalary { get; set; } = "rate";
         public int Rate { get; set; }
 
-        public virtual ICollection<Order>? Order { get; set; }
+        public virtual ICollection<Order>? MainOrder { get; set; }
+        public virtual ICollection<Order>? AdditionalOrder { get; set; }
     }
 }

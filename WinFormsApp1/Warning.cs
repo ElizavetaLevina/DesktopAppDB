@@ -1,4 +1,6 @@
-﻿namespace WinFormsApp1
+﻿using WinFormsApp1.Enum;
+
+namespace WinFormsApp1
 {
     public partial class Warning : Form
     {
@@ -59,7 +61,7 @@
 
         private void LinkLabelChangeMaxPrice_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            FeaturesOrder featuresOrder = new(id, "InRepair", true)
+            FeaturesOrder featuresOrder = new(id, StatusOrderEnum.InRepair, true)
             {
                 StartPosition = FormStartPosition.CenterParent
             };

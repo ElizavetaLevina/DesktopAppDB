@@ -1,4 +1,5 @@
 ﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Enum;
 using WinFormsApp1.Reports;
 using WinFormsApp1.Repository;
 using Color = System.Drawing.Color;
@@ -27,9 +28,10 @@ namespace WinFormsApp1
         public AddDeviceIntoRepair()
         {
             InitializeComponent();
-            UpdateComboBox(0);
-            UpdateComboBox(1);
-            UpdateComboBox(2);
+            UpdateComboBox(ElementOfRepairEnum.MainMasterElement);
+            UpdateComboBox(ElementOfRepairEnum.AdditionalMasterElement);
+            UpdateComboBox(ElementOfRepairEnum.TypeDeviceElement);
+            UpdateComboBox(ElementOfRepairEnum.BrandDeviceElement);
             textBoxNumberOrder.Text = IdKeyOrder().ToString();
 
             var clientsDTO = clientRepository.GetClients();
@@ -103,15 +105,13 @@ namespace WinFormsApp1
                         return;
                     if (!CheckIdClient())
                         return;
-                    int? idMaster = null;
+                    var mainMasterId = ((MasterDTO)comboBoxMainMaster.SelectedItem).Id;
+                    var additionalMasterId = ((MasterDTO)comboBoxAdditionalMaster.SelectedItem).Id;
                     DateTime? dateStartWork = null;
                     int? maxPrice = null;
                     Task? task;
-                    if (comboBoxMaster.Text != "-")
-                    {
-                        idMaster = ((MasterDTO)comboBoxMaster.SelectedItem).Id; 
+                    if (comboBoxMainMaster.Text != "-")
                         dateStartWork = dateTimePicker1.Value;
-                    }
 
                     if (checkBox1.Checked)
                         maxPrice = Convert.ToInt32(textBoxMaxPrice.Text);
@@ -130,7 +130,7 @@ namespace WinFormsApp1
                         });
                         task.Wait();
                     }
-                    
+
                     var equipmentDTO = equipmentRepository.GetEquipmentByName(textBoxEquipment.Text);
                     int? idEquipment = equipmentDTO.Id;
                     if (idEquipment == 0)
@@ -166,7 +166,8 @@ namespace WinFormsApp1
                         Id = 0,
                         NumberOrder = Convert.ToInt32(textBoxNumberOrder.Text),
                         ClientId = idClient,
-                        MasterId = idMaster,
+                        MainMasterId = mainMasterId,
+                        AdditionalMasterId = additionalMasterId,
                         DateCreation = dateTimePicker1.Value,
                         DateStartWork = dateStartWork,
                         TypeTechnicId = ((TypeTechnicDTO)comboBoxDevice.SelectedItem).Id,
@@ -303,30 +304,38 @@ namespace WinFormsApp1
                 StartPosition = FormStartPosition.CenterParent
             };
             addMaster.ShowDialog();
-            UpdateComboBox(0);
+            UpdateComboBox(ElementOfRepairEnum.MainMasterElement);
+            UpdateComboBox(ElementOfRepairEnum.AdditionalMasterElement);
         }
 
-        private void UpdateComboBox(int idBox)
+        private void UpdateComboBox(ElementOfRepairEnum elementOfRepair)
         {
-            switch (idBox)
+            var mastersDTO = masterRepository.GetMasters();
+            mastersDTO.Insert(0, new MasterDTO() { Id = null, NameMaster = "-" });
+            switch (elementOfRepair)
             {
-                case 0:
-                    comboBoxMaster.DataSource = null;
-                    comboBoxMaster.Items.Clear();
-                    comboBoxMaster.ValueMember = nameof(MasterDTO.Id);
-                    comboBoxMaster.DisplayMember = nameof(MasterDTO.NameMaster);
-                    var mastersDTO = masterRepository.GetMasters();
-                    mastersDTO.Insert(0, new MasterDTO() { Id = null, NameMaster = "-" });
-                    comboBoxMaster.DataSource = mastersDTO;
+                case ElementOfRepairEnum.MainMasterElement:
+                    comboBoxMainMaster.DataSource = null;
+                    comboBoxMainMaster.Items.Clear();
+                    comboBoxMainMaster.ValueMember = nameof(MasterDTO.Id);
+                    comboBoxMainMaster.DisplayMember = nameof(MasterDTO.NameMaster);
+                    comboBoxMainMaster.DataSource = mastersDTO;
                     break;
-                case 1:
+                case ElementOfRepairEnum.AdditionalMasterElement:
+                    comboBoxAdditionalMaster.DataSource = null;
+                    comboBoxAdditionalMaster.Items.Clear();
+                    comboBoxAdditionalMaster.ValueMember = nameof(MasterDTO.Id);
+                    comboBoxAdditionalMaster.DisplayMember = nameof(MasterDTO.NameMaster);
+                    comboBoxAdditionalMaster.DataSource = mastersDTO;
+                    break;
+                case ElementOfRepairEnum.TypeDeviceElement:
                     comboBoxDevice.DataSource = null;
                     comboBoxDevice.Items.Clear();
                     comboBoxDevice.ValueMember = nameof(TypeTechnicDTO.Id);
                     comboBoxDevice.DisplayMember = nameof(TypeTechnicDTO.NameTypeTechnic);
                     comboBoxDevice.DataSource = typeTechnicRepository.GetTypesTechnic();
                     break;
-                case 2:
+                case ElementOfRepairEnum.BrandDeviceElement:
                     comboBoxBrand.DataSource = null;
                     comboBoxBrand.Items.Clear();
                     comboBoxBrand.ValueMember = nameof(TypeBrandComboBoxDTO.IdBrand);
@@ -340,11 +349,6 @@ namespace WinFormsApp1
         {
             contextMenuStrip1.Show(MousePosition);
         }
-
-        /*private bool CheckClient()
-        {
-            return clientRepository.CheckClientByIdClient(textBoxNameClient.Text);
-        }*/
 
         private int IdKeyOrder()
         {
@@ -373,9 +377,9 @@ namespace WinFormsApp1
             listBoxClient.Items.Clear();
             listBoxClient.Visible = false;
 
-            foreach(var client in oldClients)
+            foreach (var client in oldClients)
             {
-                if(client.StartsWith(textBoxNameClient.Text) && textBoxNameClient.Text.Length > 0 && !loading)
+                if (client.StartsWith(textBoxNameClient.Text) && textBoxNameClient.Text.Length > 0 && !loading)
                 {
                     listBoxClient.Visible = true;
                     listBoxClient.Items.Add(client);
@@ -419,7 +423,7 @@ namespace WinFormsApp1
                 StartPosition = FormStartPosition.CenterParent
             };
             typeTechnic.ShowDialog();
-            UpdateComboBox(1);
+            UpdateComboBox(ElementOfRepairEnum.TypeDeviceElement);
         }
 
         private void LinkLabelBrand_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -429,7 +433,7 @@ namespace WinFormsApp1
                 StartPosition = FormStartPosition.CenterParent
             };
             brandTechnic.ShowDialog();
-            UpdateComboBox(2);
+            UpdateComboBox(ElementOfRepairEnum.BrandDeviceElement);
         }
 
         private void TextBoxNumberOrder_KeyPress(object sender, KeyPressEventArgs e)
@@ -446,7 +450,7 @@ namespace WinFormsApp1
 
         private void ComboBoxDevice_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateComboBox(2);
+            UpdateComboBox(ElementOfRepairEnum.BrandDeviceElement);
         }
 
         private void TextBoxEquipment_TextChanged(object sender, EventArgs e)
@@ -457,7 +461,7 @@ namespace WinFormsApp1
             nameTextBox = "equipment";
 
             equipmentsDTO = equipmentRepository.GetEquipmentsByName(textBoxEquipment.Text);
-            foreach(var equipment in equipmentsDTO)
+            foreach (var equipment in equipmentsDTO)
             {
                 if (!loading)
                 {
@@ -475,7 +479,7 @@ namespace WinFormsApp1
             nameTextBox = "diagnosis";
 
             diagnosesDTO = diagnosisRepository.GetDiagnosesByName(textBoxDiagnosis.Text);
-            foreach(var diagnosis in diagnosesDTO)
+            foreach (var diagnosis in diagnosesDTO)
             {
                 if (!loading)
                 {
@@ -573,10 +577,30 @@ namespace WinFormsApp1
             textBoxNumberOrder.Text = IdKeyOrder().ToString();
         }
 
-        public string MasterName
+        private void ComboBoxMaster1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            get { return comboBoxMaster.Text; }
-            set { comboBoxMaster.Text = value; }
+            if (comboBoxMainMaster.Text != "-")
+                comboBoxAdditionalMaster.Enabled = true;
+            else
+                comboBoxAdditionalMaster.Enabled = false;
+        }
+
+        private void ComboBoxMaster2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(comboBoxMainMaster.Text == comboBoxAdditionalMaster.Text)
+                comboBoxAdditionalMaster.SelectedIndex = 0;
+        }
+
+        public string MainMasterName
+        {
+            get { return comboBoxMainMaster.Text; }
+            set { comboBoxMainMaster.Text = value; }
+        }
+
+        public string AdditionalMasterName
+        {
+            get { return comboBoxAdditionalMaster.Text; }
+            set { comboBoxAdditionalMaster.Text = value; }
         }
 
         public string TypeDevice

@@ -18,8 +18,8 @@ namespace WinFormsApp1.Reports
                 string device = String.Format("{0} {1} {2}", orderDTO.TypeTechnic?.Name,
                     orderDTO.BrandTechnic?.Name, orderDTO.ModelTechnic);
 
-                template.AddVariable("Id", value: orderDTO.Id);
-                template.AddVariable("MasterName", value: orderDTO.Master?.NameMaster);
+                template.AddVariable("Id", value: orderDTO.NumberOrder);
+                template.AddVariable("MasterName", value: orderDTO.MainMaster?.NameMaster);
                 template.AddVariable("IdClient", value: orderDTO.Client?.IdClient);
                 template.AddVariable("ClientNameAndAddress", value: orderDTO.Client?.NameAndAddressClient);
                 template.AddVariable("ClientSecondPhone", value: orderDTO.Client?.NumberSecondPhone);

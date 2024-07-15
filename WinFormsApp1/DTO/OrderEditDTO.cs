@@ -17,8 +17,10 @@ namespace WinFormsApp1.DTO
         public int NumberOrder { get; set; }
         public int ClientId { get; set; }
         public virtual ClientEditDTO? Client { get; set; }
-        public int? MasterId { get; set; }
-        public virtual MasterEditDTO? Master { get; set; }
+        public int? MainMasterId { get; set; }
+        public virtual MasterEditDTO? MainMaster { get; set; }
+        public int? AdditionalMasterId { get; set; }
+        public virtual MasterEditDTO? AdditionalMaster { get; set; }
         public DateTime? DateCreation { get; set; }
         public DateTime? DateStartWork { get; set; }
         public DateTime? DateCompleted { get; set; }
@@ -54,8 +56,10 @@ namespace WinFormsApp1.DTO
             NumberOrder = order.NumberOrder;
             ClientId = order.ClientId;
             Client = new ClientEditDTO(order.Client);
-            MasterId = order.MasterId;
-            Master = order.Master != null ? new MasterEditDTO(order.Master) : null;
+            MainMasterId = order.MainMasterId;
+            MainMaster = order.MainMaster != null ? new MasterEditDTO(order.MainMaster) : null;
+            AdditionalMasterId = order.AdditionalMasterId;
+            AdditionalMaster = order.AdditionalMaster != null ? new MasterEditDTO(order.AdditionalMaster) : null;
             DateCreation = order.DateCreation;
             DateStartWork = order.DateStartWork;
             DateCompleted = order.DateCompleted;

@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualBasic.Logging;
-using WinFormsApp1.DTO;
+﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Enum;
 using WinFormsApp1.Repository;
 using Color = System.Drawing.Color;
 
@@ -8,7 +8,7 @@ namespace WinFormsApp1
     public partial class FeaturesOrder : Form
     {
         public int idOrder;
-        public string statusOrder;
+        StatusOrderEnum statusOrder;
         public bool show = true;
         public bool logIn;
         OrderEditDTO orderDTO;
@@ -23,15 +23,15 @@ namespace WinFormsApp1
         DiagnosisRepository diagnosisRepository = new();
         List<DiagnosisEditDTO> diagnosesDTO;
         List<EquipmentEditDTO> equipmentsDTO;
-        public FeaturesOrder(int id, string status, bool _logIn)
+        public FeaturesOrder(int id, StatusOrderEnum status, bool _logIn)
         {
             InitializeComponent();
             logIn = _logIn;
             idOrder = id;
             statusOrder = status;
-            Text = String.Format("Свойства устройства (заказ № {0} )", id);
             orderDTO = orderRepository.GetOrder(idOrder);
-            textBoxIdOrder.Text = idOrder.ToString();
+            textBoxIdOrder.Text = orderDTO.NumberOrder.ToString();
+            Text = String.Format("Свойства устройства (заказ № {0} )", orderDTO.NumberOrder);
 
             if (orderDTO.InProgress)
                 textBoxStatus.Text = "Находится в ремонте";
@@ -44,20 +44,17 @@ namespace WinFormsApp1
             listBoxEquipment.Visible = false;
             listBoxDiagnosis.Visible = false;
 
-            UpdateComboBox(0);
+            UpdateComboBox(ElementOfRepairEnum.MainMasterElement);
+            UpdateComboBox(ElementOfRepairEnum.AdditionalMasterElement);
 
-            var mastersDTO = masterRepository.GetMasters();
-
-            if (mastersDTO.Count > 0 && orderDTO.MasterId != null)
-                comboBoxMaster.SelectedIndex = comboBoxMaster.FindStringExact(orderDTO.Master?.NameMaster);
 
             dateCreation.Value = orderDTO.DateCreation.Value;
 
-            UpdateComboBox(1);
-            comboBoxDevice.SelectedIndex = comboBoxDevice.FindStringExact(orderDTO.TypeTechnic?.Name);
+            UpdateComboBox(ElementOfRepairEnum.TypeDeviceElement);
+            
 
-            UpdateComboBox(2);
-            comboBoxBrand.SelectedIndex = comboBoxBrand.FindStringExact(orderDTO.BrandTechnic?.Name);
+            UpdateComboBox(ElementOfRepairEnum.BrandDeviceElement);
+            
 
             textBoxModel.Text = orderDTO.ModelTechnic;
 
@@ -82,44 +79,57 @@ namespace WinFormsApp1
 
             switch (status)
             {
-                case "Completed":
+                case StatusOrderEnum.Completed:
                     OrderComplete();
                     break;
-                case "GuaranteeIssue":
+                case StatusOrderEnum.GuaranteeIssue:
                     OrderIssue();
                     break;
-                case "Archive":
+                case StatusOrderEnum.Archive:
                     OrderIssue();
                     break;
             }
         }
 
-        private void UpdateComboBox(int idBox)
+        private void UpdateComboBox(ElementOfRepairEnum elementOfRepair)
         {
-            switch (idBox)
+            var mastersDTO = masterRepository.GetMasters();
+            mastersDTO.Insert(0, new MasterDTO() { Id = null, NameMaster = "-" });
+            switch (elementOfRepair)
             {
-                case 0:
-                    comboBoxMaster.DataSource = null;
-                    comboBoxMaster.Items.Clear();
-                    comboBoxMaster.ValueMember = nameof(MasterDTO.Id);
-                    comboBoxMaster.DisplayMember = nameof(MasterDTO.NameMaster);
-                    var mastersDTO = masterRepository.GetMasters();
-                    mastersDTO.Insert(0, new MasterDTO() { Id = null, NameMaster = "-" });
-                    comboBoxMaster.DataSource = mastersDTO;
+                case ElementOfRepairEnum.MainMasterElement:
+                    comboBoxMainMaster.DataSource = null;
+                    comboBoxMainMaster.Items.Clear();
+                    comboBoxMainMaster.ValueMember = nameof(MasterDTO.Id);
+                    comboBoxMainMaster.DisplayMember = nameof(MasterDTO.NameMaster);
+                    comboBoxMainMaster.DataSource = mastersDTO;
+                    if (mastersDTO.Count > 0 && orderDTO.MainMasterId != null)
+                        comboBoxMainMaster.SelectedIndex = comboBoxMainMaster.FindStringExact(orderDTO.MainMaster?.NameMaster);
                     break;
-                case 1:
+                case ElementOfRepairEnum.AdditionalMasterElement:
+                    comboBoxAdditionalMaster.DataSource = null;
+                    comboBoxAdditionalMaster.Items.Clear();
+                    comboBoxAdditionalMaster.ValueMember = nameof(MasterDTO.Id);
+                    comboBoxAdditionalMaster.DisplayMember = nameof(MasterDTO.NameMaster);
+                    comboBoxAdditionalMaster.DataSource = mastersDTO;
+                    if (mastersDTO.Count > 0 && orderDTO.AdditionalMasterId != null)
+                        comboBoxAdditionalMaster.SelectedIndex = comboBoxAdditionalMaster.FindStringExact(orderDTO.AdditionalMaster?.NameMaster);
+                    break;
+                case ElementOfRepairEnum.TypeDeviceElement:
                     comboBoxDevice.DataSource = null;
                     comboBoxDevice.Items.Clear();
                     comboBoxDevice.ValueMember = nameof(TypeTechnicDTO.Id);
                     comboBoxDevice.DisplayMember = nameof(TypeTechnicDTO.NameTypeTechnic);
                     comboBoxDevice.DataSource = typeTechnicRepository.GetTypesTechnic();
+                    comboBoxDevice.SelectedIndex = comboBoxDevice.FindStringExact(orderDTO.TypeTechnic?.Name);
                     break;
-                case 2:
+                case ElementOfRepairEnum.BrandDeviceElement:
                     comboBoxBrand.DataSource = null;
                     comboBoxBrand.Items.Clear();
                     comboBoxBrand.ValueMember = nameof(TypeBrandComboBoxDTO.IdBrand);
                     comboBoxBrand.DisplayMember = nameof(TypeBrandComboBoxDTO.NameBrandTechnic);
                     comboBoxBrand.DataSource = typeBrandRepository.GetTypeBrandByNameType(comboBoxDevice.Text);
+                    comboBoxBrand.SelectedIndex = comboBoxBrand.FindStringExact(orderDTO.BrandTechnic?.Name);
                     break;
             }
         }
@@ -171,7 +181,7 @@ namespace WinFormsApp1
             label23.ForeColor = Color.FromArgb(105, 101, 148);
             label24.ForeColor = Color.FromArgb(105, 101, 148);
 
-            
+
             textBoxAvailabilityGuarantee.Enabled = true;
             textBoxGuaranteePeriod.Enabled = true;
             textBoxEndGuarantee.Enabled = true;
@@ -210,7 +220,7 @@ namespace WinFormsApp1
                     ButtonNoText = "Нет",
                     ButtonVisible = true
                 };
-                if(warning.ShowDialog() == DialogResult.OK)
+                if (warning.ShowDialog() == DialogResult.OK)
                     logIn = false;
             }
             else
@@ -230,7 +240,7 @@ namespace WinFormsApp1
             if (logIn)
             {
                 dateCreation.Enabled = true;
-                if (statusOrder == "GuaranteeIssue" || statusOrder == "Archive")
+                if (statusOrder == StatusOrderEnum.GuaranteeIssue || statusOrder == StatusOrderEnum.Archive)
                     dateIssue.Enabled = true;
                 linkLabelLogIn.Text = Properties.Settings.Default.Login;
                 textBoxMaxPrice.Enabled = true;
@@ -239,7 +249,7 @@ namespace WinFormsApp1
             else
             {
                 dateCreation.Enabled = false;
-                if (statusOrder == "GuaranteeIssue" || statusOrder == "Archive")
+                if (statusOrder == StatusOrderEnum.GuaranteeIssue || statusOrder == StatusOrderEnum.Archive)
                     dateIssue.Enabled = false;
                 linkLabelLogIn.Text = "Войти (Ctrl+D)";
                 textBoxMaxPrice.Enabled = false;
@@ -254,7 +264,8 @@ namespace WinFormsApp1
                 StartPosition = FormStartPosition.CenterParent
             };
             addMaster.ShowDialog();
-            UpdateComboBox(0);
+            UpdateComboBox(ElementOfRepairEnum.MainMasterElement);
+            UpdateComboBox(ElementOfRepairEnum.AdditionalMasterElement);
         }
 
         private void LinkLabelDevice_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -264,7 +275,7 @@ namespace WinFormsApp1
                 StartPosition = FormStartPosition.CenterParent
             };
             addDevice.ShowDialog();
-            UpdateComboBox(1);
+            UpdateComboBox(ElementOfRepairEnum.TypeDeviceElement);
         }
 
         private void LinkLabelBrand_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -274,7 +285,7 @@ namespace WinFormsApp1
                 StartPosition = FormStartPosition.CenterParent
             };
             addBrand.ShowDialog();
-            UpdateComboBox(2);
+            UpdateComboBox(ElementOfRepairEnum.BrandDeviceElement);
         }
 
         private void ButtonExit_Click(object sender, EventArgs e)
@@ -289,7 +300,8 @@ namespace WinFormsApp1
             int priceRepair = 0;
             DateTime? dateIssue = null;
             DateTime? dateEndGuarantee = null;
-            int? masterId = null;
+            var mainMasterId = ((MasterDTO)comboBoxMainMaster.SelectedItem).Id;
+            var additionalMasterId = ((MasterDTO)comboBoxAdditionalMaster.SelectedItem).Id;
             DateTime? dateStartWork = orderDTO.DateStartWork;
             Color color = Color.Black;
             int? maxPrice = null;
@@ -308,18 +320,17 @@ namespace WinFormsApp1
             else if (checkBoxPriceAgreed.Checked)
                 maxPrice = Convert.ToInt32(textBoxMaxPrice.Text);
 
-            if (comboBoxMaster.Text != "-")
+            if (comboBoxMainMaster.Text != "-")
             {
-                masterId = ((MasterDTO)comboBoxMaster.SelectedItem).Id;
                 if (orderDTO.DateStartWork == null)
                     dateStartWork = DateTime.Now;
             }
 
             switch (statusOrder)
             {
-                case "InRepair":
+                case StatusOrderEnum.InRepair:
                     int countDay = 0;
-                    if (comboBoxMaster.Text != "-")
+                    if (comboBoxMainMaster.Text != "-")
                         countDay = (DateTime.Now - dateStartWork.Value).Days;
                     else
                     {
@@ -333,7 +344,7 @@ namespace WinFormsApp1
                     else
                         color = Properties.Settings.Default.SecondLevelColor;
                     break;
-                case "Completed":
+                case StatusOrderEnum.Completed:
                     countDay = (DateTime.Now - orderDTO.DateCompleted.Value).Days;
                     if (countDay < Convert.ToInt32(Properties.Settings.Default.FirstLevelText))
                         color = Properties.Settings.Default.FirstLevelColor;
@@ -344,17 +355,17 @@ namespace WinFormsApp1
                     foundProblem = textBoxProblem1.Text;
                     priceRepair = Convert.ToInt32(textBoxPrice1.Text);
                     break;
-                case "GuaranteeIssue":
+                case StatusOrderEnum.GuaranteeIssue:
                     foundProblem = textBoxProblem1.Text;
                     priceRepair = Convert.ToInt32(textBoxPrice1.Text);
-                    dateIssue = this.dateIssue.Value;
-                    dateEndGuarantee = this.dateIssue.Value.AddMonths(orderDTO.Guarantee);
+                    dateIssue = dateIssue.Value;
+                    dateEndGuarantee = dateIssue.Value.AddMonths(orderDTO.Guarantee);
                     break;
-                case "Archive":
+                case StatusOrderEnum.Archive:
                     foundProblem = textBoxProblem1.Text;
                     priceRepair = Convert.ToInt32(textBoxPrice1.Text);
-                    dateIssue = this.dateIssue.Value;
-                    dateEndGuarantee = this.dateIssue.Value.AddMonths(orderDTO.Guarantee);
+                    dateIssue = dateIssue.Value;
+                    dateEndGuarantee = dateIssue.Value.AddMonths(orderDTO.Guarantee);
                     break;
             }
 
@@ -388,7 +399,8 @@ namespace WinFormsApp1
                 else idDiagnosis = null;
             }
 
-            orderDTO.MasterId = masterId;
+            orderDTO.MainMasterId = mainMasterId;
+            orderDTO.AdditionalMasterId = additionalMasterId;
             orderDTO.DateCreation = dateCreation.Value;
             orderDTO.DateStartWork = dateStartWork;
             orderDTO.DateIssue = dateIssue;
@@ -581,6 +593,20 @@ namespace WinFormsApp1
         private void LinkLabelLogIn_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             LogInToTheSystem();
+        }
+
+        private void ComboBoxMainMaster_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxMainMaster.Text != "-")
+                comboBoxAdditionalMaster.Enabled = true;
+            else
+                comboBoxAdditionalMaster.Enabled = false;
+        }
+
+        private void ComboBoxAdditionalMaster_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxMainMaster.Text == comboBoxAdditionalMaster.Text)
+                comboBoxAdditionalMaster.SelectedIndex = 0;
         }
     }
 }

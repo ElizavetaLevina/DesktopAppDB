@@ -1,6 +1,4 @@
-﻿using FluentFTP.Helpers;
-using Microsoft.EntityFrameworkCore;
-using System.Net;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace WinFormsApp1.Model
 {
@@ -29,10 +27,20 @@ namespace WinFormsApp1.Model
             modelBuilder.Entity<Equipment>().HasIndex(n => n.Name).IsUnique();
             modelBuilder.Entity<Client>().HasIndex(n => n.IdClient).IsUnique();
 
+            modelBuilder.Entity<Master>(e =>
+            {
+                e.Property(o => o.NameMaster).HasColumnType("TEXT COLLATE NOCASE");
+            });
+
             modelBuilder.Entity<Order>()
-                .HasOne(b => b.Master)
-                .WithMany(a => a.Order)
-                .HasForeignKey(b => b.MasterId);
+                .HasOne(b => b.MainMaster)
+                .WithMany(a => a.MainOrder)
+                .HasForeignKey(b => b.MainMasterId);
+
+            modelBuilder.Entity<Order>()
+                .HasOne(b => b.AdditionalMaster)
+                .WithMany(a => a.AdditionalOrder)
+                .HasForeignKey(b => b.AdditionalMasterId);
 
             modelBuilder.Entity<Order>()
                 .HasOne(b => b.Client)

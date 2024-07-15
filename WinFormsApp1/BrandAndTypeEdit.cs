@@ -1,4 +1,6 @@
-﻿using WinFormsApp1.DTO;
+﻿using System.Xml;
+using WinFormsApp1.DTO;
+using WinFormsApp1.Enum;
 using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
@@ -6,20 +8,20 @@ namespace WinFormsApp1
     public partial class BrandAndTypeEdit : Form
     {
         public bool newEntry = false;
-        public string name;
+        NameTableToEditEnum nameTable;
         public int id;
         public List<int>? idList = [];
         public List<int>? idRemoveList = [];
         BrandTechnicRepository brandTechnicRepository = new();
         TypeTechnicRepository typeTechnicRepository = new();
         TypeBrandRepository typeBrandRepository = new();
-        public BrandAndTypeEdit(string _name, bool _newEntry = true, int _id = 0)
+        public BrandAndTypeEdit(NameTableToEditEnum _nameTable, bool _newEntry = true, int _id = 0)
         {
             InitializeComponent();
-            name = _name;
+            nameTable = _nameTable;
             newEntry = _newEntry;
             id = _id;
-            UpdateComboBox(name);
+            UpdateComboBox(nameTable);
 
         }
 
@@ -51,7 +53,7 @@ namespace WinFormsApp1
             Close();
         }
 
-        private void EnterBrandForm_Activated(object sender, EventArgs e)
+        private void BrandAndTypeEdit_Activated(object sender, EventArgs e)
         {
             nameTextBox.Focus();
             nameTextBox.SelectAll();
@@ -66,13 +68,13 @@ namespace WinFormsApp1
                     int id = 0;
                     listBox1.Items.Add(comboBoxSecondName.Text);
 
-                    switch (name)
+                    switch (nameTable)
                     {
-                        case "type":
+                        case NameTableToEditEnum.TypeTechnic:
                             var brand = brandTechnicRepository.GetBrandTechnic(comboBoxSecondName.Text);
                             id = brand.Id;
                             break;
-                        case "brand":
+                        case NameTableToEditEnum.BrandTechnic:
                             var type = typeTechnicRepository.GetTypeTechnic(comboBoxSecondName.Text);
                             id = type.Id;
                             break;
@@ -93,13 +95,13 @@ namespace WinFormsApp1
                 int id = 0;
                 listBox1.Items.Remove(comboBoxSecondName.Text);
                 
-                switch (name)
+                switch (nameTable)
                 {
-                    case "type":
+                    case NameTableToEditEnum.TypeTechnic:
                         var brand = brandTechnicRepository.GetBrandTechnic(comboBoxSecondName.Text);
                         id = brand.Id;
                         break;
-                    case "brand":
+                    case NameTableToEditEnum.BrandTechnic:
                         var listType = typeTechnicRepository.GetTypeTechnic(comboBoxSecondName.Text);
                         id = listType.Id;
                         break;
@@ -113,12 +115,12 @@ namespace WinFormsApp1
 
         private void NameTextBox_TextChanged(object sender, EventArgs e)
         {
-            switch (name)
+            switch (nameTable)
             {
-                case "type":
+                case NameTableToEditEnum.TypeTechnic:
                     labelNameInList.Text = String.Format("Фирмы-производители для {0}", nameTextBox.Text);
                     break;
-                case "brand":
+                case NameTableToEditEnum.BrandTechnic:
                     labelNameInList.Text = String.Format("Типы устройств для {0}", nameTextBox.Text);
                     break;
             }
@@ -128,26 +130,26 @@ namespace WinFormsApp1
         {
             if (Application.OpenForms.OfType<BrandAndTypeEdit>().Count() <= 2)
             {
-                string _name = "";
+                NameTableToEditEnum _nameTable = NameTableToEditEnum.TypeTechnic;
                 string secondName = "";
                 string nameInList = "";
                 string textForm = "";
-                switch (name)
+                switch (nameTable)
                 {
-                    case "type":
-                        _name = "brand";
+                    case NameTableToEditEnum.TypeTechnic:
+                        _nameTable = NameTableToEditEnum.BrandTechnic;
                         secondName = "Фирма-производитель";
                         nameInList = "Фирмы-производители для ";
                         textForm = "Добавление новой фирмы";
                         break;
-                    case "brand":
-                        _name = "type";
+                    case NameTableToEditEnum.BrandTechnic:
+                        _nameTable = NameTableToEditEnum.TypeTechnic;
                         secondName = "Тип устройства";
                         nameInList = "Типы устройств для ";
                         textForm = "Добавление типа устройства";
                         break;
                 }
-                BrandAndTypeEdit enterBrandForm = new(_name)
+                BrandAndTypeEdit brandAndTypeEdit = new(_nameTable)
                 {
                     StartPosition = FormStartPosition.CenterParent,
                     LabelSecondName = secondName,
@@ -155,25 +157,25 @@ namespace WinFormsApp1
                     Text = textForm
                 };
 
-                if (enterBrandForm.ShowDialog() == DialogResult.OK)
+                if (brandAndTypeEdit.ShowDialog() == DialogResult.OK)
                 {
-                    switch (name)
+                    switch (nameTable)
                     {
-                        case "type":
+                        case NameTableToEditEnum.TypeTechnic:
                             var task = Task.Run(async () =>
                             {
-                                var brandTechnicDTO = new BrandTechnicEditDTO() { Id = 0, Name = enterBrandForm.NameTextBox };
+                                var brandTechnicDTO = new BrandTechnicEditDTO() { Id = 0, Name = brandAndTypeEdit.NameTextBox };
                                 await brandTechnicRepository.SaveBrandTechnicAsync(brandTechnicDTO);
                             });
                             task.Wait();
 
-                            if (enterBrandForm.idList != null)
+                            if (brandAndTypeEdit.idList != null)
                             {
-                                for (int i = 0; i < enterBrandForm.idList.Count; i++)
+                                for (int i = 0; i < brandAndTypeEdit.idList.Count; i++)
                                 {
-                                    if (!typeBrandRepository.GetTypeBrand(idBrand: id, idType: enterBrandForm.idList[i]).Any())
+                                    if (!typeBrandRepository.GetTypeBrand(idBrand: id, idType: brandAndTypeEdit.idList[i]).Any())
                                     {
-                                        int typeId = enterBrandForm.idList[i];
+                                        int typeId = brandAndTypeEdit.idList[i];
                                         task = Task.Run(async () =>
                                         {
                                             var typeBrandDTO = new TypeBrandEditDTO()
@@ -187,34 +189,34 @@ namespace WinFormsApp1
                                     }
                                 }
                             }
-                            if (enterBrandForm.idRemoveList != null)
+                            if (brandAndTypeEdit.idRemoveList != null)
                             {
-                                for (int i = 0; i < enterBrandForm.idRemoveList.Count; i++)
+                                for (int i = 0; i < brandAndTypeEdit.idRemoveList.Count; i++)
                                 {
                                     var typeBrandDTO = new TypeBrandEditDTO()
                                     {
                                         BrandTechnicsId = id,
-                                        TypeTechnicsId = enterBrandForm.idRemoveList[i]
+                                        TypeTechnicsId = brandAndTypeEdit.idRemoveList[i]
                                     };
                                     typeBrandRepository.RemoveTypeBrand(typeBrandDTO);
                                 }
                             }
                             break;
-                        case "brand":
+                        case NameTableToEditEnum.BrandTechnic:
                             task = Task.Run(async () =>
                             {
-                                var typeTechnicDTO = new TypeTechnicEditDTO() { Id = 0, Name = enterBrandForm.NameTextBox };
+                                var typeTechnicDTO = new TypeTechnicEditDTO() { Id = 0, Name = brandAndTypeEdit.NameTextBox };
                                 await typeTechnicRepository.SaveTypeTechnicAsync(typeTechnicDTO);
                             });
                             task.Wait();
 
-                            if (enterBrandForm.idList != null)
+                            if (brandAndTypeEdit.idList != null)
                             {
-                                for (int i = 0; i < enterBrandForm.idList.Count; i++)
+                                for (int i = 0; i < brandAndTypeEdit.idList.Count; i++)
                                 {
-                                    if (!typeBrandRepository.GetTypeBrand(idBrand: enterBrandForm.idList[i], idType: id).Any())
+                                    if (!typeBrandRepository.GetTypeBrand(idBrand: brandAndTypeEdit.idList[i], idType: id).Any())
                                     {
-                                        int brandId = enterBrandForm.idList[i];
+                                        int brandId = brandAndTypeEdit.idList[i];
                                         task = Task.Run(async () =>
                                         {
                                             var typeBrandDTO = new TypeBrandEditDTO()
@@ -228,13 +230,13 @@ namespace WinFormsApp1
                                     }
                                 }
                             }
-                            if (enterBrandForm.idRemoveList != null)
+                            if (brandAndTypeEdit.idRemoveList != null)
                             {
-                                for (int i = 0; i < enterBrandForm.idRemoveList.Count; i++)
+                                for (int i = 0; i < brandAndTypeEdit.idRemoveList.Count; i++)
                                 {
                                     var typeBrandDTO = new TypeBrandEditDTO()
                                     {
-                                        BrandTechnicsId = enterBrandForm.idRemoveList[i],
+                                        BrandTechnicsId = brandAndTypeEdit.idRemoveList[i],
                                         TypeTechnicsId = id
                                     };
                                     typeBrandRepository.RemoveTypeBrand(typeBrandDTO);
@@ -242,18 +244,18 @@ namespace WinFormsApp1
                             }
                             break;
                     }
-                    UpdateComboBox(name);
+                    UpdateComboBox(nameTable);
                 }
             }
         }
 
-        private void UpdateComboBox(string name)
+        private void UpdateComboBox(NameTableToEditEnum nameTable)
         {
             comboBoxSecondName.DataSource = null;
             comboBoxSecondName.Items.Clear();
-            switch (name)
+            switch (nameTable)
             {
-                case "type":
+                case NameTableToEditEnum.TypeTechnic:
                     comboBoxSecondName.ValueMember = "Id";
                     comboBoxSecondName.DisplayMember = "NameBrandTechnic";
                     comboBoxSecondName.DataSource = brandTechnicRepository.GetBrandsTechnic();
@@ -270,7 +272,7 @@ namespace WinFormsApp1
                         }
                     }
                     break;
-                case "brand":
+                case NameTableToEditEnum.BrandTechnic:
                     comboBoxSecondName.ValueMember = "Id";
                     comboBoxSecondName.DisplayMember = "NameTypeTechnic";
                     comboBoxSecondName.DataSource = typeTechnicRepository.GetTypesTechnic();

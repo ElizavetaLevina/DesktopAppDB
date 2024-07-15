@@ -6,13 +6,13 @@ namespace WinFormsApp1
     public partial class MasterEdit : Form
     {
         public bool newMaster;
-        public int id = 0;
+        public int idMaster;
         MasterRepository masterRepository = new();
-        public MasterEdit(bool addMaster = false, int idMaster = 0)
+        public MasterEdit(bool addMaster = false, int _idMaster = 0)
         {
             InitializeComponent();
             newMaster = addMaster;
-            id = idMaster;
+            idMaster = _idMaster;
         }
 
         private void TrackBarPercent_Scroll(object sender, EventArgs e)
@@ -24,7 +24,7 @@ namespace WinFormsApp1
         {
             if(!newMaster)
             {
-                var masterDTO = masterRepository.GetMaster(id);
+                var masterDTO = masterRepository.GetMaster(idMaster);
 
                 textBoxName.Text = masterDTO.NameMaster;
                 textBoxName.SelectAll();
@@ -134,7 +134,7 @@ namespace WinFormsApp1
 
                 var masterDTO = new MasterEditDTO()
                 {
-                    Id = id,
+                    Id = idMaster,
                     NameMaster = textBoxName.Text,
                     Address = textBoxAddress.Text,
                     NumberPhone = textBoxNumberPhone.Text,

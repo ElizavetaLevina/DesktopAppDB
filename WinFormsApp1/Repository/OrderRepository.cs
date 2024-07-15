@@ -1,4 +1,6 @@
-﻿using WinFormsApp1.DTO;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
 
 namespace WinFormsApp1.Repository
@@ -61,27 +63,29 @@ namespace WinFormsApp1.Repository
             string typeTechnic, string brandTechnic, string modelTechnic, string idClient)
         {
             Context context = new();
-
+            
             var set = context.Orders.Where(c => true);
 
-            if(numberOrder != "")
+            if(!string.IsNullOrEmpty(numberOrder))
                 set = set.Where(i => i.NumberOrder.ToString().Contains(numberOrder));
-            if (dateCreation != "")
+            if (!string.IsNullOrEmpty(dateCreation))
                 set = set.Where(i => i.DateCreation.ToString().StartsWith(dateCreation));
-            if (dateStartWork != "")
+            if (!string.IsNullOrEmpty(dateStartWork))
                 set = set.Where(i => i.DateStartWork != null && i.DateStartWork.ToString().StartsWith(dateStartWork));
-            if (masterName != "")
-                set = set.Where(i => i.MasterId != null && i.Master.NameMaster.ToLower().Contains(masterName.ToLower()));
-            if (typeTechnic != "")
-                set = set.Where(i => i.TypeTechnic.NameTypeTechnic.ToLower().StartsWith(typeTechnic.ToLower()));
-            if (brandTechnic != "")
-                set = set.Where(i => i.BrandTechnic.NameBrandTechnic.ToLower().StartsWith(brandTechnic.ToLower()));
-            if (modelTechnic != "")
-                set = set.Where(i => i.ModelTechnic.ToLower().StartsWith(modelTechnic.ToLower()));
-            if (idClient != "")
+            if (!string.IsNullOrEmpty(idClient))
                 set = set.Where(i => i.Client.IdClient.Contains(idClient));
 
-            return set
+            var result = set.ToList();
+            //if (!string.IsNullOrEmpty(masterName))
+            //    result = result.Where(i => i.Master?.NameMaster.ToLower()?.Contains(masterName.ToLower()) ?? false).ToList();
+            if (!string.IsNullOrEmpty(typeTechnic))
+                result = result.Where(i => i.TypeTechnic?.NameTypeTechnic?.ToLower()?.StartsWith(typeTechnic.ToLower()) ?? false).ToList();
+            if (!string.IsNullOrEmpty(brandTechnic))
+                result = result.Where(i => i.BrandTechnic?.NameBrandTechnic?.ToLower()?.StartsWith(brandTechnic.ToLower()) ?? false).ToList();
+            if (!string.IsNullOrEmpty(modelTechnic))
+                result = result.Where(i => i.ModelTechnic?.ToLower()?.StartsWith(modelTechnic.ToLower()) ?? false).ToList();
+
+            return result
                 .OrderByDescending(i => i.NumberOrder)
                 .Select(a => new OrderTableDTO(a))
                 .ToList();
@@ -149,7 +153,8 @@ namespace WinFormsApp1.Repository
                 Id = orderDTO.Id,
                 NumberOrder = orderDTO.NumberOrder,
                 ClientId = orderDTO.ClientId,
-                MasterId = orderDTO.MasterId,
+                MainMasterId = orderDTO.MainMasterId,
+                AdditionalMasterId = orderDTO.AdditionalMasterId,
                 DateCreation = orderDTO.DateCreation,
                 DateStartWork = orderDTO.DateStartWork,
                 DateCompleted = orderDTO.DateCompleted,

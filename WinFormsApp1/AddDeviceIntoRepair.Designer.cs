@@ -31,13 +31,15 @@
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddDeviceIntoRepair));
             panel1 = new Panel();
+            label10 = new Label();
+            comboBoxAdditionalMaster = new ComboBox();
             linkLabelListMaster = new LinkLabel();
-            comboBoxMaster = new ComboBox();
+            comboBoxMainMaster = new ComboBox();
             dateTimePicker1 = new DateTimePicker();
             buttonNumber = new Button();
             textBoxNumberOrder = new TextBox();
             linkLabelDateCreation = new LinkLabel();
-            labelMaster = new Label();
+            labelMainMaster = new Label();
             label8 = new Label();
             label7 = new Label();
             label1 = new Label();
@@ -109,13 +111,15 @@
             // 
             panel1.BackColor = SystemColors.Control;
             panel1.BorderStyle = BorderStyle.FixedSingle;
+            panel1.Controls.Add(label10);
+            panel1.Controls.Add(comboBoxAdditionalMaster);
             panel1.Controls.Add(linkLabelListMaster);
-            panel1.Controls.Add(comboBoxMaster);
+            panel1.Controls.Add(comboBoxMainMaster);
             panel1.Controls.Add(dateTimePicker1);
             panel1.Controls.Add(buttonNumber);
             panel1.Controls.Add(textBoxNumberOrder);
             panel1.Controls.Add(linkLabelDateCreation);
-            panel1.Controls.Add(labelMaster);
+            panel1.Controls.Add(labelMainMaster);
             panel1.Controls.Add(label8);
             panel1.Controls.Add(label7);
             panel1.Controls.Add(label1);
@@ -125,11 +129,31 @@
             panel1.Size = new Size(876, 377);
             panel1.TabIndex = 0;
             // 
+            // label10
+            // 
+            label10.Location = new Point(284, 256);
+            label10.Name = "label10";
+            label10.Size = new Size(220, 31);
+            label10.TabIndex = 14;
+            label10.Text = "Дополнительный мастер";
+            label10.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // comboBoxAdditionalMaster
+            // 
+            comboBoxAdditionalMaster.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBoxAdditionalMaster.Enabled = false;
+            comboBoxAdditionalMaster.FormattingEnabled = true;
+            comboBoxAdditionalMaster.Location = new Point(519, 256);
+            comboBoxAdditionalMaster.Name = "comboBoxAdditionalMaster";
+            comboBoxAdditionalMaster.Size = new Size(274, 33);
+            comboBoxAdditionalMaster.TabIndex = 13;
+            comboBoxAdditionalMaster.SelectedIndexChanged += ComboBoxMaster2_SelectedIndexChanged;
+            // 
             // linkLabelListMaster
             // 
             linkLabelListMaster.AutoSize = true;
             linkLabelListMaster.LinkColor = Color.FromArgb(64, 64, 64);
-            linkLabelListMaster.Location = new Point(451, 256);
+            linkLabelListMaster.Location = new Point(519, 298);
             linkLabelListMaster.Name = "linkLabelListMaster";
             linkLabelListMaster.Size = new Size(277, 25);
             linkLabelListMaster.TabIndex = 12;
@@ -137,26 +161,27 @@
             linkLabelListMaster.Text = "Редактировать список мастеров";
             linkLabelListMaster.LinkClicked += LinkLabelListMaster_LinkClicked;
             // 
-            // comboBoxMaster
+            // comboBoxMainMaster
             // 
-            comboBoxMaster.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBoxMaster.FormattingEnabled = true;
-            comboBoxMaster.Location = new Point(451, 218);
-            comboBoxMaster.Name = "comboBoxMaster";
-            comboBoxMaster.Size = new Size(274, 33);
-            comboBoxMaster.TabIndex = 11;
+            comboBoxMainMaster.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBoxMainMaster.FormattingEnabled = true;
+            comboBoxMainMaster.Location = new Point(519, 214);
+            comboBoxMainMaster.Name = "comboBoxMainMaster";
+            comboBoxMainMaster.Size = new Size(274, 33);
+            comboBoxMainMaster.TabIndex = 11;
+            comboBoxMainMaster.SelectedIndexChanged += ComboBoxMaster1_SelectedIndexChanged;
             // 
             // dateTimePicker1
             // 
             dateTimePicker1.Format = DateTimePickerFormat.Short;
-            dateTimePicker1.Location = new Point(451, 134);
+            dateTimePicker1.Location = new Point(519, 130);
             dateTimePicker1.Name = "dateTimePicker1";
             dateTimePicker1.Size = new Size(274, 31);
             dateTimePicker1.TabIndex = 10;
             // 
             // buttonNumber
             // 
-            buttonNumber.Location = new Point(604, 90);
+            buttonNumber.Location = new Point(672, 86);
             buttonNumber.Name = "buttonNumber";
             buttonNumber.Size = new Size(20, 25);
             buttonNumber.TabIndex = 9;
@@ -165,7 +190,7 @@
             // 
             // textBoxNumberOrder
             // 
-            textBoxNumberOrder.Location = new Point(451, 87);
+            textBoxNumberOrder.Location = new Point(519, 83);
             textBoxNumberOrder.Name = "textBoxNumberOrder";
             textBoxNumberOrder.Size = new Size(136, 31);
             textBoxNumberOrder.TabIndex = 8;
@@ -175,7 +200,7 @@
             // 
             linkLabelDateCreation.AutoSize = true;
             linkLabelDateCreation.LinkColor = Color.FromArgb(64, 64, 64);
-            linkLabelDateCreation.Location = new Point(451, 168);
+            linkLabelDateCreation.Location = new Point(519, 164);
             linkLabelDateCreation.Name = "linkLabelDateCreation";
             linkLabelDateCreation.Size = new Size(161, 25);
             linkLabelDateCreation.TabIndex = 7;
@@ -183,29 +208,29 @@
             linkLabelDateCreation.Text = "Сегодняшняя дата";
             linkLabelDateCreation.LinkClicked += LinkLabelDateCreation_LinkClicked;
             // 
-            // labelMaster
+            // labelMainMaster
             // 
-            labelMaster.Location = new Point(262, 218);
-            labelMaster.Name = "labelMaster";
-            labelMaster.Size = new Size(174, 31);
-            labelMaster.TabIndex = 6;
-            labelMaster.Text = "Мастер";
-            labelMaster.TextAlign = ContentAlignment.MiddleRight;
+            labelMainMaster.Location = new Point(284, 214);
+            labelMainMaster.Name = "labelMainMaster";
+            labelMainMaster.Size = new Size(220, 31);
+            labelMainMaster.TabIndex = 6;
+            labelMainMaster.Text = "Основной мастер";
+            labelMainMaster.TextAlign = ContentAlignment.MiddleRight;
             // 
             // label8
             // 
-            label8.Location = new Point(262, 134);
+            label8.Location = new Point(284, 130);
             label8.Name = "label8";
-            label8.Size = new Size(174, 31);
+            label8.Size = new Size(220, 31);
             label8.TabIndex = 5;
             label8.Text = "Дата принятия";
             label8.TextAlign = ContentAlignment.MiddleRight;
             // 
             // label7
             // 
-            label7.Location = new Point(262, 87);
+            label7.Location = new Point(284, 83);
             label7.Name = "label7";
-            label7.Size = new Size(174, 31);
+            label7.Size = new Size(220, 31);
             label7.TabIndex = 4;
             label7.Text = "Номер квитанции";
             label7.TextAlign = ContentAlignment.MiddleRight;
@@ -386,7 +411,7 @@
             contextMenuStrip1.ImageScalingSize = new Size(24, 24);
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { firstId, lastId });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(469, 101);
+            contextMenuStrip1.Size = new Size(469, 68);
             // 
             // firstId
             // 
@@ -724,7 +749,7 @@
             buttonExit.UseVisualStyleBackColor = true;
             buttonExit.Click += ButtonExit_Click;
             // 
-            // AddDeviceForRepair
+            // AddDeviceIntoRepair
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -740,7 +765,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
-            Name = "AddDeviceForRepair";
+            Name = "AddDeviceIntoRepair";
             Text = "Добавление аппарата в ремонт";
             Activated += AddDeviceForRepair_Activated;
             panel1.ResumeLayout(false);
@@ -774,12 +799,12 @@
         private Label label2;
         private Label label8;
         private Label label7;
-        private Label labelMaster;
+        private Label labelMainMaster;
         private LinkLabel linkLabelDateCreation;
         private TextBox textBoxNumberOrder;
         private Button buttonNumber;
         private DateTimePicker dateTimePicker1;
-        private ComboBox comboBoxMaster;
+        private ComboBox comboBoxMainMaster;
         private LinkLabel linkLabelListMaster;
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem firstId;
@@ -826,5 +851,7 @@
         private Label label6;
         private Label labelBlackList;
         private ListBox listBoxEquipmentDiagnosis;
+        private ComboBox comboBoxAdditionalMaster;
+        private Label label10;
     }
 }

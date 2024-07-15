@@ -112,7 +112,7 @@ namespace WinFormsApp1
             string status = "";
             Color color = Color.Black;
             DateTime date = DateTime.Now;
-            if (order.InProgress && !order.Deleted && order.MasterId != null)
+            if (order.InProgress && !order.Deleted && order.MainMasterId != null)
             {
                 status = "InRepair";
                 date = order.DateStartWork.Value;

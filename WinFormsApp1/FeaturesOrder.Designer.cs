@@ -58,7 +58,7 @@
             label4 = new Label();
             dateCreation = new DateTimePicker();
             linkLabelMaster = new LinkLabel();
-            comboBoxMaster = new ComboBox();
+            comboBoxMainMaster = new ComboBox();
             label3 = new Label();
             textBoxStatus = new TextBox();
             label2 = new Label();
@@ -115,6 +115,8 @@
             buttonSave = new Button();
             buttonExit = new Button();
             timer1 = new System.Windows.Forms.Timer(components);
+            comboBoxAdditionalMaster = new ComboBox();
+            label30 = new Label();
             tabControl1.SuspendLayout();
             tabPageOrder.SuspendLayout();
             tabPageClient.SuspendLayout();
@@ -131,11 +133,13 @@
             tabControl1.Location = new Point(12, 12);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(789, 624);
+            tabControl1.Size = new Size(789, 685);
             tabControl1.TabIndex = 0;
             // 
             // tabPageOrder
             // 
+            tabPageOrder.Controls.Add(comboBoxAdditionalMaster);
+            tabPageOrder.Controls.Add(label30);
             tabPageOrder.Controls.Add(linkLabelLogIn);
             tabPageOrder.Controls.Add(listBoxDiagnosis);
             tabPageOrder.Controls.Add(listBoxEquipment);
@@ -162,7 +166,7 @@
             tabPageOrder.Controls.Add(label4);
             tabPageOrder.Controls.Add(dateCreation);
             tabPageOrder.Controls.Add(linkLabelMaster);
-            tabPageOrder.Controls.Add(comboBoxMaster);
+            tabPageOrder.Controls.Add(comboBoxMainMaster);
             tabPageOrder.Controls.Add(label3);
             tabPageOrder.Controls.Add(textBoxStatus);
             tabPageOrder.Controls.Add(label2);
@@ -171,7 +175,7 @@
             tabPageOrder.Location = new Point(4, 34);
             tabPageOrder.Name = "tabPageOrder";
             tabPageOrder.Padding = new Padding(3);
-            tabPageOrder.Size = new Size(781, 586);
+            tabPageOrder.Size = new Size(781, 647);
             tabPageOrder.TabIndex = 0;
             tabPageOrder.Text = "Информация о заказе";
             tabPageOrder.UseVisualStyleBackColor = true;
@@ -191,7 +195,7 @@
             // 
             listBoxDiagnosis.FormattingEnabled = true;
             listBoxDiagnosis.ItemHeight = 25;
-            listBoxDiagnosis.Location = new Point(270, 473);
+            listBoxDiagnosis.Location = new Point(270, 527);
             listBoxDiagnosis.Name = "listBoxDiagnosis";
             listBoxDiagnosis.Size = new Size(463, 104);
             listBoxDiagnosis.TabIndex = 32;
@@ -202,7 +206,7 @@
             // 
             listBoxEquipment.FormattingEnabled = true;
             listBoxEquipment.ItemHeight = 25;
-            listBoxEquipment.Location = new Point(270, 430);
+            listBoxEquipment.Location = new Point(270, 484);
             listBoxEquipment.Name = "listBoxEquipment";
             listBoxEquipment.Size = new Size(463, 104);
             listBoxEquipment.TabIndex = 31;
@@ -212,7 +216,7 @@
             // label28
             // 
             label28.AutoSize = true;
-            label28.Location = new Point(664, 346);
+            label28.Location = new Point(664, 400);
             label28.Name = "label28";
             label28.Size = new Size(46, 25);
             label28.TabIndex = 30;
@@ -221,7 +225,7 @@
             // textBoxMaxPrice
             // 
             textBoxMaxPrice.Enabled = false;
-            textBoxMaxPrice.Location = new Point(536, 343);
+            textBoxMaxPrice.Location = new Point(536, 397);
             textBoxMaxPrice.Name = "textBoxMaxPrice";
             textBoxMaxPrice.Size = new Size(123, 31);
             textBoxMaxPrice.TabIndex = 29;
@@ -230,7 +234,7 @@
             // label27
             // 
             label27.AutoSize = true;
-            label27.Location = new Point(496, 346);
+            label27.Location = new Point(496, 400);
             label27.Name = "label27";
             label27.Size = new Size(33, 25);
             label27.TabIndex = 28;
@@ -238,7 +242,7 @@
             // 
             // textBoxNote
             // 
-            textBoxNote.Location = new Point(270, 487);
+            textBoxNote.Location = new Point(270, 541);
             textBoxNote.Multiline = true;
             textBoxNote.Name = "textBoxNote";
             textBoxNote.Size = new Size(463, 87);
@@ -248,7 +252,7 @@
             // 
             linkLabelBrand.AutoSize = true;
             linkLabelBrand.LinkColor = Color.FromArgb(64, 64, 64);
-            linkLabelBrand.Location = new Point(552, 256);
+            linkLabelBrand.Location = new Point(552, 310);
             linkLabelBrand.Name = "linkLabelBrand";
             linkLabelBrand.Size = new Size(211, 25);
             linkLabelBrand.TabIndex = 26;
@@ -260,7 +264,7 @@
             // 
             linkLabelDevice.AutoSize = true;
             linkLabelDevice.LinkColor = Color.FromArgb(64, 64, 64);
-            linkLabelDevice.Location = new Point(552, 208);
+            linkLabelDevice.Location = new Point(552, 262);
             linkLabelDevice.Name = "linkLabelDevice";
             linkLabelDevice.Size = new Size(124, 25);
             linkLabelDevice.TabIndex = 25;
@@ -271,7 +275,7 @@
             // checkBoxPriceAgreed
             // 
             checkBoxPriceAgreed.AutoSize = true;
-            checkBoxPriceAgreed.Location = new Point(496, 300);
+            checkBoxPriceAgreed.Location = new Point(496, 354);
             checkBoxPriceAgreed.Name = "checkBoxPriceAgreed";
             checkBoxPriceAgreed.Size = new Size(185, 29);
             checkBoxPriceAgreed.TabIndex = 24;
@@ -281,7 +285,7 @@
             // 
             // textBoxDiagnosis
             // 
-            textBoxDiagnosis.Location = new Point(270, 442);
+            textBoxDiagnosis.Location = new Point(270, 496);
             textBoxDiagnosis.Name = "textBoxDiagnosis";
             textBoxDiagnosis.Size = new Size(463, 31);
             textBoxDiagnosis.TabIndex = 21;
@@ -291,7 +295,7 @@
             // 
             // textBoxEquipment
             // 
-            textBoxEquipment.Location = new Point(270, 399);
+            textBoxEquipment.Location = new Point(270, 453);
             textBoxEquipment.Name = "textBoxEquipment";
             textBoxEquipment.Size = new Size(463, 31);
             textBoxEquipment.TabIndex = 20;
@@ -301,14 +305,14 @@
             // 
             // textBoxFactoryNumber
             // 
-            textBoxFactoryNumber.Location = new Point(270, 343);
+            textBoxFactoryNumber.Location = new Point(270, 397);
             textBoxFactoryNumber.Name = "textBoxFactoryNumber";
             textBoxFactoryNumber.Size = new Size(171, 31);
             textBoxFactoryNumber.TabIndex = 19;
             // 
             // textBoxModel
             // 
-            textBoxModel.Location = new Point(270, 301);
+            textBoxModel.Location = new Point(270, 355);
             textBoxModel.Name = "textBoxModel";
             textBoxModel.Size = new Size(171, 31);
             textBoxModel.TabIndex = 18;
@@ -318,7 +322,7 @@
             comboBoxBrand.BackColor = Color.FromArgb(224, 224, 224);
             comboBoxBrand.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBoxBrand.FormattingEnabled = true;
-            comboBoxBrand.Location = new Point(270, 248);
+            comboBoxBrand.Location = new Point(270, 302);
             comboBoxBrand.Name = "comboBoxBrand";
             comboBoxBrand.Size = new Size(266, 33);
             comboBoxBrand.TabIndex = 17;
@@ -328,7 +332,7 @@
             comboBoxDevice.BackColor = Color.FromArgb(224, 224, 224);
             comboBoxDevice.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBoxDevice.FormattingEnabled = true;
-            comboBoxDevice.Location = new Point(270, 205);
+            comboBoxDevice.Location = new Point(270, 259);
             comboBoxDevice.Name = "comboBoxDevice";
             comboBoxDevice.Size = new Size(266, 33);
             comboBoxDevice.TabIndex = 16;
@@ -336,7 +340,7 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(139, 487);
+            label11.Location = new Point(139, 541);
             label11.Name = "label11";
             label11.Size = new Size(116, 25);
             label11.TabIndex = 15;
@@ -345,7 +349,7 @@
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(23, 445);
+            label10.Location = new Point(23, 499);
             label10.Name = "label10";
             label10.Size = new Size(232, 25);
             label10.TabIndex = 14;
@@ -354,7 +358,7 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(126, 402);
+            label9.Location = new Point(126, 456);
             label9.Name = "label9";
             label9.Size = new Size(129, 25);
             label9.TabIndex = 13;
@@ -363,7 +367,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(96, 346);
+            label8.Location = new Point(96, 400);
             label8.Name = "label8";
             label8.Size = new Size(159, 25);
             label8.TabIndex = 12;
@@ -372,7 +376,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(179, 304);
+            label7.Location = new Point(179, 358);
             label7.Name = "label7";
             label7.Size = new Size(76, 25);
             label7.TabIndex = 11;
@@ -381,7 +385,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(55, 251);
+            label6.Location = new Point(55, 305);
             label6.Name = "label6";
             label6.Size = new Size(200, 25);
             label6.TabIndex = 10;
@@ -390,7 +394,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(119, 208);
+            label5.Location = new Point(119, 262);
             label5.Name = "label5";
             label5.Size = new Size(136, 25);
             label5.TabIndex = 9;
@@ -399,7 +403,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(44, 160);
+            label4.Location = new Point(44, 214);
             label4.Name = "label4";
             label4.Size = new Size(211, 25);
             label4.TabIndex = 8;
@@ -408,7 +412,7 @@
             // dateCreation
             // 
             dateCreation.Format = DateTimePickerFormat.Short;
-            dateCreation.Location = new Point(270, 155);
+            dateCreation.Location = new Point(270, 209);
             dateCreation.Name = "dateCreation";
             dateCreation.Size = new Size(266, 31);
             dateCreation.TabIndex = 7;
@@ -425,24 +429,25 @@
             linkLabelMaster.Text = "Список мастеров";
             linkLabelMaster.LinkClicked += LinkLabelMaster_LinkClicked;
             // 
-            // comboBoxMaster
+            // comboBoxMainMaster
             // 
-            comboBoxMaster.BackColor = Color.FromArgb(224, 224, 224);
-            comboBoxMaster.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBoxMaster.FormattingEnabled = true;
-            comboBoxMaster.Location = new Point(270, 104);
-            comboBoxMaster.Name = "comboBoxMaster";
-            comboBoxMaster.Size = new Size(210, 33);
-            comboBoxMaster.TabIndex = 5;
+            comboBoxMainMaster.BackColor = Color.FromArgb(224, 224, 224);
+            comboBoxMainMaster.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBoxMainMaster.FormattingEnabled = true;
+            comboBoxMainMaster.Location = new Point(270, 104);
+            comboBoxMainMaster.Name = "comboBoxMainMaster";
+            comboBoxMainMaster.Size = new Size(210, 33);
+            comboBoxMainMaster.TabIndex = 5;
+            comboBoxMainMaster.SelectedIndexChanged += ComboBoxMainMaster_SelectedIndexChanged;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(183, 107);
+            label3.Location = new Point(97, 107);
             label3.Name = "label3";
-            label3.Size = new Size(72, 25);
+            label3.Size = new Size(158, 25);
             label3.TabIndex = 4;
-            label3.Text = "Мастер";
+            label3.Text = "Основной мастер";
             // 
             // textBoxStatus
             // 
@@ -499,7 +504,7 @@
             tabPageClient.Location = new Point(4, 34);
             tabPageClient.Name = "tabPageClient";
             tabPageClient.Padding = new Padding(3);
-            tabPageClient.Size = new Size(781, 586);
+            tabPageClient.Size = new Size(781, 647);
             tabPageClient.TabIndex = 1;
             tabPageClient.Text = "Информация о клиенте";
             tabPageClient.UseVisualStyleBackColor = true;
@@ -639,7 +644,7 @@
             tabPageDeviceRepair.Location = new Point(4, 34);
             tabPageDeviceRepair.Name = "tabPageDeviceRepair";
             tabPageDeviceRepair.Padding = new Padding(3);
-            tabPageDeviceRepair.Size = new Size(781, 586);
+            tabPageDeviceRepair.Size = new Size(781, 647);
             tabPageDeviceRepair.TabIndex = 2;
             tabPageDeviceRepair.Text = "Ремонт аппарата";
             tabPageDeviceRepair.UseVisualStyleBackColor = true;
@@ -894,7 +899,7 @@
             tabPageGuarantee.Location = new Point(4, 34);
             tabPageGuarantee.Name = "tabPageGuarantee";
             tabPageGuarantee.Padding = new Padding(3);
-            tabPageGuarantee.Size = new Size(781, 586);
+            tabPageGuarantee.Size = new Size(781, 647);
             tabPageGuarantee.TabIndex = 3;
             tabPageGuarantee.Text = "Гарантия на устройство";
             tabPageGuarantee.UseVisualStyleBackColor = true;
@@ -998,7 +1003,7 @@
             // 
             // buttonSave
             // 
-            buttonSave.Location = new Point(388, 647);
+            buttonSave.Location = new Point(390, 705);
             buttonSave.Name = "buttonSave";
             buttonSave.Size = new Size(194, 43);
             buttonSave.TabIndex = 1;
@@ -1008,7 +1013,7 @@
             // 
             // buttonExit
             // 
-            buttonExit.Location = new Point(601, 647);
+            buttonExit.Location = new Point(603, 705);
             buttonExit.Name = "buttonExit";
             buttonExit.Size = new Size(194, 43);
             buttonExit.TabIndex = 27;
@@ -1020,11 +1025,32 @@
             // 
             timer1.Tick += Timer1_Tick;
             // 
+            // comboBoxAdditionalMaster
+            // 
+            comboBoxAdditionalMaster.BackColor = Color.FromArgb(224, 224, 224);
+            comboBoxAdditionalMaster.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBoxAdditionalMaster.Enabled = false;
+            comboBoxAdditionalMaster.FormattingEnabled = true;
+            comboBoxAdditionalMaster.Location = new Point(270, 154);
+            comboBoxAdditionalMaster.Name = "comboBoxAdditionalMaster";
+            comboBoxAdditionalMaster.Size = new Size(210, 33);
+            comboBoxAdditionalMaster.TabIndex = 35;
+            comboBoxAdditionalMaster.SelectedIndexChanged += ComboBoxAdditionalMaster_SelectedIndexChanged;
+            // 
+            // label30
+            // 
+            label30.AutoSize = true;
+            label30.Location = new Point(41, 157);
+            label30.Name = "label30";
+            label30.Size = new Size(214, 25);
+            label30.TabIndex = 34;
+            label30.Text = "Дополнительный мастер";
+            // 
             // FeaturesOrder
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(811, 700);
+            ClientSize = new Size(811, 760);
             Controls.Add(buttonExit);
             Controls.Add(buttonSave);
             Controls.Add(tabControl1);
@@ -1061,7 +1087,7 @@
         private Label label4;
         private DateTimePicker dateCreation;
         private LinkLabel linkLabelMaster;
-        private ComboBox comboBoxMaster;
+        private ComboBox comboBoxMainMaster;
         private Label label3;
         private TextBox textBoxStatus;
         private Label label2;
@@ -1137,5 +1163,7 @@
         private ListBox listBoxDiagnosis;
         private ListBox listBoxEquipment;
         private LinkLabel linkLabelLogIn;
+        private ComboBox comboBoxAdditionalMaster;
+        private Label label30;
     }
 }

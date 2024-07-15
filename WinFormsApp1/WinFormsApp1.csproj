@@ -25,7 +25,9 @@
     </PackageReference>
     <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
+    <PackageReference Include="System.Data.SQLite.Linq" Version="1.0.118" />
     <PackageReference Include="System.IO.Ports" Version="9.0.0-preview.4.24266.19" />
+    <PackageReference Include="System.Linq.Queryable" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,9 +1,11 @@
-﻿namespace WinFormsApp1
+﻿using WinFormsApp1.Enum;
+
+namespace WinFormsApp1
 {
     public partial class MalfunctionEquipmentDiagnosisEdit : Form
     {
-        private readonly string status;
-        public MalfunctionEquipmentDiagnosisEdit(string _status)
+        NameTableToEditEnum status;
+        public MalfunctionEquipmentDiagnosisEdit(NameTableToEditEnum _status)
         {
             InitializeComponent();
             status = _status;
@@ -53,7 +55,7 @@
             };
             switch (status)
             {
-                case "malfunction":
+                case NameTableToEditEnum.Malfunction:
                     if (textBoxName.Text != "" && textBoxPrice.Text != "")
                     {
                         DialogResult = DialogResult.OK;
@@ -62,7 +64,7 @@
                     else
                         warning.ShowDialog();
                     break;
-                case "diagnosis":
+                case NameTableToEditEnum.Diagnosis:
                     if (textBoxName.Text != "")
                     {
                         DialogResult = DialogResult.OK;
@@ -71,7 +73,7 @@
                     else
                         warning.ShowDialog();
                     break;
-                case "equipment":
+                case NameTableToEditEnum.Equipment:
                     if (textBoxName.Text != "")
                     {
                         DialogResult = DialogResult.OK;

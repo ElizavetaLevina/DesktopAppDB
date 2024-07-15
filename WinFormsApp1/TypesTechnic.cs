@@ -1,4 +1,5 @@
 ﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Enum;
 using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
@@ -15,7 +16,7 @@ namespace WinFormsApp1
 
         private void BtnAddDevice_Click(object sender, EventArgs e)
         {
-            BrandAndTypeEdit enterBrandForm = new("type")
+            BrandAndTypeEdit brandAndTypeEdit = new(NameTableToEditEnum.TypeTechnic)
             {
                 StartPosition = FormStartPosition.CenterParent,
                 Text = "Добавить тип устройства",
@@ -23,19 +24,19 @@ namespace WinFormsApp1
                 LabelNameInList = "Фирмы-производители для "
             };
 
-            if (enterBrandForm.ShowDialog() == DialogResult.OK)
+            if (brandAndTypeEdit.ShowDialog() == DialogResult.OK)
             {
                 int typeTechnicId = 0;
                 var task = Task.Run(async () =>
                 {
-                    var typeTechnicDTO = new TypeTechnicEditDTO() { Id = 0, Name = enterBrandForm.NameTextBox };
+                    var typeTechnicDTO = new TypeTechnicEditDTO() { Id = 0, Name = brandAndTypeEdit.NameTextBox };
                     typeTechnicId = await typeTechnicRepository.SaveTypeTechnicAsync(typeTechnicDTO);
                 });
                 task.Wait();
 
-                if (enterBrandForm.idList != null)
+                if (brandAndTypeEdit.idList != null)
                 {
-                    foreach (var brandId in enterBrandForm.idList)
+                    foreach (var brandId in brandAndTypeEdit.idList)
                     {
                         var typeBrandDTO = new TypeBrandEditDTO()
                         {
@@ -61,7 +62,7 @@ namespace WinFormsApp1
                 int typeTechnicId = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
                 string? name = dataGridView1.Rows[numberRow].Cells["NameTypeTechnic"].Value.ToString();
                 List<TypeBrandDTO> list = typeBrandRepository.GetTypeBrand();
-                BrandAndTypeEdit enterBrandForm = new("type", false, typeTechnicId)
+                BrandAndTypeEdit brandAndTypeEdit = new(NameTableToEditEnum.TypeTechnic, false, typeTechnicId)
                 {
                     StartPosition = FormStartPosition.CenterParent,
                     Text = "Изменение типа устройства",
@@ -71,18 +72,18 @@ namespace WinFormsApp1
                     LabelNameInList = String.Format("Фирмы-производители {0}", name)
                 };
 
-                if (enterBrandForm.ShowDialog() == DialogResult.OK)
+                if (brandAndTypeEdit.ShowDialog() == DialogResult.OK)
                 {
                     var task = Task.Run(async () =>
                     {
-                        var typeTechnicDTO = new TypeTechnicEditDTO() { Id = typeTechnicId, Name = enterBrandForm.NameTextBox };
+                        var typeTechnicDTO = new TypeTechnicEditDTO() { Id = typeTechnicId, Name = brandAndTypeEdit.NameTextBox };
                         await typeTechnicRepository.SaveTypeTechnicAsync(typeTechnicDTO);
                     });
                     task.Wait();
 
-                    if (enterBrandForm.idList != null)
+                    if (brandAndTypeEdit.idList != null)
                     {
-                        foreach(var brandId in enterBrandForm.idList)
+                        foreach(var brandId in brandAndTypeEdit.idList)
                         {
                             if (!list.Any(a => a.BrandTechnicsId == brandId && a.TypeTechnicsId == typeTechnicId))
                             {
@@ -99,9 +100,9 @@ namespace WinFormsApp1
                             }
                         }
                     }
-                    if (enterBrandForm.idRemoveList != null)
+                    if (brandAndTypeEdit.idRemoveList != null)
                     {
-                        foreach(var brandId in enterBrandForm.idRemoveList)
+                        foreach(var brandId in brandAndTypeEdit.idRemoveList)
                         {
                             var typeBrandDTO = new TypeBrandEditDTO()
                             {

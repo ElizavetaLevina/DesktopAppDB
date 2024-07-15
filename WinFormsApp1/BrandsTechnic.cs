@@ -1,4 +1,5 @@
 ﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Enum;
 using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
@@ -15,26 +16,26 @@ namespace WinFormsApp1
 
         private void BtnAddBrand_Click(object sender, EventArgs e)
         {
-            BrandAndTypeEdit enterBrandForm = new("brand")
+            BrandAndTypeEdit brandAndTypeEdit = new(NameTableToEditEnum.BrandTechnic)
             {
                 StartPosition = FormStartPosition.CenterParent,
                 LabelSecondName = "Тип устройства",
                 LabelNameInList = "Типы устройств для "
             };
             
-            if (enterBrandForm.ShowDialog() == DialogResult.OK)
+            if (brandAndTypeEdit.ShowDialog() == DialogResult.OK)
             {
                 int brandTechnicId = 0;
                 var task = Task.Run(async () =>
                 {
-                    var brandTechnicDTO = new BrandTechnicEditDTO() { Id = 0, Name = enterBrandForm.NameTextBox };
+                    var brandTechnicDTO = new BrandTechnicEditDTO() { Id = 0, Name = brandAndTypeEdit.NameTextBox };
                     brandTechnicId = await brandTechnicRepository.SaveBrandTechnicAsync(brandTechnicDTO);
                 }); 
                 task.Wait();
 
-                if (enterBrandForm.idList != null)
+                if (brandAndTypeEdit.idList != null)
                 {
-                    foreach(var typeId in enterBrandForm.idList)
+                    foreach(var typeId in brandAndTypeEdit.idList)
                     {
                         task = Task.Run(async () =>
                         {
@@ -60,7 +61,7 @@ namespace WinFormsApp1
                 int brandTechnicId = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
                 string? name = dataGridView1.Rows[numberRow].Cells["NameBrandTechnic"].Value.ToString();
                 List <TypeBrandDTO> list = typeBrandRepository.GetTypeBrand();
-                BrandAndTypeEdit enterBrandForm = new("brand", false, brandTechnicId)
+                BrandAndTypeEdit brandAndTypeEdit = new(NameTableToEditEnum.BrandTechnic, false, brandTechnicId)
                 {
                     StartPosition = FormStartPosition.CenterParent,
                     Text = "Изменение названия фирмы",
@@ -70,18 +71,18 @@ namespace WinFormsApp1
                     LabelNameInList = String.Format("Типы устройств для {0}", name)
                 };
 
-                if (enterBrandForm.ShowDialog() == DialogResult.OK)
+                if (brandAndTypeEdit.ShowDialog() == DialogResult.OK)
                 {
                     var task = Task.Run(async () =>
                     {
-                        var brandTechnicDTO = new BrandTechnicEditDTO() { Id = brandTechnicId, Name = enterBrandForm.NameTextBox };
+                        var brandTechnicDTO = new BrandTechnicEditDTO() { Id = brandTechnicId, Name = brandAndTypeEdit.NameTextBox };
                         await brandTechnicRepository.SaveBrandTechnicAsync(brandTechnicDTO);
                     });
                     task.Wait();
 
-                    if (enterBrandForm.idList != null)
+                    if (brandAndTypeEdit.idList != null)
                     {
-                        foreach(var typeId in enterBrandForm.idList)
+                        foreach(var typeId in brandAndTypeEdit.idList)
                         {
                             if (!list.Any(a => a.TypeTechnicsId == brandTechnicId && a.BrandTechnicsId == typeId))
                             {
@@ -98,9 +99,9 @@ namespace WinFormsApp1
                         }
                     }
 
-                    if(enterBrandForm.idRemoveList != null)
+                    if(brandAndTypeEdit.idRemoveList != null)
                     {
-                        foreach(var typeId in enterBrandForm.idRemoveList)
+                        foreach(var typeId in brandAndTypeEdit.idRemoveList)
                         {
                             var typeBrandDTO = new TypeBrandEditDTO()
                             {

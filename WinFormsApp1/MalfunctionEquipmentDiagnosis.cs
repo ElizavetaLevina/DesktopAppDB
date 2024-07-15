@@ -1,17 +1,18 @@
 ﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Enum;
 using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
 {
     public partial class MalfunctionEquipmentDiagnosis : Form
     {
-        public string status;
+        NameTableToEditEnum status;
         MalfunctionRepository malfunctionRepository = new();
         DiagnosisRepository diagnosisRepository = new();
         EquipmentRepository equipmentRepository = new();
         MalfunctionOrderRepository malfunctionOrderRepository = new();
         OrderRepository orderRepository = new();
-        public MalfunctionEquipmentDiagnosis(string _status)
+        public MalfunctionEquipmentDiagnosis(NameTableToEditEnum _status)
         {
             InitializeComponent();
             status = _status;
@@ -22,7 +23,7 @@ namespace WinFormsApp1
         {
             switch (status) 
             {
-                case "malfunction":
+                case NameTableToEditEnum.Malfunction:
                     dataGridView1.DataSource = malfunctionRepository.GetMalfunctions();
                     dataGridView1.Columns["Id"].Visible = false;
                     dataGridView1.Columns["Name"].HeaderText = "Название";
@@ -35,13 +36,13 @@ namespace WinFormsApp1
                         dataGridView1.Columns[i].Width = Convert.ToInt32(width);
                     }
                     break;
-                case "diagnosis":
+                case NameTableToEditEnum.Diagnosis:
                     dataGridView1.DataSource = diagnosisRepository.GetDiagnoses();
                     dataGridView1.Columns["Id"].Visible = false;
                     dataGridView1.Columns["Name"].HeaderText = "Название";
                     dataGridView1.Columns["Name"].Width = dataGridView1.Width;
                     break;
-                case "equipment":
+                case NameTableToEditEnum.Equipment:
                     dataGridView1.DataSource = equipmentRepository.GetEquipments();
                     dataGridView1.Columns["Id"].Visible = false;
                     dataGridView1.Columns["Name"].HeaderText = "Название";
@@ -58,16 +59,16 @@ namespace WinFormsApp1
             };
             switch (status)
             {
-                case "malfunction":
+                case NameTableToEditEnum.Malfunction:
                     malfunctionEquipmentDiagnosisEdit.Text = "Добавить неисправность";
                     break;
-                case "diagnosis":
+                case NameTableToEditEnum.Diagnosis:
                     malfunctionEquipmentDiagnosisEdit.Text = "Добавить диагноз";
                     malfunctionEquipmentDiagnosisEdit.LabelPriceVisible = false;
                     malfunctionEquipmentDiagnosisEdit.LabelRubVisible = false;
                     malfunctionEquipmentDiagnosisEdit.TextBoxPriceVisisble = false;
                     break;
-                case "equipment":
+                case NameTableToEditEnum.Equipment:
                     malfunctionEquipmentDiagnosisEdit.Text = "Добавить комплектацию";
                     malfunctionEquipmentDiagnosisEdit.LabelPriceVisible = false;
                     malfunctionEquipmentDiagnosisEdit.LabelRubVisible = false;
@@ -80,7 +81,7 @@ namespace WinFormsApp1
                 Task task;
                 switch (status)
                 {
-                    case "malfunction":
+                    case NameTableToEditEnum.Malfunction:
                         var malfunctionDTO = new MalfunctionEditDTO()
                         {
                             Id = 0,
@@ -93,7 +94,7 @@ namespace WinFormsApp1
                         });
                         task.Wait();
                         break;
-                    case "diagnosis":
+                    case NameTableToEditEnum.Diagnosis:
                         var diagnosisDTO = new DiagnosisEditDTO()
                         {
                             Id = 0,
@@ -105,7 +106,7 @@ namespace WinFormsApp1
                         });
                         task.Wait();
                         break;
-                    case "equipment":
+                    case NameTableToEditEnum.Equipment:
                         var equipmentDTO = new EquipmentEditDTO()
                         {
                             Id = 0,
@@ -139,13 +140,13 @@ namespace WinFormsApp1
                 };
                 switch (status)
                 {
-                    case "malfunction":
+                    case NameTableToEditEnum.Malfunction:
                         malfunctionDTO = malfunctionRepository.GetMalfunction(id);
                         malfunctionEquipmentDiagnosisEdit.Text = "Изменение неисправности";
                         malfunctionEquipmentDiagnosisEdit.TextBoxName = malfunctionDTO.Name;
                         malfunctionEquipmentDiagnosisEdit.TextBoxPrice = malfunctionDTO.Price.ToString();
                         break;
-                    case "diagnosis":
+                    case NameTableToEditEnum.Diagnosis:
                         diagnosisDTO = diagnosisRepository.GetDiagnosis(id);
                         malfunctionEquipmentDiagnosisEdit.Text = "Изменение диагноза";
                         malfunctionEquipmentDiagnosisEdit.TextBoxName = diagnosisDTO.Name;
@@ -153,7 +154,7 @@ namespace WinFormsApp1
                         malfunctionEquipmentDiagnosisEdit.LabelRubVisible = false;
                         malfunctionEquipmentDiagnosisEdit.TextBoxPriceVisisble = false;
                         break;
-                    case "equipment":
+                    case NameTableToEditEnum.Equipment:
                         equipmentDTO = equipmentRepository.GetEquipment(id);
                         malfunctionEquipmentDiagnosisEdit.Text = "Изменение комплектации";
                         malfunctionEquipmentDiagnosisEdit.TextBoxName = equipmentDTO.Name;
@@ -168,7 +169,7 @@ namespace WinFormsApp1
                     Task task;
                     switch (status)
                     {
-                        case "malfunction":
+                        case NameTableToEditEnum.Malfunction:
                             malfunctionDTO.Name = malfunctionEquipmentDiagnosisEdit.TextBoxName;
                             malfunctionDTO.Price = Convert.ToInt32(malfunctionEquipmentDiagnosisEdit.TextBoxPrice);
                             task = Task.Run(async() => {
@@ -176,7 +177,7 @@ namespace WinFormsApp1
                             });
                             task.Wait();
                             break;
-                        case "diagnosis":
+                        case NameTableToEditEnum.Diagnosis:
                             diagnosisDTO.Name = malfunctionEquipmentDiagnosisEdit.TextBoxName;
                             task = Task.Run(async () =>
                             {
@@ -184,7 +185,7 @@ namespace WinFormsApp1
                             });
                             task.Wait();
                             break;
-                        case "equipment":
+                        case NameTableToEditEnum.Equipment:
                             equipmentDTO.Name = malfunctionEquipmentDiagnosisEdit.TextBoxName;
                             task = Task.Run(async () =>
                             {
@@ -207,7 +208,7 @@ namespace WinFormsApp1
                 int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
                 switch (status)
                 {
-                    case "malfunction":
+                    case NameTableToEditEnum.Malfunction:
                         var malfunctionDTO = malfunctionRepository.GetMalfunction(id);
                         var malfunctionOrderDTO = malfunctionOrderRepository.GetMalfunctionOrdersByIdMalfunction(id);
                         foreach(var malfunctionOrder in malfunctionOrderDTO)
@@ -216,7 +217,7 @@ namespace WinFormsApp1
                         }
                         malfunctionRepository.RemoveMalfunction(malfunctionDTO);
                         break;
-                    case "diagnosis":
+                    case NameTableToEditEnum.Diagnosis:
                         var diagnosisDTO = diagnosisRepository.GetDiagnosis(id);
                         var ordersDTO = orderRepository.GetOrdersByIdDiagnosis(id);
                         foreach(var order in ordersDTO)
@@ -230,7 +231,7 @@ namespace WinFormsApp1
                         }
                         diagnosisRepository.RemoveDiagnosis(diagnosisDTO);
                         break;
-                    case "equipment":
+                    case NameTableToEditEnum.Equipment:
                         var equipmentDTO = equipmentRepository.GetEquipment(id);
                         ordersDTO = orderRepository.GetOrdersByIdEquipment(id);
                         foreach (var order in ordersDTO)

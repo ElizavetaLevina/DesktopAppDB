@@ -263,7 +263,7 @@ namespace WinFormsApp1
                             }
                             else
                             {
-                                if (list[j].MasterId == listMasters[i].Id)
+                                if (list[j].MainMasterId == listMasters[i].Id)
                                 {
                                    if (listMasters[i].TypeSalary == "percentMaster")
                                     {

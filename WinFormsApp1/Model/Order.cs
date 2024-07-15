@@ -6,8 +6,12 @@
         public int NumberOrder { get; set; }
         public int ClientId { get; set; }
         public virtual Client? Client { get; set; }
-        public int? MasterId { get; set; }
-        public virtual Master? Master { get; set; }
+        public int? MainMasterId { get; set; }
+        public virtual Master? MainMaster { get; set; }
+        public int PercentWorkMainMaster { get; set; } = 0;
+        public int? AdditionalMasterId { get; set; }
+        public virtual Master? AdditionalMaster { get; set; }
+        public int PercentWorkAdditionalMaster { get; set; } = 0;
         public DateTime? DateCreation { get; set; }
         public DateTime? DateStartWork { get; set; }
         public DateTime? DateCompleted { get; set; }

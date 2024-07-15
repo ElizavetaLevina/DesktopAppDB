@@ -164,7 +164,7 @@
             linkLabelChange.Text = "Изменить список";
             linkLabelChange.LinkClicked += LinkLabelChange_LinkClicked;
             // 
-            // EnterBrandForm
+            // BrandAndTypeEdit
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -184,9 +184,9 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
-            Name = "EnterBrandForm";
+            Name = "BrandAndTypeEdit";
             Text = "Добавление новой фирмы";
-            Activated += EnterBrandForm_Activated;
+            Activated += BrandAndTypeEdit_Activated;
             ResumeLayout(false);
             PerformLayout();
         }

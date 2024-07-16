@@ -1,5 +1,6 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
+using WinFormsApp1.Helpers;
 using WinFormsApp1.Repository;
 using Color = System.Drawing.Color;
 
@@ -23,6 +24,7 @@ namespace WinFormsApp1
         DiagnosisRepository diagnosisRepository = new();
         List<DiagnosisEditDTO> diagnosesDTO;
         List<EquipmentEditDTO> equipmentsDTO;
+        List<MasterDTO> mastersDTO;
         public FeaturesOrder(int id, StatusOrderEnum status, bool _logIn)
         {
             InitializeComponent();
@@ -46,15 +48,18 @@ namespace WinFormsApp1
 
             UpdateComboBox(ElementOfRepairEnum.MainMasterElement);
             UpdateComboBox(ElementOfRepairEnum.AdditionalMasterElement);
-
+            if (mastersDTO.Count > 0 && orderDTO.MainMasterId != null)
+                comboBoxMainMaster.SelectedIndex = comboBoxMainMaster.FindStringExact(orderDTO.MainMaster?.NameMaster);
+            if (mastersDTO.Count > 0 && orderDTO.AdditionalMasterId != null)
+                comboBoxAdditionalMaster.SelectedIndex = comboBoxAdditionalMaster.FindStringExact(orderDTO.AdditionalMaster?.NameMaster);
 
             dateCreation.Value = orderDTO.DateCreation.Value;
 
             UpdateComboBox(ElementOfRepairEnum.TypeDeviceElement);
-            
+            comboBoxDevice.SelectedIndex = comboBoxDevice.FindStringExact(orderDTO.TypeTechnic?.Name);
 
             UpdateComboBox(ElementOfRepairEnum.BrandDeviceElement);
-            
+            comboBoxBrand.SelectedIndex = comboBoxBrand.FindStringExact(orderDTO.BrandTechnic?.Name);
 
             textBoxModel.Text = orderDTO.ModelTechnic;
 
@@ -93,7 +98,7 @@ namespace WinFormsApp1
 
         private void UpdateComboBox(ElementOfRepairEnum elementOfRepair)
         {
-            var mastersDTO = masterRepository.GetMasters();
+            mastersDTO = masterRepository.GetMastersForOutput();
             mastersDTO.Insert(0, new MasterDTO() { Id = null, NameMaster = "-" });
             switch (elementOfRepair)
             {
@@ -103,8 +108,6 @@ namespace WinFormsApp1
                     comboBoxMainMaster.ValueMember = nameof(MasterDTO.Id);
                     comboBoxMainMaster.DisplayMember = nameof(MasterDTO.NameMaster);
                     comboBoxMainMaster.DataSource = mastersDTO;
-                    if (mastersDTO.Count > 0 && orderDTO.MainMasterId != null)
-                        comboBoxMainMaster.SelectedIndex = comboBoxMainMaster.FindStringExact(orderDTO.MainMaster?.NameMaster);
                     break;
                 case ElementOfRepairEnum.AdditionalMasterElement:
                     comboBoxAdditionalMaster.DataSource = null;
@@ -112,8 +115,6 @@ namespace WinFormsApp1
                     comboBoxAdditionalMaster.ValueMember = nameof(MasterDTO.Id);
                     comboBoxAdditionalMaster.DisplayMember = nameof(MasterDTO.NameMaster);
                     comboBoxAdditionalMaster.DataSource = mastersDTO;
-                    if (mastersDTO.Count > 0 && orderDTO.AdditionalMasterId != null)
-                        comboBoxAdditionalMaster.SelectedIndex = comboBoxAdditionalMaster.FindStringExact(orderDTO.AdditionalMaster?.NameMaster);
                     break;
                 case ElementOfRepairEnum.TypeDeviceElement:
                     comboBoxDevice.DataSource = null;
@@ -121,7 +122,6 @@ namespace WinFormsApp1
                     comboBoxDevice.ValueMember = nameof(TypeTechnicDTO.Id);
                     comboBoxDevice.DisplayMember = nameof(TypeTechnicDTO.NameTypeTechnic);
                     comboBoxDevice.DataSource = typeTechnicRepository.GetTypesTechnic();
-                    comboBoxDevice.SelectedIndex = comboBoxDevice.FindStringExact(orderDTO.TypeTechnic?.Name);
                     break;
                 case ElementOfRepairEnum.BrandDeviceElement:
                     comboBoxBrand.DataSource = null;
@@ -129,7 +129,6 @@ namespace WinFormsApp1
                     comboBoxBrand.ValueMember = nameof(TypeBrandComboBoxDTO.IdBrand);
                     comboBoxBrand.DisplayMember = nameof(TypeBrandComboBoxDTO.NameBrandTechnic);
                     comboBoxBrand.DataSource = typeBrandRepository.GetTypeBrandByNameType(comboBoxDevice.Text);
-                    comboBoxBrand.SelectedIndex = comboBoxBrand.FindStringExact(orderDTO.BrandTechnic?.Name);
                     break;
             }
         }
@@ -429,8 +428,7 @@ namespace WinFormsApp1
 
         private void TextBoxPriceRepair_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if ((e.KeyChar <= 47 || e.KeyChar >= 58) && e.KeyChar != 8 && e.KeyChar != 13)
-                e.Handled = true;
+            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
         }
 
         private void DateIssue_ValueChanged(object sender, EventArgs e)
@@ -464,8 +462,7 @@ namespace WinFormsApp1
 
         private void TextBoxDateLastCall_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if ((e.KeyChar <= 47 || e.KeyChar >= 58) && e.KeyChar != 8 && e.KeyChar != 13 && e.KeyChar != 46)
-                e.Handled = true;
+            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
         }
 
         private void FeaturesOrder_Load(object sender, EventArgs e)
@@ -493,8 +490,7 @@ namespace WinFormsApp1
 
         private void TextBoxMaxPrice_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if ((e.KeyChar <= 47 || e.KeyChar >= 58) && e.KeyChar != 8 && e.KeyChar != 13)
-                e.Handled = true;
+            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
         }
 
         private void CheckBoxPriceAgreed_CheckedChanged(object sender, EventArgs e)
@@ -601,12 +597,20 @@ namespace WinFormsApp1
                 comboBoxAdditionalMaster.Enabled = true;
             else
                 comboBoxAdditionalMaster.Enabled = false;
+
+            if (comboBoxMainMaster.Text == comboBoxAdditionalMaster.Text)
+                comboBoxMainMaster.SelectedIndex = 0;
         }
 
         private void ComboBoxAdditionalMaster_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBoxMainMaster.Text == comboBoxAdditionalMaster.Text)
                 comboBoxAdditionalMaster.SelectedIndex = 0;
+        }
+
+        private void ComboBoxDevice_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateComboBox(ElementOfRepairEnum.BrandDeviceElement);
         }
     }
 }

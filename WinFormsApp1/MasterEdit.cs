@@ -1,4 +1,5 @@
 ﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Helpers;
 using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
@@ -158,8 +159,7 @@ namespace WinFormsApp1
 
         private void TextBoxRate_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if ((e.KeyChar <= 47 || e.KeyChar >= 58) && e.KeyChar != 8 && e.KeyChar != 13)
-                e.Handled = true;
+            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
         }
     }
 }

@@ -10,7 +10,13 @@ namespace WinFormsApp1.Repository
         /// Получение списка мастеров
         /// </summary>
         /// <returns>Список мастеров</returns>
-        public List<MasterDTO> GetMasters()
+        public List<MasterEditDTO> GetMasters()
+        {
+            Context context = new();
+            return context.Masters.Select(c => new MasterEditDTO(c)).ToList();
+        }
+
+        public List<MasterDTO> GetMastersForOutput()
         {
             Context context = new();
             return context.Masters.Select(c => new MasterDTO(c)).ToList();

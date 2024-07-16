@@ -1,4 +1,5 @@
 ﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Helpers;
 using WinFormsApp1.Repository;
 using Color = System.Drawing.Color;
 
@@ -87,14 +88,12 @@ namespace WinFormsApp1
 
         private void TextBoxFirstLevel_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if ((e.KeyChar <= 47 || e.KeyChar >= 58) && e.KeyChar != 8 && e.KeyChar != 13)
-                e.Handled = true;
+            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
         }
 
         private void TextBoxSecondLevelBefore_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if ((e.KeyChar <= 47 || e.KeyChar >= 58) && e.KeyChar != 8 && e.KeyChar != 13)
-                e.Handled = true;
+            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
         }
 
         private void TextBoxFirstLevel_TextChanged(object sender, EventArgs e)

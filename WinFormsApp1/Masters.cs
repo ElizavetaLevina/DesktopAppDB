@@ -56,7 +56,7 @@ namespace WinFormsApp1
 
         private void UpdateTable()
         {
-            dataGridView1.DataSource = masterRepository.GetMasters();
+            dataGridView1.DataSource = masterRepository.GetMastersForOutput();
             dataGridView1.Columns["Id"].Visible = false;
             dataGridView1.Columns["NameMaster"].HeaderText = "ФИО";
             dataGridView1.Columns["NumberPhone"].HeaderText = "Телефон";

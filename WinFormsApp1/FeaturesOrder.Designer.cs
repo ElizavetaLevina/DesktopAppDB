@@ -32,6 +32,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FeaturesOrder));
             tabControl1 = new TabControl();
             tabPageOrder = new TabPage();
+            comboBoxAdditionalMaster = new ComboBox();
+            label30 = new Label();
             linkLabelLogIn = new LinkLabel();
             listBoxDiagnosis = new ListBox();
             listBoxEquipment = new ListBox();
@@ -115,8 +117,6 @@
             buttonSave = new Button();
             buttonExit = new Button();
             timer1 = new System.Windows.Forms.Timer(components);
-            comboBoxAdditionalMaster = new ComboBox();
-            label30 = new Label();
             tabControl1.SuspendLayout();
             tabPageOrder.SuspendLayout();
             tabPageClient.SuspendLayout();
@@ -179,6 +179,27 @@
             tabPageOrder.TabIndex = 0;
             tabPageOrder.Text = "Информация о заказе";
             tabPageOrder.UseVisualStyleBackColor = true;
+            // 
+            // comboBoxAdditionalMaster
+            // 
+            comboBoxAdditionalMaster.BackColor = Color.FromArgb(224, 224, 224);
+            comboBoxAdditionalMaster.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBoxAdditionalMaster.Enabled = false;
+            comboBoxAdditionalMaster.FormattingEnabled = true;
+            comboBoxAdditionalMaster.Location = new Point(270, 154);
+            comboBoxAdditionalMaster.Name = "comboBoxAdditionalMaster";
+            comboBoxAdditionalMaster.Size = new Size(210, 33);
+            comboBoxAdditionalMaster.TabIndex = 35;
+            comboBoxAdditionalMaster.SelectedIndexChanged += ComboBoxAdditionalMaster_SelectedIndexChanged;
+            // 
+            // label30
+            // 
+            label30.AutoSize = true;
+            label30.Location = new Point(41, 157);
+            label30.Name = "label30";
+            label30.Size = new Size(214, 25);
+            label30.TabIndex = 34;
+            label30.Text = "Дополнительный мастер";
             // 
             // linkLabelLogIn
             // 
@@ -336,6 +357,7 @@
             comboBoxDevice.Name = "comboBoxDevice";
             comboBoxDevice.Size = new Size(266, 33);
             comboBoxDevice.TabIndex = 16;
+            comboBoxDevice.SelectedIndexChanged += ComboBoxDevice_SelectedIndexChanged;
             // 
             // label11
             // 
@@ -1024,27 +1046,6 @@
             // timer1
             // 
             timer1.Tick += Timer1_Tick;
-            // 
-            // comboBoxAdditionalMaster
-            // 
-            comboBoxAdditionalMaster.BackColor = Color.FromArgb(224, 224, 224);
-            comboBoxAdditionalMaster.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBoxAdditionalMaster.Enabled = false;
-            comboBoxAdditionalMaster.FormattingEnabled = true;
-            comboBoxAdditionalMaster.Location = new Point(270, 154);
-            comboBoxAdditionalMaster.Name = "comboBoxAdditionalMaster";
-            comboBoxAdditionalMaster.Size = new Size(210, 33);
-            comboBoxAdditionalMaster.TabIndex = 35;
-            comboBoxAdditionalMaster.SelectedIndexChanged += ComboBoxAdditionalMaster_SelectedIndexChanged;
-            // 
-            // label30
-            // 
-            label30.AutoSize = true;
-            label30.Location = new Point(41, 157);
-            label30.Name = "label30";
-            label30.Size = new Size(214, 25);
-            label30.TabIndex = 34;
-            label30.Text = "Дополнительный мастер";
             // 
             // FeaturesOrder
             // 

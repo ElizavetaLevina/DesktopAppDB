@@ -106,7 +106,7 @@ namespace WinFormsApp1.Repository
         /// Получение последнего идентификатора в таблице
         /// </summary>
         /// <returns>Иднтификатор</returns>
-        public int GetLastId()
+        public int GetLastNumberOrder()
         {
             Context context = new();
             return (context.Orders?.OrderBy(i => i.Id).LastOrDefault()?.NumberOrder ?? 0) + 1;
@@ -144,6 +144,18 @@ namespace WinFormsApp1.Repository
             return context.Orders.Where(i => i.EquipmentId == idEquipment).Select(a => new OrderEditDTO(a)).ToList();
         }
 
+        public List<OrderEditDTO> GetOrdersForComboBoxSalaries()
+        {
+            Context context = new();
+            return context.Orders.Where(i => !i.InProgress).Select(a => new OrderEditDTO(a)).ToList();
+        }
+
+        public List<OrderEditDTO> GetOrdersForSalaries()
+        {
+            Context context = new();
+            return context.Orders.Where(i => !i.Deleted && (!i.InProgress || i.ReturnUnderGuarantee)).Select(a => new OrderEditDTO(a)).ToList();
+        }
+
 
         public async Task<int> SaveOrderAsync(OrderEditDTO orderDTO, CancellationToken token = default)
         {
@@ -154,7 +166,9 @@ namespace WinFormsApp1.Repository
                 NumberOrder = orderDTO.NumberOrder,
                 ClientId = orderDTO.ClientId,
                 MainMasterId = orderDTO.MainMasterId,
+                PercentWorkMainMaster = orderDTO.PercentWorkMainMaster,
                 AdditionalMasterId = orderDTO.AdditionalMasterId,
+                PercentWorkAdditionalMaster = orderDTO.PercentWorkAdditionalMaster,
                 DateCreation = orderDTO.DateCreation,
                 DateStartWork = orderDTO.DateStartWork,
                 DateCompleted = orderDTO.DateCompleted,

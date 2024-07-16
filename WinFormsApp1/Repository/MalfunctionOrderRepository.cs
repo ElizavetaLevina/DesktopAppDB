@@ -27,6 +27,16 @@ namespace WinFormsApp1.Repository
             return context.MalfunctionOrders.Where(i => i.MalfunctionId == idMalfunction).Select(a => new MalfunctionOrderEditDTO(a)).ToList();
         }
 
+        /// <summary>
+        /// Получение списка заказ-неисправность
+        /// </summary>
+        /// <returns>Список заказ-неисправность</returns>
+        public List<MalfunctionOrderEditDTO> GetMalfunctionOrders()
+        {
+            Context context = new();
+            return context.MalfunctionOrders.Select(a => new MalfunctionOrderEditDTO(a)).ToList();
+        }
+
         public async Task SaveMalfunctionOrderAsync(MalfunctionOrderEditDTO malfunctionOrderDTO, CancellationToken token = default)
         {
             Context db = new();

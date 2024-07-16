@@ -70,7 +70,18 @@
             labelNameDevice = new Label();
             labelIdOrder = new Label();
             label27 = new Label();
+            labelMainMaster = new Label();
+            label28 = new Label();
+            label29 = new Label();
+            panelMasters = new Panel();
+            label22 = new Label();
+            label21 = new Label();
+            textBoxAdditional = new TextBox();
+            textBoxMain = new TextBox();
+            labelAdditionalMaster = new Label();
+            linkLabelFeaturesOrder = new LinkLabel();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            panelMasters.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -160,7 +171,7 @@
             label7.BorderStyle = BorderStyle.Fixed3D;
             label7.Location = new Point(270, 200);
             label7.Name = "label7";
-            label7.Size = new Size(290, 2);
+            label7.Size = new Size(400, 2);
             label7.TabIndex = 9;
             // 
             // label8
@@ -175,7 +186,7 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(841, 281);
+            label9.Location = new Point(841, 312);
             label9.Name = "label9";
             label9.Size = new Size(99, 25);
             label9.TabIndex = 11;
@@ -184,7 +195,7 @@
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(273, 281);
+            label10.Location = new Point(273, 312);
             label10.Name = "label10";
             label10.Size = new Size(228, 25);
             label10.TabIndex = 12;
@@ -203,7 +214,7 @@
             // 
             linkLabelDateNow.AutoSize = true;
             linkLabelDateNow.LinkColor = Color.FromArgb(64, 64, 64);
-            linkLabelDateNow.Location = new Point(663, 223);
+            linkLabelDateNow.Location = new Point(507, 255);
             linkLabelDateNow.Name = "linkLabelDateNow";
             linkLabelDateNow.Size = new Size(161, 25);
             linkLabelDateNow.TabIndex = 14;
@@ -213,7 +224,7 @@
             // 
             // textBoxPrice1
             // 
-            textBoxPrice1.Location = new Point(946, 278);
+            textBoxPrice1.Location = new Point(946, 309);
             textBoxPrice1.Name = "textBoxPrice1";
             textBoxPrice1.Size = new Size(150, 31);
             textBoxPrice1.TabIndex = 18;
@@ -222,7 +233,7 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(1102, 281);
+            label11.Location = new Point(1102, 312);
             label11.Name = "label11";
             label11.Size = new Size(46, 25);
             label11.TabIndex = 16;
@@ -230,7 +241,7 @@
             // 
             // textBoxFoundProblem1
             // 
-            textBoxFoundProblem1.Location = new Point(507, 278);
+            textBoxFoundProblem1.Location = new Point(507, 309);
             textBoxFoundProblem1.Name = "textBoxFoundProblem1";
             textBoxFoundProblem1.Size = new Size(317, 31);
             textBoxFoundProblem1.TabIndex = 17;
@@ -241,7 +252,7 @@
             // label12
             // 
             label12.BorderStyle = BorderStyle.Fixed3D;
-            label12.Location = new Point(-2, 446);
+            label12.Location = new Point(-2, 469);
             label12.Name = "label12";
             label12.Size = new Size(1216, 2);
             label12.TabIndex = 18;
@@ -249,14 +260,14 @@
             // label13
             // 
             label13.BorderStyle = BorderStyle.Fixed3D;
-            label13.Location = new Point(-2, 447);
+            label13.Location = new Point(-2, 470);
             label13.Name = "label13";
             label13.Size = new Size(1216, 2);
             label13.TabIndex = 19;
             // 
             // buttonSave
             // 
-            buttonSave.Location = new Point(710, 459);
+            buttonSave.Location = new Point(710, 480);
             buttonSave.Name = "buttonSave";
             buttonSave.Size = new Size(241, 43);
             buttonSave.TabIndex = 27;
@@ -266,7 +277,7 @@
             // 
             // buttonExit
             // 
-            buttonExit.Location = new Point(957, 459);
+            buttonExit.Location = new Point(957, 480);
             buttonExit.Name = "buttonExit";
             buttonExit.Size = new Size(241, 43);
             buttonExit.TabIndex = 28;
@@ -277,7 +288,7 @@
             // pictureBox1
             // 
             pictureBox1.Image = Properties.Resources.complite;
-            pictureBox1.Location = new Point(12, 181);
+            pictureBox1.Location = new Point(12, 122);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(207, 209);
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -295,7 +306,7 @@
             // textBoxFoundProblem2
             // 
             textBoxFoundProblem2.Enabled = false;
-            textBoxFoundProblem2.Location = new Point(507, 332);
+            textBoxFoundProblem2.Location = new Point(507, 363);
             textBoxFoundProblem2.Name = "textBoxFoundProblem2";
             textBoxFoundProblem2.Size = new Size(317, 31);
             textBoxFoundProblem2.TabIndex = 19;
@@ -306,7 +317,7 @@
             // label15
             // 
             label15.AutoSize = true;
-            label15.Location = new Point(1102, 335);
+            label15.Location = new Point(1102, 366);
             label15.Name = "label15";
             label15.Size = new Size(46, 25);
             label15.TabIndex = 27;
@@ -315,7 +326,7 @@
             // textBoxPrice2
             // 
             textBoxPrice2.Enabled = false;
-            textBoxPrice2.Location = new Point(946, 332);
+            textBoxPrice2.Location = new Point(946, 363);
             textBoxPrice2.Name = "textBoxPrice2";
             textBoxPrice2.Size = new Size(150, 31);
             textBoxPrice2.TabIndex = 20;
@@ -324,7 +335,7 @@
             // label16
             // 
             label16.AutoSize = true;
-            label16.Location = new Point(273, 335);
+            label16.Location = new Point(273, 366);
             label16.Name = "label16";
             label16.Size = new Size(228, 25);
             label16.TabIndex = 25;
@@ -333,7 +344,7 @@
             // label17
             // 
             label17.AutoSize = true;
-            label17.Location = new Point(841, 335);
+            label17.Location = new Point(841, 366);
             label17.Name = "label17";
             label17.Size = new Size(99, 25);
             label17.TabIndex = 24;
@@ -342,7 +353,7 @@
             // textBoxFoundProblem3
             // 
             textBoxFoundProblem3.Enabled = false;
-            textBoxFoundProblem3.Location = new Point(507, 386);
+            textBoxFoundProblem3.Location = new Point(507, 417);
             textBoxFoundProblem3.Name = "textBoxFoundProblem3";
             textBoxFoundProblem3.Size = new Size(317, 31);
             textBoxFoundProblem3.TabIndex = 21;
@@ -353,7 +364,7 @@
             // label18
             // 
             label18.AutoSize = true;
-            label18.Location = new Point(1102, 389);
+            label18.Location = new Point(1102, 420);
             label18.Name = "label18";
             label18.Size = new Size(46, 25);
             label18.TabIndex = 32;
@@ -362,7 +373,7 @@
             // textBoxPrice3
             // 
             textBoxPrice3.Enabled = false;
-            textBoxPrice3.Location = new Point(946, 386);
+            textBoxPrice3.Location = new Point(946, 417);
             textBoxPrice3.Name = "textBoxPrice3";
             textBoxPrice3.Size = new Size(150, 31);
             textBoxPrice3.TabIndex = 22;
@@ -371,7 +382,7 @@
             // label19
             // 
             label19.AutoSize = true;
-            label19.Location = new Point(273, 389);
+            label19.Location = new Point(273, 420);
             label19.Name = "label19";
             label19.Size = new Size(228, 25);
             label19.TabIndex = 30;
@@ -380,7 +391,7 @@
             // label20
             // 
             label20.AutoSize = true;
-            label20.Location = new Point(841, 389);
+            label20.Location = new Point(841, 420);
             label20.Name = "label20";
             label20.Size = new Size(99, 25);
             label20.TabIndex = 29;
@@ -390,7 +401,7 @@
             // 
             listBox1.FormattingEnabled = true;
             listBox1.ItemHeight = 25;
-            listBox1.Location = new Point(507, 167);
+            listBox1.Location = new Point(507, 309);
             listBox1.Name = "listBox1";
             listBox1.Size = new Size(317, 79);
             listBox1.TabIndex = 44;
@@ -400,7 +411,7 @@
             // label23
             // 
             label23.AutoSize = true;
-            label23.Location = new Point(703, 97);
+            label23.Location = new Point(769, 97);
             label23.Name = "label23";
             label23.Size = new Size(109, 25);
             label23.TabIndex = 47;
@@ -409,7 +420,7 @@
             // label24
             // 
             label24.BorderStyle = BorderStyle.Fixed3D;
-            label24.Location = new Point(648, 51);
+            label24.Location = new Point(714, 51);
             label24.Name = "label24";
             label24.Size = new Size(420, 2);
             label24.TabIndex = 46;
@@ -418,7 +429,7 @@
             // 
             label25.AutoSize = true;
             label25.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label25.Location = new Point(648, 20);
+            label25.Location = new Point(714, 20);
             label25.Name = "label25";
             label25.Size = new Size(99, 25);
             label25.TabIndex = 45;
@@ -427,7 +438,7 @@
             // labelNameDevice
             // 
             labelNameDevice.AutoSize = true;
-            labelNameDevice.Location = new Point(818, 97);
+            labelNameDevice.Location = new Point(884, 97);
             labelNameDevice.Name = "labelNameDevice";
             labelNameDevice.Size = new Size(157, 25);
             labelNameDevice.TabIndex = 50;
@@ -436,7 +447,7 @@
             // labelIdOrder
             // 
             labelIdOrder.AutoSize = true;
-            labelIdOrder.Location = new Point(818, 72);
+            labelIdOrder.Location = new Point(884, 72);
             labelIdOrder.Name = "labelIdOrder";
             labelIdOrder.Size = new Size(42, 25);
             labelIdOrder.TabIndex = 54;
@@ -445,17 +456,121 @@
             // label27
             // 
             label27.AutoSize = true;
-            label27.Location = new Point(648, 72);
+            label27.Location = new Point(714, 72);
             label27.Name = "label27";
             label27.Size = new Size(164, 25);
             label27.TabIndex = 53;
             label27.Text = "Номер квитанции:";
             // 
+            // labelMainMaster
+            // 
+            labelMainMaster.Location = new Point(9, 54);
+            labelMainMaster.Name = "labelMainMaster";
+            labelMainMaster.Size = new Size(118, 31);
+            labelMainMaster.TabIndex = 55;
+            labelMainMaster.Text = "Main";
+            labelMainMaster.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // label28
+            // 
+            label28.BorderStyle = BorderStyle.Fixed3D;
+            label28.Location = new Point(4, 44);
+            label28.Name = "label28";
+            label28.Size = new Size(290, 2);
+            label28.TabIndex = 57;
+            // 
+            // label29
+            // 
+            label29.AutoSize = true;
+            label29.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label29.Location = new Point(5, 11);
+            label29.Name = "label29";
+            label29.Size = new Size(340, 25);
+            label29.TabIndex = 56;
+            label29.Text = "Информация о выполненной работе";
+            // 
+            // panelMasters
+            // 
+            panelMasters.Controls.Add(label22);
+            panelMasters.Controls.Add(label21);
+            panelMasters.Controls.Add(textBoxAdditional);
+            panelMasters.Controls.Add(textBoxMain);
+            panelMasters.Controls.Add(labelAdditionalMaster);
+            panelMasters.Controls.Add(labelMainMaster);
+            panelMasters.Controls.Add(label28);
+            panelMasters.Controls.Add(label29);
+            panelMasters.Location = new Point(710, 155);
+            panelMasters.Name = "panelMasters";
+            panelMasters.Size = new Size(350, 138);
+            panelMasters.TabIndex = 58;
+            panelMasters.Visible = false;
+            // 
+            // label22
+            // 
+            label22.AutoSize = true;
+            label22.Location = new Point(205, 97);
+            label22.Name = "label22";
+            label22.Size = new Size(27, 25);
+            label22.TabIndex = 62;
+            label22.Text = "%";
+            // 
+            // label21
+            // 
+            label21.AutoSize = true;
+            label21.Location = new Point(205, 57);
+            label21.Name = "label21";
+            label21.Size = new Size(27, 25);
+            label21.TabIndex = 61;
+            label21.Text = "%";
+            // 
+            // textBoxAdditional
+            // 
+            textBoxAdditional.Location = new Point(133, 96);
+            textBoxAdditional.MaxLength = 2;
+            textBoxAdditional.Name = "textBoxAdditional";
+            textBoxAdditional.Size = new Size(66, 31);
+            textBoxAdditional.TabIndex = 60;
+            textBoxAdditional.TextChanged += TextBoxAdditional_TextChanged;
+            textBoxAdditional.KeyPress += TextBoxAdditional_KeyPress;
+            // 
+            // textBoxMain
+            // 
+            textBoxMain.Location = new Point(133, 54);
+            textBoxMain.MaxLength = 2;
+            textBoxMain.Name = "textBoxMain";
+            textBoxMain.Size = new Size(66, 31);
+            textBoxMain.TabIndex = 59;
+            textBoxMain.TextChanged += TextBoxMain_TextChanged;
+            textBoxMain.KeyPress += TextBoxMain_KeyPress;
+            // 
+            // labelAdditionalMaster
+            // 
+            labelAdditionalMaster.Location = new Point(9, 94);
+            labelAdditionalMaster.Name = "labelAdditionalMaster";
+            labelAdditionalMaster.Size = new Size(118, 31);
+            labelAdditionalMaster.TabIndex = 58;
+            labelAdditionalMaster.Text = "Additional";
+            labelAdditionalMaster.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // linkLabelFeaturesOrder
+            // 
+            linkLabelFeaturesOrder.AutoSize = true;
+            linkLabelFeaturesOrder.LinkColor = Color.FromArgb(64, 64, 64);
+            linkLabelFeaturesOrder.Location = new Point(819, 20);
+            linkLabelFeaturesOrder.Name = "linkLabelFeaturesOrder";
+            linkLabelFeaturesOrder.Size = new Size(145, 25);
+            linkLabelFeaturesOrder.TabIndex = 59;
+            linkLabelFeaturesOrder.TabStop = true;
+            linkLabelFeaturesOrder.Text = "Свойства заказа";
+            linkLabelFeaturesOrder.LinkClicked += LinkLabelFeaturesOrder_LinkClicked;
+            // 
             // CompletedOrder
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1210, 513);
+            ClientSize = new Size(1210, 534);
+            Controls.Add(linkLabelFeaturesOrder);
+            Controls.Add(panelMasters);
             Controls.Add(labelIdOrder);
             Controls.Add(label27);
             Controls.Add(labelNameDevice);
@@ -503,6 +618,8 @@
             Name = "CompletedOrder";
             Text = "Пометка аппарата как отремонтированного";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            panelMasters.ResumeLayout(false);
+            panelMasters.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -554,5 +671,13 @@
         private Label labelNameDevice;
         private Label labelIdOrder;
         private Label label27;
+        private Label labelMainMaster;
+        private Label label28;
+        private Label label29;
+        private Panel panelMasters;
+        private Label labelAdditionalMaster;
+        private TextBox textBoxAdditional;
+        private TextBox textBoxMain;
+        private LinkLabel linkLabelFeaturesOrder;
     }
 }

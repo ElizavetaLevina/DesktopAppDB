@@ -44,7 +44,9 @@ namespace WinFormsApp1.DTO
             DateStartWork = order.DateStartWork?.ToShortDateString();
             DateCompleted = order.DateCompleted?.ToShortDateString();
             DateIssue = order.DateIssue?.ToShortDateString();
-            MasterName = String.Format("{0} {1}", order.MainMaster?.NameMaster, order.AdditionalMaster?.NameMaster);
+            MasterName = order.AdditionalMasterId != null ? 
+                String.Format("{0} | {1}", order.MainMaster?.NameMaster, order.AdditionalMaster?.NameMaster) : 
+                order.MainMaster?.NameMaster;
             NameDevice = String.Format("{0} {1} {2}", order.TypeTechnic?.NameTypeTechnic,
                 order.BrandTechnic?.NameBrandTechnic, order.ModelTechnic);
             IdClient = order.Client?.IdClient;

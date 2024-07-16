@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculatingEmployeeSalaries));
             panel1 = new Panel();
             radioButton12 = new RadioButton();
@@ -44,6 +44,8 @@
             radioButton2 = new RadioButton();
             radioButton1 = new RadioButton();
             dataGridView1 = new DataGridView();
+            colMaster = new DataGridViewTextBoxColumn();
+            colSalary = new DataGridViewTextBoxColumn();
             comboBoxYears = new ComboBox();
             label1 = new Label();
             label2 = new Label();
@@ -53,9 +55,7 @@
             label6 = new Label();
             buttonExit = new Button();
             label8 = new Label();
-            comboBox1 = new ComboBox();
-            colMaster = new DataGridViewTextBoxColumn();
-            colSalary = new DataGridViewTextBoxColumn();
+            comboBoxCalculationByDate = new ComboBox();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
@@ -230,14 +230,14 @@
             dataGridView1.BackgroundColor = Color.FromArgb(224, 224, 224);
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Columns.AddRange(new DataGridViewColumn[] { colMaster, colSalary });
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Window;
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.GradientInactiveCaption;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
-            dataGridView1.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.GradientInactiveCaption;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
             dataGridView1.Location = new Point(233, 18);
             dataGridView1.MultiSelect = false;
             dataGridView1.Name = "dataGridView1";
@@ -247,6 +247,20 @@
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.Size = new Size(544, 481);
             dataGridView1.TabIndex = 1;
+            // 
+            // colMaster
+            // 
+            colMaster.HeaderText = "Мастер";
+            colMaster.MinimumWidth = 8;
+            colMaster.Name = "colMaster";
+            colMaster.Width = 300;
+            // 
+            // colSalary
+            // 
+            colSalary.HeaderText = "Зарплата";
+            colSalary.MinimumWidth = 8;
+            colSalary.Name = "colSalary";
+            colSalary.Width = 244;
             // 
             // comboBoxYears
             // 
@@ -326,36 +340,22 @@
             label8.TabIndex = 13;
             label8.Text = "Расчет по";
             // 
-            // comboBox1
+            // comboBoxCalculationByDate
             // 
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Items.AddRange(new object[] { "дате выполнения", "дате выдачи" });
-            comboBox1.Location = new Point(330, 514);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(182, 33);
-            comboBox1.TabIndex = 14;
-            comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
-            // 
-            // colMaster
-            // 
-            colMaster.HeaderText = "Мастер";
-            colMaster.MinimumWidth = 8;
-            colMaster.Name = "colMaster";
-            colMaster.Width = 300;
-            // 
-            // colSalary
-            // 
-            colSalary.HeaderText = "Зарплата";
-            colSalary.MinimumWidth = 8;
-            colSalary.Name = "colSalary";
-            colSalary.Width = 244;
+            comboBoxCalculationByDate.FormattingEnabled = true;
+            comboBoxCalculationByDate.Items.AddRange(new object[] { "дате выполнения", "дате выдачи" });
+            comboBoxCalculationByDate.Location = new Point(330, 514);
+            comboBoxCalculationByDate.Name = "comboBoxCalculationByDate";
+            comboBoxCalculationByDate.Size = new Size(182, 33);
+            comboBoxCalculationByDate.TabIndex = 14;
+            comboBoxCalculationByDate.SelectedIndexChanged += ComboBoxCalculationByDate_SelectedIndexChanged;
             // 
             // CalculatingEmployeeSalaries
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 626);
-            Controls.Add(comboBox1);
+            Controls.Add(comboBoxCalculationByDate);
             Controls.Add(label8);
             Controls.Add(buttonExit);
             Controls.Add(label6);
@@ -402,7 +402,7 @@
         private Label label6;
         private Button buttonExit;
         private Label label8;
-        private ComboBox comboBox1;
+        private ComboBox comboBoxCalculationByDate;
         private DataGridViewTextBoxColumn colMaster;
         private DataGridViewTextBoxColumn colSalary;
     }

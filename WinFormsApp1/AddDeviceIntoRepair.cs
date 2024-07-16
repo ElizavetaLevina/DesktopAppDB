@@ -1,5 +1,6 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
+using WinFormsApp1.Helpers;
 using WinFormsApp1.Reports;
 using WinFormsApp1.Repository;
 using Color = System.Drawing.Color;
@@ -22,7 +23,6 @@ namespace WinFormsApp1
         DiagnosisRepository diagnosisRepository = new();
         EquipmentRepository equipmentRepository = new();
         MasterRepository masterRepository = new();
-        BrandTechnicRepository brandTechnicRepository = new();
         TypeBrandRepository typeBrandRepository = new();
         TypeTechnicRepository typeTechnicRepository = new();
         public AddDeviceIntoRepair()
@@ -310,7 +310,7 @@ namespace WinFormsApp1
 
         private void UpdateComboBox(ElementOfRepairEnum elementOfRepair)
         {
-            var mastersDTO = masterRepository.GetMasters();
+            var mastersDTO = masterRepository.GetMastersForOutput();
             mastersDTO.Insert(0, new MasterDTO() { Id = null, NameMaster = "-" });
             switch (elementOfRepair)
             {
@@ -352,7 +352,7 @@ namespace WinFormsApp1
 
         private int IdKeyOrder()
         {
-            return orderRepository.GetLastId();
+            return orderRepository.GetLastNumberOrder();
         }
 
         private void ListBoxClient_SelectedIndexChanged(object sender, EventArgs e)
@@ -438,8 +438,7 @@ namespace WinFormsApp1
 
         private void TextBoxNumberOrder_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if ((e.KeyChar <= 47 || e.KeyChar >= 58) && e.KeyChar != 8 && e.KeyChar != 13)
-                e.Handled = true;
+            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
         }
 
         private void CheckBox1_CheckedChanged(object sender, EventArgs e)

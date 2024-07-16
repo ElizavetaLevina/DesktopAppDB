@@ -1,4 +1,5 @@
 ﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Helpers;
 using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
@@ -10,7 +11,7 @@ namespace WinFormsApp1
         public List<string>? problem = [];
         public List<int>? price = [];
         int sumDetails = 0;
-        public List<string>? nameProblem = [];
+        public List<string> nameProblem = [];
         private int numberProblem = 1;
         public int countProblem = 0;
         MalfunctionRepository malfunctionRepository = new();
@@ -26,7 +27,7 @@ namespace WinFormsApp1
             orderDTO = orderRepository.GetOrder(idOrder);
 
             var malfunctionList = malfunctionRepository.GetMalfunctions();
-            foreach(var malfunction in malfunctionList)
+            foreach (var malfunction in malfunctionList)
             {
                 nameProblem.Add(malfunction.Name);
             }
@@ -54,6 +55,13 @@ namespace WinFormsApp1
             labelIdOrder.Text = orderDTO.NumberOrder.ToString();
             labelNameDevice.Text = String.Format("{0} {1} {2}", orderDTO.TypeTechnic?.Name,
                 orderDTO.BrandTechnic?.Name, orderDTO.ModelTechnic);
+
+            if (orderDTO.AdditionalMasterId != null)
+            {
+                panelMasters.Visible = true;
+                labelMainMaster.Text = orderDTO.MainMaster?.NameMaster;
+                labelAdditionalMaster.Text = orderDTO.AdditionalMaster?.NameMaster;
+            }
         }
 
         private void LinkLabelDateNow_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -63,7 +71,7 @@ namespace WinFormsApp1
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.Cancel;    
+            DialogResult = DialogResult.Cancel;
             Close();
         }
 
@@ -76,14 +84,20 @@ namespace WinFormsApp1
             {
                 StartPosition = FormStartPosition.CenterParent
             };
-            
+
+            if (orderDTO.AdditionalMasterId != null && (string.IsNullOrEmpty(textBoxMain.Text) || string.IsNullOrEmpty(textBoxAdditional.Text)))
+            {
+                warning.ShowDialog();
+                return;
+            }
+
             switch (countProblem)
             {
                 case 0:
                     warning.ShowDialog();
                     return;
                 case 1:
-                    if (textBoxPrice1.Text.Length == 0)
+                    if (string.IsNullOrEmpty(textBoxPrice1.Text))
                     {
                         warning.ShowDialog();
                         return;
@@ -92,7 +106,7 @@ namespace WinFormsApp1
                     price?.Add(Convert.ToInt32(textBoxPrice1.Text));
                     break;
                 case 2:
-                    if (textBoxPrice1.Text.Length == 0 || textBoxPrice2.Text.Length == 0)
+                    if (string.IsNullOrEmpty(textBoxPrice1.Text) || string.IsNullOrEmpty(textBoxPrice2.Text))
                     {
                         warning.ShowDialog();
                         return;
@@ -103,8 +117,7 @@ namespace WinFormsApp1
                     price?.Add(Convert.ToInt32(textBoxPrice2.Text));
                     break;
                 case 3:
-                    if (textBoxPrice3.Text.Length == 0 || textBoxPrice2.Text.Length == 0 ||
-                        textBoxPrice1.Text.Length == 0)
+                    if (string.IsNullOrEmpty(textBoxPrice1.Text) || string.IsNullOrEmpty(textBoxPrice2.Text) || string.IsNullOrEmpty(textBoxPrice3.Text))
                     {
                         warning.ShowDialog();
                         return;
@@ -155,6 +168,12 @@ namespace WinFormsApp1
 
             orderDTO.InProgress = false;
             orderDTO.DateCompleted = dateTimePicker1.Value;
+            if (orderDTO.AdditionalMasterId != null)
+            {
+                orderDTO.PercentWorkMainMaster = Convert.ToInt32(textBoxMain.Text);
+                orderDTO.PercentWorkAdditionalMaster = Convert.ToInt32(textBoxAdditional.Text);
+            }
+            else orderDTO.PercentWorkMainMaster = 100;
             if (orderDTO.ReturnUnderGuarantee)
             {
                 int countDayInRepair = (orderDTO.DateCompletedReturn.Value - orderDTO.DateReturn.Value).Days;
@@ -189,7 +208,7 @@ namespace WinFormsApp1
             listBox1.DataSource = null;
             listBox1.Items.Clear();
             listBox1.Visible = false;
-            foreach(var problem in nameProblem)
+            foreach (var problem in nameProblem)
             {
                 if (problem.StartsWith(textBoxFoundProblem1.Text))
                 {
@@ -309,20 +328,17 @@ namespace WinFormsApp1
 
         private void TextBoxPriceRepair_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if ((e.KeyChar <= 47 || e.KeyChar >= 58) && e.KeyChar != 8)
-                e.Handled = true;
+            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
         }
 
         private void TextBoxPrice2_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if ((e.KeyChar <= 47 || e.KeyChar >= 58) && e.KeyChar != 8)
-                e.Handled = true;
+            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
         }
 
         private void TextBoxPrice3_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if ((e.KeyChar <= 47 || e.KeyChar >= 58) && e.KeyChar != 8)
-                e.Handled = true;
+            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
         }
 
         private void TextBoxFoundProblem1_KeyDown(object sender, KeyEventArgs e)
@@ -408,7 +424,7 @@ namespace WinFormsApp1
                 catch { }
             }
         }
-        
+
         private void ListBox1_Click(object sender, EventArgs e)
         {
             try
@@ -420,7 +436,7 @@ namespace WinFormsApp1
                     switch (numberProblem)
                     {
                         case 1:
-                            
+
                             textBoxFoundProblem1.Text = listBox1.Items[id].ToString();
                             listBox1.Visible = false;
                             malfunctionDTO = malfunctionRepository.GetMalfunctionByName(textBoxFoundProblem1.Text);
@@ -445,6 +461,51 @@ namespace WinFormsApp1
                 }
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+
+
+
+        private void TextBoxMain_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !KeyPressHelper.CheckKeyPress(true, textBoxMain.Text, e.KeyChar);
+        }
+
+        private void TextBoxAdditional_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !KeyPressHelper.CheckKeyPress(true, textBoxAdditional.Text, e.KeyChar);
+        }
+
+        private void TextBoxMain_TextChanged(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(textBoxMain.Text))
+                textBoxAdditional.Text = (100 - Convert.ToInt32(textBoxMain.Text)).ToString();
+            else textBoxAdditional.Text = string.Empty;
+        }
+
+        private void TextBoxAdditional_TextChanged(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(textBoxAdditional.Text))
+                textBoxMain.Text = (100 - Convert.ToInt32(textBoxAdditional.Text)).ToString();
+            else textBoxMain.Text = string.Empty;
+        }
+
+        private void LinkLabelFeaturesOrder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            FeaturesOrder featuresOrder = new(idOrder, Enum.StatusOrderEnum.InRepair, true)
+            {
+                StartPosition = FormStartPosition.CenterParent
+            };
+            if (featuresOrder.ShowDialog() == DialogResult.OK)
+            {
+                orderDTO = orderRepository.GetOrder(idOrder);
+                if (orderDTO.AdditionalMasterId != null)
+                {
+                    panelMasters.Visible = true;
+                    labelMainMaster.Text = orderDTO.MainMaster?.NameMaster;
+                    labelAdditionalMaster.Text = orderDTO.AdditionalMaster?.NameMaster;
+                }
+                else panelMasters.Visible = false;
+            }
         }
 
         public DateTime DateComplete

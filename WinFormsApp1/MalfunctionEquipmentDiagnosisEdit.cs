@@ -1,4 +1,5 @@
 ﻿using WinFormsApp1.Enum;
+using WinFormsApp1.Helpers;
 
 namespace WinFormsApp1
 {
@@ -43,8 +44,7 @@ namespace WinFormsApp1
 
         private void TextBoxPrice_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if ((e.KeyChar <= 47 || e.KeyChar >= 58) && e.KeyChar != 8)
-                e.Handled = true;
+            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
         }
 
         private void ButtonSave_Click(object sender, EventArgs e)
@@ -83,7 +83,6 @@ namespace WinFormsApp1
                         warning.ShowDialog();
                     break;
             }
-            
         }
 
         private void ButtonExit_Click(object sender, EventArgs e)

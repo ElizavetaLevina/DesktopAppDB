@@ -18,8 +18,10 @@ namespace WinFormsApp1.DTO
         public int ClientId { get; set; }
         public virtual ClientEditDTO? Client { get; set; }
         public int? MainMasterId { get; set; }
+        public int PercentWorkMainMaster { get; set; } = 0;
         public virtual MasterEditDTO? MainMaster { get; set; }
         public int? AdditionalMasterId { get; set; }
+        public int PercentWorkAdditionalMaster { get; set; } = 0;
         public virtual MasterEditDTO? AdditionalMaster { get; set; }
         public DateTime? DateCreation { get; set; }
         public DateTime? DateStartWork { get; set; }
@@ -57,8 +59,10 @@ namespace WinFormsApp1.DTO
             ClientId = order.ClientId;
             Client = new ClientEditDTO(order.Client);
             MainMasterId = order.MainMasterId;
+            PercentWorkMainMaster = order.PercentWorkMainMaster;
             MainMaster = order.MainMaster != null ? new MasterEditDTO(order.MainMaster) : null;
             AdditionalMasterId = order.AdditionalMasterId;
+            PercentWorkAdditionalMaster = order.PercentWorkAdditionalMaster;
             AdditionalMaster = order.AdditionalMaster != null ? new MasterEditDTO(order.AdditionalMaster) : null;
             DateCreation = order.DateCreation;
             DateStartWork = order.DateStartWork;

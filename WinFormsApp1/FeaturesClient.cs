@@ -1,4 +1,5 @@
 ﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Enum;
 using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
@@ -6,40 +7,42 @@ namespace WinFormsApp1
     public partial class FeaturesClient : Form
     {
         ClientRepository clientRepository = new();
-        ClientEditDTO client;
+        ClientEditDTO clientDTO;
         public int clientId;
         public FeaturesClient(int id = 0)
         {
             InitializeComponent();
             clientId = id;
-            client = clientRepository.GetClient(id);
-            textBoxID.Text = client.IdClient;
-            textBoxNameAddress.Text = client.NameAndAddressClient;
-            textBoxSecondPhone.Text = client.NumberSecondPhone;
+            clientDTO = clientRepository.GetClient(id);
+            textBoxID.Text = clientDTO.IdClient;
+            textBoxNameAddress.Text = clientDTO.NameAndAddressClient;
+            textBoxSecondPhone.Text = clientDTO.NumberSecondPhone;
 
-            switch (client.TypeClient)
+            var typeClient = (TypeClientEnum)System.Enum.Parse(typeof(TypeClientEnum), clientDTO.TypeClient);
+
+            switch (typeClient)
             {
-                case "normal":
+                case TypeClientEnum.normal:
                     radioButtonNormal.Checked = true; break;
-                case "white":
+                case TypeClientEnum.white:
                     radioButtonWhite.Checked = true; break;
-                case "black":
+                case TypeClientEnum.black:
                     radioButtonBlack.Checked = true; break;
             }
         }
 
         private void ButtonSave_Click(object sender, EventArgs e)
         {
-            if (textBoxID.Text != "")
+            if (!string.IsNullOrEmpty(textBoxID.Text))
             {
-                client.IdClient = textBoxID.Text;
-                client.NameAndAddressClient = textBoxNameAddress.Text;
-                client.NumberSecondPhone = textBoxSecondPhone.Text;
-                client.TypeClient = TypeClient();
+                clientDTO.IdClient = textBoxID.Text;
+                clientDTO.NameAndAddressClient = textBoxNameAddress.Text;
+                clientDTO.NumberSecondPhone = textBoxSecondPhone.Text;
+                clientDTO.TypeClient = TypeClient();
 
                 Task.Run(async () =>
                 {
-                    await clientRepository.SaveClientAsync(client);
+                    await clientRepository.SaveClientAsync(clientDTO);
                 });
 
                 DialogResult = DialogResult.OK;
@@ -55,12 +58,12 @@ namespace WinFormsApp1
 
         public string TypeClient()
         {
-            string typeClient = "normal";
+            string typeClient = TypeClientEnum.normal.ToString();
 
             if (radioButtonWhite.Checked)
-                typeClient = "white";
+                typeClient = TypeClientEnum.white.ToString();
             else if (radioButtonBlack.Checked)
-                typeClient = "black";
+                typeClient = TypeClientEnum.black.ToString();
 
             return typeClient;
         }

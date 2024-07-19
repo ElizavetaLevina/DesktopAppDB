@@ -17,7 +17,7 @@ namespace WinFormsApp1
         readonly List<string> equipmentList = [];
         List<DiagnosisEditDTO> diagnosesDTO;
         List<EquipmentEditDTO> equipmentsDTO;
-        string nameTextBox = "";
+        NameTableToEditEnum nameTextBox;
         OrderRepository orderRepository = new();
         ClientRepository clientRepository = new();
         DiagnosisRepository diagnosisRepository = new();
@@ -28,6 +28,11 @@ namespace WinFormsApp1
         public AddDeviceIntoRepair()
         {
             InitializeComponent();
+            InitializeElementsForm();
+        }
+
+        private void InitializeElementsForm()
+        {
             UpdateComboBox(ElementOfRepairEnum.MainMasterElement);
             UpdateComboBox(ElementOfRepairEnum.AdditionalMasterElement);
             UpdateComboBox(ElementOfRepairEnum.TypeDeviceElement);
@@ -135,7 +140,7 @@ namespace WinFormsApp1
                     int? idEquipment = equipmentDTO.Id;
                     if (idEquipment == 0)
                     {
-                        if (textBoxEquipment.Text != "")
+                        if (!string.IsNullOrEmpty(textBoxEquipment.Text))
                         {
                             task = Task.Run(async () =>
                             {
@@ -150,7 +155,7 @@ namespace WinFormsApp1
                     int? idDiagnosis = diagnosisDTO.Id;
                     if (idDiagnosis == 0)
                     {
-                        if (textBoxDiagnosis.Text != "")
+                        if (!string.IsNullOrEmpty(textBoxDiagnosis.Text))
                         {
                             task = Task.Run(async () =>
                             {
@@ -232,7 +237,7 @@ namespace WinFormsApp1
 
         private bool CheckIdClient()
         {
-            if (textBoxNameClient.Text == "")
+            if (string.IsNullOrEmpty(textBoxNameClient.Text))
             {
                 ShowWarningForm("Вы не заполнили Id заказчика!");
                 labelNameClient.ForeColor = Color.Red;
@@ -391,7 +396,7 @@ namespace WinFormsApp1
                 if (textBoxNameClient.Text == oldClients[i])
                 {
                     labelTypeClient.Text = "Старый клиент";
-                    if (oldClientsType[i] == "black")
+                    if (oldClientsType[i] == TypeClientEnum.black.ToString())
                         labelBlackList.Visible = true;
                     else labelBlackList.Visible = false;
                     break;
@@ -402,6 +407,16 @@ namespace WinFormsApp1
                     labelTypeClient.Text = "Новый клиент";
                 }
             }
+        }
+
+        private void TextBoxNameClient_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
+        }
+
+        private void TextBoxSecondPhone_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
         }
 
         private void AddDeviceForRepair_Activated(object sender, EventArgs e)
@@ -457,7 +472,7 @@ namespace WinFormsApp1
             listBoxEquipmentDiagnosis.Items.Clear();
             listBoxEquipmentDiagnosis.Visible = false;
             listBoxEquipmentDiagnosis.Location = new Point(listBoxEquipmentDiagnosis.Location.X, textBoxEquipment.Location.Y + textBoxEquipment.Height);
-            nameTextBox = "equipment";
+            nameTextBox = NameTableToEditEnum.Equipment;
 
             equipmentsDTO = equipmentRepository.GetEquipmentsByName(textBoxEquipment.Text);
             foreach (var equipment in equipmentsDTO)
@@ -475,7 +490,7 @@ namespace WinFormsApp1
             listBoxEquipmentDiagnosis.Items.Clear();
             listBoxEquipmentDiagnosis.Visible = false;
             listBoxEquipmentDiagnosis.Location = new Point(listBoxEquipmentDiagnosis.Location.X, textBoxDiagnosis.Location.Y + textBoxDiagnosis.Height);
-            nameTextBox = "diagnosis";
+            nameTextBox = NameTableToEditEnum.Diagnosis;
 
             diagnosesDTO = diagnosisRepository.GetDiagnosesByName(textBoxDiagnosis.Text);
             foreach (var diagnosis in diagnosesDTO)
@@ -494,10 +509,10 @@ namespace WinFormsApp1
             {
                 switch (nameTextBox)
                 {
-                    case "equipment":
+                    case NameTableToEditEnum.Equipment:
                         textBoxEquipment.Text = listBoxEquipmentDiagnosis.Items[listBoxEquipmentDiagnosis.SelectedIndex].ToString();
                         break;
-                    case "diagnosis":
+                    case NameTableToEditEnum.Diagnosis:
                         textBoxDiagnosis.Text = listBoxEquipmentDiagnosis.Items[listBoxEquipmentDiagnosis.SelectedIndex].ToString();
                         break;
                 }
@@ -530,16 +545,17 @@ namespace WinFormsApp1
             else
             {
                 listBoxEquipmentDiagnosis.Items.Clear();
-                listBoxEquipmentDiagnosis.Visible = true;
                 listBoxEquipmentDiagnosis.Location = new Point(listBoxEquipmentDiagnosis.Location.X, textBoxEquipment.Location.Y + textBoxEquipment.Height);
-                nameTextBox = "equipment";
+                nameTextBox = NameTableToEditEnum.Equipment;
 
                 equipmentsDTO = equipmentRepository.GetEquipmentsByName(textBoxEquipment.Text);
                 foreach (var equipment in equipmentsDTO)
                 {
-                    listBoxEquipmentDiagnosis.Visible = true;
                     listBoxEquipmentDiagnosis.Items.Add(equipment.Name);
                 }
+
+                if (listBoxEquipmentDiagnosis.Items.Count > 0)
+                    listBoxEquipmentDiagnosis.Visible = true;
             }
         }
 
@@ -550,19 +566,20 @@ namespace WinFormsApp1
             else
             {
                 listBoxEquipmentDiagnosis.Items.Clear();
-                listBoxEquipmentDiagnosis.Visible = true;
                 listBoxEquipmentDiagnosis.Location = new Point(listBoxEquipmentDiagnosis.Location.X, textBoxDiagnosis.Location.Y + textBoxDiagnosis.Height);
-                nameTextBox = "diagnosis";
+                nameTextBox = NameTableToEditEnum.Diagnosis;
 
                 diagnosesDTO = diagnosisRepository.GetDiagnosesByName(textBoxDiagnosis.Text);
                 foreach (var diagnosis in diagnosesDTO)
                 {
                     if (!loading)
                     {
-                        listBoxEquipmentDiagnosis.Visible = true;
                         listBoxEquipmentDiagnosis.Items.Add(diagnosis.Name);
                     }
                 }
+
+                if (listBoxEquipmentDiagnosis.Items.Count > 0)
+                    listBoxEquipmentDiagnosis.Visible = true;
             }
         }
 
@@ -586,7 +603,7 @@ namespace WinFormsApp1
 
         private void ComboBoxMaster2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(comboBoxMainMaster.Text == comboBoxAdditionalMaster.Text)
+            if (comboBoxMainMaster.Text == comboBoxAdditionalMaster.Text)
                 comboBoxAdditionalMaster.SelectedIndex = 0;
         }
 

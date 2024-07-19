@@ -56,7 +56,7 @@ namespace WinFormsApp1
             switch (status)
             {
                 case NameTableToEditEnum.Malfunction:
-                    if (textBoxName.Text != "" && textBoxPrice.Text != "")
+                    if (!string.IsNullOrEmpty(textBoxName.Text) && !string.IsNullOrEmpty(textBoxPrice.Text))
                     {
                         DialogResult = DialogResult.OK;
                         Close();
@@ -65,7 +65,7 @@ namespace WinFormsApp1
                         warning.ShowDialog();
                     break;
                 case NameTableToEditEnum.Diagnosis:
-                    if (textBoxName.Text != "")
+                    if (!string.IsNullOrEmpty(textBoxName.Text))
                     {
                         DialogResult = DialogResult.OK;
                         Close();
@@ -74,7 +74,7 @@ namespace WinFormsApp1
                         warning.ShowDialog();
                     break;
                 case NameTableToEditEnum.Equipment:
-                    if (textBoxName.Text != "")
+                    if (!string.IsNullOrEmpty(textBoxName.Text))
                     {
                         DialogResult = DialogResult.OK;
                         Close();

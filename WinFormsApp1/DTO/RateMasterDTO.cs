@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using WinFormsApp1.Model;
+using WinFormsApp1.Enum;
 
 namespace WinFormsApp1.DTO
 {
@@ -18,7 +19,7 @@ namespace WinFormsApp1.DTO
         {
             Id = rateMaster.Id;
             MasterName = rateMaster.Master?.NameMaster;
-            MonthYear = string.Format("{0}  {1}", (Enum.MonthEnum)rateMaster.DateStart.Month, rateMaster.DateStart.Year);
+            MonthYear = string.Format("{0}  {1}", (MonthEnum)rateMaster.DateStart.Month, rateMaster.DateStart.Year);
             PercentProfit = rateMaster.PercentProfit;
         }
     }

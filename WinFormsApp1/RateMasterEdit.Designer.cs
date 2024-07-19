@@ -145,6 +145,7 @@
             Controls.Add(comboBoxMonth);
             Controls.Add(label1);
             Controls.Add(dataGridView1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "RateMasterEdit";
             Text = "Процент прибыли мастера";

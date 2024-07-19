@@ -78,7 +78,7 @@ namespace WinFormsApp1
             } else
             {
                 labelIsGuarantee.Text = "Без гарантии";
-                labelGuaranteePeriod.Text = "";
+                labelGuaranteePeriod.Text = string.Empty;
             }
         }
 

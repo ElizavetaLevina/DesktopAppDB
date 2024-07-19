@@ -32,6 +32,11 @@ namespace WinFormsApp1
             idOrder = id;
             statusOrder = status;
             orderDTO = orderRepository.GetOrder(idOrder);
+            InitializeElementsForm();
+        }
+
+        private void InitializeElementsForm()
+        {
             textBoxIdOrder.Text = orderDTO.NumberOrder.ToString();
             Text = String.Format("Свойства устройства (заказ № {0} )", orderDTO.NumberOrder);
 
@@ -48,6 +53,7 @@ namespace WinFormsApp1
 
             UpdateComboBox(ElementOfRepairEnum.MainMasterElement);
             UpdateComboBox(ElementOfRepairEnum.AdditionalMasterElement);
+
             if (mastersDTO.Count > 0 && orderDTO.MainMasterId != null)
                 comboBoxMainMaster.SelectedIndex = comboBoxMainMaster.FindStringExact(orderDTO.MainMaster?.NameMaster);
             if (mastersDTO.Count > 0 && orderDTO.AdditionalMasterId != null)
@@ -71,18 +77,19 @@ namespace WinFormsApp1
             UpdateData();
 
             var clientDTO = clientRepository.GetClient(orderDTO.ClientId);
+            var typeClient = (TypeClientEnum)System.Enum.Parse(typeof(TypeClientEnum), clientDTO.TypeClient);
 
-            switch (clientDTO.TypeClient)
+            switch (typeClient)
             {
-                case "normal":
+                case TypeClientEnum.normal:
                     textBoxTypeClient.Text = "Обычный клиент"; break;
-                case "white":
+                case TypeClientEnum.white:
                     textBoxTypeClient.Text = "В белом списке"; break;
-                case "black":
+                case TypeClientEnum.black:
                     textBoxTypeClient.Text = "В черном списке"; break;
             }
 
-            switch (status)
+            switch (statusOrder)
             {
                 case StatusOrderEnum.Completed:
                     OrderComplete();
@@ -295,7 +302,7 @@ namespace WinFormsApp1
 
         private void ButtonSave_Click(object sender, EventArgs e)
         {
-            string foundProblem = "";
+            string foundProblem = string.Empty;
             int priceRepair = 0;
             DateTime? dateIssue = null;
             DateTime? dateEndGuarantee = null;
@@ -372,7 +379,7 @@ namespace WinFormsApp1
             int? idEquipment = equipmentDTO.Id;
             if (idEquipment == 0)
             {
-                if (textBoxEquipment.Text != "")
+                if (!string.IsNullOrEmpty(textBoxEquipment.Text))
                 {
                     task = Task.Run(async () =>
                     {
@@ -387,7 +394,7 @@ namespace WinFormsApp1
             int? idDiagnosis = diagnosisDTO.Id;
             if (idDiagnosis == 0)
             {
-                if (textBoxDiagnosis.Text != "")
+                if (!string.IsNullOrEmpty(textBoxDiagnosis.Text))
                 {
                     task = Task.Run(async () =>
                     {

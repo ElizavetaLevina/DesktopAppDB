@@ -1,4 +1,5 @@
 ﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Enum;
 using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
@@ -50,19 +51,19 @@ namespace WinFormsApp1
 
         private void ButtonWhite_Click(object sender, EventArgs e)
         {
-            clients = clientRepository.GetClientsByType("white");
+            clients = clientRepository.GetClientsByType(TypeClientEnum.white.ToString());
             UpdateTable();
         }
 
         private void ButtonNormal_Click(object sender, EventArgs e)
         {
-            clients = clientRepository.GetClientsByType("normal");
+            clients = clientRepository.GetClientsByType(TypeClientEnum.normal.ToString());
             UpdateTable();
         }
 
         private void ButtonBlack_Click(object sender, EventArgs e)
         {
-            clients = clientRepository.GetClientsByType("black");
+            clients = clientRepository.GetClientsByType(TypeClientEnum.black.ToString());
             UpdateTable();
         }
 

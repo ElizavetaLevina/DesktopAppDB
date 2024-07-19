@@ -1,4 +1,6 @@
-﻿namespace WinFormsApp1.DTO
+﻿using WinFormsApp1.Enum;
+
+namespace WinFormsApp1.DTO
 {
     public class ClientEditDTO
     {
@@ -9,7 +11,7 @@
         public string? IdClient { get; set; }
         public string? NameAndAddressClient { get; set; }
         public string? NumberSecondPhone { get; set; }
-        public string TypeClient { get; set; } = "normal";
+        public string TypeClient { get; set; } = TypeClientEnum.normal.ToString();
 
         public ClientEditDTO(Client client)
         {

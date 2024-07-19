@@ -1,12 +1,13 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Helpers;
 using WinFormsApp1.Repository;
+using WinFormsApp1.Enum;
 
 namespace WinFormsApp1
 {
     public partial class CompletedOrder : Form
     {
-        readonly DateTime dateCreate;
+        DateTime dateCreate;
         readonly int idOrder;
         public List<string>? problem = [];
         public List<int>? price = [];
@@ -24,6 +25,11 @@ namespace WinFormsApp1
         {
             InitializeComponent();
             idOrder = id;
+            InitializeElementsForm();
+        }
+
+        private void InitializeElementsForm()
+        {
             orderDTO = orderRepository.GetOrder(idOrder);
 
             var malfunctionList = malfunctionRepository.GetMalfunctions();
@@ -216,21 +222,21 @@ namespace WinFormsApp1
                     listBox1.Items.Add(problem);
                 }
             }
-            if (textBoxFoundProblem1.Text == "")
+            if (string.IsNullOrEmpty(textBoxFoundProblem1.Text))
             {
                 countProblem = 0;
                 textBoxFoundProblem2.Enabled = false;
                 textBoxFoundProblem3.Enabled = false;
                 textBoxPrice2.Enabled = false;
                 textBoxPrice3.Enabled = false;
-                textBoxPrice1.Text = "";
+                textBoxPrice1.Text = string.Empty;
             }
             else
             {
                 countProblem = 1;
                 textBoxFoundProblem2.Enabled = true;
                 textBoxPrice2.Enabled = true;
-                if (textBoxFoundProblem2.Text != "")
+                if (!string.IsNullOrEmpty(textBoxFoundProblem2.Text))
                 {
                     textBoxFoundProblem3.Enabled = true;
                     textBoxPrice3.Enabled = true;
@@ -254,19 +260,19 @@ namespace WinFormsApp1
                     listBox1.Items.Add(problem);
                 }
             }
-            if (textBoxFoundProblem2.Text == "")
+            if (string.IsNullOrEmpty(textBoxFoundProblem2.Text))
             {
                 countProblem = 1;
                 textBoxFoundProblem3.Enabled = false;
                 textBoxPrice3.Enabled = false;
-                textBoxPrice2.Text = "";
+                textBoxPrice2.Text = string.Empty;
             }
             else
             {
                 countProblem = 2;
                 textBoxFoundProblem3.Enabled = true;
                 textBoxPrice3.Enabled = true;
-                if (textBoxFoundProblem3.Text != "")
+                if (!string.IsNullOrEmpty(textBoxFoundProblem3.Text))
                     countProblem = 3;
             }
         }
@@ -287,10 +293,10 @@ namespace WinFormsApp1
                     listBox1.Items.Add(problem);
                 }
             }
-            if (textBoxFoundProblem3.Text == "")
+            if (string.IsNullOrEmpty(textBoxFoundProblem3.Text))
             {
                 countProblem = 2;
-                textBoxPrice3.Text = "";
+                textBoxPrice3.Text = string.Empty;
             }
             else
                 countProblem = 3;
@@ -299,7 +305,7 @@ namespace WinFormsApp1
         private void TextBoxFoundProblem1_Click(object sender, EventArgs e)
         {
             numberProblem = 1;
-            if (textBoxFoundProblem1.Text == "")
+            if (string.IsNullOrEmpty(textBoxFoundProblem1.Text))
                 listBox1.DataSource = nameProblem;
 
             listBox1.Location = new Point(listBox1.Location.X, textBoxFoundProblem1.Location.Y +
@@ -309,7 +315,7 @@ namespace WinFormsApp1
         private void TextBoxFoundProblem2_Click(object sender, EventArgs e)
         {
             numberProblem = 2;
-            if (textBoxFoundProblem2.Text == "")
+            if (string.IsNullOrEmpty(textBoxFoundProblem2.Text))
                 listBox1.DataSource = nameProblem;
             listBox1.Location = new Point(listBox1.Location.X, textBoxFoundProblem2.Location.Y +
                 textBoxFoundProblem2.Height);
@@ -319,7 +325,7 @@ namespace WinFormsApp1
         private void TextBoxFoundProblem3_Click(object sender, EventArgs e)
         {
             numberProblem = 3;
-            if (textBoxFoundProblem3.Text == "")
+            if (string.IsNullOrEmpty(textBoxFoundProblem3.Text))
                 listBox1.DataSource = nameProblem;
             listBox1.Location = new Point(listBox1.Location.X, textBoxFoundProblem3.Location.Y +
                 textBoxFoundProblem3.Height);
@@ -491,7 +497,7 @@ namespace WinFormsApp1
 
         private void LinkLabelFeaturesOrder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            FeaturesOrder featuresOrder = new(idOrder, Enum.StatusOrderEnum.InRepair, true)
+            FeaturesOrder featuresOrder = new(idOrder, StatusOrderEnum.InRepair, true)
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -507,7 +513,6 @@ namespace WinFormsApp1
                 else panelMasters.Visible = false;
             }
         }
-
         public DateTime DateComplete
         {
             get { return dateTimePicker1.Value; }

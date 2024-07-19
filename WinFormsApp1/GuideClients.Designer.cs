@@ -136,6 +136,7 @@
             Controls.Add(buttonWhite);
             Controls.Add(textBoxEnterName);
             Controls.Add(dataGridView1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "GuideClients";
             Text = "Клиенты";

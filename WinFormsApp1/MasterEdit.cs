@@ -114,7 +114,7 @@ namespace WinFormsApp1
             }
             else
             {
-                string typeSalary = "";
+                string typeSalary = string.Empty;
                 int rate = 0;
 
                 if (radioButtonRate.Checked)

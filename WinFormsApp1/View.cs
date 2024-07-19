@@ -1,4 +1,5 @@
 ﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Enum;
 using WinFormsApp1.Helpers;
 using WinFormsApp1.Repository;
 using Color = System.Drawing.Color;
@@ -7,7 +8,7 @@ namespace WinFormsApp1
 {
     public partial class View : Form
     {
-        OrderRepository orderRepository = new OrderRepository();
+        OrderRepository orderRepository = new();
         public View()
         {
             InitializeComponent();
@@ -47,8 +48,8 @@ namespace WinFormsApp1
             {
                 StartPosition = FormStartPosition.CenterParent
             };
-            if (textBoxFirstLevel.Text == "" && textBoxSecondLevelFrom.Text == "" &&
-                textBoxSecondLevelBefore.Text == "" && textBoxThirdLevel.Text == "")
+            if (string.IsNullOrEmpty(textBoxFirstLevel.Text) || string.IsNullOrEmpty(textBoxSecondLevelFrom.Text) &&
+                string.IsNullOrEmpty(textBoxSecondLevelBefore.Text) || string.IsNullOrEmpty(textBoxThirdLevel.Text))
             {
                 warning.LabelText = "Не все поля заполнены!";
                 warning.ShowDialog();
@@ -108,21 +109,21 @@ namespace WinFormsApp1
 
         private Color FindColor(OrderEditDTO order)
         {
-            string status = "";
+            StatusOrderEnum status = StatusOrderEnum.Trash;
             Color color = Color.Black;
             DateTime date = DateTime.Now;
             if (order.InProgress && !order.Deleted && order.MainMasterId != null)
             {
-                status = "InRepair";
+                status = StatusOrderEnum.InRepair;
                 date = order.DateStartWork.Value;
             }
             else if (!order.InProgress && !order.Deleted && !order.Issue)
             {
-                status = "Completed";
+                status = StatusOrderEnum.Completed;
                 date = order.DateCompleted.Value;
             }
 
-            if (status == "InRepair" || status == "Completed")
+            if (status == StatusOrderEnum.InRepair || status == StatusOrderEnum.Completed)
             {
                 if ((DateTime.Now - date).Days < Convert.ToInt32(textBoxFirstLevel.Text))
                 {

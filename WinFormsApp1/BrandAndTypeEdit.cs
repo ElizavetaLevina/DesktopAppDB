@@ -22,7 +22,6 @@ namespace WinFormsApp1
             newEntry = _newEntry;
             id = _id;
             UpdateComboBox(nameTable);
-
         }
 
         private void BtnAdd_Click(object sender, EventArgs e)
@@ -131,9 +130,9 @@ namespace WinFormsApp1
             if (Application.OpenForms.OfType<BrandAndTypeEdit>().Count() <= 2)
             {
                 NameTableToEditEnum _nameTable = NameTableToEditEnum.TypeTechnic;
-                string secondName = "";
-                string nameInList = "";
-                string textForm = "";
+                string secondName = string.Empty;
+                string nameInList = string.Empty;
+                string textForm = string.Empty;
                 switch (nameTable)
                 {
                     case NameTableToEditEnum.TypeTechnic:

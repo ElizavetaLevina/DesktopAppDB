@@ -1,6 +1,6 @@
-﻿using System.Data;
-using WinFormsApp1.DTO;
+﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Repository;
+using WinFormsApp1.Enum;
 
 namespace WinFormsApp1
 {
@@ -13,79 +13,38 @@ namespace WinFormsApp1
         public CalculatingEmployeeSalaries()
         {
             InitializeComponent();
-            UpdateComboBox();
+            InitializeElementsForm();            
+        }
+
+        private void InitializeElementsForm()
+        {
             UpdateTable();
-            comboBoxCalculationByDate.SelectedIndex = 0;
-            int[] percent = [60, 40];
-            for(int i = 0; i < dataGridView1.ColumnCount; i++)
-            {
-                double width = Convert.ToDouble(dataGridView1.Width) / 100.0 * percent[i];
-                dataGridView1.Columns[i].Width = Convert.ToInt32(width);
-            }
+            InitializeComboBoxes();
         }
 
-        private void UpdateComboBox()
+        private void InitializeComboBoxes()
         {
-            orderDTO = orderRepository.GetOrdersForComboBoxSalaries();
-            foreach(var order in orderDTO)
+            List<string> calculationBy = ["дате выполнения", "дате выдачи"];
+            comboBoxCalculationByDate.DataSource = calculationBy;
+
+            List<int> years = new();
+            int startYear = 2023;
+            int endYear = DateTime.Now.Year + 1;
+
+            for (int i = 0; i <= endYear - startYear; i++)
             {
-                if(comboBoxYears.Items.IndexOf(order.DateCompleted?.Year) < 0)
-                    comboBoxYears.Items.Add(order.DateCompleted?.Year);
+                years.Add(startYear + i);
             }
-
-            if (comboBoxYears.Items.IndexOf(DateTime.Now.Year) < 0)
-                comboBoxYears.Items.Add(DateTime.Now.Year);
-
-            comboBoxYears.SelectedIndex = 0;
+            comboBoxYears.DataSource = years;
+            comboBoxYears.SelectedItem = DateTime.Now.Year;
         }
 
-        private int CheckMonth()
+        private int NumberSelectedMonth()
         {
-            int numberMonth = 0;
+            var selectedRadioButton = panel1.Controls.OfType<RadioButton>().First(r => r.Checked);
+            var selectedMonthEnum = (MonthEnum)System.Enum.Parse(typeof(MonthEnum), selectedRadioButton.Text);
 
-            var checkedButton = panel1.Controls.OfType<RadioButton>()
-                                      .FirstOrDefault(r => r.Checked);
-
-            switch (checkedButton?.Text)
-            {
-                case "Январь":
-                    numberMonth = 1;
-                    break;
-                case "Февраль":
-                    numberMonth = 2;
-                    break;
-                case "Март":
-                    numberMonth = 3;
-                    break;
-                case "Апрель":
-                    numberMonth = 4;
-                    break;
-                case "Май":
-                    numberMonth = 5;
-                    break;
-                case "Июнь":
-                    numberMonth = 6;
-                    break;
-                case "Июль":
-                    numberMonth = 7;
-                    break;
-                case "Август":
-                    numberMonth = 8;
-                    break;
-                case "Сентябрь":
-                    numberMonth = 9;
-                    break;
-                case "Октябрь":
-                    numberMonth = 10;
-                    break;
-                case "Ноябрь":
-                    numberMonth = 11;
-                    break;
-                case "Декабрь":
-                    numberMonth = 12;
-                    break;
-            }
-            return numberMonth;
+            return (int)selectedMonthEnum;
         }
 
         private void RadioButton1_CheckedChanged(object sender, EventArgs e)
@@ -151,9 +110,18 @@ namespace WinFormsApp1
 
         private void UpdateTable()
         {
+            int[] percent = [60, 40];
+            for (int i = 0; i < dataGridView1.ColumnCount; i++)
+            {
+                double width = Convert.ToDouble(dataGridView1.Width) / 100.0 * percent[i];
+                dataGridView1.Columns[i].Width = Convert.ToInt32(width);
+            }
+
+
             orderDTO = orderRepository.GetOrdersForSalaries();
             var masterDTO = masterRepository.GetMasters();
             var malfunctionOrderDTO = malfunctionOrderRepository.GetMalfunctionOrders();
+            var radioButton = panel1.Controls.OfType<RadioButton>().FirstOrDefault(r => r.Checked);
 
             dataGridView1.Rows.Clear();
 
@@ -197,8 +165,8 @@ namespace WinFormsApp1
                         }
                         
 
-                        if (monthCompleted == CheckMonth() && yearCompleted == Convert.ToInt32(comboBoxYears.Text)
-                            && (monthReturn != CheckMonth() || yearReturn != Convert.ToInt32(comboBoxYears.Text)))
+                        if (monthCompleted == NumberSelectedMonth() && yearCompleted == Convert.ToInt32(comboBoxYears.Text)
+                            && (monthReturn != NumberSelectedMonth() || yearReturn != Convert.ToInt32(comboBoxYears.Text)))
                         {
                             for(int k = 0; k < malfunctionOrderDTO.Count; k++)
                             {
@@ -210,8 +178,8 @@ namespace WinFormsApp1
 
                             
                         }
-                        else if (monthReturn == CheckMonth() && yearReturn == Convert.ToInt32(comboBoxYears.Text) &&
-                            (monthCompleted != CheckMonth() || yearCompleted != Convert.ToInt32(comboBoxYears.Text)))
+                        else if (monthReturn == NumberSelectedMonth() && yearReturn == Convert.ToInt32(comboBoxYears.Text) &&
+                            (monthCompleted != NumberSelectedMonth() || yearCompleted != Convert.ToInt32(comboBoxYears.Text)))
                         {
                             if (orderDTO[j].InProgress)
                             {
@@ -244,9 +212,9 @@ namespace WinFormsApp1
                         }
                         
                         
-                        if (monthCompleted == CheckMonth() && yearCompleted == Convert.ToInt32(comboBoxYears.Text))
+                        if (monthCompleted == NumberSelectedMonth() && yearCompleted == Convert.ToInt32(comboBoxYears.Text))
                         {
-                            if (masterDTO[i].TypeSalary == "percentOrganization")
+                            if (masterDTO[i].TypeSalary == TypeSalaryEnum.percentOrganization.ToString())
                             {
                                 for (int k = 0; k < malfunctionOrderDTO.Count; k++)
                                 {
@@ -260,7 +228,7 @@ namespace WinFormsApp1
                             {
                                 if (orderDTO[j].MainMasterId == masterDTO[i].Id)
                                 {
-                                   if (masterDTO[i].TypeSalary == "percentMaster")
+                                   if (masterDTO[i].TypeSalary == TypeSalaryEnum.percentMaster.ToString())
                                     {
                                         for (int k = 0; k < malfunctionOrderDTO.Count; k++)
                                         {
@@ -275,7 +243,7 @@ namespace WinFormsApp1
                         }
                     }
                 }
-                if (masterDTO[i].TypeSalary == "rate")
+                if (masterDTO[i].TypeSalary == TypeSalaryEnum.rate.ToString())
                     dataGridView1.Rows.Add(masterDTO[i].NameMaster, masterDTO[i].Rate);
                 else
                     dataGridView1.Rows.Add(masterDTO[i].NameMaster, masterDTO[i].Rate / 100.0 * salary);

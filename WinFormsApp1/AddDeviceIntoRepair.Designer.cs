@@ -626,9 +626,11 @@
             // textBoxSecondPhone
             // 
             textBoxSecondPhone.Location = new Point(406, 188);
+            textBoxSecondPhone.MaxLength = 11;
             textBoxSecondPhone.Name = "textBoxSecondPhone";
             textBoxSecondPhone.Size = new Size(275, 31);
             textBoxSecondPhone.TabIndex = 10;
+            textBoxSecondPhone.KeyPress += TextBoxSecondPhone_KeyPress;
             // 
             // textBoxNameAddress
             // 
@@ -645,6 +647,7 @@
             textBoxNameClient.Size = new Size(275, 31);
             textBoxNameClient.TabIndex = 8;
             textBoxNameClient.TextChanged += TextBoxNameClient_TextChanged;
+            textBoxNameClient.KeyPress += TextBoxNameClient_KeyPress;
             // 
             // labelTypeClient
             // 

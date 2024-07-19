@@ -562,7 +562,7 @@ namespace WinFormsApp1
                 idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
                 var orderDTO = orderRepository.GetOrder(idOrder);
                 var clientDTO = clientRepository.GetClient(orderDTO.ClientId);
-                clientDTO.TypeClient = "white";
+                clientDTO.TypeClient = TypeClientEnum.white.ToString();
                 var task = Task.Run(async () =>
                 {
                     await clientRepository.SaveClientAsync(clientDTO);
@@ -580,7 +580,7 @@ namespace WinFormsApp1
                 idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
                 var orderDTO = orderRepository.GetOrder(idOrder);
                 var clientDTO = clientRepository.GetClient(orderDTO.ClientId);
-                clientDTO.TypeClient = "black";
+                clientDTO.TypeClient = TypeClientEnum.black.ToString();
                 var task = Task.Run(async () =>
                 {
                     await clientRepository.SaveClientAsync(clientDTO);
@@ -598,7 +598,7 @@ namespace WinFormsApp1
                 idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
                 var orderDTO = orderRepository.GetOrder(idOrder);
                 var clientDTO = clientRepository.GetClient(orderDTO.ClientId);
-                clientDTO.TypeClient = "normal";
+                clientDTO.TypeClient = TypeClientEnum.normal.ToString();
                 var task = Task.Run(async () =>
                 {
                     await clientRepository.SaveClientAsync(clientDTO);
@@ -618,8 +618,11 @@ namespace WinFormsApp1
             {
                 StartPosition = FormStartPosition.CenterParent,
                 
+                MainMasterName = orderDTO.MainMasterId == null ? "-" : orderDTO.MainMaster?.NameMaster,
+                AdditionalMasterName = orderDTO.AdditionalMasterId == null ? "-" : orderDTO.AdditionalMaster?.NameMaster,
                 TypeDevice = orderDTO.TypeTechnic.Name,
                 BrandDevice = orderDTO.BrandTechnic.Name,
+                FactoryNumber = orderDTO.FactoryNumber,
                 Model = orderDTO.ModelTechnic,
                 ClientName = orderDTO.Client.IdClient,
                 ClientNameAddress = orderDTO.Client?.NameAndAddressClient,
@@ -629,8 +632,6 @@ namespace WinFormsApp1
                 Diagnosis = orderDTO.Diagnosis?.Name,
                 Note = orderDTO.Note
             };
-            //if(orderDTO.MasterId != null)
-            //    newOrder.MainMasterName = orderDTO.Master?.NameMaster;
 
             if (newOrder.ShowDialog() == DialogResult.OK)
             {
@@ -1658,28 +1659,28 @@ namespace WinFormsApp1
 
         private bool CheckNoFilters()
         {
-            if (textBoxIdOrder.Text == "" &&
-                textBoxDateCreation.Text == "" &&
-                textBoxDateStartWork.Text == "" &&
-                textBoxNameMaster.Text == "" &&
-                textBoxTypeDevice.Text == "" &&
-                textBoxBrandDevice.Text == "" &&
-                textBoxModel.Text == "" &&
-                textBoxNameClient.Text == "")
+            if (string.IsNullOrEmpty(textBoxIdOrder.Text) &&
+                string.IsNullOrEmpty(textBoxDateCreation.Text) &&
+                string.IsNullOrEmpty(textBoxDateStartWork.Text) &&
+                string.IsNullOrEmpty(textBoxNameMaster.Text) &&
+                string.IsNullOrEmpty(textBoxTypeDevice.Text) &&
+                string.IsNullOrEmpty(textBoxBrandDevice.Text) &&
+                string.IsNullOrEmpty(textBoxModel.Text) &&
+                string.IsNullOrEmpty(textBoxNameClient.Text))
                 return true;
             else return false;
         }
 
         private void ButtonReset_Click(object sender, EventArgs e)
         {
-            textBoxIdOrder.Text = "";
-            textBoxDateCreation.Text = "";
-            textBoxDateStartWork.Text = "";
-            textBoxNameMaster.Text = "";
-            textBoxTypeDevice.Text = "";
-            textBoxBrandDevice.Text = "";
-            textBoxModel.Text = "";
-            textBoxNameClient.Text = "";
+            textBoxIdOrder.Text = string.Empty;
+            textBoxDateCreation.Text = string.Empty;
+            textBoxDateStartWork.Text = string.Empty;
+            textBoxNameMaster.Text = string.Empty;
+            textBoxTypeDevice.Text = string.Empty;
+            textBoxBrandDevice.Text = string.Empty;
+            textBoxModel.Text = string.Empty;
+            textBoxNameClient.Text = string.Empty;
             UpdateTableData();
             FocusButton(status);
         }

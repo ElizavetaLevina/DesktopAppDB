@@ -39,7 +39,7 @@
             }
             else
             {
-                if (textBoxLogin.Text != "" && textBoxPassword.Text != "")
+                if (!string.IsNullOrEmpty(textBoxLogin.Text) && !string.IsNullOrEmpty(textBoxPassword.Text))
                 {
                     Properties.Settings.Default.Login = textBoxLogin.Text;
                     Properties.Settings.Default.Password = textBoxPassword.Text;
@@ -87,7 +87,7 @@
                 }
                 else
                 {
-                    if (textBoxLogin.Text != "" && textBoxPassword.Text != "")
+                    if (!string.IsNullOrEmpty(textBoxLogin.Text) && !string.IsNullOrEmpty(textBoxPassword.Text))
                     {
                         Properties.Settings.Default.Login = textBoxLogin.Text;
                         Properties.Settings.Default.Password = textBoxPassword.Text;

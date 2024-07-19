@@ -1,5 +1,7 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Repository;
+using WinFormsApp1.Enum;
+
 
 namespace WinFormsApp1
 {
@@ -17,7 +19,7 @@ namespace WinFormsApp1
         private void InitializeElementsForm()
         {
             UpdateTable();
-            comboBoxMonth.DataSource = System.Enum.GetValues(typeof(Enum.MonthEnum));
+            comboBoxMonth.DataSource = System.Enum.GetValues(typeof(MonthEnum));
             comboBoxMonth.SelectedIndex = DateTime.Now.Month - 1;
 
             List<int> years = new();

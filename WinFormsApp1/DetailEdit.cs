@@ -16,11 +16,16 @@ namespace WinFormsApp1
             InitializeComponent();
             changeDetail = _changeDetail;
             id = _id;
+            InitializeElementsForm();
+        }
+
+        private void InitializeElementsForm()
+        {
             var list = warehouseRepository.GetWarehouses();
             listBoxDetails.Visible = false;
             if (list.Count > 0)
             {
-                foreach(var item in list)
+                foreach (var item in list)
                 {
                     if (!nameDetails.Contains(item.NameDetail))
                         nameDetails.Add(item.NameDetail);
@@ -30,8 +35,8 @@ namespace WinFormsApp1
 
         private void ButtonSave_Click(object sender, EventArgs e)
         {
-            if (textBoxNameDetail.Text == "" || textBoxPricePurchase.Text == "" ||
-                textBoxPriceSale.Text == "")
+            if (string.IsNullOrEmpty(textBoxNameDetail.Text) || string.IsNullOrEmpty(textBoxPricePurchase.Text) ||
+                string.IsNullOrEmpty(textBoxPriceSale.Text))
             {
                 Warning warning = new()
                 {
@@ -39,17 +44,17 @@ namespace WinFormsApp1
                 };
                 warning.ShowDialog();
 
-                if (textBoxNameDetail.Text == "")
+                if (string.IsNullOrEmpty(textBoxNameDetail.Text))
                     labelName.ForeColor = Color.Red;
                 else
                     labelName.ForeColor = Color.Black;
 
-                if (textBoxPricePurchase.Text == "")
+                if (string.IsNullOrEmpty(textBoxPricePurchase.Text))
                     labelPricePurchase.ForeColor = Color.Red;
                 else
                     labelPricePurchase.ForeColor = Color.Black;
 
-                if (textBoxPriceSale.Text == "")
+                if (string.IsNullOrEmpty(textBoxPriceSale.Text))
                     labelPriceSale.ForeColor = Color.Red;
                 else
                     labelPriceSale.ForeColor = Color.Black;

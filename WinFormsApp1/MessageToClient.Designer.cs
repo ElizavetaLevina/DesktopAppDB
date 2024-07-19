@@ -69,12 +69,12 @@
             contextMenu.ImageScalingSize = new Size(24, 24);
             contextMenu.Items.AddRange(new ToolStripItem[] { item1, item2 });
             contextMenu.Name = "contextMenu";
-            contextMenu.Size = new Size(297, 101);
+            contextMenu.Size = new Size(297, 68);
             // 
             // item1
             // 
             item1.Name = "item1";
-            item1.Size = new Size(245, 32);
+            item1.Size = new Size(296, 32);
             item1.Text = "ID клиента";
             item1.Click += Item1_Click;
             // 
@@ -163,7 +163,7 @@
             buttonSend.UseVisualStyleBackColor = true;
             buttonSend.Click += ButtonSend_Click;
             // 
-            // Message
+            // MessageToClient
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -179,8 +179,9 @@
             Controls.Add(buttonChangeNumber);
             Controls.Add(textBoxPhone);
             Controls.Add(label1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Name = "Message";
+            Name = "MessageToClient";
             Text = "Отправка сообщения";
             contextMenu.ResumeLayout(false);
             ResumeLayout(false);

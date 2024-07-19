@@ -16,6 +16,7 @@ namespace WinFormsApp1.Model
         public DbSet<MalfunctionOrder> MalfunctionOrders => Set<MalfunctionOrder>();
         public DbSet<Diagnosis> Diagnosis => Set<Diagnosis>();
         public DbSet<Equipment> Equipment => Set<Equipment>();
+        public DbSet<RateMaster> RateMaster => Set<RateMaster>();
         public Context() => Database.EnsureCreatedAsync();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -114,6 +115,11 @@ namespace WinFormsApp1.Model
                         c.HasKey(e => new { e.MalfunctionId, e.OrderId });
                         c.ToTable("MalfunctionOrder");
                     });
+
+            modelBuilder.Entity<RateMaster>()
+                .HasOne(b => b.Master)
+                .WithMany(a => a.RateMasters)
+                .HasForeignKey(b => b.MasterId);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

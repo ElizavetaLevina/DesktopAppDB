@@ -23,7 +23,8 @@ namespace WinFormsApp1
 
         private void AddMasterForm_Activated(object sender, EventArgs e)
         {
-            if(!newMaster)
+            linkLabelRateEdit.Visible = !newMaster;
+            if (!newMaster)
             {
                 var masterDTO = masterRepository.GetMaster(idMaster);
 
@@ -110,8 +111,8 @@ namespace WinFormsApp1
                     StartPosition = FormStartPosition.CenterParent
                 };
                 warning.ShowDialog();
-            } 
-            else 
+            }
+            else
             {
                 string typeSalary = "";
                 int rate = 0;
@@ -120,13 +121,13 @@ namespace WinFormsApp1
                 {
                     typeSalary = "rate";
                     rate = Convert.ToInt32(textBoxRate.Text);
-                } 
+                }
                 else if (radioButtonProfitMaster.Checked)
                 {
                     typeSalary = "percentMaster";
                     rate = Convert.ToInt32(labelPercent.Text);
 
-                } 
+                }
                 else if (radioButtonProfitOrganization.Checked)
                 {
                     typeSalary = "percentOrganization";
@@ -160,6 +161,15 @@ namespace WinFormsApp1
         private void TextBoxRate_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
+        }
+
+        private void LinkLabelRateEdit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            RateMasterEdit rateMasterEdit = new(idMaster) 
+            {
+                StartPosition = FormStartPosition.CenterParent
+            };
+            rateMasterEdit.ShowDialog();
         }
     }
 }

@@ -24,17 +24,19 @@ namespace WinFormsApp1
 
         private void BtnChangeMaster_Click(object sender, EventArgs e)
         {
-            int numberRow = dataGridView1.CurrentCell.RowIndex;
-            int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
-
-            MasterEdit addMasterForm = new(false, id) 
+            if (dataGridView1.Rows.Count > 0)
             {
-                StartPosition = FormStartPosition.CenterParent,
-                Text = "Изменение информации о мастере"
-            };
-            addMasterForm.ShowDialog();
-            UpdateTable();
+                int numberRow = dataGridView1.CurrentCell.RowIndex;
+                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
 
+                MasterEdit addMasterForm = new(false, id)
+                {
+                    StartPosition = FormStartPosition.CenterParent,
+                    Text = "Изменение информации о мастере"
+                };
+                addMasterForm.ShowDialog();
+                UpdateTable();
+            }
         }
 
         private void BtnDeleteMaster_Click(object sender, EventArgs e)

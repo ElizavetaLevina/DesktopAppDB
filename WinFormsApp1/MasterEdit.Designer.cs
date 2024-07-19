@@ -48,6 +48,7 @@
             buttonExit = new Button();
             labelSymbolPercent = new Label();
             label6 = new Label();
+            linkLabelRateEdit = new LinkLabel();
             ((System.ComponentModel.ISupportInitialize)trackBarPercent).BeginInit();
             SuspendLayout();
             // 
@@ -155,7 +156,7 @@
             // 
             // textBoxRate
             // 
-            textBoxRate.Location = new Point(360, 201);
+            textBoxRate.Location = new Point(273, 201);
             textBoxRate.Name = "textBoxRate";
             textBoxRate.Size = new Size(150, 31);
             textBoxRate.TabIndex = 12;
@@ -164,7 +165,7 @@
             // labelRate
             // 
             labelRate.AutoSize = true;
-            labelRate.Location = new Point(516, 204);
+            labelRate.Location = new Point(429, 204);
             labelRate.Name = "labelRate";
             labelRate.Size = new Size(46, 25);
             labelRate.TabIndex = 13;
@@ -228,11 +229,23 @@
             label6.Size = new Size(646, 2);
             label6.TabIndex = 5;
             // 
-            // AddMasterForm
+            // linkLabelRateEdit
+            // 
+            linkLabelRateEdit.LinkColor = Color.FromArgb(64, 64, 64);
+            linkLabelRateEdit.Location = new Point(501, 232);
+            linkLabelRateEdit.Name = "linkLabelRateEdit";
+            linkLabelRateEdit.Size = new Size(133, 84);
+            linkLabelRateEdit.TabIndex = 25;
+            linkLabelRateEdit.TabStop = true;
+            linkLabelRateEdit.Text = "Редактировать проценты по месяцам";
+            linkLabelRateEdit.LinkClicked += LinkLabelRateEdit_LinkClicked;
+            // 
+            // MasterEdit
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(645, 448);
+            ClientSize = new Size(646, 448);
+            Controls.Add(linkLabelRateEdit);
             Controls.Add(labelSymbolPercent);
             Controls.Add(buttonExit);
             Controls.Add(buttonAdd);
@@ -253,7 +266,7 @@
             Controls.Add(label2);
             Controls.Add(label1);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Name = "AddMasterForm";
+            Name = "MasterEdit";
             Text = "Добавление нового мастера";
             Activated += AddMasterForm_Activated;
             ((System.ComponentModel.ISupportInitialize)trackBarPercent).EndInit();
@@ -282,5 +295,6 @@
         private Button buttonExit;
         private Label labelSymbolPercent;
         private Label label6;
+        private LinkLabel linkLabelRateEdit;
     }
 }

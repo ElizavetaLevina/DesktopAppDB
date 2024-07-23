@@ -1,5 +1,4 @@
-﻿using System.Xml;
-using WinFormsApp1.DTO;
+﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Repository;
 
@@ -26,18 +25,14 @@ namespace WinFormsApp1
 
         private void BtnAdd_Click(object sender, EventArgs e)
         {
-            if (nameTextBox.Text.Length == 0)
+            if (string.IsNullOrEmpty(nameTextBox.Text))
             {
+                label1.ForeColor = Color.Red;
                 Warning warning = new()
                 {
                     StartPosition = FormStartPosition.CenterParent
                 };
                 warning.ShowDialog();
-
-                if (nameTextBox.Text.Length == 0)
-                    label1.ForeColor = Color.Red;
-                else
-                    label1.ForeColor = Color.Black;
             }
             else
             {

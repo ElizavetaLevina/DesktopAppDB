@@ -1,31 +1,25 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Repository;
 using WinFormsApp1.Enum;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WinFormsApp1
 {
     public partial class CalculatingEmployeeSalaries : Form
     {
-        List<OrderEditDTO> orderDTO;
+        List<OrderEditDTO> ordersDTO;
         OrderRepository orderRepository = new();
         MasterRepository masterRepository = new();
         MalfunctionOrderRepository malfunctionOrderRepository = new();
         public CalculatingEmployeeSalaries()
         {
             InitializeComponent();
-            InitializeElementsForm();            
-        }
-
-        private void InitializeElementsForm()
-        {
-            UpdateTable();
             InitializeComboBoxes();
         }
 
         private void InitializeComboBoxes()
         {
-            List<string> calculationBy = ["дате выполнения", "дате выдачи"];
-            comboBoxCalculationByDate.DataSource = calculationBy;
+            comboBoxCalculationByDate.DataSource = System.Enum.GetValues(typeof(SalaryCalculationByEnum));
 
             List<int> years = new();
             int startYear = 2023;
@@ -110,7 +104,7 @@ namespace WinFormsApp1
 
         private void UpdateTable()
         {
-            int[] percent = [60, 40];
+            int[] percent = [30, 20, 50];
             for (int i = 0; i < dataGridView1.ColumnCount; i++)
             {
                 double width = Convert.ToDouble(dataGridView1.Width) / 100.0 * percent[i];
@@ -118,49 +112,57 @@ namespace WinFormsApp1
             }
 
 
-            orderDTO = orderRepository.GetOrdersForSalaries();
+
+            SalaryCalculation();
+
+
+
+            ordersDTO = orderRepository.GetOrdersForSalaries();
             var masterDTO = masterRepository.GetMasters();
             var malfunctionOrderDTO = malfunctionOrderRepository.GetMalfunctionOrders();
-            var radioButton = panel1.Controls.OfType<RadioButton>().FirstOrDefault(r => r.Checked);
+
 
             dataGridView1.Rows.Clear();
 
-            for (int i = 0; i < masterDTO.Count; i++)
+
+
+
+            /*for (int i = 0; i < masterDTO.Count; i++)
             {
                 int salary = 0;
-                for (int j = 0; j < orderDTO.Count; j++)
+                for (int j = 0; j < ordersDTO.Count; j++)
                 {
-                    if (orderDTO[j].ReturnUnderGuarantee)
+                    if (ordersDTO[j].ReturnUnderGuarantee)
                     {
-                        int? monthReturn = orderDTO[j].DateCreation?.Month;
-                        int? yearReturn = orderDTO[j].DateCreation?.Year;
-                        int? monthCompleted = orderDTO[j].DateCompleted?.Month;
-                        int? yearCompleted = orderDTO[j].DateCompleted?.Year;
+                        int? monthReturn = ordersDTO[j].DateCreation?.Month;
+                        int? yearReturn = ordersDTO[j].DateCreation?.Year;
+                        int? monthCompleted = ordersDTO[j].DateCompleted?.Month;
+                        int? yearCompleted = ordersDTO[j].DateCompleted?.Year;
                         if(comboBoxCalculationByDate.SelectedIndex == 0)
                         {
-                            if (orderDTO[j].DateCompletedReturn != null)
+                            if (ordersDTO[j].DateCompletedReturn != null)
                             {
-                                monthCompleted = orderDTO[j].DateCompletedReturn?.Month;
-                                yearCompleted = orderDTO[j].DateCompletedReturn?.Year;
+                                monthCompleted = ordersDTO[j].DateCompletedReturn?.Month;
+                                yearCompleted = ordersDTO[j].DateCompletedReturn?.Year;
                             }
                         }
                         else
                         {
-                            if (!orderDTO[j].Issue) 
+                            if (!ordersDTO[j].Issue) 
                             {
                                 monthCompleted = 0;
                                 yearCompleted = 0;
                             }
 
-                            if (orderDTO[j].DateIssueReturn == null)
+                            if (ordersDTO[j].DateIssueReturn == null)
                             {
-                                monthCompleted = orderDTO[j].DateIssue?.Month;
-                                yearCompleted = orderDTO[j].DateIssue?.Year;
+                                monthCompleted = ordersDTO[j].DateIssue?.Month;
+                                yearCompleted = ordersDTO[j].DateIssue?.Year;
                             }
                             else
                             {
-                                monthCompleted = orderDTO[j].DateIssueReturn?.Month;
-                                yearCompleted = orderDTO[j].DateIssueReturn?.Year;
+                                monthCompleted = ordersDTO[j].DateIssueReturn?.Month;
+                                yearCompleted = ordersDTO[j].DateIssueReturn?.Year;
                             }
                         }
                         
@@ -170,7 +172,7 @@ namespace WinFormsApp1
                         {
                             for(int k = 0; k < malfunctionOrderDTO.Count; k++)
                             {
-                                if (malfunctionOrderDTO[k].OrderId == orderDTO[j].Id)
+                                if (malfunctionOrderDTO[k].OrderId == ordersDTO[j].Id)
                                 {
                                     salary += malfunctionOrderDTO[k].Price;
                                 }
@@ -181,11 +183,11 @@ namespace WinFormsApp1
                         else if (monthReturn == NumberSelectedMonth() && yearReturn == Convert.ToInt32(comboBoxYears.Text) &&
                             (monthCompleted != NumberSelectedMonth() || yearCompleted != Convert.ToInt32(comboBoxYears.Text)))
                         {
-                            if (orderDTO[j].InProgress)
+                            if (ordersDTO[j].InProgress)
                             {
                                 for (int k = 0; k < malfunctionOrderDTO.Count; k++)
                                 {
-                                    if (malfunctionOrderDTO[k].OrderId == orderDTO[j].Id)
+                                    if (malfunctionOrderDTO[k].OrderId == ordersDTO[j].Id)
                                     {
                                         salary -= malfunctionOrderDTO[k].Price;
                                     }
@@ -193,21 +195,21 @@ namespace WinFormsApp1
                             }
                         }
                     }
-                    else if (!orderDTO[j].InProgress)
+                    else if (!ordersDTO[j].InProgress)
                     {
-                        int? monthCompleted = orderDTO[j].DateCompleted?.Month;
-                        int? yearCompleted = orderDTO[j].DateCompleted?.Year;
+                        int? monthCompleted = ordersDTO[j].DateCompleted?.Month;
+                        int? yearCompleted = ordersDTO[j].DateCompleted?.Year;
 
                         if (comboBoxCalculationByDate.SelectedIndex == 1)
                         {
-                            if (!orderDTO[j].Issue)
+                            if (!ordersDTO[j].Issue)
                             {
                                 monthCompleted = 0;
                                 yearCompleted = 0;
                             } else
                             {
-                                monthCompleted = orderDTO[j].DateIssue?.Month;
-                                yearCompleted = orderDTO[j].DateIssue?.Year;
+                                monthCompleted = ordersDTO[j].DateIssue?.Month;
+                                yearCompleted = ordersDTO[j].DateIssue?.Year;
                             }
                         }
                         
@@ -218,7 +220,7 @@ namespace WinFormsApp1
                             {
                                 for (int k = 0; k < malfunctionOrderDTO.Count; k++)
                                 {
-                                    if (malfunctionOrderDTO[k].OrderId == orderDTO[j].Id)
+                                    if (malfunctionOrderDTO[k].OrderId == ordersDTO[j].Id)
                                     {
                                         salary += malfunctionOrderDTO[k].Price;
                                     }
@@ -226,13 +228,13 @@ namespace WinFormsApp1
                             }
                             else
                             {
-                                if (orderDTO[j].MainMasterId == masterDTO[i].Id)
+                                if (ordersDTO[j].MainMasterId == masterDTO[i].Id)
                                 {
                                    if (masterDTO[i].TypeSalary == TypeSalaryEnum.percentMaster.ToString())
                                     {
                                         for (int k = 0; k < malfunctionOrderDTO.Count; k++)
                                         {
-                                            if (malfunctionOrderDTO[k].OrderId == orderDTO[j].Id)
+                                            if (malfunctionOrderDTO[k].OrderId == ordersDTO[j].Id)
                                             {
                                                 salary += malfunctionOrderDTO[k].Price;
                                             }
@@ -247,9 +249,27 @@ namespace WinFormsApp1
                     dataGridView1.Rows.Add(masterDTO[i].NameMaster, masterDTO[i].Rate);
                 else
                     dataGridView1.Rows.Add(masterDTO[i].NameMaster, masterDTO[i].Rate / 100.0 * salary);
-            }
+            }*/
         }
 
+        private void SalaryCalculation()
+        {
+            DateTime? dateCompleted = null;
+            DateTime? dateIssue = null;
+
+            if ((SalaryCalculationByEnum)comboBoxCalculationByDate.SelectedItem == SalaryCalculationByEnum.выполнения)
+                dateCompleted = DateTime.Parse(string.Format("{0}.{1}.{2}", 1, NumberSelectedMonth(), comboBoxYears.SelectedValue));
+            else
+                dateIssue = DateTime.Parse(string.Format("{0}.{1}.{2}", 1, NumberSelectedMonth(), comboBoxYears.SelectedValue));
+
+            // все завершённые заказы, с учётов вернувшихся по гараниии
+            ordersDTO = orderRepository.GetOrdersForSalaries(dateCompleted: dateCompleted, dateIssue: dateIssue);
+            // общая прибыль, расчитывается как сумма всех завершённых заказов за вычетом вернувшихся по гарантии
+            var sumOrders = ordersDTO.Where(o => o.ReturnUnderGuarantee == false).Sum(o => o.MalfunctionOrders.Sum(m => m.Price));
+            var mastersDTO = masterRepository.GetMasters();
+
+
+        }
         private void ButtonExit_Click(object sender, EventArgs e)
         {
             Close();

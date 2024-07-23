@@ -59,9 +59,9 @@ namespace WinFormsApp1
         private void UpdateTable()
         {
             dataGridView1.DataSource = masterRepository.GetMastersForOutput();
-            dataGridView1.Columns["Id"].Visible = false;
-            dataGridView1.Columns["NameMaster"].HeaderText = "ФИО";
-            dataGridView1.Columns["NumberPhone"].HeaderText = "Телефон";
+            dataGridView1.Columns[nameof(MasterDTO.Id)].Visible = false;
+            dataGridView1.Columns[nameof(MasterDTO.NameMaster)].HeaderText = "ФИО";
+            dataGridView1.Columns[nameof(MasterDTO.NumberPhone)].HeaderText = "Телефон";
 
             int[] percent = [0, 40, 60];
             for (int i = 0; i < dataGridView1.ColumnCount; i++)

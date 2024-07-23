@@ -46,6 +46,7 @@
             dataGridView1 = new DataGridView();
             colMaster = new DataGridViewTextBoxColumn();
             colSalary = new DataGridViewTextBoxColumn();
+            colNote = new DataGridViewTextBoxColumn();
             comboBoxYears = new ComboBox();
             label1 = new Label();
             label2 = new Label();
@@ -229,7 +230,7 @@
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.BackgroundColor = Color.FromArgb(224, 224, 224);
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { colMaster, colSalary });
+            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { colMaster, colSalary, colNote });
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = SystemColors.Window;
             dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
@@ -245,7 +246,7 @@
             dataGridView1.RowHeadersWidth = 62;
             dataGridView1.ScrollBars = ScrollBars.Vertical;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView1.Size = new Size(544, 481);
+            dataGridView1.Size = new Size(836, 481);
             dataGridView1.TabIndex = 1;
             // 
             // colMaster
@@ -253,7 +254,7 @@
             colMaster.HeaderText = "Мастер";
             colMaster.MinimumWidth = 8;
             colMaster.Name = "colMaster";
-            colMaster.Width = 300;
+            colMaster.Width = 200;
             // 
             // colSalary
             // 
@@ -261,6 +262,13 @@
             colSalary.MinimumWidth = 8;
             colSalary.Name = "colSalary";
             colSalary.Width = 244;
+            // 
+            // colNote
+            // 
+            colNote.HeaderText = "Примечание";
+            colNote.MinimumWidth = 8;
+            colNote.Name = "colNote";
+            colNote.Width = 400;
             // 
             // comboBoxYears
             // 
@@ -302,7 +310,7 @@
             label4.BorderStyle = BorderStyle.Fixed3D;
             label4.Location = new Point(0, 567);
             label4.Name = "label4";
-            label4.Size = new Size(804, 2);
+            label4.Size = new Size(1083, 2);
             label4.TabIndex = 7;
             // 
             // label5
@@ -318,12 +326,12 @@
             label6.BorderStyle = BorderStyle.Fixed3D;
             label6.Location = new Point(0, 568);
             label6.Name = "label6";
-            label6.Size = new Size(804, 2);
+            label6.Size = new Size(1083, 2);
             label6.TabIndex = 9;
             // 
             // buttonExit
             // 
-            buttonExit.Location = new Point(573, 576);
+            buttonExit.Location = new Point(865, 576);
             buttonExit.Name = "buttonExit";
             buttonExit.Size = new Size(204, 43);
             buttonExit.TabIndex = 10;
@@ -336,15 +344,15 @@
             label8.AutoSize = true;
             label8.Location = new Point(233, 519);
             label8.Name = "label8";
-            label8.Size = new Size(91, 25);
+            label8.Size = new Size(131, 25);
             label8.TabIndex = 13;
-            label8.Text = "Расчет по";
+            label8.Text = "Расчет по дате";
             // 
             // comboBoxCalculationByDate
             // 
             comboBoxCalculationByDate.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBoxCalculationByDate.FormattingEnabled = true;
-            comboBoxCalculationByDate.Location = new Point(330, 514);
+            comboBoxCalculationByDate.Location = new Point(369, 514);
             comboBoxCalculationByDate.Name = "comboBoxCalculationByDate";
             comboBoxCalculationByDate.Size = new Size(182, 33);
             comboBoxCalculationByDate.TabIndex = 14;
@@ -354,7 +362,7 @@
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 626);
+            ClientSize = new Size(1081, 626);
             Controls.Add(comboBoxCalculationByDate);
             Controls.Add(label8);
             Controls.Add(buttonExit);
@@ -406,5 +414,6 @@
         private ComboBox comboBoxCalculationByDate;
         private DataGridViewTextBoxColumn colMaster;
         private DataGridViewTextBoxColumn colSalary;
+        private DataGridViewTextBoxColumn colNote;
     }
 }

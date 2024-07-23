@@ -150,10 +150,25 @@ namespace WinFormsApp1.Repository
             return context.Orders.Where(i => !i.InProgress).Select(a => new OrderEditDTO(a)).ToList();
         }
 
-        public List<OrderEditDTO> GetOrdersForSalaries()
+        public List<OrderEditDTO> GetOrdersForSalaries(DateTime? dateCompleted = null, DateTime? dateIssue = null)
         {
             Context context = new();
-            return context.Orders.Where(i => !i.Deleted && (!i.InProgress || i.ReturnUnderGuarantee)).Select(a => new OrderEditDTO(a)).ToList();
+            var set = context.Orders.Where(c => true);
+
+            set = set.Where(i => !i.Deleted);
+            set = set.Where(i => (!i.InProgress || i.ReturnUnderGuarantee));
+
+            if (dateCompleted != null)
+                set = set.Where(i => i.DateCompleted.Value.Month == dateCompleted.Value.Month 
+                && i.DateCompleted.Value.Year == dateCompleted.Value.Year);
+            if (dateIssue != null)
+                set = set.Where(i => i.DateIssue.Value.Month == dateIssue.Value.Month 
+                && i.DateIssue.Value.Year == dateIssue.Value.Year);
+
+
+
+
+            return set.Select(a => new OrderEditDTO(a)).ToList();
         }
 
 

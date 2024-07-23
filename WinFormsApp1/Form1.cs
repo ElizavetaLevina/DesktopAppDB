@@ -23,16 +23,22 @@ namespace WinFormsApp1
         public Form1()
         {
             InitializeComponent();
+            InitializeElementsForm();
+        }
+
+        private void InitializeElementsForm()
+        {
             try
             {
                 InProgress();
                 ToolStripEnabled();
-                if (Properties.Settings.Default.Size == "Small")
+                var screenSize = (ScreenSizeEnum)System.Enum.Parse(typeof(ScreenSizeEnum), Properties.Settings.Default.Size);
+                if (screenSize == ScreenSizeEnum.Small)
                 {
                     Width = Properties.Settings.Default.WidthSmall;
                     Height = Properties.Settings.Default.HeightSmall;
                 }
-                else if (Properties.Settings.Default.Size == "Medium")
+                else if (screenSize == ScreenSizeEnum.Medium)
                 {
                     Width = Properties.Settings.Default.WidthMedium;
                     Height = Properties.Settings.Default.HeightMedium;
@@ -223,7 +229,7 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
                 FeaturesOrder featuresOrder = new(idOrder, status, logInSystem)
                 {
                     StartPosition = FormStartPosition.CenterParent
@@ -247,7 +253,7 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
                 DetailsInOrder detailsInOrder = new(idOrder)
                 {
                     StartPosition = FormStartPosition.CenterParent
@@ -262,7 +268,7 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
                 var orderDTO = orderRepository.GetOrder(idOrder);
 
                 if (status == StatusOrderEnum.Trash)
@@ -314,7 +320,7 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
                 var orderDTO = orderRepository.GetOrder(idOrder);
                 orderDTO.Deleted = false;
                 var task = Task.Run(async () =>
@@ -415,7 +421,7 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
 
                 if(status == StatusOrderEnum.Completed)
                 {
@@ -438,7 +444,7 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
                 var orderDTO = orderRepository.GetOrder(idOrder);
                 var malfunctionsOrderDTO = malfunctionOrderRepository.GetMalfunctionOrdersByIdOrder(idOrder);
                 Warning warning = new()
@@ -482,7 +488,7 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
                 var orderDTO = orderRepository.GetOrder(idOrder);
                 Warning warning = new()
                 {
@@ -521,7 +527,7 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
                 var orderDTO = orderRepository.GetOrder(idOrder);
                 int idClient = orderDTO.ClientId;
                 MessageToClient message = new(idClient)
@@ -538,7 +544,7 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
                 var orderDTO = orderRepository.GetOrder(idOrder);
                 int idClient = orderDTO.ClientId;
 
@@ -559,7 +565,7 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
                 var orderDTO = orderRepository.GetOrder(idOrder);
                 var clientDTO = clientRepository.GetClient(orderDTO.ClientId);
                 clientDTO.TypeClient = TypeClientEnum.white.ToString();
@@ -577,7 +583,7 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
                 var orderDTO = orderRepository.GetOrder(idOrder);
                 var clientDTO = clientRepository.GetClient(orderDTO.ClientId);
                 clientDTO.TypeClient = TypeClientEnum.black.ToString();
@@ -595,7 +601,7 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
                 var orderDTO = orderRepository.GetOrder(idOrder);
                 var clientDTO = clientRepository.GetClient(orderDTO.ClientId);
                 clientDTO.TypeClient = TypeClientEnum.normal.ToString();
@@ -611,7 +617,7 @@ namespace WinFormsApp1
         private void NewOrder()
         {
             int numberRow = dataGridView1.CurrentCell.RowIndex;
-            idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+            idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
             var orderDTO = orderRepository.GetOrder(idOrder);
 
             AddDeviceIntoRepair newOrder = new()
@@ -676,7 +682,7 @@ namespace WinFormsApp1
         {
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
-                idOrder = Convert.ToInt32(dataGridView1.Rows[i].Cells["Id"].Value);
+                idOrder = Convert.ToInt32(dataGridView1.Rows[i].Cells[nameof(OrderTableDTO.Id)].Value);
                 var orderDTO = orderRepository.GetOrder(idOrder);
                 if (orderDTO.MainMasterId == null)
                 {
@@ -684,7 +690,7 @@ namespace WinFormsApp1
                     dataGridView1.Rows[i].DefaultCellStyle.SelectionForeColor = Color.DimGray;
                     continue;
                 }
-                string hexColor = dataGridView1.Rows[i].Cells["ColorRow"].Value.ToString();
+                string hexColor = dataGridView1.Rows[i].Cells[nameof(OrderTableDTO.ColorRow)].Value.ToString();
                 Color color = ColorTranslator.FromHtml(hexColor);
                 if (color != CheckColor(idOrder))
                 {
@@ -699,7 +705,7 @@ namespace WinFormsApp1
                 dataGridView1.Rows[i].DefaultCellStyle.ForeColor = color;
                 dataGridView1.Rows[i].DefaultCellStyle.SelectionForeColor = color;
 
-                if (Convert.ToBoolean(dataGridView1.Rows[i].Cells["ReturnUnderGuarantee"].Value))
+                if (Convert.ToBoolean(dataGridView1.Rows[i].Cells[nameof(OrderTableDTO.ReturnUnderGuarantee)].Value))
                 {
                     dataGridView1.Rows[i].DefaultCellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
                 }
@@ -1117,7 +1123,7 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
                 FeaturesOrder featuresOrder = new(idOrder, status, logInSystem)
                 {
                     StartPosition = FormStartPosition.CenterParent
@@ -1489,7 +1495,7 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
                 gettingReport.Report(idOrder);
                 FocusButton(status);
             }
@@ -1501,7 +1507,7 @@ namespace WinFormsApp1
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
                 issuingReport.Report(idOrder);
                 FocusButton(status);
             }
@@ -1643,13 +1649,14 @@ namespace WinFormsApp1
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (Properties.Settings.Default.Size == "Small")
+            var screenSize = (ScreenSizeEnum)System.Enum.Parse(typeof(ScreenSizeEnum), Properties.Settings.Default.Size);
+            if (screenSize == ScreenSizeEnum.Small)
             {
                 Properties.Settings.Default.WidthSmall = Width;
                 Properties.Settings.Default.HeightSmall = Height;
                 Properties.Settings.Default.Save();
             }
-            else if (Properties.Settings.Default.Size == "Medium")
+            else if (screenSize == ScreenSizeEnum.Medium)
             {
                 Properties.Settings.Default.WidthMedium = Width;
                 Properties.Settings.Default.HeightMedium = Height;
@@ -1687,13 +1694,14 @@ namespace WinFormsApp1
 
         private void ItemSmall_Click(object sender, EventArgs e)
         {
-            if (Properties.Settings.Default.Size == "Medium")
+            var screenSize = (ScreenSizeEnum)System.Enum.Parse(typeof(ScreenSizeEnum), Properties.Settings.Default.Size);
+            if (screenSize == ScreenSizeEnum.Medium)
             {
                 Properties.Settings.Default.WidthMedium = Width;
                 Properties.Settings.Default.HeightMedium = Height;
                 Properties.Settings.Default.Save();
             }
-            Properties.Settings.Default.Size = "Small";
+            Properties.Settings.Default.Size = ScreenSizeEnum.Small.ToString();
             Properties.Settings.Default.Save();
 
             Width = Properties.Settings.Default.WidthSmall;
@@ -1702,14 +1710,15 @@ namespace WinFormsApp1
 
         private void ItemMedium_Click(object sender, EventArgs e)
         {
-            if (Properties.Settings.Default.Size == "Small")
+            var screenSize = (ScreenSizeEnum)System.Enum.Parse(typeof(ScreenSizeEnum), Properties.Settings.Default.Size);
+            if (screenSize == ScreenSizeEnum.Small)
             {
                 Properties.Settings.Default.WidthSmall = Width;
                 Properties.Settings.Default.HeightSmall = Height;
                 Properties.Settings.Default.Save();
             }
 
-            Properties.Settings.Default.Size = "Medium";
+            Properties.Settings.Default.Size = ScreenSizeEnum.Medium.ToString();
             Properties.Settings.Default.Save();
 
             Width = Properties.Settings.Default.WidthMedium;
@@ -1832,9 +1841,10 @@ namespace WinFormsApp1
 
         private void ChangeSizeAndLocation()
         {
-            if (Properties.Settings.Default.Size == "Small")
+            var screenSize = (ScreenSizeEnum)System.Enum.Parse(typeof(ScreenSizeEnum), Properties.Settings.Default.Size);
+            if (screenSize== ScreenSizeEnum.Small)
                 SmallWindow();
-            else if (Properties.Settings.Default.Size == "Medium")
+            else if (screenSize == ScreenSizeEnum.Medium)
                 MediumWindow();
             try
             {

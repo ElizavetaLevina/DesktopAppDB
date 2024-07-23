@@ -1,4 +1,5 @@
 ﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Enum;
 using WinFormsApp1.Helpers;
 using WinFormsApp1.Repository;
 
@@ -27,16 +28,17 @@ namespace WinFormsApp1
             if (!newMaster)
             {
                 var masterDTO = masterRepository.GetMaster(idMaster);
+                var typeSalary = (TypeSalaryEnum)System.Enum.Parse(typeof(TypeSalaryEnum), masterDTO.TypeSalary);
 
                 textBoxName.Text = masterDTO.NameMaster;
                 textBoxName.SelectAll();
                 textBoxAddress.Text = masterDTO.Address;
                 textBoxNumberPhone.Text = masterDTO.NumberPhone;
                 buttonAdd.Text = "Изменить данные";
-
-                switch (masterDTO.TypeSalary)
+                
+                switch (typeSalary)
                 {
-                    case "rate":
+                    case TypeSalaryEnum.rate:
                         radioButtonRate.Checked = true;
                         radioButtonProfitMaster.Checked = false;
                         radioButtonProfitOrganization.Checked = false;
@@ -47,7 +49,7 @@ namespace WinFormsApp1
                         labelPercent.Enabled = false;
                         labelSymbolPercent.Enabled = false;
                         break;
-                    case "percentMaster":
+                    case TypeSalaryEnum.percentMaster:
                         radioButtonRate.Checked = false;
                         radioButtonProfitMaster.Checked = true;
                         radioButtonProfitOrganization.Checked = false;
@@ -59,7 +61,7 @@ namespace WinFormsApp1
                         labelPercent.Text = masterDTO.Rate.ToString();
                         labelSymbolPercent.Enabled = true;
                         break;
-                    case "percentOrganization":
+                    case TypeSalaryEnum.percentOrganization:
                         radioButtonRate.Checked = false;
                         radioButtonProfitMaster.Checked = false;
                         radioButtonProfitOrganization.Checked = true;

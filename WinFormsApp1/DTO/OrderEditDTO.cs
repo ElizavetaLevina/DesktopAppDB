@@ -47,6 +47,7 @@ namespace WinFormsApp1.DTO
         public DateTime? DateCompletedReturn { get; set; }
         public DateTime? DateIssueReturn { get; set; }
         public bool Issue { get; set; } = false;
+        public virtual List<MalfunctionOrder>? MalfunctionOrders { get; set; }
         public string ColorRow { get; set; } = Color.Black.Name;
         public string? DateLastCall { get; set; }
         public bool PriceAgreed { get; set; } = false;
@@ -88,6 +89,7 @@ namespace WinFormsApp1.DTO
             DateCompletedReturn = order.DateCompletedReturn;
             DateIssueReturn = order.DateIssueReturn;
             Issue = order.Issue;
+            MalfunctionOrders = order.MalfunctionOrders;
             ColorRow = order.ColorRow;
             DateLastCall = order.DateLastCall;
             PriceAgreed = order.PriceAgreed;

@@ -407,6 +407,7 @@
             listBox1.TabIndex = 44;
             listBox1.Visible = false;
             listBox1.Click += ListBox1_Click;
+            listBox1.KeyDown += ListBox1_KeyDown;
             // 
             // label23
             // 

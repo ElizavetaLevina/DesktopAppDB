@@ -1,4 +1,5 @@
 ﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Enum;
 using WinFormsApp1.Helpers;
 using WinFormsApp1.Reports;
 using WinFormsApp1.Repository;
@@ -92,7 +93,10 @@ namespace WinFormsApp1
                 orderDTO.DateIssue = DateIssue;
                 orderDTO.Guarantee = GuaranteePeriod;
                 orderDTO.DateEndGuarantee = DateEndGuarantee;
-                orderDTO.Issue = true;
+                if (orderDTO.Guarantee > 0 && orderDTO.DateEndGuarantee > DateTime.Now)
+                    orderDTO.StatusOrder = StatusOrderEnum.GuaranteeIssue;
+                else
+                    orderDTO.StatusOrder = StatusOrderEnum.Archive;
 
 
                 var task = Task.Run(async () =>

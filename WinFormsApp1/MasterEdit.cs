@@ -28,7 +28,6 @@ namespace WinFormsApp1
             if (!newMaster)
             {
                 var masterDTO = masterRepository.GetMaster(idMaster);
-                var typeSalary = (TypeSalaryEnum)System.Enum.Parse(typeof(TypeSalaryEnum), masterDTO.TypeSalary);
 
                 textBoxName.Text = masterDTO.NameMaster;
                 textBoxName.SelectAll();
@@ -36,7 +35,7 @@ namespace WinFormsApp1
                 textBoxNumberPhone.Text = masterDTO.NumberPhone;
                 buttonAdd.Text = "Изменить данные";
                 
-                switch (typeSalary)
+                switch (masterDTO.TypeSalary)
                 {
                     case TypeSalaryEnum.rate:
                         radioButtonRate.Checked = true;
@@ -116,35 +115,29 @@ namespace WinFormsApp1
             }
             else
             {
-                string typeSalary = string.Empty;
-                int rate = 0;
-
-                if (radioButtonRate.Checked)
-                {
-                    typeSalary = "rate";
-                    rate = Convert.ToInt32(textBoxRate.Text);
-                }
-                else if (radioButtonProfitMaster.Checked)
-                {
-                    typeSalary = "percentMaster";
-                    rate = Convert.ToInt32(labelPercent.Text);
-
-                }
-                else if (radioButtonProfitOrganization.Checked)
-                {
-                    typeSalary = "percentOrganization";
-                    rate = Convert.ToInt32(labelPercent.Text);
-                }
-
                 var masterDTO = new MasterEditDTO()
                 {
                     Id = idMaster,
                     NameMaster = textBoxName.Text,
                     Address = textBoxAddress.Text,
-                    NumberPhone = textBoxNumberPhone.Text,
-                    TypeSalary = typeSalary,
-                    Rate = rate
+                    NumberPhone = textBoxNumberPhone.Text
                 };
+                if (radioButtonRate.Checked)
+                {
+                    masterDTO.TypeSalary = TypeSalaryEnum.rate;
+                    masterDTO.Rate = Convert.ToInt32(textBoxRate.Text);
+                }
+                else if (radioButtonProfitMaster.Checked)
+                {
+                    masterDTO.TypeSalary = TypeSalaryEnum.percentMaster;
+                    masterDTO.Rate = Convert.ToInt32(labelPercent.Text);
+
+                }
+                else if (radioButtonProfitOrganization.Checked)
+                {
+                    masterDTO.TypeSalary = TypeSalaryEnum.percentOrganization;
+                    masterDTO.Rate = Convert.ToInt32(labelPercent.Text);
+                }
 
                 var task = Task.Run(async () =>
                 {

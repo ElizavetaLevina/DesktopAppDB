@@ -483,9 +483,11 @@
             // 
             textBoxMaxPrice.Enabled = false;
             textBoxMaxPrice.Location = new Point(654, 315);
+            textBoxMaxPrice.MaxLength = 6;
             textBoxMaxPrice.Name = "textBoxMaxPrice";
             textBoxMaxPrice.Size = new Size(104, 31);
             textBoxMaxPrice.TabIndex = 10;
+            textBoxMaxPrice.KeyPress += TextBoxMaxPrice_KeyPress;
             // 
             // label6
             // 

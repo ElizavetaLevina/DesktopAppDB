@@ -43,7 +43,7 @@ namespace WinFormsApp1
             foreach (var client in clientsDTO)
             {
                 oldClients.Add(client.IdClient);
-                oldClientsType.Add(client.TypeClient);
+                oldClientsType.Add(client.TypeClient.ToString());
             }
 
             diagnosesDTO = diagnosisRepository.GetDiagnoses();
@@ -182,7 +182,8 @@ namespace WinFormsApp1
                         EquipmentId = idEquipment,
                         DiagnosisId = idDiagnosis,
                         Note = textBoxNote.Text,
-                        InProgress = true,
+                        StatusOrder = StatusOrderEnum.InRepair,
+                        //InProgress = true,
                         ColorRow = FindColor()
                     };
 
@@ -605,6 +606,11 @@ namespace WinFormsApp1
         {
             if (comboBoxMainMaster.Text == comboBoxAdditionalMaster.Text)
                 comboBoxAdditionalMaster.SelectedIndex = 0;
+        }
+
+        private void TextBoxMaxPrice_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !KeyPressHelper.CheckKeyPress(true, textBoxMaxPrice.Text, e.KeyChar);
         }
 
         public string MainMasterName

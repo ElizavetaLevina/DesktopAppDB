@@ -51,19 +51,19 @@ namespace WinFormsApp1
 
         private void ButtonWhite_Click(object sender, EventArgs e)
         {
-            clients = clientRepository.GetClientsByType(TypeClientEnum.white.ToString());
+            clients = clientRepository.GetClientsByType(TypeClientEnum.white);
             UpdateTable();
         }
 
         private void ButtonNormal_Click(object sender, EventArgs e)
         {
-            clients = clientRepository.GetClientsByType(TypeClientEnum.normal.ToString());
+            clients = clientRepository.GetClientsByType(TypeClientEnum.normal);
             UpdateTable();
         }
 
         private void ButtonBlack_Click(object sender, EventArgs e)
         {
-            clients = clientRepository.GetClientsByType(TypeClientEnum.black.ToString());
+            clients = clientRepository.GetClientsByType(TypeClientEnum.black);
             UpdateTable();
         }
 

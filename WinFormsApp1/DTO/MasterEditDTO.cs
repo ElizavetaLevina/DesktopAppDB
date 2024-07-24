@@ -1,4 +1,6 @@
-﻿namespace WinFormsApp1.DTO
+﻿using WinFormsApp1.Enum;
+
+namespace WinFormsApp1.DTO
 {
     public class MasterEditDTO
     {
@@ -9,7 +11,7 @@
         public string? NameMaster { get; set; }
         public string? Address { get; set; }
         public string? NumberPhone { get; set; }
-        public string TypeSalary { get; set; } = "rate";
+        public TypeSalaryEnum TypeSalary { get; set; }
         public int Rate { get; set; }
 
         public MasterEditDTO(Master master)

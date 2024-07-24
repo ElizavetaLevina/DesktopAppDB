@@ -25,9 +25,9 @@ namespace WinFormsApp1
             {
                 case NameTableToEditEnum.Malfunction:
                     dataGridView1.DataSource = malfunctionRepository.GetMalfunctions();
-                    dataGridView1.Columns["Id"].Visible = false;
-                    dataGridView1.Columns["Name"].HeaderText = "Название";
-                    dataGridView1.Columns["Price"].HeaderText = "Цена";
+                    dataGridView1.Columns[nameof(MalfunctionEditDTO.Id)].Visible = false;
+                    dataGridView1.Columns[nameof(MalfunctionEditDTO.Name)].HeaderText = "Название";
+                    dataGridView1.Columns[nameof(MalfunctionEditDTO.Price)].HeaderText = "Цена";
                     int[] percent = [0, 70, 30];
 
                     for (int i = 0; i < dataGridView1.ColumnCount; i++)
@@ -38,15 +38,15 @@ namespace WinFormsApp1
                     break;
                 case NameTableToEditEnum.Diagnosis:
                     dataGridView1.DataSource = diagnosisRepository.GetDiagnoses();
-                    dataGridView1.Columns["Id"].Visible = false;
-                    dataGridView1.Columns["Name"].HeaderText = "Название";
-                    dataGridView1.Columns["Name"].Width = dataGridView1.Width;
+                    dataGridView1.Columns[nameof(MalfunctionEditDTO.Id)].Visible = false;
+                    dataGridView1.Columns[nameof(MalfunctionEditDTO.Name)].HeaderText = "Название";
+                    dataGridView1.Columns[nameof(MalfunctionEditDTO.Name)].Width = dataGridView1.Width;
                     break;
                 case NameTableToEditEnum.Equipment:
                     dataGridView1.DataSource = equipmentRepository.GetEquipments();
-                    dataGridView1.Columns["Id"].Visible = false;
-                    dataGridView1.Columns["Name"].HeaderText = "Название";
-                    dataGridView1.Columns["Name"].Width = dataGridView1.Width;
+                    dataGridView1.Columns[nameof(MalfunctionEditDTO.Id)].Visible = false;
+                    dataGridView1.Columns[nameof(MalfunctionEditDTO.Name)].HeaderText = "Название";
+                    dataGridView1.Columns[nameof(MalfunctionEditDTO.Name)].Width = dataGridView1.Width;
                     break;
             }
         }
@@ -123,7 +123,7 @@ namespace WinFormsApp1
             }
         }
 
-        private async void ButtonChange_Click(object sender, EventArgs e)
+        private void ButtonChange_Click(object sender, EventArgs e)
         {
             if (dataGridView1.Rows.Count > 0)
             {
@@ -132,7 +132,7 @@ namespace WinFormsApp1
                 EquipmentEditDTO equipmentDTO = new();
 
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(MalfunctionEditDTO.Id)].Value);
 
                 MalfunctionEquipmentDiagnosisEdit malfunctionEquipmentDiagnosisEdit = new(status)
                 {
@@ -205,7 +205,7 @@ namespace WinFormsApp1
             {
                 Task task;
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(MalfunctionEditDTO.Id)].Value);
                 switch (status)
                 {
                     case NameTableToEditEnum.Malfunction:

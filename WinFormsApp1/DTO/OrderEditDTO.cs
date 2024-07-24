@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WinFormsApp1.Enum;
 using WinFormsApp1.Model;
 
 namespace WinFormsApp1.DTO
@@ -38,7 +39,8 @@ namespace WinFormsApp1.DTO
         public int? DiagnosisId { get; set; }
         public virtual DiagnosisEditDTO? Diagnosis { get; set; }
         public string? Note { get; set; }
-        public bool InProgress { get; set; } = true;
+        public StatusOrderEnum StatusOrder { get; set; }
+        //public bool InProgress { get; set; } = true;
         public int Guarantee { get; set; } = 0;
         public DateTime? DateEndGuarantee { get; set; }
         public bool Deleted { get; set; } = false;
@@ -46,7 +48,7 @@ namespace WinFormsApp1.DTO
         public DateTime? DateReturn { get; set; }
         public DateTime? DateCompletedReturn { get; set; }
         public DateTime? DateIssueReturn { get; set; }
-        public bool Issue { get; set; } = false;
+        //public bool Issue { get; set; } = false;
         public virtual List<MalfunctionOrder>? MalfunctionOrders { get; set; }
         public string ColorRow { get; set; } = Color.Black.Name;
         public string? DateLastCall { get; set; }
@@ -80,7 +82,8 @@ namespace WinFormsApp1.DTO
             DiagnosisId = order.DiagnosisId;
             Diagnosis = order.Diagnosis != null ? new DiagnosisEditDTO(order.Diagnosis) : null;
             Note = order.Note;
-            InProgress = order.InProgress;
+            StatusOrder = order.StatusOrder;
+            //InProgress = order.InProgress;
             Guarantee = order.Guarantee;
             DateEndGuarantee = order.DateEndGuarantee;
             Deleted = order.Deleted;
@@ -88,7 +91,7 @@ namespace WinFormsApp1.DTO
             DateReturn = order.DateReturn;
             DateCompletedReturn = order.DateCompletedReturn;
             DateIssueReturn = order.DateIssueReturn;
-            Issue = order.Issue;
+            //Issue = order.Issue;
             MalfunctionOrders = order.MalfunctionOrders;
             ColorRow = order.ColorRow;
             DateLastCall = order.DateLastCall;

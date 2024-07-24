@@ -173,7 +173,7 @@ namespace WinFormsApp1
                 task.Wait();
             }
 
-            orderDTO.InProgress = false;
+            orderDTO.StatusOrder = StatusOrderEnum.Completed;
             orderDTO.DateCompleted = dateTimePicker1.Value;
             if (orderDTO.AdditionalMasterId != null)
             {

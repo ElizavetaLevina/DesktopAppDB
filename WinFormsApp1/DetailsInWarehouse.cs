@@ -35,13 +35,13 @@ namespace WinFormsApp1
                 int[] percent = [10, 40, 17, 17, 16, 0, 0];
 
                 dataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                dataGridView1.Columns["Id"].HeaderText = "№";
-                dataGridView1.Columns["NameDetail"].HeaderText = "Название детали";
-                dataGridView1.Columns["PricePurchase"].HeaderText = "Цена покупки";
-                dataGridView1.Columns["PriceSale"].HeaderText = "Цена продажи";
-                dataGridView1.Columns["DatePurchase"].HeaderText = "Дата покупки";
-                dataGridView1.Columns["Availability"].Visible = false;
-                dataGridView1.Columns["IdOrder"].Visible = false;
+                dataGridView1.Columns[nameof(WarehouseTableDTO.Id)].HeaderText = "№";
+                dataGridView1.Columns[nameof(WarehouseTableDTO.NameDetail)].HeaderText = "Название детали";
+                dataGridView1.Columns[nameof(WarehouseTableDTO.PricePurchase)].HeaderText = "Цена покупки";
+                dataGridView1.Columns[nameof(WarehouseTableDTO.PriceSale)].HeaderText = "Цена продажи";
+                dataGridView1.Columns[nameof(WarehouseTableDTO.DatePurchase)].HeaderText = "Дата покупки";
+                dataGridView1.Columns[nameof(WarehouseTableDTO.Availability)].Visible = false;
+                dataGridView1.Columns[nameof(WarehouseTableDTO.IdOrder)].Visible = false;
 
                 for (int i = 0; i < dataGridView1.ColumnCount; i++)
                 {
@@ -53,11 +53,13 @@ namespace WinFormsApp1
                 {
                     buttonDeleteDetail.Enabled = true;
                     buttonAdd.Enabled = true;
+                    buttonChangeDetail.Enabled = true;
                 }
                 else
                 {
                     buttonDeleteDetail.Enabled = false;
                     buttonAdd.Enabled = false;
+                    buttonChangeDetail.Enabled = false;
                 }
             }
             catch (Exception ex)
@@ -81,7 +83,7 @@ namespace WinFormsApp1
         private void ButtonDeleteDetail_Click(object sender, EventArgs e)
         {
             int numberRow = dataGridView1.CurrentCell.RowIndex;
-            int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
+            int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(WarehouseTableDTO.Id)].Value);
             Warning warning = new()
             {
                 StartPosition = FormStartPosition.CenterParent,
@@ -92,7 +94,7 @@ namespace WinFormsApp1
 
             if (warning.ShowDialog() == DialogResult.OK)
             {
-                var warehouseDTO = warehouseRepository.GetWarehouse(id);/*new WarehouseEditDTO() { Id = id };*/
+                var warehouseDTO = warehouseRepository.GetWarehouse(id);
                 warehouseRepository.RemoveWarehouse(warehouseDTO);
                 UpdateTable();
             }
@@ -106,7 +108,7 @@ namespace WinFormsApp1
         private void ButtonAdd_Click(object sender, EventArgs e)
         {
             int numberRow = dataGridView1.CurrentCell.RowIndex;
-            idDetail = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
+            idDetail = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(WarehouseTableDTO.Id)].Value);
             DialogResult = DialogResult.OK;
             Close();
         }
@@ -115,22 +117,24 @@ namespace WinFormsApp1
         {
             list = warehouseRepository.GetWarehousesForTable(availability: true, datePurchase: true, name: textBoxDevice.Text);
             dataGridView1.DataSource = Funcs.ToDataTable(list);
-            if (dataGridView1.RowCount > 0)
+            /*if (dataGridView1.RowCount > 0)
             {
                 buttonDeleteDetail.Enabled = true;
                 buttonAdd.Enabled = true;
+                buttonChangeDetail.Enabled = true;
             }
             else
             {
                 buttonDeleteDetail.Enabled = false;
                 buttonAdd.Enabled = false;
-            }
+                buttonChangeDetail.Enabled = false;
+            }*/
         }
 
         private void ButtonChangeDetail_Click(object sender, EventArgs e)
         {
             int numberRow = dataGridView1.CurrentCell.RowIndex;
-            int idDetail = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
+            int idDetail = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(WarehouseTableDTO.Id)].Value);
             var warehouse = warehouseRepository.GetWarehouse(id: idDetail);
 
             DetailEdit addDetail = new(true, idDetail)

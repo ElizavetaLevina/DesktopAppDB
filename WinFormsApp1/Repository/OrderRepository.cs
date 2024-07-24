@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using WinFormsApp1.DTO;
+using WinFormsApp1.Enum;
 using WinFormsApp1.Model;
 
 namespace WinFormsApp1.Repository
@@ -18,7 +19,7 @@ namespace WinFormsApp1.Repository
         /// <param name="dateIssue">Дата выдачи</param>
         /// <param name="id">Номер заказа</param>
         /// <returns>Список заказов для главной таблицы</returns>
-        public List<OrderTableDTO> GetOrdersForTable(bool? inProgress = null, bool? deleted = null, bool? issue = null, bool dateCreation = false, 
+        public List<OrderTableDTO> GetOrdersForTable(StatusOrderEnum? statusOrder = null, bool? deleted = null, bool dateCreation = false, 
             bool dateCompleted = false, bool dateIssue = false, bool id = false)
         {
             Context context = new();
@@ -27,10 +28,8 @@ namespace WinFormsApp1.Repository
 
             if(deleted != null)
                 set = set.Where(i => i.Deleted == deleted);
-            if(inProgress != null)
-                set = set.Where(i => i.InProgress == inProgress);
-            if(issue != null)
-                set = set.Where(i => i.Issue == issue);
+            if(statusOrder != null)
+                set = set.Where(i => i.StatusOrder == statusOrder);
 
             if (dateCreation == true)
                 set = set.OrderByDescending(i => i.DateCreation);
@@ -144,11 +143,11 @@ namespace WinFormsApp1.Repository
             return context.Orders.Where(i => i.EquipmentId == idEquipment).Select(a => new OrderEditDTO(a)).ToList();
         }
 
-        public List<OrderEditDTO> GetOrdersForComboBoxSalaries()
-        {
-            Context context = new();
-            return context.Orders.Where(i => !i.InProgress).Select(a => new OrderEditDTO(a)).ToList();
-        }
+        //public List<OrderEditDTO> GetOrdersForComboBoxSalaries()
+        //{
+        //    Context context = new();
+        //    return context.Orders.Where(i => !i.InProgress).Select(a => new OrderEditDTO(a)).ToList();
+        //}
 
         public List<OrderEditDTO> GetOrdersForSalaries(DateTime? dateCompleted = null, DateTime? dateIssue = null)
         {
@@ -156,7 +155,7 @@ namespace WinFormsApp1.Repository
             var set = context.Orders.Where(c => true);
 
             set = set.Where(i => !i.Deleted);
-            set = set.Where(i => (!i.InProgress || i.ReturnUnderGuarantee));
+            set = set.Where(i => (i.StatusOrder != StatusOrderEnum.InRepair || i.ReturnUnderGuarantee));
 
             if (dateCompleted != null)
                 set = set.Where(i => i.DateCompleted.Value.Month == dateCompleted.Value.Month 
@@ -195,7 +194,8 @@ namespace WinFormsApp1.Repository
                 EquipmentId = orderDTO.EquipmentId,
                 DiagnosisId = orderDTO.DiagnosisId,
                 Note = orderDTO.Note,
-                InProgress = orderDTO.InProgress,
+                StatusOrder = orderDTO.StatusOrder,
+                //InProgress = orderDTO.InProgress,
                 Guarantee = orderDTO.Guarantee,
                 DateEndGuarantee = orderDTO.DateEndGuarantee,
                 Deleted = orderDTO.Deleted,
@@ -203,7 +203,7 @@ namespace WinFormsApp1.Repository
                 DateReturn = orderDTO.DateReturn,
                 DateCompletedReturn = orderDTO.DateCompletedReturn,
                 DateIssueReturn = orderDTO.DateIssueReturn,
-                Issue = orderDTO.Issue,
+                //Issue = orderDTO.Issue,
                 ColorRow = orderDTO.ColorRow,
                 DateLastCall = orderDTO.DateLastCall,
                 PriceAgreed = orderDTO.PriceAgreed,

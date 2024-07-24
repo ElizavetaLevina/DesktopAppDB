@@ -108,14 +108,14 @@ namespace WinFormsApp1
             }
         }
 
-        private void TextBoxPriceDetail_KeyPress(object sender, KeyPressEventArgs e)
+        private void TextBoxPricePurchase_KeyPress(object sender, KeyPressEventArgs e)
         {
-            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
+            e.Handled = !KeyPressHelper.CheckKeyPress(true, textBoxPricePurchase.Text, e.KeyChar);
         }
 
         private void TextBoxPriceSale_KeyPress(object sender, KeyPressEventArgs e)
         {
-            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
+            e.Handled = !KeyPressHelper.CheckKeyPress(true, textBoxPriceSale.Text, e.KeyChar);
         }
 
         private void ListBoxDetails_SelectedIndexChanged(object sender, EventArgs e)

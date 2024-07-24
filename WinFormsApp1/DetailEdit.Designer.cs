@@ -85,10 +85,11 @@
             // textBoxPricePurchase
             // 
             textBoxPricePurchase.Location = new Point(213, 121);
+            textBoxPricePurchase.MaxLength = 6;
             textBoxPricePurchase.Name = "textBoxPricePurchase";
             textBoxPricePurchase.Size = new Size(172, 31);
             textBoxPricePurchase.TabIndex = 4;
-            textBoxPricePurchase.KeyPress += TextBoxPriceDetail_KeyPress;
+            textBoxPricePurchase.KeyPress += TextBoxPricePurchase_KeyPress;
             // 
             // dateTimePicker1
             // 
@@ -159,6 +160,7 @@
             // textBoxPriceSale
             // 
             textBoxPriceSale.Location = new Point(213, 198);
+            textBoxPriceSale.MaxLength = 6;
             textBoxPriceSale.Name = "textBoxPriceSale";
             textBoxPriceSale.Size = new Size(172, 31);
             textBoxPriceSale.TabIndex = 5;
@@ -183,7 +185,7 @@
             listBoxDetails.TabIndex = 15;
             listBoxDetails.SelectedIndexChanged += ListBoxDetails_SelectedIndexChanged;
             // 
-            // AddDetailToWarehouse
+            // DetailEdit
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -205,7 +207,7 @@
             Controls.Add(labelName);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Name = "AddDetailToWarehouse";
+            Name = "DetailEdit";
             Text = "Добавление детали на склад";
             Activated += AddDetailToWarehouse_Activated;
             ResumeLayout(false);

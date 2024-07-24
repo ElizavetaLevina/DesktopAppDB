@@ -1,4 +1,6 @@
-﻿namespace WinFormsApp1.Model
+﻿using WinFormsApp1.Enum;
+
+namespace WinFormsApp1.Model
 {
     public class Order
     {
@@ -27,7 +29,8 @@
         public int? DiagnosisId { get; set; }
         public virtual Diagnosis? Diagnosis { get; set; }
         public string? Note { get; set; }
-        public bool InProgress { get; set; }
+        public StatusOrderEnum StatusOrder { get; set; }
+        //public bool InProgress { get; set; }
         public int Guarantee { get; set; }
         public DateTime? DateEndGuarantee { get; set; }
         public bool Deleted { get; set; }
@@ -35,7 +38,7 @@
         public DateTime? DateReturn { get; set; }
         public DateTime? DateCompletedReturn { get; set; }
         public DateTime? DateIssueReturn { get; set; }
-        public bool Issue { get; set; }
+        //public bool Issue { get; set; }
         public virtual List<Malfunction>? Malfunction { get; set; }
         public virtual List<MalfunctionOrder>? MalfunctionOrders { get; set; }
         public virtual List<Warehouse>? Details { get; set; }

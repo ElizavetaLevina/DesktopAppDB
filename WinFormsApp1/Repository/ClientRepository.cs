@@ -1,5 +1,6 @@
 ﻿using System.Net.Sockets;
 using WinFormsApp1.DTO;
+using WinFormsApp1.Enum;
 using WinFormsApp1.Model;
 
 namespace WinFormsApp1.Repository
@@ -44,7 +45,7 @@ namespace WinFormsApp1.Repository
         /// </summary>
         /// <param name="typeClient">Тип клиента</param>
         /// <returns>Спиок клиентов</returns>
-        public List<ClientDTO> GetClientsByType(string typeClient) 
+        public List<ClientDTO> GetClientsByType(TypeClientEnum typeClient) 
         {
             Context context = new();
             return context.Clients

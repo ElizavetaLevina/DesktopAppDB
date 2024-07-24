@@ -11,7 +11,7 @@ namespace WinFormsApp1.DTO
         public string? IdClient { get; set; }
         public string? NameAndAddressClient { get; set; }
         public string? NumberSecondPhone { get; set; }
-        public string TypeClient { get; set; } = TypeClientEnum.normal.ToString();
+        public TypeClientEnum TypeClient { get; set; }
 
         public ClientEditDTO(Client client)
         {

@@ -27,7 +27,7 @@ namespace WinFormsApp1
             if (dataGridView1.Rows.Count > 0)
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
+                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(MasterDTO.Id)].Value);
 
                 MasterEdit addMasterForm = new(false, id)
                 {
@@ -44,7 +44,7 @@ namespace WinFormsApp1
             if (dataGridView1.Rows.Count > 0)
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(MasterDTO.Id)].Value);
                 var masterDTO = new MasterEditDTO() { Id = id };
                 masterRepository.RemoveMaster(masterDTO);
                 UpdateTable();

@@ -59,8 +59,8 @@ namespace WinFormsApp1
             if (dataGridView1.Rows.Count > 0)
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int typeTechnicId = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
-                string? name = dataGridView1.Rows[numberRow].Cells["NameTypeTechnic"].Value.ToString();
+                int typeTechnicId = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(TypeTechnicDTO.Id)].Value);
+                string? name = dataGridView1.Rows[numberRow].Cells[nameof(TypeTechnicDTO.NameTypeTechnic)].Value.ToString();
                 List<TypeBrandDTO> list = typeBrandRepository.GetTypeBrand();
                 BrandAndTypeEdit brandAndTypeEdit = new(NameTableToEditEnum.TypeTechnic, false, typeTechnicId)
                 {
@@ -122,7 +122,7 @@ namespace WinFormsApp1
             if (dataGridView1.Rows.Count > 0)
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int typeTechnicId = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                int typeTechnicId = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(TypeTechnicDTO.Id)].Value);
                 var typeTechnicDTO = new TypeTechnicEditDTO() { Id = typeTechnicId };
                 typeTechnicRepository.RemoveTypeTechnic(typeTechnicDTO);
                 UpdateTable();
@@ -138,9 +138,9 @@ namespace WinFormsApp1
         {
             List<TypeTechnicDTO> list= typeTechnicRepository.GetTypesTechnic();
             dataGridView1.DataSource = list;
-            dataGridView1.Columns["Id"].Visible = false;
-            dataGridView1.Columns["NameTypeTechnic"].HeaderText = "Тип устройства";
-            dataGridView1.Columns["NameTypeTechnic"].Width = dataGridView1.Width;
+            dataGridView1.Columns[nameof(TypeTechnicDTO.Id)].Visible = false;
+            dataGridView1.Columns[nameof(TypeTechnicDTO.NameTypeTechnic)].HeaderText = "Тип устройства";
+            dataGridView1.Columns[nameof(TypeTechnicDTO.NameTypeTechnic)].Width = dataGridView1.Width;
         }
     }
 }

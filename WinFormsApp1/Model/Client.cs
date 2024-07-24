@@ -9,7 +9,7 @@ namespace WinFormsApp1
         public string? IdClient {  get; set; }
         public string? NameAndAddressClient { get; set; }
         public string? NumberSecondPhone {  get; set; }
-        public string TypeClient { get; set; } = TypeClientEnum.normal.ToString();
+        public TypeClientEnum TypeClient { get; set; }
         public virtual List<Order>? Order { get; set; }
     }
 }

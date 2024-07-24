@@ -55,13 +55,13 @@ namespace WinFormsApp1
             dataGridView1.DataSource = Funcs.ToDataTable(list);
 
             dataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView1.Columns["Id"].Visible = false;
-            dataGridView1.Columns["NameDetail"].HeaderText = "Название детали";
-            dataGridView1.Columns["PricePurchase"].Visible = false;
-            dataGridView1.Columns["PriceSale"].HeaderText = "Цена";
-            dataGridView1.Columns["DatePurchase"].Visible = false;
-            dataGridView1.Columns["Availability"].Visible = false;
-            dataGridView1.Columns["IdOrder"].Visible = false;
+            dataGridView1.Columns[nameof(WarehouseTableDTO.Id)].Visible = false;
+            dataGridView1.Columns[nameof(WarehouseTableDTO.NameDetail)].HeaderText = "Название детали";
+            dataGridView1.Columns[nameof(WarehouseTableDTO.PricePurchase)].Visible = false;
+            dataGridView1.Columns[nameof(WarehouseTableDTO.PriceSale)].HeaderText = "Цена";
+            dataGridView1.Columns[nameof(WarehouseTableDTO.DatePurchase)].Visible = false;
+            dataGridView1.Columns[nameof(WarehouseTableDTO.Availability)].Visible = false;
+            dataGridView1.Columns[nameof(WarehouseTableDTO.IdOrder)].Visible = false;
 
             foreach(var detail in list)
             {
@@ -83,7 +83,7 @@ namespace WinFormsApp1
             if (dataGridView1.Rows.Count > 0)
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int idDetail = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
+                int idDetail = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(WarehouseTableDTO.Id)].Value);
                 var warehouse = warehouseRepository.GetWarehouse(id: idDetail);
 
                 DetailEdit changeDetail = new(true, idDetail)
@@ -128,7 +128,7 @@ namespace WinFormsApp1
                 if (warning.ShowDialog() == DialogResult.OK)
                 {
                     int numberRow = dataGridView1.CurrentCell.RowIndex;
-                    int idDetail = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[0].Value);
+                    int idDetail = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(WarehouseTableDTO.Id)].Value);
                     var warehouse = warehouseRepository.GetWarehouse(id: idDetail);
                     warehouse.Availability = true;
                     warehouse.IdOrder = null;

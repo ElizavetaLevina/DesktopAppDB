@@ -95,9 +95,9 @@
             // 
             // buttonExit
             // 
-            buttonExit.Location = new Point(540, 451);
+            buttonExit.Location = new Point(545, 451);
             buttonExit.Name = "buttonExit";
-            buttonExit.Size = new Size(248, 43);
+            buttonExit.Size = new Size(243, 43);
             buttonExit.TabIndex = 4;
             buttonExit.Text = "Выход";
             buttonExit.UseVisualStyleBackColor = true;
@@ -105,9 +105,9 @@
             // 
             // buttonAdd
             // 
-            buttonAdd.Location = new Point(286, 451);
+            buttonAdd.Location = new Point(280, 451);
             buttonAdd.Name = "buttonAdd";
-            buttonAdd.Size = new Size(248, 43);
+            buttonAdd.Size = new Size(243, 43);
             buttonAdd.TabIndex = 5;
             buttonAdd.Text = "Добавить деталь в заказ";
             buttonAdd.UseVisualStyleBackColor = true;
@@ -117,7 +117,7 @@
             // 
             textBoxDevice.Location = new Point(12, 457);
             textBoxDevice.Name = "textBoxDevice";
-            textBoxDevice.Size = new Size(223, 31);
+            textBoxDevice.Size = new Size(243, 31);
             textBoxDevice.TabIndex = 6;
             textBoxDevice.Visible = false;
             textBoxDevice.TextChanged += TextBoxDevice_TextChanged;
@@ -132,7 +132,7 @@
             buttonChangeDetail.UseVisualStyleBackColor = true;
             buttonChangeDetail.Click += ButtonChangeDetail_Click;
             // 
-            // WarehouseDetails
+            // DetailsInWarehouse
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -147,7 +147,7 @@
             Controls.Add(dataGridView1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Name = "WarehouseDetails";
+            Name = "DetailsInWarehouse";
             Text = "Склад";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);

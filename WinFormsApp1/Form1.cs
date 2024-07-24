@@ -131,7 +131,7 @@ namespace WinFormsApp1
             status = StatusOrderEnum.InRepair;
             try
             {
-                List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(inProgress: true, deleted: false, dateCreation: true);
+                List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(statusOrder: status, deleted: false, dateCreation: true);
                 dataGridView1.DataSource = Funcs.ToDataTable(orders);
                 UpdateTable();
                 ChangeColorRows();
@@ -144,8 +144,7 @@ namespace WinFormsApp1
             status = StatusOrderEnum.Completed;
             try
             {
-                List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(inProgress: false, deleted: false, issue: false,
-                    dateCompleted: true);
+                List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(statusOrder: status, deleted: false, dateCompleted: true);
                 dataGridView1.DataSource = Funcs.ToDataTable(orders);
                 UpdateTable();
                 ChangeColorRows();
@@ -158,8 +157,7 @@ namespace WinFormsApp1
             status = StatusOrderEnum.GuaranteeIssue;
             try
             {
-                List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(inProgress: false, deleted: false, issue: true,
-                    dateIssue: true);
+                List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(statusOrder: status, deleted: false, dateIssue: true);
 
                 for (int i = 0; i < orders.Count; i++)
                 {
@@ -178,8 +176,7 @@ namespace WinFormsApp1
             status = StatusOrderEnum.Archive;
             try
             {
-                List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(inProgress: false, deleted: false, issue: true,
-                    dateIssue: true);
+                List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(statusOrder: status, deleted: false, dateIssue: true);
                 dataGridView1.DataSource = Funcs.ToDataTable(orders);
 
                 for (int i = 0; i < orders.Count; i++)
@@ -459,7 +456,7 @@ namespace WinFormsApp1
                 {
                     if(status == StatusOrderEnum.Completed)
                     {
-                        orderDTO.InProgress = true;
+                        orderDTO.StatusOrder = StatusOrderEnum.InRepair;
                         if (orderDTO.ReturnUnderGuarantee)
                             orderDTO.DateCompletedReturn = null;
                         else
@@ -504,9 +501,8 @@ namespace WinFormsApp1
                     {
                         orderDTO.DateCreation = DateTime.Now;
                         orderDTO.DateStartWork = DateTime.Now;
-                        orderDTO.InProgress = true;
+                        orderDTO.StatusOrder = StatusOrderEnum.InRepair;
                         orderDTO.ReturnUnderGuarantee = true;
-                        orderDTO.Issue = false;
 
                         var task = Task.Run(async () =>
                         {
@@ -568,7 +564,7 @@ namespace WinFormsApp1
                 idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
                 var orderDTO = orderRepository.GetOrder(idOrder);
                 var clientDTO = clientRepository.GetClient(orderDTO.ClientId);
-                clientDTO.TypeClient = TypeClientEnum.white.ToString();
+                clientDTO.TypeClient = TypeClientEnum.white;
                 var task = Task.Run(async () =>
                 {
                     await clientRepository.SaveClientAsync(clientDTO);
@@ -586,7 +582,7 @@ namespace WinFormsApp1
                 idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
                 var orderDTO = orderRepository.GetOrder(idOrder);
                 var clientDTO = clientRepository.GetClient(orderDTO.ClientId);
-                clientDTO.TypeClient = TypeClientEnum.black.ToString();
+                clientDTO.TypeClient = TypeClientEnum.black;
                 var task = Task.Run(async () =>
                 {
                     await clientRepository.SaveClientAsync(clientDTO);
@@ -604,7 +600,7 @@ namespace WinFormsApp1
                 idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
                 var orderDTO = orderRepository.GetOrder(idOrder);
                 var clientDTO = clientRepository.GetClient(orderDTO.ClientId);
-                clientDTO.TypeClient = TypeClientEnum.normal.ToString();
+                clientDTO.TypeClient = TypeClientEnum.normal;
                 var task = Task.Run(async () =>
                 {
                     await clientRepository.SaveClientAsync(clientDTO);
@@ -731,7 +727,7 @@ namespace WinFormsApp1
                 color = Properties.Settings.Default.FirstLevelColor;
             else if (countDays > Convert.ToInt32(Properties.Settings.Default.SecondLevelText))
                 color = Properties.Settings.Default.ThirdLevelColor;
-            else if (orderDTO.Issue)
+            else if (orderDTO.StatusOrder == StatusOrderEnum.GuaranteeIssue || orderDTO.StatusOrder == StatusOrderEnum.Archive)
                 color = Color.Black;
             else
                 color = Properties.Settings.Default.SecondLevelColor;

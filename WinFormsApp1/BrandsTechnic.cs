@@ -58,8 +58,8 @@ namespace WinFormsApp1
             if (dataGridView1.Rows.Count > 0)
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int brandTechnicId = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
-                string? name = dataGridView1.Rows[numberRow].Cells["NameBrandTechnic"].Value.ToString();
+                int brandTechnicId = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(BrandTechnicDTO.Id)].Value);
+                string? name = dataGridView1.Rows[numberRow].Cells[nameof(BrandTechnicDTO.NameBrandTechnic)].Value.ToString();
                 List <TypeBrandDTO> list = typeBrandRepository.GetTypeBrand();
                 BrandAndTypeEdit brandAndTypeEdit = new(NameTableToEditEnum.BrandTechnic, false, brandTechnicId)
                 {
@@ -121,7 +121,7 @@ namespace WinFormsApp1
             if (dataGridView1.Rows.Count > 0)
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells["Id"].Value);
+                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(BrandTechnicDTO.Id)].Value);
                 var brandTechnicDTO = new BrandTechnicEditDTO() { Id = id };
                 brandTechnicRepository.RemoveBrandTechnic(brandTechnicDTO);
                 UpdateTable();
@@ -137,9 +137,9 @@ namespace WinFormsApp1
         {
             List<BrandTechnicDTO> list = brandTechnicRepository.GetBrandsTechnic();
             dataGridView1.DataSource = list;
-            dataGridView1.Columns["Id"].Visible = false;
-            dataGridView1.Columns["NameBrandTechnic"].HeaderText = "Название";
-            dataGridView1.Columns["NameBrandTechnic"].Width = dataGridView1.Width;
+            dataGridView1.Columns[nameof(BrandTechnicDTO.Id)].Visible = false;
+            dataGridView1.Columns[nameof(BrandTechnicDTO.NameBrandTechnic)].HeaderText = "Название";
+            dataGridView1.Columns[nameof(BrandTechnicDTO.NameBrandTechnic)].Width = dataGridView1.Width;
         }
     }
 }

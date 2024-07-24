@@ -40,7 +40,7 @@ namespace WinFormsApp1
             textBoxIdOrder.Text = orderDTO.NumberOrder.ToString();
             Text = String.Format("Свойства устройства (заказ № {0} )", orderDTO.NumberOrder);
 
-            if (orderDTO.InProgress)
+            if (orderDTO.StatusOrder == StatusOrderEnum.InRepair)
                 textBoxStatus.Text = "Находится в ремонте";
             else
                 textBoxStatus.Text = "Отремонтирован";
@@ -77,9 +77,8 @@ namespace WinFormsApp1
             UpdateData();
 
             var clientDTO = clientRepository.GetClient(orderDTO.ClientId);
-            var typeClient = (TypeClientEnum)System.Enum.Parse(typeof(TypeClientEnum), clientDTO.TypeClient);
 
-            switch (typeClient)
+            switch (clientDTO.TypeClient)
             {
                 case TypeClientEnum.normal:
                     textBoxTypeClient.Text = "Обычный клиент"; break;
@@ -497,7 +496,7 @@ namespace WinFormsApp1
 
         private void TextBoxMaxPrice_KeyPress(object sender, KeyPressEventArgs e)
         {
-            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
+            e.Handled = !KeyPressHelper.CheckKeyPress(true, textBoxMaxPrice.Text, e.KeyChar);
         }
 
         private void CheckBoxPriceAgreed_CheckedChanged(object sender, EventArgs e)

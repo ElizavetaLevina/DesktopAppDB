@@ -109,32 +109,28 @@ namespace WinFormsApp1
 
         private Color FindColor(OrderEditDTO order)
         {
-            StatusOrderEnum status = StatusOrderEnum.Trash;
             Color color = Color.Black;
-            DateTime date = DateTime.Now;
-            if (order.InProgress && !order.Deleted && order.MainMasterId != null)
+            DateTime date;
+            if (order.StatusOrder == StatusOrderEnum.InRepair && !order.Deleted && order.MainMasterId != null)
             {
-                status = StatusOrderEnum.InRepair;
                 date = order.DateStartWork.Value;
             }
-            else if (!order.InProgress && !order.Deleted && !order.Issue)
+            else if (order.StatusOrder == StatusOrderEnum.Completed && !order.Deleted)
             {
-                status = StatusOrderEnum.Completed;
                 date = order.DateCompleted.Value;
             }
+            else
+                return color;
 
-            if (status == StatusOrderEnum.InRepair || status == StatusOrderEnum.Completed)
+            if ((DateTime.Now - date).Days < Convert.ToInt32(textBoxFirstLevel.Text))
             {
-                if ((DateTime.Now - date).Days < Convert.ToInt32(textBoxFirstLevel.Text))
-                {
-                    color = button1.BackColor;
-                }
-                else if ((DateTime.Now - date).Days > Convert.ToInt32(textBoxThirdLevel.Text))
-                {
-                    color = button3.BackColor;
-                }
-                else color = button2.BackColor;
+                color = button1.BackColor;
             }
+            else if ((DateTime.Now - date).Days > Convert.ToInt32(textBoxThirdLevel.Text))
+            {
+                color = button3.BackColor;
+            }
+            else color = button2.BackColor;
             return color;
         }
     }

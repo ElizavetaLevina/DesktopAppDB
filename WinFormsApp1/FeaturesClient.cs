@@ -18,9 +18,7 @@ namespace WinFormsApp1
             textBoxNameAddress.Text = clientDTO.NameAndAddressClient;
             textBoxSecondPhone.Text = clientDTO.NumberSecondPhone;
 
-            var typeClient = (TypeClientEnum)System.Enum.Parse(typeof(TypeClientEnum), clientDTO.TypeClient);
-
-            switch (typeClient)
+            switch (clientDTO.TypeClient)
             {
                 case TypeClientEnum.normal:
                     radioButtonNormal.Checked = true; break;
@@ -56,14 +54,14 @@ namespace WinFormsApp1
             Close();
         }
 
-        public string TypeClient()
+        public TypeClientEnum TypeClient()
         {
-            string typeClient = TypeClientEnum.normal.ToString();
+            var typeClient = TypeClientEnum.normal;
 
             if (radioButtonWhite.Checked)
-                typeClient = TypeClientEnum.white.ToString();
+                typeClient = TypeClientEnum.white;
             else if (radioButtonBlack.Checked)
-                typeClient = TypeClientEnum.black.ToString();
+                typeClient = TypeClientEnum.black;
 
             return typeClient;
         }

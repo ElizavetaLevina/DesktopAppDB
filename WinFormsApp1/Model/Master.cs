@@ -1,4 +1,5 @@
-﻿using WinFormsApp1.Model;
+﻿using WinFormsApp1.Enum;
+using WinFormsApp1.Model;
 
 namespace WinFormsApp1
 {
@@ -8,7 +9,7 @@ namespace WinFormsApp1
         public string? NameMaster { get; set; }
         public string? Address {  get; set; }
         public string? NumberPhone { get; set; }
-        public string TypeSalary { get; set; } = "rate";
+        public TypeSalaryEnum TypeSalary { get; set; }
         public int Rate { get; set; }
 
         public virtual List<Order>? MainOrder { get; set; }

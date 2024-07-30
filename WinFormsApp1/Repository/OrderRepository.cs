@@ -1,6 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using WinFormsApp1.DTO;
+﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Model;
 
@@ -143,12 +141,32 @@ namespace WinFormsApp1.Repository
             return context.Orders.Where(i => i.EquipmentId == idEquipment).Select(a => new OrderEditDTO(a)).ToList();
         }
 
-        //public List<OrderEditDTO> GetOrdersForComboBoxSalaries()
-        //{
-        //    Context context = new();
-        //    return context.Orders.Where(i => !i.InProgress).Select(a => new OrderEditDTO(a)).ToList();
-        //}
+        /// <summary>
+        /// Получения списка заказов для диаграммы
+        /// </summary>
+        /// <param name="year">Год</param>
+        /// <param name="master">Указан ли мастер</param>
+        /// <param name="masterId">Идентификатор мастера</param>
+        /// <returns>Список заказов</returns>
+        public List<OrderEditDTO> GetOrdersForChart(int year, bool master = false, int? masterId = null)
+        {
+            Context context = new();
+            var set = context.Orders.Where(i => i.StatusOrder != StatusOrderEnum.InRepair && i.StatusOrder != StatusOrderEnum.Trash);
 
+            set = set.Where(i => i.DateCompleted.Value.Year == year);              
+
+            if (master)
+                set = set.Where(i => i.MainMasterId == masterId || i.AdditionalMasterId == masterId);
+
+            return set.Select(a => new OrderEditDTO(a)).ToList();
+        }
+
+        /// <summary>
+        /// Получение списка заказов для расчета зарплаты
+        /// </summary>
+        /// <param name="dateCompleted">Дата завершения заказа</param>
+        /// <param name="dateIssue">Дата выдачи заказа</param>
+        /// <returns>Список заказов</returns>
         public List<OrderEditDTO> GetOrdersForSalaries(DateTime? dateCompleted = null, DateTime? dateIssue = null)
         {
             Context context = new();
@@ -163,9 +181,6 @@ namespace WinFormsApp1.Repository
             if (dateIssue != null)
                 set = set.Where(i => i.DateIssue.Value.Month == dateIssue.Value.Month 
                 && i.DateIssue.Value.Year == dateIssue.Value.Year);
-
-
-
 
             return set.Select(a => new OrderEditDTO(a)).ToList();
         }

@@ -2,7 +2,7 @@
 
 namespace WinFormsApp1.Helpers
 {
-    public class FoundProblemTextChangeHelper
+    public static class FoundProblemTextChangeHelper
     {
         /// <summary>
         /// Получение списка неисправностей по строке 

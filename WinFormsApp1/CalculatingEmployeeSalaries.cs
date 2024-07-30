@@ -1,7 +1,6 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Repository;
 using WinFormsApp1.Enum;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WinFormsApp1
 {

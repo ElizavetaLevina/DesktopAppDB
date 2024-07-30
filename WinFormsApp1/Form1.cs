@@ -368,7 +368,7 @@ namespace WinFormsApp1
                     else return;
                 }
 
-                
+
                 bool enabledPrice = true;
 
                 if (orderDTO.ReturnUnderGuarantee)
@@ -420,7 +420,7 @@ namespace WinFormsApp1
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
                 idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
 
-                if(status == StatusOrderEnum.Completed)
+                if (status == StatusOrderEnum.Completed)
                 {
                     IssuingClient issuingClient = new(idOrder)
                     {
@@ -454,7 +454,7 @@ namespace WinFormsApp1
 
                 if (warning.ShowDialog() == DialogResult.OK)
                 {
-                    if(status == StatusOrderEnum.Completed)
+                    if (status == StatusOrderEnum.Completed)
                     {
                         orderDTO.StatusOrder = StatusOrderEnum.InRepair;
                         if (orderDTO.ReturnUnderGuarantee)
@@ -467,7 +467,7 @@ namespace WinFormsApp1
                         });
                         task.Wait();
 
-                        foreach(var malfunctionOrder in malfunctionsOrderDTO)
+                        foreach (var malfunctionOrder in malfunctionsOrderDTO)
                         {
                             malfunctionOrderRepository.RemoveMalfunctionOrder(malfunctionOrder);
                         }
@@ -619,7 +619,7 @@ namespace WinFormsApp1
             AddDeviceIntoRepair newOrder = new()
             {
                 StartPosition = FormStartPosition.CenterParent,
-                
+
                 MainMasterName = orderDTO.MainMasterId == null ? "-" : orderDTO.MainMaster?.NameMaster,
                 AdditionalMasterName = orderDTO.AdditionalMasterId == null ? "-" : orderDTO.AdditionalMaster?.NameMaster,
                 TypeDevice = orderDTO.TypeTechnic.Name,
@@ -1466,6 +1466,16 @@ namespace WinFormsApp1
             NewOrder();
         }
 
+        private void ItemReportOrganization_Click(object sender, EventArgs e)
+        {
+            ReportsOrganization reportsOrganization = new()
+            {
+                StartPosition = FormStartPosition.CenterParent
+            };
+            reportsOrganization.ShowDialog();
+            FocusButton(status);
+        }
+
         private void ItemSalary_Click(object sender, EventArgs e)
         {
             CalculatingEmployeeSalaries salary = new()
@@ -1632,11 +1642,11 @@ namespace WinFormsApp1
 
         private void Search()
         {
-            var ordersDTO = orderRepository.GetOrdersBySearch(numberOrder: textBoxIdOrder.Text, 
-                dateCreation: textBoxDateCreation.Text, dateStartWork: textBoxDateStartWork.Text, 
-                masterName: textBoxNameMaster.Text, typeTechnic: textBoxTypeDevice.Text, 
+            var ordersDTO = orderRepository.GetOrdersBySearch(numberOrder: textBoxIdOrder.Text,
+                dateCreation: textBoxDateCreation.Text, dateStartWork: textBoxDateStartWork.Text,
+                masterName: textBoxNameMaster.Text, typeTechnic: textBoxTypeDevice.Text,
                 brandTechnic: textBoxBrandDevice.Text, modelTechnic: textBoxModel.Text, idClient: textBoxNameClient.Text);
-  
+
             dataGridView1.DataSource = Funcs.ToDataTable(ordersDTO);
             ChangeColorRows();
             if (CheckNoFilters())
@@ -1746,7 +1756,7 @@ namespace WinFormsApp1
             int thirdLine = buttonReset.Location.Y + buttonReset.Height - labelDateCreation.Height;
             int secondLine = thirdLine - labelDateCreation.Height - 11;
             int thirdColumn = buttonReset.Location.X - widthTextBox - 15;
-            int marginWidthFilter = ((thirdColumn + textBoxTypeDevice.Width) - (widthTextBox + widthLT) * 3 - 
+            int marginWidthFilter = ((thirdColumn + textBoxTypeDevice.Width) - (widthTextBox + widthLT) * 3 -
                 labelIdOrder.Width - labelDateStartWork.Width - labelTypeDevice.Width) / 2;
 
             labelIdOrder.Location = new Point(labelIdOrder.Location.X, buttonReset.Location.Y);
@@ -1782,12 +1792,12 @@ namespace WinFormsApp1
             int buttonMenuX = Width - buttonInProgress.Width - 25;
             int heightButtonMenu = buttonInProgress.Height;
             int heightReset = 77;
-            
+
             dataGridView1.Width = Width - buttonInProgress.Width - 50;
             dataGridView1.Height = Height - dataGridView1.Location.Y - heightReset - 70;
 
             int bottomTable = dataGridView1.Height + dataGridView1.Location.Y;
-            int marginHeightMenuX = (dataGridView1.Height - heightButtonMenu * 5) / 4; 
+            int marginHeightMenuX = (dataGridView1.Height - heightButtonMenu * 5) / 4;
 
             labelLogIn.Location = new Point(buttonMenuX, labelLogIn.Location.Y);
             buttonInProgress.Location = new Point(buttonMenuX, buttonInProgress.Location.Y);
@@ -1819,7 +1829,7 @@ namespace WinFormsApp1
             textBoxModel.Location = new Point(endTable - widthTextBox, buttonReset.Location.Y);
             textBoxModel.Width = widthTextBox;
             labelModel.Location = new Point(textBoxModel.Location.X - labelModel.Width - widthLT, buttonReset.Location.Y);
-            
+
 
             labelDateCreation.Location = new Point(labelDateCreation.Location.X, bottomMargin);
             textBoxDateCreation.Location = new Point(textBoxDateCreation.Location.X, bottomMargin);
@@ -1838,7 +1848,7 @@ namespace WinFormsApp1
         private void ChangeSizeAndLocation()
         {
             var screenSize = (ScreenSizeEnum)System.Enum.Parse(typeof(ScreenSizeEnum), Properties.Settings.Default.Size);
-            if (screenSize== ScreenSizeEnum.Small)
+            if (screenSize == ScreenSizeEnum.Small)
                 SmallWindow();
             else if (screenSize == ScreenSizeEnum.Medium)
                 MediumWindow();
@@ -1863,7 +1873,7 @@ namespace WinFormsApp1
                     labelClientId.Visible = true;
                     var rectangle = dataGridView1.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true);
                     labelClientId.Text = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
-                    labelClientId.Location = new Point(rectangle.X + dataGridView1.Location.X - labelClientId.Width, 
+                    labelClientId.Location = new Point(rectangle.X + dataGridView1.Location.X - labelClientId.Width,
                         rectangle.Y + dataGridView1.Location.Y);
                     /*labelClientId.Location = new Point(rectangle.X + dataGridView1.Location.X,
                         rectangle.Y + dataGridView1.Location.Y + rectangle.Height);*/

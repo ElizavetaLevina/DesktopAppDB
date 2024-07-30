@@ -167,6 +167,7 @@ namespace WinFormsApp1
             itemChangeData = new ToolStripMenuItem();
             itemLogOut = new ToolStripMenuItem();
             labelClientId = new Label();
+            itemReportOrganization = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             contextMenu1.SuspendLayout();
             toolStrip1.SuspendLayout();
@@ -1069,14 +1070,14 @@ namespace WinFormsApp1
             // contextButton4
             // 
             contextButton4.ImageScalingSize = new Size(24, 24);
-            contextButton4.Items.AddRange(new ToolStripItem[] { itemSalary });
+            contextButton4.Items.AddRange(new ToolStripItem[] { itemReportOrganization, itemSalary });
             contextButton4.Name = "contextButton4";
-            contextButton4.Size = new Size(219, 36);
+            contextButton4.Size = new Size(364, 101);
             // 
             // itemSalary
             // 
             itemSalary.Name = "itemSalary";
-            itemSalary.Size = new Size(218, 32);
+            itemSalary.Size = new Size(363, 32);
             itemSalary.Text = "Расчет зарплаты";
             itemSalary.Click += ItemSalary_Click;
             // 
@@ -1340,6 +1341,13 @@ namespace WinFormsApp1
             labelClientId.Text = "0";
             labelClientId.Visible = false;
             // 
+            // itemReportOrganization
+            // 
+            itemReportOrganization.Name = "itemReportOrganization";
+            itemReportOrganization.Size = new Size(363, 32);
+            itemReportOrganization.Text = "Отчет работы организации за год";
+            itemReportOrganization.Click += ItemReportOrganization_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
@@ -1539,5 +1547,6 @@ namespace WinFormsApp1
         private ToolStripMenuItem itemChangeData;
         private ToolStripMenuItem itemLogOut;
         private Label labelClientId;
+        private ToolStripMenuItem itemReportOrganization;
     }
 }

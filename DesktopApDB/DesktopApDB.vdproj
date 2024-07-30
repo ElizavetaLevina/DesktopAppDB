@@ -15,25 +15,19 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_43984EB80FCA4AFD8B3A4D614DD37841"
+        "MsmKey" = "8:_081460484F6943819AEC4F4A1BE743DF"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_62E9707132944B8B97D1A041282E6304"
+        "MsmKey" = "8:_44EC032B886E4261B1AA1EF3BF1FBA6B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_710B0E9F0D4B415EB6AF5B05603E74E8"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_79229167771849C19F2EADCD7ABF4299"
+        "MsmKey" = "8:_66D952172EC9439DBBF5D93056A1CBC9"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -45,13 +39,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_8480C0452191456481AD1155D674AB02"
+        "MsmKey" = "8:_8A52F449276242908B38187D47126006"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_97EB2A68DCAE4E56878813D994F0048B"
+        "MsmKey" = "8:_AF92D1393ED74ED280DA723475336359"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -63,13 +57,25 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_D53D14360A9E4616BB50C25B3E8955DF"
+        "MsmKey" = "8:_B5A9AC941CD44F54949F56BBB45C5E38"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_F69BD45AD22A4EF3B3EA0568C927D1B3"
+        "MsmKey" = "8:_D39F0FAE0FF74135BC74301AA515E067"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_DA868208A1294C04A75CB15B4EA45315"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E8954598C2774FA79CAEC950527AC90E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -170,47 +176,7 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_43984EB80FCA4AFD8B3A4D614DD37841"
-            {
-            "SourcePath" = "8:..\\WinFormsApp1\\bin\\Debug\\net8.0-windows\\Templates\\reportIssuing.xlsx"
-            "TargetName" = "8:reportIssuing.xlsx"
-            "Tag" = "8:"
-            "Folder" = "8:_8B18C21CD8B045648AB5969E7DFB2E91"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_62E9707132944B8B97D1A041282E6304"
-            {
-            "SourcePath" = "8:..\\WinFormsApp1\\bin\\Debug\\net8.0-windows\\File\\computerservice.db"
-            "TargetName" = "8:computerservice.db"
-            "Tag" = "8:"
-            "Folder" = "8:_AE785FD62368477792F1FD66C57016F6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_710B0E9F0D4B415EB6AF5B05603E74E8"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_081460484F6943819AEC4F4A1BE743DF"
             {
             "SourcePath" = "8:..\\WinFormsApp1\\bin\\Debug\\net8.0-windows\\Output\\reportIssuing.xlsx"
             "TargetName" = "8:reportIssuing.xlsx"
@@ -230,12 +196,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_79229167771849C19F2EADCD7ABF4299"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_66D952172EC9439DBBF5D93056A1CBC9"
             {
-            "SourcePath" = "8:..\\WinFormsApp1\\bin\\Debug\\net8.0-windows\\File\\computerservice.db"
+            "SourcePath" = "8:..\\WinFormsApp1\\bin\\Debug\\net8.0-windows\\computerservice.db"
             "TargetName" = "8:computerservice.db"
             "Tag" = "8:"
-            "Folder" = "8:_0121B5585BEA4743B81D88AA327071A6"
+            "Folder" = "8:_83321DCF477E435C9B44B82DC11BD731"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -270,12 +236,32 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_97EB2A68DCAE4E56878813D994F0048B"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8A52F449276242908B38187D47126006"
             {
-            "SourcePath" = "8:..\\WinFormsApp1\\bin\\Debug\\net8.0-windows\\File\\computerservice.db"
-            "TargetName" = "8:computerservice.db"
+            "SourcePath" = "8:..\\WinFormsApp1\\bin\\Debug\\net8.0-windows\\Output\\reportGetting.xlsx"
+            "TargetName" = "8:reportGetting.xlsx"
             "Tag" = "8:"
-            "Folder" = "8:_83321DCF477E435C9B44B82DC11BD731"
+            "Folder" = "8:_35BF88968A834F2E914CCD4E52C5B415"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AF92D1393ED74ED280DA723475336359"
+            {
+            "SourcePath" = "8:..\\WinFormsApp1\\bin\\Debug\\net8.0-windows\\Templates\\reportGetting.xlsx"
+            "TargetName" = "8:reportGetting.xlsx"
+            "Tag" = "8:"
+            "Folder" = "8:_8B18C21CD8B045648AB5969E7DFB2E91"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -310,10 +296,30 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D53D14360A9E4616BB50C25B3E8955DF"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B5A9AC941CD44F54949F56BBB45C5E38"
             {
-            "SourcePath" = "8:..\\WinFormsApp1\\bin\\Debug\\net8.0-windows\\Templates\\reportGetting.xlsx"
-            "TargetName" = "8:reportGetting.xlsx"
+            "SourcePath" = "8:..\\WinFormsApp1\\bin\\Debug\\net8.0-windows\\computerservice.db"
+            "TargetName" = "8:computerservice.db"
+            "Tag" = "8:"
+            "Folder" = "8:_AE785FD62368477792F1FD66C57016F6"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D39F0FAE0FF74135BC74301AA515E067"
+            {
+            "SourcePath" = "8:..\\WinFormsApp1\\bin\\Debug\\net8.0-windows\\Templates\\reportIssuing.xlsx"
+            "TargetName" = "8:reportIssuing.xlsx"
             "Tag" = "8:"
             "Folder" = "8:_8B18C21CD8B045648AB5969E7DFB2E91"
             "Condition" = "8:"
@@ -330,12 +336,32 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F69BD45AD22A4EF3B3EA0568C927D1B3"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DA868208A1294C04A75CB15B4EA45315"
             {
-            "SourcePath" = "8:..\\WinFormsApp1\\bin\\Debug\\net8.0-windows\\Output\\reportGetting.xlsx"
-            "TargetName" = "8:reportGetting.xlsx"
+            "SourcePath" = "8:..\\WinFormsApp1\\bin\\Debug\\net8.0-windows\\computerservice.db"
+            "TargetName" = "8:computerservice.db"
             "Tag" = "8:"
-            "Folder" = "8:_35BF88968A834F2E914CCD4E52C5B415"
+            "Folder" = "8:_0121B5585BEA4743B81D88AA327071A6"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E8954598C2774FA79CAEC950527AC90E"
+            {
+            "SourcePath" = "8:..\\WinFormsApp1\\Properties\\Settings.settings"
+            "TargetName" = "8:Settings.settings"
+            "Tag" = "8:"
+            "Folder" = "8:_AE785FD62368477792F1FD66C57016F6"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -462,7 +488,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:DesktopApDB"
         "ProductCode" = "8:{8944E710-468D-4BF9-9B12-4076516ED5C8}"
-        "PackageCode" = "8:{CD9E52BA-1E1B-41D8-93A1-CC7211916682}"
+        "PackageCode" = "8:{22902C69-B4B8-4313-8340-C390F2BAA398}"
         "UpgradeCode" = "8:{49468435-E9C2-49F2-AF29-75AF86E70DA2}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -582,7 +608,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_6BB3B725E9BD4D179ABF657054D64B72"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_55EBC0BFF60E456088653EF26ADA84E8"
             {
             "Name" = "8:DesktopAppDB"
             "Arguments" = "8:"
@@ -590,7 +616,7 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_8480C0452191456481AD1155D674AB02"
+            "Target" = "8:_44EC032B886E4261B1AA1EF3BF1FBA6B"
             "Folder" = "8:_1240FE4C9DB543CC920F8F3E453BADF5"
             "WorkingFolder" = "8:_EEB5AD79780F4E3B916D497E7A161DDF"
             "Icon" = "8:_806B82EB958042A781FA3625742AB686"
@@ -995,7 +1021,7 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_8480C0452191456481AD1155D674AB02"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_44EC032B886E4261B1AA1EF3BF1FBA6B"
             {
             "SourcePath" = "8:..\\WinFormsApp1\\obj\\Release\\net8.0-windows\\apphost.exe"
             "TargetName" = "8:"

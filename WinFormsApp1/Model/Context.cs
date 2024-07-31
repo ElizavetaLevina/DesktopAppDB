@@ -17,6 +17,7 @@ namespace WinFormsApp1.Model
         public DbSet<Diagnosis> Diagnosis => Set<Diagnosis>();
         public DbSet<Equipment> Equipment => Set<Equipment>();
         public DbSet<RateMaster> RateMaster => Set<RateMaster>();
+        public DbSet<NoteSalaryMaster> NoteSalaryMasters => Set<NoteSalaryMaster>();
         public Context() => Database.EnsureCreatedAsync();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -119,6 +120,11 @@ namespace WinFormsApp1.Model
             modelBuilder.Entity<RateMaster>()
                 .HasOne(b => b.Master)
                 .WithMany(a => a.RateMasters)
+                .HasForeignKey(b => b.MasterId);
+
+            modelBuilder.Entity<NoteSalaryMaster>()
+                .HasOne(b => b.Master)
+                .WithMany(a => a.NoteMasters)
                 .HasForeignKey(b => b.MasterId);
         }
 

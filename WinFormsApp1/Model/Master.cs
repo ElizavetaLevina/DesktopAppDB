@@ -15,5 +15,6 @@ namespace WinFormsApp1
         public virtual List<Order>? MainOrder { get; set; }
         public virtual List<Order>? AdditionalOrder { get; set; }
         public virtual List<RateMaster>? RateMasters { get; set; }
+        public virtual List<NoteSalaryMaster>? NoteMasters { get; set; }
     }
 }

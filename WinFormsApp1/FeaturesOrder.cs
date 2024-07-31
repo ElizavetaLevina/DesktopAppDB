@@ -90,13 +90,24 @@ namespace WinFormsApp1
 
             switch (statusOrder)
             {
+                case StatusOrderEnum.InRepair:
+                    textBoxStored.Text = (DateTime.Now - orderDTO.DateCreation).Value.Days.ToString();
+                    break;
                 case StatusOrderEnum.Completed:
+                    labelStatus.Text = "Отремонтирован:";
+                    textBoxStored.Text = (DateTime.Now - orderDTO.DateCompleted).Value.Days.ToString();
                     OrderComplete();
                     break;
                 case StatusOrderEnum.GuaranteeIssue:
+                    textBoxStored.Visible = false;
+                    labelStatus.Visible = false;
+                    labelDay.Visible = false;
                     OrderIssue();
                     break;
                 case StatusOrderEnum.Archive:
+                    textBoxStored.Visible = false;
+                    labelStatus.Visible = false;
+                    labelDay.Visible = false;
                     OrderIssue();
                     break;
             }

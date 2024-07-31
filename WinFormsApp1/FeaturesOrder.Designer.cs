@@ -32,6 +32,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FeaturesOrder));
             tabControl1 = new TabControl();
             tabPageOrder = new TabPage();
+            textBoxStored = new TextBox();
+            labelDay = new Label();
+            labelStatus = new Label();
             comboBoxAdditionalMaster = new ComboBox();
             label30 = new Label();
             linkLabelLogIn = new LinkLabel();
@@ -133,11 +136,14 @@
             tabControl1.Location = new Point(12, 12);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(789, 685);
+            tabControl1.Size = new Size(827, 685);
             tabControl1.TabIndex = 0;
             // 
             // tabPageOrder
             // 
+            tabPageOrder.Controls.Add(textBoxStored);
+            tabPageOrder.Controls.Add(labelDay);
+            tabPageOrder.Controls.Add(labelStatus);
             tabPageOrder.Controls.Add(comboBoxAdditionalMaster);
             tabPageOrder.Controls.Add(label30);
             tabPageOrder.Controls.Add(linkLabelLogIn);
@@ -175,10 +181,35 @@
             tabPageOrder.Location = new Point(4, 34);
             tabPageOrder.Name = "tabPageOrder";
             tabPageOrder.Padding = new Padding(3);
-            tabPageOrder.Size = new Size(781, 647);
+            tabPageOrder.Size = new Size(819, 647);
             tabPageOrder.TabIndex = 0;
             tabPageOrder.Text = "Информация о заказе";
             tabPageOrder.UseVisualStyleBackColor = true;
+            // 
+            // textBoxStored
+            // 
+            textBoxStored.Location = new Point(656, 211);
+            textBoxStored.Name = "textBoxStored";
+            textBoxStored.Size = new Size(50, 31);
+            textBoxStored.TabIndex = 38;
+            // 
+            // labelDay
+            // 
+            labelDay.AutoSize = true;
+            labelDay.Location = new Point(706, 214);
+            labelDay.Name = "labelDay";
+            labelDay.Size = new Size(87, 25);
+            labelDay.TabIndex = 37;
+            labelDay.Text = "дн. назад";
+            // 
+            // labelStatus
+            // 
+            labelStatus.Location = new Point(486, 211);
+            labelStatus.Name = "labelStatus";
+            labelStatus.Size = new Size(164, 31);
+            labelStatus.TabIndex = 36;
+            labelStatus.Text = "Принят в ремонт:";
+            labelStatus.TextAlign = ContentAlignment.MiddleRight;
             // 
             // comboBoxAdditionalMaster
             // 
@@ -203,7 +234,7 @@
             // 
             // linkLabelLogIn
             // 
-            linkLabelLogIn.Location = new Point(639, 10);
+            linkLabelLogIn.Location = new Point(678, 10);
             linkLabelLogIn.Name = "linkLabelLogIn";
             linkLabelLogIn.Size = new Size(132, 33);
             linkLabelLogIn.TabIndex = 33;
@@ -436,7 +467,7 @@
             dateCreation.Format = DateTimePickerFormat.Short;
             dateCreation.Location = new Point(270, 209);
             dateCreation.Name = "dateCreation";
-            dateCreation.Size = new Size(266, 31);
+            dateCreation.Size = new Size(210, 31);
             dateCreation.TabIndex = 7;
             // 
             // linkLabelMaster
@@ -1025,7 +1056,7 @@
             // 
             // buttonSave
             // 
-            buttonSave.Location = new Point(390, 705);
+            buttonSave.Location = new Point(428, 706);
             buttonSave.Name = "buttonSave";
             buttonSave.Size = new Size(194, 43);
             buttonSave.TabIndex = 1;
@@ -1035,7 +1066,7 @@
             // 
             // buttonExit
             // 
-            buttonExit.Location = new Point(603, 705);
+            buttonExit.Location = new Point(641, 706);
             buttonExit.Name = "buttonExit";
             buttonExit.Size = new Size(194, 43);
             buttonExit.TabIndex = 27;
@@ -1051,7 +1082,7 @@
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(811, 760);
+            ClientSize = new Size(849, 760);
             Controls.Add(buttonExit);
             Controls.Add(buttonSave);
             Controls.Add(tabControl1);
@@ -1166,5 +1197,8 @@
         private LinkLabel linkLabelLogIn;
         private ComboBox comboBoxAdditionalMaster;
         private Label label30;
+        private TextBox textBoxStored;
+        private Label labelDay;
+        private Label labelStatus;
     }
 }

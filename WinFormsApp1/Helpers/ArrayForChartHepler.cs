@@ -32,14 +32,14 @@ namespace WinFormsApp1.Helpers
                         }
                         else pointsArray[(int)MonthEnum.Январь - 1] += sumPrice;
                         break;
-                    case MonthEnum.Ферваль:
+                    case MonthEnum.Февраль:
                         if (master)
                         {
-                            pointsArray[(int)MonthEnum.Ферваль - 1] += order.MainMasterId == masterId ?
+                            pointsArray[(int)MonthEnum.Февраль - 1] += order.MainMasterId == masterId ?
                             (int)(sumPrice * (order.PercentWorkMainMaster / 100.0)) :
                             (int)(sumPrice * (order.PercentWorkAdditionalMaster / 100.0));
                         }
-                        else pointsArray[(int)MonthEnum.Ферваль - 1] += sumPrice;
+                        else pointsArray[(int)MonthEnum.Февраль - 1] += sumPrice;
                         break;
                     case MonthEnum.Март:
                         if (master)
@@ -153,8 +153,8 @@ namespace WinFormsApp1.Helpers
                     case MonthEnum.Январь:
                         pointsArray[(int)MonthEnum.Январь - 1] += 1;
                         break;
-                    case MonthEnum.Ферваль:
-                        pointsArray[(int)MonthEnum.Ферваль - 1] += 1;
+                    case MonthEnum.Февраль:
+                        pointsArray[(int)MonthEnum.Февраль - 1] += 1;
                         break;
                     case MonthEnum.Март:
                         pointsArray[(int)MonthEnum.Март - 1] += 1;
@@ -209,8 +209,8 @@ namespace WinFormsApp1.Helpers
                     case MonthEnum.Январь:
                         pointsArray[(int)MonthEnum.Январь - 1] += order.Details.Sum(m => m.PriceSale);
                         break;
-                    case MonthEnum.Ферваль:
-                        pointsArray[(int)MonthEnum.Ферваль - 1] += order.Details.Sum(m => m.PriceSale);
+                    case MonthEnum.Февраль:
+                        pointsArray[(int)MonthEnum.Февраль - 1] += order.Details.Sum(m => m.PriceSale);
                         break;
                     case MonthEnum.Март:
                         pointsArray[(int)MonthEnum.Март - 1] += order.Details.Sum(m => m.PriceSale);

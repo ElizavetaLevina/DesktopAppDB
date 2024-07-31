@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
-using WinFormsApp1.DTO;
+﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
 
 namespace WinFormsApp1.Repository
@@ -41,6 +40,13 @@ namespace WinFormsApp1.Repository
             }
         }
 
+        public MasterEditDTO GetMasterByName(string name)
+        {
+            Context context = new();
+            var master = context.Masters.FirstOrDefault(i => i.NameMaster == name);
+            return new MasterEditDTO(master);
+        }
+
         public async Task SaveMasterAsync(MasterEditDTO masterDTO, CancellationToken token = default)
         {
             using Context db = new();
@@ -67,14 +73,14 @@ namespace WinFormsApp1.Repository
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
 
-        public void RemoveMaster(MasterEditDTO masterDTO)
+        public async Task RemoveMasterAsync(MasterEditDTO masterDTO, CancellationToken token = default)
         {
+            using Context db = new();
             try
             {
-                using Context db = new();
                 var master = db.Masters.FirstOrDefault(c => c.Id == masterDTO.Id);
                 db.Masters.Remove(master);
-                db.SaveChanges();
+                await db.SaveChangesAsync(token);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }

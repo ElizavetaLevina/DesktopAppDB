@@ -248,6 +248,7 @@
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.Size = new Size(836, 481);
             dataGridView1.TabIndex = 1;
+            dataGridView1.CellValidating += DataGridView1_CellValidating;
             // 
             // colMaster
             // 

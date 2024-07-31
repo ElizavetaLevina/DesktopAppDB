@@ -117,7 +117,7 @@ namespace WinFormsApp1
         {
             list = warehouseRepository.GetWarehousesForTable(availability: true, datePurchase: true, name: textBoxDevice.Text);
             dataGridView1.DataSource = Funcs.ToDataTable(list);
-            /*if (dataGridView1.RowCount > 0)
+            if (dataGridView1.RowCount > 0)
             {
                 buttonDeleteDetail.Enabled = true;
                 buttonAdd.Enabled = true;
@@ -128,7 +128,7 @@ namespace WinFormsApp1
                 buttonDeleteDetail.Enabled = false;
                 buttonAdd.Enabled = false;
                 buttonChangeDetail.Enabled = false;
-            }*/
+            }
         }
 
         private void ButtonChangeDetail_Click(object sender, EventArgs e)

@@ -46,7 +46,11 @@ namespace WinFormsApp1
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
                 int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(MasterDTO.Id)].Value);
                 var masterDTO = new MasterEditDTO() { Id = id };
-                masterRepository.RemoveMaster(masterDTO);
+                var task = Task.Run(async () =>
+                {
+                    await masterRepository.RemoveMasterAsync(masterDTO);
+                });
+                task.Wait();
                 UpdateTable();
             }
         }

@@ -961,12 +961,19 @@ namespace WinFormsApp1
                 }
             }
         }
+
         private void DataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
                 dataGridView1.CurrentCell = dataGridView1[e.ColumnIndex, e.RowIndex];
             }
+        }
+
+        private void DataGridView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (status != StatusOrderEnum.Trash)
+                FeaturesOrderItem();
         }
 
         private void Item1_Click(object sender, EventArgs e)
@@ -1595,11 +1602,6 @@ namespace WinFormsApp1
             ChangeSizeAndLocation();
         }
 
-        private void DataGridView1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            FeaturesOrderItem();
-        }
-
         private void TextBoxIdOrder_TextChanged(object sender, EventArgs e)
         {
             Search();
@@ -1875,8 +1877,6 @@ namespace WinFormsApp1
                     labelClientId.Text = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
                     labelClientId.Location = new Point(rectangle.X + dataGridView1.Location.X - labelClientId.Width,
                         rectangle.Y + dataGridView1.Location.Y);
-                    /*labelClientId.Location = new Point(rectangle.X + dataGridView1.Location.X,
-                        rectangle.Y + dataGridView1.Location.Y + rectangle.Height);*/
                 }
                 else
                     labelClientId.Visible = false;

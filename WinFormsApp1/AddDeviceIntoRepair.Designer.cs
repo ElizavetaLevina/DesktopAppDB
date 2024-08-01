@@ -146,8 +146,8 @@
             comboBoxAdditionalMaster.Location = new Point(519, 256);
             comboBoxAdditionalMaster.Name = "comboBoxAdditionalMaster";
             comboBoxAdditionalMaster.Size = new Size(274, 33);
-            comboBoxAdditionalMaster.TabIndex = 13;
-            comboBoxAdditionalMaster.SelectedIndexChanged += ComboBoxMaster2_SelectedIndexChanged;
+            comboBoxAdditionalMaster.TabIndex = 12;
+            comboBoxAdditionalMaster.SelectedIndexChanged += ComboBoxAdditionalMaster_SelectedIndexChanged;
             // 
             // linkLabelListMaster
             // 
@@ -156,7 +156,7 @@
             linkLabelListMaster.Location = new Point(519, 298);
             linkLabelListMaster.Name = "linkLabelListMaster";
             linkLabelListMaster.Size = new Size(277, 25);
-            linkLabelListMaster.TabIndex = 12;
+            linkLabelListMaster.TabIndex = 13;
             linkLabelListMaster.TabStop = true;
             linkLabelListMaster.Text = "Редактировать список мастеров";
             linkLabelListMaster.LinkClicked += LinkLabelListMaster_LinkClicked;
@@ -169,7 +169,7 @@
             comboBoxMainMaster.Name = "comboBoxMainMaster";
             comboBoxMainMaster.Size = new Size(274, 33);
             comboBoxMainMaster.TabIndex = 11;
-            comboBoxMainMaster.SelectedIndexChanged += ComboBoxMaster1_SelectedIndexChanged;
+            comboBoxMainMaster.SelectedIndexChanged += ComboBoxMainMaster_SelectedIndexChanged;
             // 
             // dateTimePicker1
             // 
@@ -177,14 +177,14 @@
             dateTimePicker1.Location = new Point(519, 130);
             dateTimePicker1.Name = "dateTimePicker1";
             dateTimePicker1.Size = new Size(274, 31);
-            dateTimePicker1.TabIndex = 10;
+            dateTimePicker1.TabIndex = 9;
             // 
             // buttonNumber
             // 
             buttonNumber.Location = new Point(672, 86);
             buttonNumber.Name = "buttonNumber";
             buttonNumber.Size = new Size(20, 25);
-            buttonNumber.TabIndex = 9;
+            buttonNumber.TabIndex = 8;
             buttonNumber.UseVisualStyleBackColor = true;
             buttonNumber.Click += ButtonNumber_Click;
             // 
@@ -193,7 +193,7 @@
             textBoxNumberOrder.Location = new Point(519, 83);
             textBoxNumberOrder.Name = "textBoxNumberOrder";
             textBoxNumberOrder.Size = new Size(136, 31);
-            textBoxNumberOrder.TabIndex = 8;
+            textBoxNumberOrder.TabIndex = 7;
             textBoxNumberOrder.KeyPress += TextBoxNumberOrder_KeyPress;
             // 
             // linkLabelDateCreation
@@ -203,7 +203,7 @@
             linkLabelDateCreation.Location = new Point(519, 164);
             linkLabelDateCreation.Name = "linkLabelDateCreation";
             linkLabelDateCreation.Size = new Size(161, 25);
-            linkLabelDateCreation.TabIndex = 7;
+            linkLabelDateCreation.TabIndex = 10;
             linkLabelDateCreation.TabStop = true;
             linkLabelDateCreation.Text = "Сегодняшняя дата";
             linkLabelDateCreation.LinkClicked += LinkLabelDateCreation_LinkClicked;
@@ -326,7 +326,7 @@
             linkLabelDevice.Location = new Point(455, 105);
             linkLabelDevice.Name = "linkLabelDevice";
             linkLabelDevice.Size = new Size(338, 25);
-            linkLabelDevice.TabIndex = 6;
+            linkLabelDevice.TabIndex = 5;
             linkLabelDevice.TabStop = true;
             linkLabelDevice.Text = "Редактировать список типов аппаратов";
             linkLabelDevice.LinkClicked += LinkLabelDevice_LinkClicked;
@@ -338,7 +338,7 @@
             comboBoxBrand.Location = new Point(455, 148);
             comboBoxBrand.Name = "comboBoxBrand";
             comboBoxBrand.Size = new Size(274, 33);
-            comboBoxBrand.TabIndex = 5;
+            comboBoxBrand.TabIndex = 6;
             // 
             // comboBoxDevice
             // 
@@ -391,7 +391,7 @@
             buttonFurther.Location = new Point(457, 511);
             buttonFurther.Name = "buttonFurther";
             buttonFurther.Size = new Size(166, 43);
-            buttonFurther.TabIndex = 2;
+            buttonFurther.TabIndex = 11;
             buttonFurther.Text = "Далее";
             buttonFurther.UseVisualStyleBackColor = true;
             buttonFurther.Click += ButtonFurther_Click;
@@ -401,7 +401,7 @@
             buttonBack.Location = new Point(282, 511);
             buttonBack.Name = "buttonBack";
             buttonBack.Size = new Size(166, 43);
-            buttonBack.TabIndex = 3;
+            buttonBack.TabIndex = 13;
             buttonBack.Text = "Назад";
             buttonBack.UseVisualStyleBackColor = true;
             buttonBack.Click += ButtonBack_Click;
@@ -468,7 +468,8 @@
             listBoxEquipmentDiagnosis.Size = new Size(415, 129);
             listBoxEquipmentDiagnosis.TabIndex = 12;
             listBoxEquipmentDiagnosis.Visible = false;
-            listBoxEquipmentDiagnosis.SelectedIndexChanged += ListBox_SelectedIndexChanged;
+            listBoxEquipmentDiagnosis.Click += ListBoxEquipmentDiagnosis_Click;
+            listBoxEquipmentDiagnosis.KeyDown += ListBoxEquipmentDiagnosis_KeyDown;
             // 
             // label9
             // 
@@ -508,6 +509,7 @@
             checkBox1.Text = "Цена согласована";
             checkBox1.UseVisualStyleBackColor = true;
             checkBox1.CheckedChanged += CheckBox1_CheckedChanged;
+            checkBox1.KeyDown += CheckBox1_KeyDown;
             // 
             // textBoxNote
             // 
@@ -526,6 +528,7 @@
             textBoxDiagnosis.Click += TextBoxDiagnosis_Click;
             textBoxDiagnosis.TextChanged += TextBoxDiagnosis_TextChanged;
             textBoxDiagnosis.KeyDown += TextBoxDiagnosis_KeyDown;
+            textBoxDiagnosis.PreviewKeyDown += TextBoxDiagnosis_PreviewKeyDown;
             // 
             // textBoxEquipment
             // 
@@ -536,6 +539,7 @@
             textBoxEquipment.Click += TextBoxEquipment_Click;
             textBoxEquipment.TextChanged += TextBoxEquipment_TextChanged;
             textBoxEquipment.KeyDown += TextBoxEquipment_KeyDown;
+            textBoxEquipment.PreviewKeyDown += TextBoxEquipment_PreviewKeyDown;
             // 
             // label21
             // 
@@ -623,7 +627,8 @@
             listBoxClient.Size = new Size(275, 154);
             listBoxClient.TabIndex = 12;
             listBoxClient.Visible = false;
-            listBoxClient.SelectedIndexChanged += ListBoxClient_SelectedIndexChanged;
+            listBoxClient.Click += ListBoxClient_Click;
+            listBoxClient.KeyDown += ListBoxClient_KeyDown;
             // 
             // textBoxSecondPhone
             // 
@@ -649,7 +654,9 @@
             textBoxNameClient.Size = new Size(275, 31);
             textBoxNameClient.TabIndex = 8;
             textBoxNameClient.TextChanged += TextBoxNameClient_TextChanged;
+            textBoxNameClient.KeyDown += TextBoxNameClient_KeyDown;
             textBoxNameClient.KeyPress += TextBoxNameClient_KeyPress;
+            textBoxNameClient.PreviewKeyDown += TextBoxNameClient_PreviewKeyDown;
             // 
             // labelTypeClient
             // 
@@ -749,7 +756,7 @@
             buttonExit.Location = new Point(693, 511);
             buttonExit.Name = "buttonExit";
             buttonExit.Size = new Size(166, 43);
-            buttonExit.TabIndex = 7;
+            buttonExit.TabIndex = 12;
             buttonExit.Text = "Отмена";
             buttonExit.UseVisualStyleBackColor = true;
             buttonExit.Click += ButtonExit_Click;
@@ -758,7 +765,7 @@
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(873, 559);
+            ClientSize = new Size(1150, 559);
             Controls.Add(buttonExit);
             Controls.Add(panel4);
             Controls.Add(panel3);

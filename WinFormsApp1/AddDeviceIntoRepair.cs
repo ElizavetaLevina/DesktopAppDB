@@ -10,7 +10,8 @@ namespace WinFormsApp1
     public partial class AddDeviceIntoRepair : Form
     {
         int numberPage = 1;
-        bool loading = true;
+        bool loadingForm = true;
+        readonly string withoutMaster = "-";
         readonly List<string> oldClients = [];
         readonly List<string> oldClientsType = [];
         readonly List<string> diagnosisList = [];
@@ -37,6 +38,7 @@ namespace WinFormsApp1
             UpdateComboBox(ElementOfRepairEnum.AdditionalMasterElement);
             UpdateComboBox(ElementOfRepairEnum.TypeDeviceElement);
             UpdateComboBox(ElementOfRepairEnum.BrandDeviceElement);
+
             textBoxNumberOrder.Text = IdKeyOrder().ToString();
 
             var clientsDTO = clientRepository.GetClients();
@@ -67,20 +69,22 @@ namespace WinFormsApp1
                 case 2:
                     panel2.Visible = false;
                     panel1.Visible = true;
+                    dateTimePicker1.Focus();
                     numberPage = 1;
                     break;
                 case 3:
                     panel3.Visible = false;
                     panel2.Visible = true;
+                    comboBoxDevice.Focus();
                     numberPage = 2;
                     break;
                 case 4:
                     panel4.Visible = false;
                     panel3.Visible = true;
+                    textBoxNameClient.Focus();
                     numberPage = 3;
                     buttonFurther.Text = "Далее";
                     break;
-
             }
             Steps();
         }
@@ -92,126 +96,135 @@ namespace WinFormsApp1
                 case 1:
                     panel1.Visible = false;
                     panel2.Visible = true;
+                    comboBoxDevice.Focus();
                     numberPage = 2;
                     break;
                 case 2:
                     panel2.Visible = false;
                     panel3.Visible = true;
+                    textBoxNameClient.Focus();
                     numberPage = 3;
                     break;
                 case 3:
                     panel3.Visible = false;
                     panel4.Visible = true;
+                    textBoxEquipment.Focus();
                     numberPage = 4;
                     buttonFurther.Text = "Готово";
                     break;
                 case 4:
-                    if (!CheckComboBox())
-                        return;
-                    if (!CheckIdClient())
-                        return;
-                    var mainMasterId = ((MasterDTO)comboBoxMainMaster.SelectedItem).Id;
-                    var additionalMasterId = ((MasterDTO)comboBoxAdditionalMaster.SelectedItem).Id;
-                    DateTime? dateStartWork = null;
-                    int? maxPrice = null;
-                    Task? task;
-                    if (comboBoxMainMaster.Text != "-")
-                        dateStartWork = dateTimePicker1.Value;
-
-                    if (checkBox1.Checked)
-                        maxPrice = Convert.ToInt32(textBoxMaxPrice.Text);
-
-                    var clientDTO = clientRepository.GetClientByIdClient(textBoxNameClient.Text);
-                    int idClient = clientDTO.Id;
-                    if (idClient == 0)
-                    {
-                        clientDTO.IdClient = textBoxNameClient.Text;
-                        clientDTO.NameAndAddressClient = textBoxNameAddress.Text;
-                        clientDTO.NumberSecondPhone = textBoxSecondPhone.Text;
-
-                        task = Task.Run(async () =>
-                        {
-                            idClient = await clientRepository.SaveClientAsync(clientDTO);
-                        });
-                        task.Wait();
-                    }
-
-                    var equipmentDTO = equipmentRepository.GetEquipmentByName(textBoxEquipment.Text);
-                    int? idEquipment = equipmentDTO.Id;
-                    if (idEquipment == 0)
-                    {
-                        if (!string.IsNullOrEmpty(textBoxEquipment.Text))
-                        {
-                            task = Task.Run(async () =>
-                            {
-                                idEquipment = await equipmentRepository.SaveEquipmentAsync(equipmentDTO);
-                            });
-                            task.Wait();
-                        }
-                        else idEquipment = null;
-                    }
-
-                    var diagnosisDTO = diagnosisRepository.GetDiagnosisByName(textBoxDiagnosis.Text);
-                    int? idDiagnosis = diagnosisDTO.Id;
-                    if (idDiagnosis == 0)
-                    {
-                        if (!string.IsNullOrEmpty(textBoxDiagnosis.Text))
-                        {
-                            task = Task.Run(async () =>
-                            {
-                                idDiagnosis = await diagnosisRepository.SaveDiagnosisAsync(diagnosisDTO);
-                            });
-                            task.Wait();
-                        }
-                        else idDiagnosis = null;
-                    }
-
-                    var orderDTO = new OrderEditDTO()
-                    {
-                        Id = 0,
-                        NumberOrder = Convert.ToInt32(textBoxNumberOrder.Text),
-                        ClientId = idClient,
-                        MainMasterId = mainMasterId,
-                        AdditionalMasterId = additionalMasterId,
-                        DateCreation = dateTimePicker1.Value,
-                        DateStartWork = dateStartWork,
-                        TypeTechnicId = ((TypeTechnicDTO)comboBoxDevice.SelectedItem).Id,
-                        BrandTechnicId = ((TypeBrandComboBoxDTO)comboBoxBrand.SelectedItem).IdBrand,
-                        ModelTechnic = textBoxModel.Text,
-                        FactoryNumber = textBoxFactoryNumber.Text,
-                        EquipmentId = idEquipment,
-                        DiagnosisId = idDiagnosis,
-                        Note = textBoxNote.Text,
-                        StatusOrder = StatusOrderEnum.InRepair,
-                        //InProgress = true,
-                        ColorRow = FindColor()
-                    };
-
-                    int idOrder = 0;
-                    task = Task.Run(async () =>
-                    {
-                        idOrder = await orderRepository.SaveOrderAsync(orderDTO);
-                    });
-                    task.Wait();
-
-                    Warning warning = new()
-                    {
-                        StartPosition = FormStartPosition.CenterParent,
-                        LabelText = "Распечатать квитанцию?",
-                        ButtonNoText = "Нет",
-                        ButtonVisible = true
-                    };
-
-                    if (warning.ShowDialog() == DialogResult.OK)
-                    {
-                        GettingReport gettingReport = new();
-                        gettingReport.Report(idOrder);
-                    }
-                    DialogResult = DialogResult.OK;
-                    Close();
+                    SaveOrder();
                     break;
             }
             Steps();
+        }
+
+        private void SaveOrder()
+        {
+            if (!CheckComboBox())
+                return;
+
+            if (!CheckIdClient())
+                return;
+
+            var mainMasterId = ((MasterDTO)comboBoxMainMaster.SelectedItem).Id;
+            var additionalMasterId = ((MasterDTO)comboBoxAdditionalMaster.SelectedItem).Id;
+            DateTime? dateStartWork = null;
+            int? maxPrice = null;
+            Task? task;
+            if (comboBoxMainMaster.Text != withoutMaster)
+                dateStartWork = dateTimePicker1.Value;
+
+            if (checkBox1.Checked)
+                maxPrice = Convert.ToInt32(textBoxMaxPrice.Text);
+
+            var clientDTO = clientRepository.GetClientByIdClient(textBoxNameClient.Text);
+            int idClient = clientDTO.Id;
+            if (idClient == 0)
+            {
+                clientDTO.IdClient = textBoxNameClient.Text;
+                clientDTO.NameAndAddressClient = textBoxNameAddress.Text;
+                clientDTO.NumberSecondPhone = textBoxSecondPhone.Text;
+
+                task = Task.Run(async () =>
+                {
+                    idClient = await clientRepository.SaveClientAsync(clientDTO);
+                });
+                task.Wait();
+            }
+
+            var equipmentDTO = equipmentRepository.GetEquipmentByName(textBoxEquipment.Text);
+            int? idEquipment = equipmentDTO.Id;
+            if (idEquipment == 0)
+            {
+                if (!string.IsNullOrEmpty(textBoxEquipment.Text))
+                {
+                    task = Task.Run(async () =>
+                    {
+                        idEquipment = await equipmentRepository.SaveEquipmentAsync(equipmentDTO);
+                    });
+                    task.Wait();
+                }
+                else idEquipment = null;
+            }
+
+            var diagnosisDTO = diagnosisRepository.GetDiagnosisByName(textBoxDiagnosis.Text);
+            int? idDiagnosis = diagnosisDTO.Id;
+            if (idDiagnosis == 0)
+            {
+                if (!string.IsNullOrEmpty(textBoxDiagnosis.Text))
+                {
+                    task = Task.Run(async () =>
+                    {
+                        idDiagnosis = await diagnosisRepository.SaveDiagnosisAsync(diagnosisDTO);
+                    });
+                    task.Wait();
+                }
+                else idDiagnosis = null;
+            }
+
+            var orderDTO = new OrderEditDTO()
+            {
+                Id = 0,
+                NumberOrder = Convert.ToInt32(textBoxNumberOrder.Text),
+                ClientId = idClient,
+                MainMasterId = mainMasterId,
+                AdditionalMasterId = additionalMasterId,
+                DateCreation = dateTimePicker1.Value,
+                DateStartWork = dateStartWork,
+                TypeTechnicId = ((TypeTechnicDTO)comboBoxDevice.SelectedItem).Id,
+                BrandTechnicId = ((TypeBrandComboBoxDTO)comboBoxBrand.SelectedItem).IdBrand,
+                ModelTechnic = textBoxModel.Text,
+                FactoryNumber = textBoxFactoryNumber.Text,
+                EquipmentId = idEquipment,
+                DiagnosisId = idDiagnosis,
+                Note = textBoxNote.Text,
+                StatusOrder = StatusOrderEnum.InRepair,
+                ColorRow = FindColor()
+            };
+
+            int idOrder = 0;
+            task = Task.Run(async () =>
+            {
+                idOrder = await orderRepository.SaveOrderAsync(orderDTO);
+            });
+            task.Wait();
+
+            Warning warning = new()
+            {
+                StartPosition = FormStartPosition.CenterParent,
+                LabelText = "Распечатать квитанцию?",
+                ButtonNoText = "Нет",
+                ButtonVisible = true
+            };
+
+            if (warning.ShowDialog() == DialogResult.OK)
+            {
+                GettingReport gettingReport = new();
+                gettingReport.Report(idOrder);
+            }
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private bool CheckComboBox()
@@ -234,7 +247,6 @@ namespace WinFormsApp1
             else
                 return true;
         }
-
 
         private bool CheckIdClient()
         {
@@ -298,26 +310,73 @@ namespace WinFormsApp1
             }
         }
 
-        private void LinkLabelDateCreation_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void SelectingListBox(ListBox listBox, TextBox textBoxCurrent, TextBox textBoxNext, bool label = false)
         {
-            dateTimePicker1.Value = DateTime.Now;
-        }
-
-        private void LinkLabelListMaster_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Masters addMaster = new()
+            if (listBox.SelectedIndex >= 0)
             {
-                StartPosition = FormStartPosition.CenterParent
-            };
-            addMaster.ShowDialog();
-            UpdateComboBox(ElementOfRepairEnum.MainMasterElement);
-            UpdateComboBox(ElementOfRepairEnum.AdditionalMasterElement);
+                textBoxCurrent.Text = listBox.Items[listBox.SelectedIndex].ToString();
+
+                listBox.Items.Clear();
+                listBox.Visible = false;
+
+
+                if (!label)
+                    labelTypeClient.Text = "Старый клиент";
+
+                textBoxNext.Focus();
+            }
+
+            /*if (listBoxClient.SelectedIndex >= 0)
+            {
+                textBoxNameClient.Text = listBoxClient.Items[listBoxClient.SelectedIndex].ToString();
+
+                listBoxClient.Items.Clear();
+                listBoxClient.Visible = false;
+
+                labelTypeClient.Text = "Старый клиент";
+
+                textBoxNameAddress.Focus();
+            }*/
+        }
+        private void UpdateListBox(ListBox listBox, TextBox textBox, bool equipment = false, bool diagnosis = false, bool click = false)
+        {
+            if (click)
+            {
+                if (listBox.Visible)
+                {
+                    listBox.Visible = false;
+                    return;
+                }
+            }
+            listBox.Items.Clear();
+            listBox.Location = new Point(listBox.Location.X, textBox.Location.Y + textBox.Height);
+            nameTextBox = NameTableToEditEnum.Equipment;
+
+            if (equipment)
+            {
+                equipmentsDTO = equipmentRepository.GetEquipmentsByName(textBox.Text);
+                foreach (var item in equipmentsDTO)
+                {
+                    listBox.Items.Add(item.Name);
+                }
+            }
+            else if (diagnosis)
+            {
+                diagnosesDTO = diagnosisRepository.GetDiagnosesByName(textBox.Text);
+                foreach (var item in diagnosesDTO)
+                {
+                    listBox.Items.Add(item.Name);
+                }
+            }
+
+            if (listBox.Items.Count > 0)
+                listBox.Visible = true;
         }
 
         private void UpdateComboBox(ElementOfRepairEnum elementOfRepair)
         {
             var mastersDTO = masterRepository.GetMastersForOutput();
-            mastersDTO.Insert(0, new MasterDTO() { Id = null, NameMaster = "-" });
+            mastersDTO.Insert(0, new MasterDTO() { Id = null, NameMaster = withoutMaster });
             switch (elementOfRepair)
             {
                 case ElementOfRepairEnum.MainMasterElement:
@@ -351,6 +410,77 @@ namespace WinFormsApp1
             }
         }
 
+        private void PressKeys(ListBox listBox, TextBox textBoxNext, Keys keyCode)
+        {
+            if (keyCode == Keys.Down)
+            {
+                listBox.Focus();
+                try
+                {
+                    if (listBox.SelectedIndex < listBox.Items.Count)
+                        listBox.SelectedIndex += 1;
+                }
+                catch { }
+            }
+            else if (keyCode == Keys.Up)
+            {
+                listBox.Focus();
+                try
+                {
+                    if (listBox.SelectedIndex > 1)
+                        listBox.SelectedIndex -= 1;
+                }
+                catch { }
+            }
+            else if (keyCode == Keys.Enter)
+            {
+                if (listBox.Visible)
+                    listBox.Visible = false;
+
+                textBoxNext.Focus();
+            }
+        }
+
+        private void FirstId_Click(object sender, EventArgs e)
+        {
+            textBoxNumberOrder.Text = "1";
+        }
+
+        private void LastId_Click(object sender, EventArgs e)
+        {
+            textBoxNumberOrder.Text = IdKeyOrder().ToString();
+        }
+
+        private void ComboBoxMainMaster_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxMainMaster.Text != withoutMaster)
+                comboBoxAdditionalMaster.Enabled = true;
+            else
+                comboBoxAdditionalMaster.Enabled = false;
+        }
+
+        private void ComboBoxAdditionalMaster_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxMainMaster.Text == comboBoxAdditionalMaster.Text)
+                comboBoxAdditionalMaster.SelectedIndex = 0;
+        }
+
+        private void LinkLabelDateCreation_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            dateTimePicker1.Value = DateTime.Now;
+        }
+
+        private void LinkLabelListMaster_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Masters addMaster = new()
+            {
+                StartPosition = FormStartPosition.CenterParent
+            };
+            addMaster.ShowDialog();
+            UpdateComboBox(ElementOfRepairEnum.MainMasterElement);
+            UpdateComboBox(ElementOfRepairEnum.AdditionalMasterElement);
+        }
+
         private void ButtonNumber_Click(object sender, EventArgs e)
         {
             contextMenuStrip1.Show(MousePosition);
@@ -361,31 +491,17 @@ namespace WinFormsApp1
             return orderRepository.GetLastNumberOrder();
         }
 
-        private void ListBoxClient_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int idClient = listBoxClient.SelectedIndex;
-            if (idClient >= 0)
-            {
-                textBoxNameClient.Text = listBoxClient.Items[idClient].ToString();
-
-                listBoxClient.Items.Clear();
-                listBoxClient.Visible = false;
-
-                labelTypeClient.Text = "Старый клиент";
-
-                textBoxNameClient.Focus();
-                textBoxNameClient.SelectionStart = textBoxNameClient.TextLength;
-            }
-        }
-
         private void TextBoxNameClient_TextChanged(object sender, EventArgs e)
         {
+            if (loadingForm)
+                return;
+
             listBoxClient.Items.Clear();
             listBoxClient.Visible = false;
 
             foreach (var client in oldClients)
             {
-                if (client.StartsWith(textBoxNameClient.Text) && textBoxNameClient.Text.Length > 0 && !loading)
+                if (client.StartsWith(textBoxNameClient.Text) && textBoxNameClient.Text.Length > 0)
                 {
                     listBoxClient.Visible = true;
                     listBoxClient.Items.Add(client);
@@ -415,21 +531,41 @@ namespace WinFormsApp1
             e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
         }
 
+        private void TextBoxNameClient_KeyDown(object sender, KeyEventArgs e)
+        {
+            PressKeys(listBoxClient, textBoxNameAddress, e.KeyCode);
+        }
+
+        private void TextBoxNameClient_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Tab)
+            {
+                if (listBoxClient.Visible)
+                    listBoxClient.Visible = false;
+            }
+        }
+
+        private void ListBoxClient_Click(object sender, EventArgs e)
+        {
+            SelectingListBox(listBox: listBoxClient, textBoxCurrent: textBoxNameClient, textBoxNext: textBoxNameAddress, label: true);
+        }
+
+        private void ListBoxClient_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                SelectingListBox(listBox: listBoxClient, textBoxCurrent: textBoxNameClient, textBoxNext: textBoxNameAddress, label: true);
+            }
+            else if (e.KeyCode == Keys.Up)
+            {
+                if (listBoxClient.SelectedIndex == 0)
+                    textBoxNameClient.Focus();
+            }
+        }
+
         private void TextBoxSecondPhone_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
-        }
-
-        private void AddDeviceForRepair_Activated(object sender, EventArgs e)
-        {
-            buttonNumber.Focus();
-            loading = false;
-        }
-
-        private void ButtonExit_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.Cancel;
-            Close();
         }
 
         private void LinkLabelDevice_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -457,12 +593,6 @@ namespace WinFormsApp1
             e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
         }
 
-        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBox1.Checked) textBoxMaxPrice.Enabled = true;
-            else textBoxMaxPrice.Enabled = false;
-        }
-
         private void ComboBoxDevice_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateComboBox(ElementOfRepairEnum.BrandDeviceElement);
@@ -470,148 +600,113 @@ namespace WinFormsApp1
 
         private void TextBoxEquipment_TextChanged(object sender, EventArgs e)
         {
-            listBoxEquipmentDiagnosis.Items.Clear();
-            listBoxEquipmentDiagnosis.Visible = false;
-            listBoxEquipmentDiagnosis.Location = new Point(listBoxEquipmentDiagnosis.Location.X, textBoxEquipment.Location.Y + textBoxEquipment.Height);
-            nameTextBox = NameTableToEditEnum.Equipment;
+            if (loadingForm)
+                return;
 
-            equipmentsDTO = equipmentRepository.GetEquipmentsByName(textBoxEquipment.Text);
-            foreach (var equipment in equipmentsDTO)
-            {
-                if (!loading)
-                {
-                    listBoxEquipmentDiagnosis.Visible = true;
-                    listBoxEquipmentDiagnosis.Items.Add(equipment.Name);
-                }
-            }
+            UpdateListBox(listBoxEquipmentDiagnosis, textBoxEquipment, equipment: true);
         }
 
         private void TextBoxDiagnosis_TextChanged(object sender, EventArgs e)
         {
-            listBoxEquipmentDiagnosis.Items.Clear();
-            listBoxEquipmentDiagnosis.Visible = false;
-            listBoxEquipmentDiagnosis.Location = new Point(listBoxEquipmentDiagnosis.Location.X, textBoxDiagnosis.Location.Y + textBoxDiagnosis.Height);
-            nameTextBox = NameTableToEditEnum.Diagnosis;
+            if (loadingForm)
+                return;
 
-            diagnosesDTO = diagnosisRepository.GetDiagnosesByName(textBoxDiagnosis.Text);
-            foreach (var diagnosis in diagnosesDTO)
+            UpdateListBox(listBoxEquipmentDiagnosis, textBoxDiagnosis, diagnosis: true);
+        }
+
+        private void TextBoxEquipment_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Tab)
             {
-                if (!loading)
-                {
-                    listBoxEquipmentDiagnosis.Visible = true;
-                    listBoxEquipmentDiagnosis.Items.Add(diagnosis.Name);
-                }
+                if (listBoxEquipmentDiagnosis.Visible)
+                    listBoxEquipmentDiagnosis.Visible = false;
             }
         }
 
-        private void ListBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void TextBoxDiagnosis_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-            if (listBoxEquipmentDiagnosis.SelectedIndex >= 0)
+            if (e.KeyCode == Keys.Tab)
             {
-                switch (nameTextBox)
-                {
-                    case NameTableToEditEnum.Equipment:
-                        textBoxEquipment.Text = listBoxEquipmentDiagnosis.Items[listBoxEquipmentDiagnosis.SelectedIndex].ToString();
-                        break;
-                    case NameTableToEditEnum.Diagnosis:
-                        textBoxDiagnosis.Text = listBoxEquipmentDiagnosis.Items[listBoxEquipmentDiagnosis.SelectedIndex].ToString();
-                        break;
-                }
+                if (listBoxEquipmentDiagnosis.Visible)
+                    listBoxEquipmentDiagnosis.Visible = false;
+            }
+        }
 
-                listBoxEquipmentDiagnosis.Items.Clear();
-                listBoxEquipmentDiagnosis.Visible = false;
+        private void ListBoxEquipmentDiagnosis_Click(object sender, EventArgs e)
+        {
+            if (nameTextBox == NameTableToEditEnum.Equipment)
+                SelectingListBox(listBox: listBoxEquipmentDiagnosis, textBoxEquipment, textBoxDiagnosis);
+            else if (nameTextBox == NameTableToEditEnum.Diagnosis)
+                SelectingListBox(listBox: listBoxEquipmentDiagnosis, textBoxDiagnosis, textBoxNote);
+        }
+
+        private void ListBoxEquipmentDiagnosis_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (nameTextBox == NameTableToEditEnum.Equipment)
+                    SelectingListBox(listBox: listBoxEquipmentDiagnosis, textBoxEquipment, textBoxDiagnosis);
+                else if (nameTextBox == NameTableToEditEnum.Diagnosis)
+                    SelectingListBox(listBox: listBoxEquipmentDiagnosis, textBoxDiagnosis, textBoxNote);
+            }
+            else if (e.KeyCode == Keys.Up)
+            {
+                if (listBoxEquipmentDiagnosis.SelectedIndex == 0)
+                {
+                    if (nameTextBox == NameTableToEditEnum.Equipment)
+                        textBoxEquipment.Focus();
+                    else if (nameTextBox == NameTableToEditEnum.Diagnosis)
+                        textBoxDiagnosis.Focus();
+                }
             }
         }
 
         private void TextBoxEquipment_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
-            {
-                listBoxEquipmentDiagnosis.Visible = false;
-            }
+            PressKeys(listBoxEquipmentDiagnosis, textBoxDiagnosis, e.KeyCode);
         }
 
         private void TextBoxDiagnosis_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
-            {
-                listBoxEquipmentDiagnosis.Visible = false;
-            }
+            PressKeys(listBoxEquipmentDiagnosis, textBoxNote, e.KeyCode);
         }
 
         private void TextBoxEquipment_Click(object sender, EventArgs e)
         {
-            if (listBoxEquipmentDiagnosis.Visible)
-                listBoxEquipmentDiagnosis.Visible = false;
-            else
-            {
-                listBoxEquipmentDiagnosis.Items.Clear();
-                listBoxEquipmentDiagnosis.Location = new Point(listBoxEquipmentDiagnosis.Location.X, textBoxEquipment.Location.Y + textBoxEquipment.Height);
-                nameTextBox = NameTableToEditEnum.Equipment;
-
-                equipmentsDTO = equipmentRepository.GetEquipmentsByName(textBoxEquipment.Text);
-                foreach (var equipment in equipmentsDTO)
-                {
-                    listBoxEquipmentDiagnosis.Items.Add(equipment.Name);
-                }
-
-                if (listBoxEquipmentDiagnosis.Items.Count > 0)
-                    listBoxEquipmentDiagnosis.Visible = true;
-            }
+            UpdateListBox(listBoxEquipmentDiagnosis, textBoxEquipment, equipment: true, click: true);
         }
 
         private void TextBoxDiagnosis_Click(object sender, EventArgs e)
         {
-            if (listBoxEquipmentDiagnosis.Visible)
-                listBoxEquipmentDiagnosis.Visible = false;
-            else
-            {
-                listBoxEquipmentDiagnosis.Items.Clear();
-                listBoxEquipmentDiagnosis.Location = new Point(listBoxEquipmentDiagnosis.Location.X, textBoxDiagnosis.Location.Y + textBoxDiagnosis.Height);
-                nameTextBox = NameTableToEditEnum.Diagnosis;
-
-                diagnosesDTO = diagnosisRepository.GetDiagnosesByName(textBoxDiagnosis.Text);
-                foreach (var diagnosis in diagnosesDTO)
-                {
-                    if (!loading)
-                    {
-                        listBoxEquipmentDiagnosis.Items.Add(diagnosis.Name);
-                    }
-                }
-
-                if (listBoxEquipmentDiagnosis.Items.Count > 0)
-                    listBoxEquipmentDiagnosis.Visible = true;
-            }
+            UpdateListBox(listBoxEquipmentDiagnosis, textBoxDiagnosis, diagnosis: true, click: true);
         }
-
-        private void FirstId_Click(object sender, EventArgs e)
+        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
         {
-            textBoxNumberOrder.Text = "1";
+            if (checkBox1.Checked) textBoxMaxPrice.Enabled = true;
+            else textBoxMaxPrice.Enabled = false;
         }
-
-        private void LastId_Click(object sender, EventArgs e)
+        private void CheckBox1_KeyDown(object sender, KeyEventArgs e)
         {
-            textBoxNumberOrder.Text = IdKeyOrder().ToString();
+            if (e.KeyCode == Keys.Enter)
+                checkBox1.Checked = !checkBox1.Checked;
         }
-
-        private void ComboBoxMaster1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (comboBoxMainMaster.Text != "-")
-                comboBoxAdditionalMaster.Enabled = true;
-            else
-                comboBoxAdditionalMaster.Enabled = false;
-        }
-
-        private void ComboBoxMaster2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (comboBoxMainMaster.Text == comboBoxAdditionalMaster.Text)
-                comboBoxAdditionalMaster.SelectedIndex = 0;
-        }
-
         private void TextBoxMaxPrice_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !KeyPressHelper.CheckKeyPress(true, textBoxMaxPrice.Text, e.KeyChar);
         }
+
+        private void AddDeviceForRepair_Activated(object sender, EventArgs e)
+        {
+            dateTimePicker1.Focus();
+            loadingForm = false;
+        }
+
+        private void ButtonExit_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
+        }
+
 
         public string MainMasterName
         {

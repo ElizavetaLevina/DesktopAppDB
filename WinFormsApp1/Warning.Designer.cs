@@ -72,7 +72,7 @@
             buttonExit.Location = new Point(420, 222);
             buttonExit.Name = "buttonExit";
             buttonExit.Size = new Size(181, 43);
-            buttonExit.TabIndex = 6;
+            buttonExit.TabIndex = 8;
             buttonExit.Text = "ОК";
             buttonExit.UseVisualStyleBackColor = true;
             buttonExit.Click += ButtonExit_Click;
@@ -111,7 +111,7 @@
             linkLabelChangeMaxPrice.Location = new Point(263, 176);
             linkLabelChangeMaxPrice.Name = "linkLabelChangeMaxPrice";
             linkLabelChangeMaxPrice.Size = new Size(266, 25);
-            linkLabelChangeMaxPrice.TabIndex = 10;
+            linkLabelChangeMaxPrice.TabIndex = 6;
             linkLabelChangeMaxPrice.TabStop = true;
             linkLabelChangeMaxPrice.Text = "Изменить согласованную цену";
             linkLabelChangeMaxPrice.Visible = false;

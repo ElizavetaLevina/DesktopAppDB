@@ -5,9 +5,11 @@ namespace WinFormsApp1.Helpers
 {
     public static class CalculationSalaryHelper
     {
-        public static int SalaryCalculation(MasterEditDTO masterDTO, List<OrderEditDTO> ordersDTO)
+        public static int SalaryCalculation(MasterEditDTO masterDTO, List<OrderEditDTO> ordersDTO, RateMasterEditDTO rateMasterDTO)
         {
             int salary = 0;
+
+            var rateMaster = rateMasterDTO.Id == 0 ? masterDTO.Rate : rateMasterDTO.PercentProfit;
 
             switch (masterDTO.TypeSalary) 
             {
@@ -23,13 +25,13 @@ namespace WinFormsApp1.Helpers
                             salary += (int)(order.MalfunctionOrders.Sum(m => m.Price) * order.PercentWorkAdditionalMaster / 100.0);
                         }
                     }
-                    salary = (int)(salary * masterDTO.Rate / 100.0);
+                    salary = (int)(salary * rateMaster / 100.0);
                     break;
                 case TypeSalaryEnum.percentOrganization:
-                    salary = (int)(ordersDTO.Sum(o => o.MalfunctionOrders.Sum(m => m.Price)) * masterDTO.Rate / 100.0);
+                    salary = (int)(ordersDTO.Sum(o => o.MalfunctionOrders.Sum(m => m.Price)) * rateMaster / 100.0);
                     break;
                 case TypeSalaryEnum.rate:
-                    salary = masterDTO.Rate;
+                    salary = rateMaster;
                     break;
             }
             return salary;

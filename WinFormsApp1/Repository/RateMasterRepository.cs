@@ -5,16 +5,27 @@ namespace WinFormsApp1.Repository
 {
     public class RateMasterRepository
     {
+        /// <summary>
+        /// Получение записи по идентификатору мастера
+        /// </summary>
+        /// <param name="id">Идентификатор мастера</param>
+        /// <returns>Запись</returns>
         public List<RateMasterDTO> GetRateMasterByIdMaster(int id)
         {
             Context context = new();
             return context.RateMaster.Where(i => i.MasterId == id).OrderBy(i => i.DateStart).Select(a => new RateMasterDTO(a)).ToList();
         }
 
-        public RateMasterEditDTO GetRateMaster(DateTime date)
+        /// <summary>
+        /// Получение записи по идентификатору мастера и по дате
+        /// </summary>
+        /// <param name="masterId">Идентификатор мастера</param>
+        /// <param name="date">Дата</param>
+        /// <returns>Запись</returns>
+        public RateMasterEditDTO GetRateMasterByDate(int masterId, DateTime date)
         {
             Context context = new();
-            var rateMaster = context.RateMaster.FirstOrDefault(i => i.DateStart == date);
+            var rateMaster = context.RateMaster.FirstOrDefault(i => i.MasterId == masterId && i.DateStart == date);
             if (rateMaster != null)
                 return new RateMasterEditDTO(rateMaster);
             else

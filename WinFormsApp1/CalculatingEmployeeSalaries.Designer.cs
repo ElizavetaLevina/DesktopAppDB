@@ -87,7 +87,6 @@
             radioButton12.Name = "radioButton12";
             radioButton12.Size = new Size(106, 29);
             radioButton12.TabIndex = 13;
-            radioButton12.TabStop = true;
             radioButton12.Text = "Декабрь";
             radioButton12.UseVisualStyleBackColor = true;
             radioButton12.CheckedChanged += RadioButton12_CheckedChanged;
@@ -99,7 +98,6 @@
             radioButton11.Name = "radioButton11";
             radioButton11.Size = new Size(100, 29);
             radioButton11.TabIndex = 12;
-            radioButton11.TabStop = true;
             radioButton11.Text = "Ноябрь";
             radioButton11.UseVisualStyleBackColor = true;
             radioButton11.CheckedChanged += RadioButton11_CheckedChanged;
@@ -111,7 +109,6 @@
             radioButton10.Name = "radioButton10";
             radioButton10.Size = new Size(106, 29);
             radioButton10.TabIndex = 11;
-            radioButton10.TabStop = true;
             radioButton10.Text = "Октябрь";
             radioButton10.UseVisualStyleBackColor = true;
             radioButton10.CheckedChanged += RadioButton10_CheckedChanged;
@@ -123,7 +120,6 @@
             radioButton9.Name = "radioButton9";
             radioButton9.Size = new Size(113, 29);
             radioButton9.TabIndex = 10;
-            radioButton9.TabStop = true;
             radioButton9.Text = "Сентябрь";
             radioButton9.UseVisualStyleBackColor = true;
             radioButton9.CheckedChanged += RadioButton9_CheckedChanged;
@@ -135,7 +131,6 @@
             radioButton8.Name = "radioButton8";
             radioButton8.Size = new Size(90, 29);
             radioButton8.TabIndex = 8;
-            radioButton8.TabStop = true;
             radioButton8.Text = "Август";
             radioButton8.UseVisualStyleBackColor = true;
             radioButton8.CheckedChanged += RadioButton8_CheckedChanged;
@@ -147,7 +142,6 @@
             radioButton7.Name = "radioButton7";
             radioButton7.Size = new Size(83, 29);
             radioButton7.TabIndex = 7;
-            radioButton7.TabStop = true;
             radioButton7.Text = "Июль";
             radioButton7.UseVisualStyleBackColor = true;
             radioButton7.CheckedChanged += RadioButton7_CheckedChanged;
@@ -159,7 +153,6 @@
             radioButton6.Name = "radioButton6";
             radioButton6.Size = new Size(84, 29);
             radioButton6.TabIndex = 6;
-            radioButton6.TabStop = true;
             radioButton6.Text = "Июнь";
             radioButton6.UseVisualStyleBackColor = true;
             radioButton6.CheckedChanged += RadioButton6_CheckedChanged;
@@ -171,7 +164,6 @@
             radioButton5.Name = "radioButton5";
             radioButton5.Size = new Size(72, 29);
             radioButton5.TabIndex = 5;
-            radioButton5.TabStop = true;
             radioButton5.Text = "Май";
             radioButton5.UseVisualStyleBackColor = true;
             radioButton5.CheckedChanged += RadioButton5_CheckedChanged;
@@ -183,7 +175,6 @@
             radioButton4.Name = "radioButton4";
             radioButton4.Size = new Size(97, 29);
             radioButton4.TabIndex = 4;
-            radioButton4.TabStop = true;
             radioButton4.Text = "Апрель";
             radioButton4.UseVisualStyleBackColor = true;
             radioButton4.CheckedChanged += RadioButton4_CheckedChanged;
@@ -195,7 +186,6 @@
             radioButton3.Name = "radioButton3";
             radioButton3.Size = new Size(80, 29);
             radioButton3.TabIndex = 3;
-            radioButton3.TabStop = true;
             radioButton3.Text = "Март";
             radioButton3.UseVisualStyleBackColor = true;
             radioButton3.CheckedChanged += RadioButton3_CheckedChanged;
@@ -207,7 +197,6 @@
             radioButton2.Name = "radioButton2";
             radioButton2.Size = new Size(107, 29);
             radioButton2.TabIndex = 2;
-            radioButton2.TabStop = true;
             radioButton2.Text = "Февраль";
             radioButton2.UseVisualStyleBackColor = true;
             radioButton2.CheckedChanged += RadioButton2_CheckedChanged;
@@ -215,12 +204,10 @@
             // radioButton1
             // 
             radioButton1.AutoSize = true;
-            radioButton1.Checked = true;
             radioButton1.Location = new Point(20, 16);
             radioButton1.Name = "radioButton1";
             radioButton1.Size = new Size(97, 29);
             radioButton1.TabIndex = 1;
-            radioButton1.TabStop = true;
             radioButton1.Text = "Январь";
             radioButton1.UseVisualStyleBackColor = true;
             radioButton1.CheckedChanged += RadioButton1_CheckedChanged;

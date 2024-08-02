@@ -11,11 +11,14 @@ namespace WinFormsApp1
         OrderRepository orderRepository = new();
         MasterRepository masterRepository = new();
         NoteSalaryMasterRepository noteSalaryMasterRepository = new();
+        RateMasterRepository rateMasterRepository = new();
+        bool loading = true;
         public CalculatingEmployeeSalaries()
         {
             InitializeComponent();
             InitializeComboBoxes();
             InitializeTable();
+            loading = false;
         }
 
         private void InitializeComboBoxes()
@@ -44,6 +47,34 @@ namespace WinFormsApp1
                 dataGridView1.Columns[i].Width = Convert.ToInt32(width);
                 dataGridView1.Columns[i].ReadOnly = readOnly[i];
             }
+
+            switch ((MonthEnum)DateTime.Now.Month) 
+            {
+                case MonthEnum.Январь:
+                    radioButton1.Checked = true; break;
+                case MonthEnum.Февраль:
+                    radioButton2.Checked = true; break;
+                case MonthEnum.Март:
+                    radioButton3.Checked = true; break;
+                case MonthEnum.Апрель:
+                    radioButton4.Checked = true; break;
+                case MonthEnum.Май:
+                    radioButton5.Checked = true; break;
+                case MonthEnum.Июнь:
+                    radioButton6.Checked = true; break;
+                case MonthEnum.Июль:
+                    radioButton7.Checked = true; break;
+                case MonthEnum.Август:
+                    radioButton8.Checked = true; break;
+                case MonthEnum.Сентябрь:
+                    radioButton9.Checked = true; break;
+                case MonthEnum.Октябрь:
+                    radioButton10.Checked = true; break;
+                case MonthEnum.Ноябрь:
+                    radioButton11.Checked = true; break;
+                case MonthEnum.Декабрь:
+                    radioButton12.Checked = true; break;
+            }
         }
 
         private int NumberSelectedMonth()
@@ -52,67 +83,6 @@ namespace WinFormsApp1
             var selectedMonthEnum = (MonthEnum)System.Enum.Parse(typeof(MonthEnum), selectedRadioButton.Text);
 
             return (int)selectedMonthEnum;
-        }
-
-        private void RadioButton1_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateTable();
-        }
-
-        private void RadioButton2_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateTable();
-
-        }
-
-        private void RadioButton3_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateTable();
-        }
-
-        private void RadioButton4_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateTable();
-        }
-
-        private void RadioButton5_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateTable();
-        }
-
-        private void RadioButton6_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateTable();
-        }
-
-        private void RadioButton7_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateTable();
-        }
-
-        private void RadioButton8_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateTable();
-        }
-
-        private void RadioButton9_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateTable();
-        }
-
-        private void RadioButton10_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateTable();
-        }
-
-        private void RadioButton11_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateTable();
-        }
-
-        private void RadioButton12_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateTable();
         }
 
         private void UpdateTable()
@@ -133,21 +103,94 @@ namespace WinFormsApp1
 
             ordersDTO = orderRepository.GetOrdersForSalaries(dateCompleted: dateCompleted, dateIssue: dateIssue);
 
+            DateTime date = (DateTime)(dateCompleted != null ? dateCompleted : dateIssue);
+            
+
             var mastersDTO = masterRepository.GetMasters();
 
             foreach (var master in mastersDTO)
             {
-                dataGridView1.Rows.Add(master.NameMaster, CalculationSalaryHelper.SalaryCalculation(master, ordersDTO), string.Empty);
+                var rateMastersDTO = rateMasterRepository.GetRateMasterByDate(master.Id, date);
+                dataGridView1.Rows.Add(master.NameMaster, CalculationSalaryHelper.SalaryCalculation(master, ordersDTO, rateMastersDTO), string.Empty);
             }
         }
-        private void ButtonExit_Click(object sender, EventArgs e)
+
+        private void RadioButton1_CheckedChanged(object sender, EventArgs e)
         {
-            Close();
+            if (radioButton1.Checked) 
+                UpdateTable();
+        }
+
+        private void RadioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton2.Checked)
+                UpdateTable();
+        }
+
+        private void RadioButton3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton3.Checked)
+                UpdateTable();
+        }
+
+        private void RadioButton4_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton4.Checked)
+                UpdateTable();
+        }
+
+        private void RadioButton5_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton5.Checked)
+                UpdateTable();
+        }
+
+        private void RadioButton6_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton6.Checked)
+                UpdateTable();
+        }
+
+        private void RadioButton7_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton7.Checked)
+                UpdateTable();
+        }
+
+        private void RadioButton8_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton8.Checked)
+                UpdateTable();
+        }
+
+        private void RadioButton9_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton9.Checked)
+                UpdateTable();
+        }
+
+        private void RadioButton10_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton10.Checked)
+                UpdateTable();
+        }
+
+        private void RadioButton11_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton11.Checked)
+                UpdateTable();
+        }
+
+        private void RadioButton12_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton12.Checked)
+                UpdateTable();
         }
 
         private void ComboBoxCalculationByDate_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateTable();
+            if (!loading)
+                UpdateTable();
         }
 
         private void DataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
@@ -169,6 +212,11 @@ namespace WinFormsApp1
                     await noteSalaryMasterRepository.SaveNoteSalaryMasterAsync(noteSalaryMasterDTO);
                 });
             }
+        }
+
+        private void ButtonExit_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

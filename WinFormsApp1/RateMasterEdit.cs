@@ -45,7 +45,7 @@ namespace WinFormsApp1
         private void UpdatePercent()
         {
             var date = DateTime.Parse(string.Format("{0}.{1}.{2}", 1, comboBoxMonth.SelectedIndex + 1, comboBoxYear.SelectedValue));
-            var rateMasterDTO = rateMasterRepository.GetRateMaster(date);
+            var rateMasterDTO = rateMasterRepository.GetRateMasterByDate(masterId, date);
             if (rateMasterDTO.Id != 0)
                 textBoxPercent.Text = rateMasterDTO.PercentProfit.ToString();
             else
@@ -73,7 +73,7 @@ namespace WinFormsApp1
             labelPercent.ForeColor = Color.Black;
 
             var date = DateTime.Parse(string.Format("{0}.{1}.{2}", 1, comboBoxMonth.SelectedIndex + 1, comboBoxYear.SelectedValue));
-            var rateMasterDTO = rateMasterRepository.GetRateMaster(date);
+            var rateMasterDTO = rateMasterRepository.GetRateMasterByDate(masterId, date);
 
             rateMasterDTO.MasterId = masterId;
             rateMasterDTO.PercentProfit = Convert.ToInt32(textBoxPercent.Text);

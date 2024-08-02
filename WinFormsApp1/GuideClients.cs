@@ -11,6 +11,13 @@ namespace WinFormsApp1
         public GuideClients()
         {
             InitializeComponent();
+            InitializeElementsForm();
+        }
+
+        private void InitializeElementsForm() 
+        {
+            clients = clientRepository.GetClientsForTable();
+            UpdateTable();
         }
 
         private void UpdateTable()
@@ -28,13 +35,6 @@ namespace WinFormsApp1
                 dataGridView1.Columns[i].Width = Convert.ToInt32(width);
             }
 
-        }
-
-        private void GuideClients_Activated(object sender, EventArgs e)
-        {
-            buttonAll.Focus();
-            clients = clientRepository.GetClientsForTable();
-            UpdateTable();
         }
 
         private void TextBoxEnterName_TextChanged(object sender, EventArgs e)

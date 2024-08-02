@@ -98,7 +98,7 @@
             buttonExit.Location = new Point(545, 451);
             buttonExit.Name = "buttonExit";
             buttonExit.Size = new Size(243, 43);
-            buttonExit.TabIndex = 4;
+            buttonExit.TabIndex = 6;
             buttonExit.Text = "Выход";
             buttonExit.UseVisualStyleBackColor = true;
             buttonExit.Click += ButtonExit_Click;
@@ -118,7 +118,7 @@
             textBoxDevice.Location = new Point(12, 457);
             textBoxDevice.Name = "textBoxDevice";
             textBoxDevice.Size = new Size(243, 31);
-            textBoxDevice.TabIndex = 6;
+            textBoxDevice.TabIndex = 4;
             textBoxDevice.Visible = false;
             textBoxDevice.TextChanged += TextBoxDevice_TextChanged;
             // 
@@ -127,7 +127,7 @@
             buttonChangeDetail.Location = new Point(545, 381);
             buttonChangeDetail.Name = "buttonChangeDetail";
             buttonChangeDetail.Size = new Size(243, 43);
-            buttonChangeDetail.TabIndex = 7;
+            buttonChangeDetail.TabIndex = 3;
             buttonChangeDetail.Text = "Изменить данные";
             buttonChangeDetail.UseVisualStyleBackColor = true;
             buttonChangeDetail.Click += ButtonChangeDetail_Click;

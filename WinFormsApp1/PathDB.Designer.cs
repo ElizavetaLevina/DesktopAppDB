@@ -62,7 +62,7 @@
             linkLabel1.Location = new Point(76, 144);
             linkLabel1.Name = "linkLabel1";
             linkLabel1.Size = new Size(91, 25);
-            linkLabel1.TabIndex = 0;
+            linkLabel1.TabIndex = 2;
             linkLabel1.TabStop = true;
             linkLabel1.Text = "Изменить";
             linkLabel1.LinkClicked += LinkLabel1_LinkClicked;

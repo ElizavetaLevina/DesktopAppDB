@@ -53,9 +53,11 @@
             dataGridView1.DefaultCellStyle = dataGridViewCellStyle1;
             dataGridView1.Location = new Point(12, 12);
             dataGridView1.Name = "dataGridView1";
+            dataGridView1.ReadOnly = true;
             dataGridView1.RowHeadersVisible = false;
             dataGridView1.RowHeadersWidth = 62;
             dataGridView1.ScrollBars = ScrollBars.Vertical;
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.Size = new Size(511, 381);
             dataGridView1.TabIndex = 0;
             // 
@@ -107,7 +109,7 @@
             label1.Size = new Size(0, 0);
             label1.TabIndex = 6;
             // 
-            // MalfunctionList
+            // MalfunctionEquipmentDiagnosis
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -120,7 +122,7 @@
             Controls.Add(dataGridView1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Name = "MalfunctionList";
+            Name = "MalfunctionEquipmentDiagnosis";
             Text = "Неисправности";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);

@@ -112,6 +112,11 @@
             else textBoxPassword.UseSystemPasswordChar = true;
         }
 
+        private void CheckBoxShowPassword_KeyDown(object sender, KeyEventArgs e)
+        {
+            checkBoxShowPassword.Checked = !checkBoxShowPassword.Checked;
+        }
+
         private void LogInSystem_Activated(object sender, EventArgs e)
         {
             if (logIn)

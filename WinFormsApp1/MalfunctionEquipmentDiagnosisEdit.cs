@@ -12,42 +12,7 @@ namespace WinFormsApp1
             status = _status;
         }
 
-        public string TextBoxName
-        {
-            get { return textBoxName.Text; }
-            set { textBoxName.Text = value; }
-        }
-
-        public string TextBoxPrice
-        {
-            get { return textBoxPrice.Text; }
-            set { textBoxPrice.Text = value; }
-        }
-
-        public bool LabelPriceVisible
-        {
-            get { return labelPrice.Visible; }
-            set { labelPrice.Visible = value; }
-        }
-
-        public bool LabelRubVisible
-        {
-            get { return labelRub.Visible; }
-            set { labelRub.Visible = value; }
-        }
-
-        public bool TextBoxPriceVisisble
-        {
-            get { return textBoxPrice.Visible; }
-            set { textBoxPrice.Visible = value; }
-        }
-
-        private void TextBoxPrice_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
-        }
-
-        private void ButtonSave_Click(object sender, EventArgs e)
+        private void Save()
         {
             Warning warning = new()
             {
@@ -85,10 +50,62 @@ namespace WinFormsApp1
             }
         }
 
+        private void TextBoxPrice_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
+        }
+
+        private void ButtonSave_Click(object sender, EventArgs e)
+        {
+            Save();
+        }
+
         private void ButtonExit_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             Close();
+        }
+
+        private void TextBoxName_KeyDown(object sender, KeyEventArgs e)
+        {
+            if ((status == NameTableToEditEnum.Diagnosis || status == NameTableToEditEnum.Equipment) && e.KeyCode == Keys.Enter)
+                Save();
+        }
+
+        private void TextBoxPrice_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                Save();
+        }
+
+        public string TextBoxName
+        {
+            get { return textBoxName.Text; }
+            set { textBoxName.Text = value; }
+        }
+
+        public string TextBoxPrice
+        {
+            get { return textBoxPrice.Text; }
+            set { textBoxPrice.Text = value; }
+        }
+
+        public bool LabelPriceVisible
+        {
+            get { return labelPrice.Visible; }
+            set { labelPrice.Visible = value; }
+        }
+
+        public bool LabelRubVisible
+        {
+            get { return labelRub.Visible; }
+            set { labelRub.Visible = value; }
+        }
+
+        public bool TextBoxPriceVisisble
+        {
+            get { return textBoxPrice.Visible; }
+            set { textBoxPrice.Visible = value; }
         }
     }
 }

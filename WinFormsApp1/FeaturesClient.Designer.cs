@@ -66,7 +66,7 @@
             textBoxNameAddress.Location = new Point(201, 86);
             textBoxNameAddress.Name = "textBoxNameAddress";
             textBoxNameAddress.Size = new Size(522, 31);
-            textBoxNameAddress.TabIndex = 2;
+            textBoxNameAddress.TabIndex = 3;
             // 
             // label2
             // 
@@ -74,7 +74,7 @@
             label2.Location = new Point(48, 89);
             label2.Name = "label2";
             label2.Size = new Size(111, 25);
-            label2.TabIndex = 3;
+            label2.TabIndex = 2;
             label2.Text = "ФИО, Адрес";
             // 
             // label3
@@ -135,7 +135,7 @@
             label7.Location = new Point(53, 192);
             label7.Name = "label7";
             label7.Size = new Size(109, 25);
-            label7.TabIndex = 12;
+            label7.TabIndex = 6;
             label7.Text = "Тип клиента";
             // 
             // radioButtonNormal
@@ -144,7 +144,7 @@
             radioButtonNormal.Location = new Point(201, 190);
             radioButtonNormal.Name = "radioButtonNormal";
             radioButtonNormal.Size = new Size(167, 29);
-            radioButtonNormal.TabIndex = 13;
+            radioButtonNormal.TabIndex = 7;
             radioButtonNormal.TabStop = true;
             radioButtonNormal.Text = "Простой клиент";
             radioButtonNormal.UseVisualStyleBackColor = true;
@@ -155,7 +155,7 @@
             radioButtonWhite.Location = new Point(201, 225);
             radioButtonWhite.Name = "radioButtonWhite";
             radioButtonWhite.Size = new Size(163, 29);
-            radioButtonWhite.TabIndex = 14;
+            radioButtonWhite.TabIndex = 8;
             radioButtonWhite.TabStop = true;
             radioButtonWhite.Text = "В белом списке";
             radioButtonWhite.UseVisualStyleBackColor = true;
@@ -166,7 +166,7 @@
             radioButtonBlack.Location = new Point(201, 260);
             radioButtonBlack.Name = "radioButtonBlack";
             radioButtonBlack.Size = new Size(175, 29);
-            radioButtonBlack.TabIndex = 15;
+            radioButtonBlack.TabIndex = 9;
             radioButtonBlack.TabStop = true;
             radioButtonBlack.Text = "В черном списке";
             radioButtonBlack.UseVisualStyleBackColor = true;

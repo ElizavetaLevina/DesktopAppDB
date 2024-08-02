@@ -85,23 +85,22 @@
             btnExit.Location = new Point(430, 455);
             btnExit.Name = "btnExit";
             btnExit.Size = new Size(249, 43);
-            btnExit.TabIndex = 3;
+            btnExit.TabIndex = 4;
             btnExit.Text = "Выход";
             btnExit.UseVisualStyleBackColor = true;
             btnExit.Click += BtnExit_Click;
             // 
             // btnDeleteBrand
             // 
-            btnDeleteBrand.BackColor = SystemColors.Control;
             btnDeleteBrand.Location = new Point(430, 139);
             btnDeleteBrand.Name = "btnDeleteBrand";
             btnDeleteBrand.Size = new Size(249, 43);
-            btnDeleteBrand.TabIndex = 4;
+            btnDeleteBrand.TabIndex = 3;
             btnDeleteBrand.Text = "Удалить фирму";
-            btnDeleteBrand.UseVisualStyleBackColor = false;
+            btnDeleteBrand.UseVisualStyleBackColor = true;
             btnDeleteBrand.Click += BtnDeleteBrand_Click;
             // 
-            // AddBrand
+            // BrandsTechnic
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -114,7 +113,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
-            Name = "AddBrand";
+            Name = "BrandsTechnic";
             Text = "Фирмы-производители устройств";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);

@@ -1505,6 +1505,8 @@ namespace WinFormsApp1
 
         private void ItemGetting_Click(object sender, EventArgs e)
         {
+            if (dataGridView1.Rows.Count == 0)
+                return;
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;
@@ -1517,6 +1519,8 @@ namespace WinFormsApp1
 
         private void ItemIssuing_Click(object sender, EventArgs e)
         {
+            if (dataGridView1.Rows.Count == 0)
+                return;
             try
             {
                 int numberRow = dataGridView1.CurrentCell.RowIndex;

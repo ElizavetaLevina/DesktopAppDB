@@ -13,7 +13,7 @@ namespace WinFormsApp1
         public List<string> nameProblem = [];
         private int numberProblem = 1;
         public int countProblem = 0;
-        bool showListBox = true;
+        //bool loading = true;
         MalfunctionRepository malfunctionRepository = new();
         WarehouseRepository warehouseRepository = new();
         OrderRepository orderRepository = new();
@@ -69,6 +69,66 @@ namespace WinFormsApp1
             }
         }
 
+        private void TextBoxKeyDown(Keys keyCode, TextBox textBox)
+        {
+            if (keyCode == Keys.Enter)
+            {
+                if (listBox1.Visible)
+                    listBox1.Visible = false;
+                textBox.Focus();
+            }
+            else if (keyCode == Keys.Down)
+            {
+                listBox1.Focus();
+                try
+                {
+                    if (listBox1.SelectedIndex < listBox1.Items.Count)
+                        listBox1.SelectedIndex += 1;
+                }
+                catch { }
+            }
+            else if (keyCode == Keys.Up)
+            {
+                listBox1.Focus();
+                try
+                {
+                    if (listBox1.SelectedIndex > 1)
+                        listBox1.SelectedIndex -= 1;
+                }
+                catch { }
+            }
+        }
+
+        private void SelectingElementsListBox()
+        {
+            MalfunctionEditDTO malfunctionDTO;
+            if (listBox1.SelectedIndex >= 0)
+            {
+                listBox1.Visible = false;
+                switch (numberProblem)
+                {
+                    case 1:
+                        textBoxFoundProblem1.Text = listBox1.Items[listBox1.SelectedIndex].ToString();
+                        malfunctionDTO = malfunctionRepository.GetMalfunctionByName(textBoxFoundProblem1.Text);
+                        textBoxPrice1.Text = malfunctionDTO.Price.ToString();
+                        textBoxPrice1.Focus();
+                        break;
+                    case 2:
+                        textBoxFoundProblem2.Text = listBox1.Items[listBox1.SelectedIndex].ToString();
+                        malfunctionDTO = malfunctionRepository.GetMalfunctionByName(textBoxFoundProblem2.Text);
+                        textBoxPrice2.Text = malfunctionDTO.Price.ToString();
+                        textBoxPrice2.Focus();
+                        break;
+                    case 3:
+                        textBoxFoundProblem3.Text = listBox1.Items[listBox1.SelectedIndex].ToString();
+                        malfunctionDTO = malfunctionRepository.GetMalfunctionByName(textBoxFoundProblem3.Text);
+                        textBoxPrice3.Text = malfunctionDTO.Price.ToString();
+                        textBoxPrice3.Focus();
+                        break;
+                }
+            }
+        }
+
         private void LinkLabelDateNow_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             dateTimePicker1.Value = DateTime.Now;
@@ -118,7 +178,7 @@ namespace WinFormsApp1
                         warning.ShowDialog();
                         return;
                     }
-                    foundProblem = FoundProblemTextChangeHelper.GetFoundProblem(countProblem: countProblem, 
+                    foundProblem = FoundProblemTextChangeHelper.GetFoundProblem(countProblem: countProblem,
                         textBoxProblem1: textBoxFoundProblem1.Text, textBoxProblem2: textBoxFoundProblem2.Text);
                     priceProblem = FoundProblemTextChangeHelper.GetPriceProblem(countProblem: countProblem,
                         textBoxPrice1: textBoxPrice1.Text, textBoxPrice2: textBoxPrice2.Text);
@@ -130,7 +190,7 @@ namespace WinFormsApp1
                         return;
                     }
                     foundProblem = FoundProblemTextChangeHelper.GetFoundProblem(countProblem: countProblem,
-                        textBoxProblem1: textBoxFoundProblem1.Text, textBoxProblem2: textBoxFoundProblem2.Text, 
+                        textBoxProblem1: textBoxFoundProblem1.Text, textBoxProblem2: textBoxFoundProblem2.Text,
                         textBoxProblem3: textBoxFoundProblem2.Text);
                     priceProblem = FoundProblemTextChangeHelper.GetPriceProblem(countProblem: countProblem,
                         textBoxPrice1: textBoxPrice1.Text, textBoxPrice2: textBoxPrice2.Text, textBoxPrice3: textBoxPrice3.Text);
@@ -209,17 +269,18 @@ namespace WinFormsApp1
 
         private void TextBoxFoundProblem1_TextChanged(object sender, EventArgs e)
         {
-            if (!showListBox)
-            {
-                showListBox = true;
+            /*if (loading)
                 return;
-            }
-            if (!listBox1.Visible)
-                listBox1.Visible = true;
+*/
             numberProblem = 1;
             listBox1.Location = new Point(listBox1.Location.X, textBoxFoundProblem1.Location.Y +
                 textBoxFoundProblem1.Height);
             listBox1.DataSource = FoundProblemTextChangeHelper.GetItemsListBox(textBoxProblem1: textBoxFoundProblem1.Text);
+
+            if (listBox1.Items.Count > 0)
+                listBox1.Visible = true;
+            else listBox1.Visible = false;
+                
 
             if (string.IsNullOrEmpty(textBoxFoundProblem1.Text))
             {
@@ -245,17 +306,17 @@ namespace WinFormsApp1
 
         private void TextBoxFoundProblem2_TextChanged(object sender, EventArgs e)
         {
-            if (!showListBox)
-            {
-                showListBox = true;
-                return;
-            }
-            if (!listBox1.Visible)
-                listBox1.Visible = true;
+            /*if (loading)
+                return;*/
+
             numberProblem = 2;
             listBox1.Location = new Point(listBox1.Location.X, textBoxFoundProblem2.Location.Y +
                 textBoxFoundProblem2.Height);
             listBox1.DataSource = FoundProblemTextChangeHelper.GetItemsListBox(textBoxProblem2: textBoxFoundProblem2.Text);
+
+            if (listBox1.Items.Count > 0)
+                listBox1.Visible = true;
+            else listBox1.Visible = false;
 
             if (string.IsNullOrEmpty(textBoxFoundProblem2.Text))
             {
@@ -276,17 +337,17 @@ namespace WinFormsApp1
 
         private void TextBoxFoundProblem3_TextChanged(object sender, EventArgs e)
         {
-            if (!showListBox)
-            {
-                showListBox = true;
-                return;
-            }
-            if (!listBox1.Visible)
-                listBox1.Visible = true;
+            /*if (loading)
+                return;*/
+
             numberProblem = 3;
             listBox1.Location = new Point(listBox1.Location.X, textBoxFoundProblem3.Location.Y +
                 textBoxFoundProblem3.Height);
             listBox1.DataSource = FoundProblemTextChangeHelper.GetItemsListBox(textBoxProblem3: textBoxFoundProblem3.Text);
+
+            if (listBox1.Items.Count > 0)
+                listBox1.Visible = true;
+            else listBox1.Visible = false;
 
             if (string.IsNullOrEmpty(textBoxFoundProblem3.Text))
             {
@@ -310,6 +371,7 @@ namespace WinFormsApp1
                 textBoxFoundProblem1.Height);
             listBox1.Visible = true;
         }
+
         private void TextBoxFoundProblem2_Click(object sender, EventArgs e)
         {
             if (numberProblem == 2 && listBox1.Visible)
@@ -338,6 +400,24 @@ namespace WinFormsApp1
             listBox1.Visible = true;
         }
 
+        private void TextBoxFoundProblem1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (KeyPressHelper.CheckKeyTab(e.KeyCode, listBox1.Visible))
+                listBox1.Visible = false;
+        }
+
+        private void TextBoxFoundProblem2_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (KeyPressHelper.CheckKeyTab(e.KeyCode, listBox1.Visible))
+                listBox1.Visible = false;
+        }
+
+        private void TextBoxFoundProblem3_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (KeyPressHelper.CheckKeyTab(e.KeyCode, listBox1.Visible))
+                listBox1.Visible = false;
+        }
+
         private void TextBoxPriceRepair_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
@@ -351,35 +431,6 @@ namespace WinFormsApp1
         private void TextBoxPrice3_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
-        }
-
-        private void TextBoxKeyDown(Keys keyCode, TextBox textBox)
-        {
-            if(keyCode == Keys.Enter)
-            {
-                listBox1.Visible = false;
-                textBox.Focus();
-            }
-            else if(keyCode == Keys.Down)
-            {
-                listBox1.Focus();
-                try
-                {
-                    if (listBox1.SelectedIndex < listBox1.Items.Count)
-                        listBox1.SelectedIndex += 1;
-                }
-                catch { }
-            }
-            else if (keyCode == Keys.Up)
-            {
-                listBox1.Focus();
-                try
-                {
-                    if (listBox1.SelectedIndex > 1)
-                        listBox1.SelectedIndex -= 1;
-                }
-                catch { }
-            }
         }
 
         private void TextBoxFoundProblem1_KeyDown(object sender, KeyEventArgs e)
@@ -397,39 +448,32 @@ namespace WinFormsApp1
             TextBoxKeyDown(e.KeyCode, textBoxPrice3);
         }
 
-        private void SelectingElementsListBox()
-        {
-            MalfunctionEditDTO malfunctionDTO;
-            if (listBox1.SelectedIndex >= 0)
-            {
-                listBox1.Visible = false;
-                showListBox = false;
-                switch (numberProblem)
-                {
-                    case 1:
-                        textBoxFoundProblem1.Text = listBox1.Items[listBox1.SelectedIndex].ToString();
-                        malfunctionDTO = malfunctionRepository.GetMalfunctionByName(textBoxFoundProblem1.Text);
-                        textBoxPrice1.Text = malfunctionDTO.Price.ToString();
-                        textBoxPrice1.Focus();
-                        break;
-                    case 2:
-                        textBoxFoundProblem2.Text = listBox1.Items[listBox1.SelectedIndex].ToString();
-                        malfunctionDTO = malfunctionRepository.GetMalfunctionByName(textBoxFoundProblem2.Text);
-                        textBoxPrice2.Text = malfunctionDTO.Price.ToString();
-                        textBoxPrice2.Focus();
-                        break;
-                    case 3:
-                        textBoxFoundProblem3.Text = listBox1.Items[listBox1.SelectedIndex].ToString();
-                        malfunctionDTO = malfunctionRepository.GetMalfunctionByName(textBoxFoundProblem3.Text);
-                        textBoxPrice3.Text = malfunctionDTO.Price.ToString();
-                        textBoxPrice3.Focus();
-                        break;
-                }
-            }
-        }
         private void ListBox1_Click(object sender, EventArgs e)
         {
             SelectingElementsListBox();
+        }
+
+        private void ListBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                SelectingElementsListBox();
+            }
+            else if (e.KeyCode == Keys.Up && listBox1.SelectedIndex == 0)
+            {
+                switch (numberProblem)
+                {
+                    case 1:
+                        textBoxFoundProblem1.Focus();
+                        break;
+                    case 2:
+                        textBoxFoundProblem2.Focus();
+                        break;
+                    case 3:
+                        textBoxFoundProblem3.Focus();
+                        break;
+                }
+            }
         }
 
         private void TextBoxMain_KeyPress(object sender, KeyPressEventArgs e)
@@ -475,12 +519,11 @@ namespace WinFormsApp1
             }
         }
 
-        private void ListBox1_KeyDown(object sender, KeyEventArgs e)
+        private void CompletedOrder_Activated(object sender, EventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
-            {
-                SelectingElementsListBox();
-            }
+            /*if (loading)
+                loading = false;*/
+            textBoxFoundProblem1.Focus();
         }
 
         public bool EnabledPrice

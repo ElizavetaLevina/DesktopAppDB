@@ -190,8 +190,9 @@
             // 
             textBoxStored.Location = new Point(656, 211);
             textBoxStored.Name = "textBoxStored";
+            textBoxStored.ReadOnly = true;
             textBoxStored.Size = new Size(50, 31);
-            textBoxStored.TabIndex = 38;
+            textBoxStored.TabIndex = 11;
             // 
             // labelDay
             // 
@@ -220,7 +221,7 @@
             comboBoxAdditionalMaster.Location = new Point(270, 154);
             comboBoxAdditionalMaster.Name = "comboBoxAdditionalMaster";
             comboBoxAdditionalMaster.Size = new Size(210, 33);
-            comboBoxAdditionalMaster.TabIndex = 35;
+            comboBoxAdditionalMaster.TabIndex = 8;
             comboBoxAdditionalMaster.SelectedIndexChanged += ComboBoxAdditionalMaster_SelectedIndexChanged;
             // 
             // label30
@@ -229,7 +230,7 @@
             label30.Location = new Point(41, 157);
             label30.Name = "label30";
             label30.Size = new Size(214, 25);
-            label30.TabIndex = 34;
+            label30.TabIndex = 7;
             label30.Text = "Дополнительный мастер";
             // 
             // linkLabelLogIn
@@ -252,7 +253,8 @@
             listBoxDiagnosis.Size = new Size(463, 104);
             listBoxDiagnosis.TabIndex = 32;
             listBoxDiagnosis.Visible = false;
-            listBoxDiagnosis.SelectedIndexChanged += ListBoxDiagnosis_SelectedIndexChanged;
+            listBoxDiagnosis.Click += ListBoxDiagnosis_Click;
+            listBoxDiagnosis.KeyDown += ListBoxDiagnosis_KeyDown;
             // 
             // listBoxEquipment
             // 
@@ -263,7 +265,8 @@
             listBoxEquipment.Size = new Size(463, 104);
             listBoxEquipment.TabIndex = 31;
             listBoxEquipment.Visible = false;
-            listBoxEquipment.SelectedIndexChanged += ListBoxEquipment_SelectedIndexChanged;
+            listBoxEquipment.Click += ListBoxEquipment_Click;
+            listBoxEquipment.KeyDown += ListBoxEquipment_KeyDown;
             // 
             // label28
             // 
@@ -280,7 +283,7 @@
             textBoxMaxPrice.Location = new Point(536, 397);
             textBoxMaxPrice.Name = "textBoxMaxPrice";
             textBoxMaxPrice.Size = new Size(123, 31);
-            textBoxMaxPrice.TabIndex = 29;
+            textBoxMaxPrice.TabIndex = 22;
             textBoxMaxPrice.KeyPress += TextBoxMaxPrice_KeyPress;
             // 
             // label27
@@ -307,7 +310,7 @@
             linkLabelBrand.Location = new Point(552, 310);
             linkLabelBrand.Name = "linkLabelBrand";
             linkLabelBrand.Size = new Size(211, 25);
-            linkLabelBrand.TabIndex = 26;
+            linkLabelBrand.TabIndex = 16;
             linkLabelBrand.TabStop = true;
             linkLabelBrand.Text = "Список производителей";
             linkLabelBrand.LinkClicked += LinkLabelBrand_LinkClicked;
@@ -319,7 +322,7 @@
             linkLabelDevice.Location = new Point(552, 262);
             linkLabelDevice.Name = "linkLabelDevice";
             linkLabelDevice.Size = new Size(124, 25);
-            linkLabelDevice.TabIndex = 25;
+            linkLabelDevice.TabIndex = 13;
             linkLabelDevice.TabStop = true;
             linkLabelDevice.Text = "Список типов";
             linkLabelDevice.LinkClicked += LinkLabelDevice_LinkClicked;
@@ -330,37 +333,40 @@
             checkBoxPriceAgreed.Location = new Point(496, 354);
             checkBoxPriceAgreed.Name = "checkBoxPriceAgreed";
             checkBoxPriceAgreed.Size = new Size(185, 29);
-            checkBoxPriceAgreed.TabIndex = 24;
+            checkBoxPriceAgreed.TabIndex = 21;
             checkBoxPriceAgreed.Text = "Цена согласована";
             checkBoxPriceAgreed.UseVisualStyleBackColor = true;
             checkBoxPriceAgreed.CheckedChanged += CheckBoxPriceAgreed_CheckedChanged;
+            checkBoxPriceAgreed.KeyDown += CheckBoxPriceAgreed_KeyDown;
             // 
             // textBoxDiagnosis
             // 
             textBoxDiagnosis.Location = new Point(270, 496);
             textBoxDiagnosis.Name = "textBoxDiagnosis";
             textBoxDiagnosis.Size = new Size(463, 31);
-            textBoxDiagnosis.TabIndex = 21;
+            textBoxDiagnosis.TabIndex = 25;
             textBoxDiagnosis.Click += TextBoxDiagnosis_Click;
             textBoxDiagnosis.TextChanged += TextBoxDiagnosis_TextChanged;
             textBoxDiagnosis.KeyDown += TextBoxDiagnosis_KeyDown;
+            textBoxDiagnosis.PreviewKeyDown += TextBoxDiagnosis_PreviewKeyDown;
             // 
             // textBoxEquipment
             // 
             textBoxEquipment.Location = new Point(270, 453);
             textBoxEquipment.Name = "textBoxEquipment";
             textBoxEquipment.Size = new Size(463, 31);
-            textBoxEquipment.TabIndex = 20;
+            textBoxEquipment.TabIndex = 24;
             textBoxEquipment.Click += TextBoxEquipment_Click;
             textBoxEquipment.TextChanged += TextBoxEquipment_TextChanged;
             textBoxEquipment.KeyDown += TextBoxEquipment_KeyDown;
+            textBoxEquipment.PreviewKeyDown += TextBoxEquipment_PreviewKeyDown;
             // 
             // textBoxFactoryNumber
             // 
             textBoxFactoryNumber.Location = new Point(270, 397);
             textBoxFactoryNumber.Name = "textBoxFactoryNumber";
             textBoxFactoryNumber.Size = new Size(171, 31);
-            textBoxFactoryNumber.TabIndex = 19;
+            textBoxFactoryNumber.TabIndex = 20;
             // 
             // textBoxModel
             // 
@@ -377,7 +383,7 @@
             comboBoxBrand.Location = new Point(270, 302);
             comboBoxBrand.Name = "comboBoxBrand";
             comboBoxBrand.Size = new Size(266, 33);
-            comboBoxBrand.TabIndex = 17;
+            comboBoxBrand.TabIndex = 15;
             // 
             // comboBoxDevice
             // 
@@ -387,7 +393,7 @@
             comboBoxDevice.Location = new Point(270, 259);
             comboBoxDevice.Name = "comboBoxDevice";
             comboBoxDevice.Size = new Size(266, 33);
-            comboBoxDevice.TabIndex = 16;
+            comboBoxDevice.TabIndex = 12;
             comboBoxDevice.SelectedIndexChanged += ComboBoxDevice_SelectedIndexChanged;
             // 
             // label11
@@ -396,7 +402,7 @@
             label11.Location = new Point(139, 541);
             label11.Name = "label11";
             label11.Size = new Size(116, 25);
-            label11.TabIndex = 15;
+            label11.TabIndex = 26;
             label11.Text = "Примечание";
             // 
             // label10
@@ -405,7 +411,7 @@
             label10.Location = new Point(23, 499);
             label10.Name = "label10";
             label10.Size = new Size(232, 25);
-            label10.TabIndex = 14;
+            label10.TabIndex = 25;
             label10.Text = "Предварительный диагноз";
             // 
             // label9
@@ -414,7 +420,7 @@
             label9.Location = new Point(126, 456);
             label9.Name = "label9";
             label9.Size = new Size(129, 25);
-            label9.TabIndex = 13;
+            label9.TabIndex = 23;
             label9.Text = "Комплектация";
             // 
             // label8
@@ -423,7 +429,7 @@
             label8.Location = new Point(96, 400);
             label8.Name = "label8";
             label8.Size = new Size(159, 25);
-            label8.TabIndex = 12;
+            label8.TabIndex = 19;
             label8.Text = "Заводской номер";
             // 
             // label7
@@ -432,7 +438,7 @@
             label7.Location = new Point(179, 358);
             label7.Name = "label7";
             label7.Size = new Size(76, 25);
-            label7.TabIndex = 11;
+            label7.TabIndex = 17;
             label7.Text = "Модель";
             // 
             // label6
@@ -441,7 +447,7 @@
             label6.Location = new Point(55, 305);
             label6.Name = "label6";
             label6.Size = new Size(200, 25);
-            label6.TabIndex = 10;
+            label6.TabIndex = 14;
             label6.Text = "Фирма-производитель";
             // 
             // label5
@@ -450,7 +456,7 @@
             label5.Location = new Point(119, 262);
             label5.Name = "label5";
             label5.Size = new Size(136, 25);
-            label5.TabIndex = 9;
+            label5.TabIndex = 11;
             label5.Text = "Тип устройства";
             // 
             // label4
@@ -459,7 +465,7 @@
             label4.Location = new Point(44, 214);
             label4.Name = "label4";
             label4.Size = new Size(211, 25);
-            label4.TabIndex = 8;
+            label4.TabIndex = 9;
             label4.Text = "Дата принятия в ремонт";
             // 
             // dateCreation
@@ -468,7 +474,7 @@
             dateCreation.Location = new Point(270, 209);
             dateCreation.Name = "dateCreation";
             dateCreation.Size = new Size(210, 31);
-            dateCreation.TabIndex = 7;
+            dateCreation.TabIndex = 10;
             // 
             // linkLabelMaster
             // 
@@ -557,7 +563,7 @@
             tabPageClient.Location = new Point(4, 34);
             tabPageClient.Name = "tabPageClient";
             tabPageClient.Padding = new Padding(3);
-            tabPageClient.Size = new Size(781, 647);
+            tabPageClient.Size = new Size(819, 647);
             tabPageClient.TabIndex = 1;
             tabPageClient.Text = "Информация о клиенте";
             tabPageClient.UseVisualStyleBackColor = true;
@@ -570,7 +576,7 @@
             linkLabel1.Location = new Point(507, 326);
             linkLabel1.Name = "linkLabel1";
             linkLabel1.Size = new Size(174, 25);
-            linkLabel1.TabIndex = 13;
+            linkLabel1.TabIndex = 10;
             linkLabel1.TabStop = true;
             linkLabel1.Text = "Сегодняшнее число";
             linkLabel1.LinkClicked += LinkLabel1_LinkClicked;
@@ -580,7 +586,7 @@
             textBoxDateLastCall.Location = new Point(248, 323);
             textBoxDateLastCall.Name = "textBoxDateLastCall";
             textBoxDateLastCall.Size = new Size(253, 31);
-            textBoxDateLastCall.TabIndex = 12;
+            textBoxDateLastCall.TabIndex = 9;
             textBoxDateLastCall.KeyPress += TextBoxDateLastCall_KeyPress;
             // 
             // label26
@@ -589,7 +595,7 @@
             label26.Location = new Point(23, 326);
             label26.Name = "label26";
             label26.Size = new Size(210, 25);
-            label26.TabIndex = 11;
+            label26.TabIndex = 8;
             label26.Text = "Дата последнего звонка";
             // 
             // label25
@@ -599,7 +605,7 @@
             label25.Location = new Point(79, 257);
             label25.Name = "label25";
             label25.Size = new Size(154, 25);
-            label25.TabIndex = 9;
+            label25.TabIndex = 6;
             label25.Text = "Качество клиента";
             // 
             // textBoxTypeClient
@@ -609,7 +615,7 @@
             textBoxTypeClient.Name = "textBoxTypeClient";
             textBoxTypeClient.ReadOnly = true;
             textBoxTypeClient.Size = new Size(253, 31);
-            textBoxTypeClient.TabIndex = 8;
+            textBoxTypeClient.TabIndex = 7;
             // 
             // textBoxNameAddress
             // 
@@ -618,7 +624,7 @@
             textBoxNameAddress.Name = "textBoxNameAddress";
             textBoxNameAddress.ReadOnly = true;
             textBoxNameAddress.Size = new Size(507, 31);
-            textBoxNameAddress.TabIndex = 7;
+            textBoxNameAddress.TabIndex = 3;
             // 
             // label19
             // 
@@ -627,7 +633,7 @@
             label19.Location = new Point(119, 93);
             label19.Name = "label19";
             label19.Size = new Size(111, 25);
-            label19.TabIndex = 6;
+            label19.TabIndex = 2;
             label19.Text = "ФИО, Адрес";
             // 
             // label13
@@ -647,7 +653,7 @@
             label12.Location = new Point(114, 42);
             label12.Name = "label12";
             label12.Size = new Size(116, 25);
-            label12.TabIndex = 3;
+            label12.TabIndex = 0;
             label12.Text = "ID заказчика";
             // 
             // textBoxSecondPhone
@@ -657,7 +663,7 @@
             textBoxSecondPhone.Name = "textBoxSecondPhone";
             textBoxSecondPhone.ReadOnly = true;
             textBoxSecondPhone.Size = new Size(253, 31);
-            textBoxSecondPhone.TabIndex = 1;
+            textBoxSecondPhone.TabIndex = 5;
             // 
             // textBoxIdClient
             // 
@@ -666,7 +672,7 @@
             textBoxIdClient.Name = "textBoxIdClient";
             textBoxIdClient.ReadOnly = true;
             textBoxIdClient.Size = new Size(253, 31);
-            textBoxIdClient.TabIndex = 0;
+            textBoxIdClient.TabIndex = 1;
             // 
             // tabPageDeviceRepair
             // 
@@ -697,7 +703,7 @@
             tabPageDeviceRepair.Location = new Point(4, 34);
             tabPageDeviceRepair.Name = "tabPageDeviceRepair";
             tabPageDeviceRepair.Padding = new Padding(3);
-            tabPageDeviceRepair.Size = new Size(781, 647);
+            tabPageDeviceRepair.Size = new Size(819, 647);
             tabPageDeviceRepair.TabIndex = 2;
             tabPageDeviceRepair.Text = "Ремонт аппарата";
             tabPageDeviceRepair.UseVisualStyleBackColor = true;
@@ -709,7 +715,7 @@
             label29.Location = new Point(698, 516);
             label29.Name = "label29";
             label29.Size = new Size(46, 25);
-            label29.TabIndex = 35;
+            label29.TabIndex = 23;
             label29.Text = "руб.";
             // 
             // textBoxSumPrice
@@ -718,7 +724,7 @@
             textBoxSumPrice.Name = "textBoxSumPrice";
             textBoxSumPrice.ReadOnly = true;
             textBoxSumPrice.Size = new Size(108, 31);
-            textBoxSumPrice.TabIndex = 34;
+            textBoxSumPrice.TabIndex = 22;
             // 
             // label18
             // 
@@ -727,7 +733,7 @@
             label18.Location = new Point(513, 516);
             label18.Name = "label18";
             label18.Size = new Size(65, 25);
-            label18.TabIndex = 33;
+            label18.TabIndex = 21;
             label18.Text = "Итого:";
             // 
             // labelRub3
@@ -737,7 +743,7 @@
             labelRub3.Location = new Point(698, 456);
             labelRub3.Name = "labelRub3";
             labelRub3.Size = new Size(46, 25);
-            labelRub3.TabIndex = 22;
+            labelRub3.TabIndex = 20;
             labelRub3.Text = "руб.";
             // 
             // textBoxPrice3
@@ -747,7 +753,7 @@
             textBoxPrice3.Name = "textBoxPrice3";
             textBoxPrice3.ReadOnly = true;
             textBoxPrice3.Size = new Size(108, 31);
-            textBoxPrice3.TabIndex = 21;
+            textBoxPrice3.TabIndex = 19;
             // 
             // textBoxProblem3
             // 
@@ -757,7 +763,7 @@
             textBoxProblem3.Name = "textBoxProblem3";
             textBoxProblem3.ReadOnly = true;
             textBoxProblem3.Size = new Size(208, 31);
-            textBoxProblem3.TabIndex = 20;
+            textBoxProblem3.TabIndex = 17;
             // 
             // labelPrice3
             // 
@@ -766,7 +772,7 @@
             labelPrice3.Location = new Point(525, 456);
             labelPrice3.Name = "labelPrice3";
             labelPrice3.Size = new Size(53, 25);
-            labelPrice3.TabIndex = 19;
+            labelPrice3.TabIndex = 18;
             labelPrice3.Text = "Цена";
             // 
             // labelProblem3
@@ -776,7 +782,7 @@
             labelProblem3.Location = new Point(27, 456);
             labelProblem3.Name = "labelProblem3";
             labelProblem3.Size = new Size(228, 25);
-            labelProblem3.TabIndex = 18;
+            labelProblem3.TabIndex = 16;
             labelProblem3.Text = "Найденная неисправность";
             // 
             // labelRub2
@@ -786,7 +792,7 @@
             labelRub2.Location = new Point(698, 409);
             labelRub2.Name = "labelRub2";
             labelRub2.Size = new Size(46, 25);
-            labelRub2.TabIndex = 17;
+            labelRub2.TabIndex = 15;
             labelRub2.Text = "руб.";
             // 
             // textBoxPrice2
@@ -797,7 +803,7 @@
             textBoxPrice2.Name = "textBoxPrice2";
             textBoxPrice2.ReadOnly = true;
             textBoxPrice2.Size = new Size(108, 31);
-            textBoxPrice2.TabIndex = 16;
+            textBoxPrice2.TabIndex = 14;
             // 
             // textBoxProblem2
             // 
@@ -807,7 +813,7 @@
             textBoxProblem2.Name = "textBoxProblem2";
             textBoxProblem2.ReadOnly = true;
             textBoxProblem2.Size = new Size(208, 31);
-            textBoxProblem2.TabIndex = 15;
+            textBoxProblem2.TabIndex = 12;
             // 
             // labelPrice2
             // 
@@ -816,7 +822,7 @@
             labelPrice2.Location = new Point(525, 409);
             labelPrice2.Name = "labelPrice2";
             labelPrice2.Size = new Size(53, 25);
-            labelPrice2.TabIndex = 14;
+            labelPrice2.TabIndex = 13;
             labelPrice2.Text = "Цена";
             // 
             // labelProblem2
@@ -826,7 +832,7 @@
             labelProblem2.Location = new Point(27, 409);
             labelProblem2.Name = "labelProblem2";
             labelProblem2.Size = new Size(228, 25);
-            labelProblem2.TabIndex = 13;
+            labelProblem2.TabIndex = 11;
             labelProblem2.Text = "Найденная неисправность";
             // 
             // labelRub1
@@ -836,7 +842,7 @@
             labelRub1.Location = new Point(698, 362);
             labelRub1.Name = "labelRub1";
             labelRub1.Size = new Size(46, 25);
-            labelRub1.TabIndex = 12;
+            labelRub1.TabIndex = 10;
             labelRub1.Text = "руб.";
             // 
             // listBox1
@@ -847,7 +853,7 @@
             listBox1.Location = new Point(270, 32);
             listBox1.Name = "listBox1";
             listBox1.Size = new Size(432, 204);
-            listBox1.TabIndex = 11;
+            listBox1.TabIndex = 1;
             // 
             // textBoxPrice1
             // 
@@ -869,7 +875,7 @@
             textBoxProblem1.Name = "textBoxProblem1";
             textBoxProblem1.ReadOnly = true;
             textBoxProblem1.Size = new Size(208, 31);
-            textBoxProblem1.TabIndex = 8;
+            textBoxProblem1.TabIndex = 7;
             // 
             // labelPrice1
             // 
@@ -878,7 +884,7 @@
             labelPrice1.Location = new Point(525, 362);
             labelPrice1.Name = "labelPrice1";
             labelPrice1.Size = new Size(53, 25);
-            labelPrice1.TabIndex = 7;
+            labelPrice1.TabIndex = 8;
             labelPrice1.Text = "Цена";
             // 
             // labelProblem1
@@ -905,7 +911,7 @@
             textBoxCountDetails.Name = "textBoxCountDetails";
             textBoxCountDetails.ReadOnly = true;
             textBoxCountDetails.Size = new Size(150, 31);
-            textBoxCountDetails.TabIndex = 4;
+            textBoxCountDetails.TabIndex = 3;
             // 
             // label17
             // 
@@ -914,7 +920,7 @@
             label17.Location = new Point(24, 294);
             label17.Name = "label17";
             label17.Size = new Size(231, 25);
-            label17.TabIndex = 2;
+            label17.TabIndex = 4;
             label17.Text = "Суммарная цена за детали";
             // 
             // label16
@@ -924,7 +930,7 @@
             label16.Location = new Point(80, 252);
             label16.Name = "label16";
             label16.Size = new Size(175, 25);
-            label16.TabIndex = 1;
+            label16.TabIndex = 2;
             label16.Text = "Количество деталей";
             // 
             // label15
@@ -952,7 +958,7 @@
             tabPageGuarantee.Location = new Point(4, 34);
             tabPageGuarantee.Name = "tabPageGuarantee";
             tabPageGuarantee.Padding = new Padding(3);
-            tabPageGuarantee.Size = new Size(781, 647);
+            tabPageGuarantee.Size = new Size(819, 647);
             tabPageGuarantee.TabIndex = 3;
             tabPageGuarantee.Text = "Гарантия на устройство";
             tabPageGuarantee.UseVisualStyleBackColor = true;
@@ -973,7 +979,7 @@
             textBoxEndGuarantee.Name = "textBoxEndGuarantee";
             textBoxEndGuarantee.ReadOnly = true;
             textBoxEndGuarantee.Size = new Size(180, 31);
-            textBoxEndGuarantee.TabIndex = 8;
+            textBoxEndGuarantee.TabIndex = 7;
             // 
             // textBoxGuaranteePeriod
             // 
@@ -982,7 +988,7 @@
             textBoxGuaranteePeriod.Name = "textBoxGuaranteePeriod";
             textBoxGuaranteePeriod.ReadOnly = true;
             textBoxGuaranteePeriod.Size = new Size(220, 31);
-            textBoxGuaranteePeriod.TabIndex = 7;
+            textBoxGuaranteePeriod.TabIndex = 5;
             // 
             // textBoxAvailabilityGuarantee
             // 
@@ -992,7 +998,7 @@
             textBoxAvailabilityGuarantee.Name = "textBoxAvailabilityGuarantee";
             textBoxAvailabilityGuarantee.ReadOnly = true;
             textBoxAvailabilityGuarantee.Size = new Size(260, 31);
-            textBoxAvailabilityGuarantee.TabIndex = 6;
+            textBoxAvailabilityGuarantee.TabIndex = 3;
             // 
             // dateIssue
             // 
@@ -1001,7 +1007,7 @@
             dateIssue.Location = new Point(270, 30);
             dateIssue.Name = "dateIssue";
             dateIssue.Size = new Size(153, 31);
-            dateIssue.TabIndex = 5;
+            dateIssue.TabIndex = 1;
             dateIssue.ValueChanged += DateIssue_ValueChanged;
             // 
             // label24
@@ -1011,7 +1017,7 @@
             label24.Location = new Point(48, 209);
             label24.Name = "label24";
             label24.Size = new Size(207, 25);
-            label24.TabIndex = 4;
+            label24.TabIndex = 8;
             label24.Text = "Осталось до окончания";
             // 
             // label23
@@ -1021,7 +1027,7 @@
             label23.Location = new Point(29, 167);
             label23.Name = "label23";
             label23.Size = new Size(226, 25);
-            label23.TabIndex = 3;
+            label23.TabIndex = 6;
             label23.Text = "Срок окончания гарантии";
             // 
             // label22
@@ -1031,7 +1037,7 @@
             label22.Location = new Point(36, 125);
             label22.Name = "label22";
             label22.Size = new Size(219, 25);
-            label22.TabIndex = 2;
+            label22.TabIndex = 4;
             label22.Text = "Срок гарантии в месяцах";
             // 
             // label21
@@ -1041,7 +1047,7 @@
             label21.Location = new Point(95, 83);
             label21.Name = "label21";
             label21.Size = new Size(160, 25);
-            label21.TabIndex = 1;
+            label21.TabIndex = 2;
             label21.Text = "Наличие гарантии";
             // 
             // label20
@@ -1059,7 +1065,7 @@
             buttonSave.Location = new Point(428, 706);
             buttonSave.Name = "buttonSave";
             buttonSave.Size = new Size(194, 43);
-            buttonSave.TabIndex = 1;
+            buttonSave.TabIndex = 28;
             buttonSave.Text = "Сохранить";
             buttonSave.UseVisualStyleBackColor = true;
             buttonSave.Click += ButtonSave_Click;
@@ -1069,7 +1075,7 @@
             buttonExit.Location = new Point(641, 706);
             buttonExit.Name = "buttonExit";
             buttonExit.Size = new Size(194, 43);
-            buttonExit.TabIndex = 27;
+            buttonExit.TabIndex = 29;
             buttonExit.Text = "Выход";
             buttonExit.UseVisualStyleBackColor = true;
             buttonExit.Click += ButtonExit_Click;
@@ -1092,7 +1098,6 @@
             MaximizeBox = false;
             Name = "FeaturesOrder";
             Text = "Свойства устройства";
-            Activated += FeaturesOrder_Activated;
             Load += FeaturesOrder_Load;
             KeyDown += FeaturesOrder_KeyDown;
             tabControl1.ResumeLayout(false);

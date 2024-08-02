@@ -150,7 +150,7 @@
             label9.Location = new Point(274, 129);
             label9.Name = "label9";
             label9.Size = new Size(227, 25);
-            label9.TabIndex = 9;
+            label9.TabIndex = 11;
             label9.Text = "Гарантировать аппарат на";
             // 
             // label10
@@ -159,7 +159,7 @@
             label10.Location = new Point(587, 129);
             label10.Name = "label10";
             label10.Size = new Size(46, 25);
-            label10.TabIndex = 10;
+            label10.TabIndex = 13;
             label10.Text = "мес.";
             // 
             // labelGuaranteePeriod
@@ -168,7 +168,7 @@
             labelGuaranteePeriod.Location = new Point(778, 129);
             labelGuaranteePeriod.Name = "labelGuaranteePeriod";
             labelGuaranteePeriod.Size = new Size(100, 25);
-            labelGuaranteePeriod.TabIndex = 11;
+            labelGuaranteePeriod.TabIndex = 15;
             labelGuaranteePeriod.Text = "08.05.2024";
             // 
             // label11
@@ -177,7 +177,7 @@
             label11.Location = new Point(377, 216);
             label11.Name = "label11";
             label11.Size = new Size(124, 25);
-            label11.TabIndex = 12;
+            label11.TabIndex = 16;
             label11.Text = "ФИО клиента:";
             // 
             // label12
@@ -186,7 +186,7 @@
             label12.Location = new Point(288, 241);
             label12.Name = "label12";
             label12.Size = new Size(213, 25);
-            label12.TabIndex = 13;
+            label12.TabIndex = 18;
             label12.Text = "Дата принятия аппарата:";
             // 
             // label13
@@ -195,7 +195,7 @@
             label13.Location = new Point(368, 266);
             label13.Name = "label13";
             label13.Size = new Size(133, 25);
-            label13.TabIndex = 14;
+            label13.TabIndex = 20;
             label13.Text = "Комплектация:";
             // 
             // label14
@@ -204,7 +204,7 @@
             label14.Location = new Point(269, 291);
             label14.Name = "label14";
             label14.Size = new Size(232, 25);
-            label14.TabIndex = 15;
+            label14.TabIndex = 22;
             label14.Text = "Кол-во деталей на ремонт:";
             // 
             // label15
@@ -213,7 +213,7 @@
             label15.Location = new Point(330, 316);
             label15.Name = "label15";
             label15.Size = new Size(171, 25);
-            label15.TabIndex = 16;
+            label15.TabIndex = 24;
             label15.Text = "Стоимость деталей:";
             // 
             // label16
@@ -222,7 +222,7 @@
             label16.Location = new Point(369, 341);
             label16.Name = "label16";
             label16.Size = new Size(132, 25);
-            label16.TabIndex = 17;
+            label16.TabIndex = 26;
             label16.Text = "Цена ремонта:";
             // 
             // label17
@@ -240,7 +240,7 @@
             label18.Location = new Point(752, 316);
             label18.Name = "label18";
             label18.Size = new Size(68, 25);
-            label18.TabIndex = 19;
+            label18.TabIndex = 28;
             label18.Text = "Итого:";
             // 
             // labelTotalPrice
@@ -249,7 +249,7 @@
             labelTotalPrice.Location = new Point(752, 341);
             labelTotalPrice.Name = "labelTotalPrice";
             labelTotalPrice.Size = new Size(61, 25);
-            labelTotalPrice.TabIndex = 20;
+            labelTotalPrice.TabIndex = 29;
             labelTotalPrice.Text = "0 руб.";
             // 
             // labelNameClient
@@ -258,7 +258,7 @@
             labelNameClient.Location = new Point(507, 216);
             labelNameClient.Name = "labelNameClient";
             labelNameClient.Size = new Size(62, 25);
-            labelNameClient.TabIndex = 21;
+            labelNameClient.TabIndex = 17;
             labelNameClient.Text = "78987";
             // 
             // labelDateCreate
@@ -267,7 +267,7 @@
             labelDateCreate.Location = new Point(507, 241);
             labelDateCreate.Name = "labelDateCreate";
             labelDateCreate.Size = new Size(100, 25);
-            labelDateCreate.TabIndex = 22;
+            labelDateCreate.TabIndex = 19;
             labelDateCreate.Text = "04.04.2024";
             // 
             // labelEquipment
@@ -276,7 +276,7 @@
             labelEquipment.Location = new Point(507, 266);
             labelEquipment.Name = "labelEquipment";
             labelEquipment.Size = new Size(19, 25);
-            labelEquipment.TabIndex = 23;
+            labelEquipment.TabIndex = 21;
             labelEquipment.Text = "-";
             // 
             // labelCountDetails
@@ -285,7 +285,7 @@
             labelCountDetails.Location = new Point(507, 291);
             labelCountDetails.Name = "labelCountDetails";
             labelCountDetails.Size = new Size(52, 25);
-            labelCountDetails.TabIndex = 24;
+            labelCountDetails.TabIndex = 23;
             labelCountDetails.Text = "0 шт.";
             // 
             // labelPriceDetails
@@ -303,7 +303,7 @@
             labelPriceRepair.Location = new Point(508, 341);
             labelPriceRepair.Name = "labelPriceRepair";
             labelPriceRepair.Size = new Size(61, 25);
-            labelPriceRepair.TabIndex = 26;
+            labelPriceRepair.TabIndex = 27;
             labelPriceRepair.Text = "0 руб.";
             // 
             // dateTimePicker1
@@ -312,7 +312,7 @@
             dateTimePicker1.Location = new Point(508, 78);
             dateTimePicker1.Name = "dateTimePicker1";
             dateTimePicker1.Size = new Size(164, 31);
-            dateTimePicker1.TabIndex = 27;
+            dateTimePicker1.TabIndex = 9;
             dateTimePicker1.ValueChanged += DateTimePicker1_ValueChanged;
             // 
             // textBoxGuarantee
@@ -320,7 +320,7 @@
             textBoxGuarantee.Location = new Point(507, 126);
             textBoxGuarantee.Name = "textBoxGuarantee";
             textBoxGuarantee.Size = new Size(74, 31);
-            textBoxGuarantee.TabIndex = 28;
+            textBoxGuarantee.TabIndex = 12;
             textBoxGuarantee.Text = "1";
             textBoxGuarantee.TextChanged += TextBoxGuarantee_TextChanged;
             textBoxGuarantee.KeyPress += TextBoxGuarantee_KeyPress;
@@ -330,7 +330,7 @@
             buttonIssueDevice.Location = new Point(392, 390);
             buttonIssueDevice.Name = "buttonIssueDevice";
             buttonIssueDevice.Size = new Size(241, 43);
-            buttonIssueDevice.TabIndex = 29;
+            buttonIssueDevice.TabIndex = 30;
             buttonIssueDevice.Text = "Выдать аппарат";
             buttonIssueDevice.UseVisualStyleBackColor = true;
             buttonIssueDevice.Click += ButtonIssueDevice_Click;
@@ -340,7 +340,7 @@
             buttonExit.Location = new Point(656, 390);
             buttonExit.Name = "buttonExit";
             buttonExit.Size = new Size(241, 43);
-            buttonExit.TabIndex = 30;
+            buttonExit.TabIndex = 31;
             buttonExit.Text = "Выход";
             buttonExit.UseVisualStyleBackColor = true;
             buttonExit.Click += ButtonExit_Click;
@@ -352,7 +352,7 @@
             linkLabelDateNow.Location = new Point(688, 83);
             linkLabelDateNow.Name = "linkLabelDateNow";
             linkLabelDateNow.Size = new Size(161, 25);
-            linkLabelDateNow.TabIndex = 31;
+            linkLabelDateNow.TabIndex = 10;
             linkLabelDateNow.TabStop = true;
             linkLabelDateNow.Text = "Сегодняшняя дата";
             linkLabelDateNow.LinkClicked += LinkLabelDateNow_LinkClicked;
@@ -363,7 +363,7 @@
             labelIsGuarantee.Location = new Point(668, 129);
             labelIsGuarantee.Name = "labelIsGuarantee";
             labelIsGuarantee.Size = new Size(111, 25);
-            labelIsGuarantee.TabIndex = 32;
+            labelIsGuarantee.TabIndex = 14;
             labelIsGuarantee.Text = "Гарантия до";
             // 
             // IssuingClient

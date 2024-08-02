@@ -55,19 +55,20 @@
             dataGridView1.Location = new Point(12, 77);
             dataGridView1.MultiSelect = false;
             dataGridView1.Name = "dataGridView1";
+            dataGridView1.ReadOnly = true;
             dataGridView1.RowHeadersVisible = false;
             dataGridView1.RowHeadersWidth = 62;
             dataGridView1.ScrollBars = ScrollBars.Vertical;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.Size = new Size(670, 388);
-            dataGridView1.TabIndex = 0;
+            dataGridView1.TabIndex = 1;
             // 
             // textBoxEnterName
             // 
             textBoxEnterName.Location = new Point(12, 474);
             textBoxEnterName.Name = "textBoxEnterName";
             textBoxEnterName.Size = new Size(220, 31);
-            textBoxEnterName.TabIndex = 1;
+            textBoxEnterName.TabIndex = 0;
             textBoxEnterName.TextChanged += TextBoxEnterName_TextChanged;
             // 
             // buttonWhite
@@ -77,7 +78,7 @@
             buttonWhite.Location = new Point(78, 9);
             buttonWhite.Name = "buttonWhite";
             buttonWhite.Size = new Size(50, 57);
-            buttonWhite.TabIndex = 2;
+            buttonWhite.TabIndex = 3;
             buttonWhite.UseVisualStyleBackColor = true;
             buttonWhite.Click += ButtonWhite_Click;
             // 
@@ -88,7 +89,7 @@
             buttonNormal.Location = new Point(144, 9);
             buttonNormal.Name = "buttonNormal";
             buttonNormal.Size = new Size(50, 57);
-            buttonNormal.TabIndex = 3;
+            buttonNormal.TabIndex = 4;
             buttonNormal.UseVisualStyleBackColor = true;
             buttonNormal.Click += ButtonNormal_Click;
             // 
@@ -99,7 +100,7 @@
             buttonBlack.Location = new Point(210, 9);
             buttonBlack.Name = "buttonBlack";
             buttonBlack.Size = new Size(50, 57);
-            buttonBlack.TabIndex = 4;
+            buttonBlack.TabIndex = 5;
             buttonBlack.UseVisualStyleBackColor = true;
             buttonBlack.Click += ButtonBlack_Click;
             // 
@@ -110,7 +111,7 @@
             buttonAll.Location = new Point(12, 9);
             buttonAll.Name = "buttonAll";
             buttonAll.Size = new Size(50, 57);
-            buttonAll.TabIndex = 5;
+            buttonAll.TabIndex = 2;
             buttonAll.UseVisualStyleBackColor = true;
             buttonAll.Click += ButtonAll_Click;
             // 
@@ -140,7 +141,6 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "GuideClients";
             Text = "Клиенты";
-            Activated += GuideClients_Activated;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
             PerformLayout();

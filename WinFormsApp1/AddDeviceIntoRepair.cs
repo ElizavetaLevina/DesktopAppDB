@@ -1,4 +1,5 @@
-﻿using WinFormsApp1.DTO;
+﻿using System.Windows.Forms;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Helpers;
 using WinFormsApp1.Reports;
@@ -338,6 +339,7 @@ namespace WinFormsApp1
                 textBoxNameAddress.Focus();
             }*/
         }
+
         private void UpdateListBox(ListBox listBox, TextBox textBox, bool equipment = false, bool diagnosis = false, bool click = false)
         {
             if (click)
@@ -538,11 +540,8 @@ namespace WinFormsApp1
 
         private void TextBoxNameClient_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-            if (e.KeyCode == Keys.Tab)
-            {
-                if (listBoxClient.Visible)
-                    listBoxClient.Visible = false;
-            }
+            if (KeyPressHelper.CheckKeyTab(e.KeyCode, listBoxClient.Visible))
+                listBoxClient.Visible = false;
         }
 
         private void ListBoxClient_Click(object sender, EventArgs e)
@@ -616,20 +615,14 @@ namespace WinFormsApp1
 
         private void TextBoxEquipment_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-            if (e.KeyCode == Keys.Tab)
-            {
-                if (listBoxEquipmentDiagnosis.Visible)
-                    listBoxEquipmentDiagnosis.Visible = false;
-            }
+            if (KeyPressHelper.CheckKeyTab(e.KeyCode, listBoxEquipmentDiagnosis.Visible))
+                listBoxEquipmentDiagnosis.Visible = false;
         }
 
         private void TextBoxDiagnosis_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-            if (e.KeyCode == Keys.Tab)
-            {
-                if (listBoxEquipmentDiagnosis.Visible)
-                    listBoxEquipmentDiagnosis.Visible = false;
-            }
+            if (KeyPressHelper.CheckKeyTab(e.KeyCode, listBoxEquipmentDiagnosis.Visible))
+                listBoxEquipmentDiagnosis.Visible = false;
         }
 
         private void ListBoxEquipmentDiagnosis_Click(object sender, EventArgs e)
@@ -680,6 +673,7 @@ namespace WinFormsApp1
         {
             UpdateListBox(listBoxEquipmentDiagnosis, textBoxDiagnosis, diagnosis: true, click: true);
         }
+
         private void CheckBox1_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBox1.Checked) textBoxMaxPrice.Enabled = true;

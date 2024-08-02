@@ -78,7 +78,7 @@
             panel1.Location = new Point(12, 114);
             panel1.Name = "panel1";
             panel1.Size = new Size(162, 438);
-            panel1.TabIndex = 0;
+            panel1.TabIndex = 1;
             // 
             // radioButton12
             // 
@@ -247,7 +247,7 @@
             dataGridView1.ScrollBars = ScrollBars.Vertical;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.Size = new Size(836, 481);
-            dataGridView1.TabIndex = 1;
+            dataGridView1.TabIndex = 3;
             dataGridView1.CellValidating += DataGridView1_CellValidating;
             // 
             // colMaster
@@ -278,7 +278,7 @@
             comboBoxYears.Location = new Point(12, 75);
             comboBoxYears.Name = "comboBoxYears";
             comboBoxYears.Size = new Size(162, 33);
-            comboBoxYears.TabIndex = 3;
+            comboBoxYears.TabIndex = 0;
             // 
             // label1
             // 
@@ -356,7 +356,7 @@
             comboBoxCalculationByDate.Location = new Point(369, 514);
             comboBoxCalculationByDate.Name = "comboBoxCalculationByDate";
             comboBoxCalculationByDate.Size = new Size(182, 33);
-            comboBoxCalculationByDate.TabIndex = 14;
+            comboBoxCalculationByDate.TabIndex = 2;
             comboBoxCalculationByDate.SelectedIndexChanged += ComboBoxCalculationByDate_SelectedIndexChanged;
             // 
             // CalculatingEmployeeSalaries

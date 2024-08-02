@@ -136,7 +136,7 @@
             radioButtonProfitMaster.Location = new Point(168, 237);
             radioButtonProfitMaster.Name = "radioButtonProfitMaster";
             radioButtonProfitMaster.Size = new Size(271, 29);
-            radioButtonProfitMaster.TabIndex = 10;
+            radioButtonProfitMaster.TabIndex = 11;
             radioButtonProfitMaster.TabStop = true;
             radioButtonProfitMaster.Text = "Процент с прибыли мастера";
             radioButtonProfitMaster.UseVisualStyleBackColor = true;
@@ -148,7 +148,7 @@
             radioButtonProfitOrganization.Location = new Point(168, 272);
             radioButtonProfitOrganization.Name = "radioButtonProfitOrganization";
             radioButtonProfitOrganization.Size = new Size(311, 29);
-            radioButtonProfitOrganization.TabIndex = 11;
+            radioButtonProfitOrganization.TabIndex = 12;
             radioButtonProfitOrganization.TabStop = true;
             radioButtonProfitOrganization.Text = "Процент с прибыли организации";
             radioButtonProfitOrganization.UseVisualStyleBackColor = true;
@@ -159,7 +159,7 @@
             textBoxRate.Location = new Point(273, 201);
             textBoxRate.Name = "textBoxRate";
             textBoxRate.Size = new Size(150, 31);
-            textBoxRate.TabIndex = 12;
+            textBoxRate.TabIndex = 10;
             textBoxRate.KeyPress += TextBoxRate_KeyPress;
             // 
             // labelRate
@@ -174,7 +174,7 @@
             // trackBarPercent
             // 
             trackBarPercent.Enabled = false;
-            trackBarPercent.Location = new Point(100, 308);
+            trackBarPercent.Location = new Point(100, 351);
             trackBarPercent.Maximum = 100;
             trackBarPercent.Name = "trackBarPercent";
             trackBarPercent.Size = new Size(429, 69);
@@ -184,7 +184,7 @@
             // labelPercent
             // 
             labelPercent.Enabled = false;
-            labelPercent.Location = new Point(269, 352);
+            labelPercent.Location = new Point(269, 392);
             labelPercent.Name = "labelPercent";
             labelPercent.Size = new Size(44, 25);
             labelPercent.TabIndex = 15;
@@ -193,7 +193,7 @@
             // 
             // buttonAdd
             // 
-            buttonAdd.Location = new Point(212, 397);
+            buttonAdd.Location = new Point(212, 448);
             buttonAdd.Name = "buttonAdd";
             buttonAdd.Size = new Size(210, 43);
             buttonAdd.TabIndex = 17;
@@ -203,7 +203,7 @@
             // 
             // buttonExit
             // 
-            buttonExit.Location = new Point(428, 397);
+            buttonExit.Location = new Point(428, 448);
             buttonExit.Name = "buttonExit";
             buttonExit.Size = new Size(210, 43);
             buttonExit.TabIndex = 18;
@@ -215,7 +215,7 @@
             // 
             labelSymbolPercent.AutoSize = true;
             labelSymbolPercent.Enabled = false;
-            labelSymbolPercent.Location = new Point(306, 352);
+            labelSymbolPercent.Location = new Point(306, 392);
             labelSymbolPercent.Name = "labelSymbolPercent";
             labelSymbolPercent.Size = new Size(27, 25);
             labelSymbolPercent.TabIndex = 19;
@@ -224,18 +224,19 @@
             // label6
             // 
             label6.BorderStyle = BorderStyle.Fixed3D;
-            label6.Location = new Point(0, 388);
+            label6.Location = new Point(0, 439);
             label6.Name = "label6";
             label6.Size = new Size(646, 2);
             label6.TabIndex = 5;
             // 
             // linkLabelRateEdit
             // 
+            linkLabelRateEdit.AutoSize = true;
             linkLabelRateEdit.LinkColor = Color.FromArgb(64, 64, 64);
-            linkLabelRateEdit.Location = new Point(501, 232);
+            linkLabelRateEdit.Location = new Point(168, 314);
             linkLabelRateEdit.Name = "linkLabelRateEdit";
-            linkLabelRateEdit.Size = new Size(133, 84);
-            linkLabelRateEdit.TabIndex = 25;
+            linkLabelRateEdit.Size = new Size(323, 25);
+            linkLabelRateEdit.TabIndex = 13;
             linkLabelRateEdit.TabStop = true;
             linkLabelRateEdit.Text = "Редактировать проценты по месяцам";
             linkLabelRateEdit.LinkClicked += LinkLabelRateEdit_LinkClicked;
@@ -244,7 +245,7 @@
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(646, 448);
+            ClientSize = new Size(646, 500);
             Controls.Add(linkLabelRateEdit);
             Controls.Add(labelSymbolPercent);
             Controls.Add(buttonExit);

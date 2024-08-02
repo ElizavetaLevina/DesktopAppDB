@@ -9,6 +9,7 @@ namespace WinFormsApp1
     public partial class FeaturesOrder : Form
     {
         public int idOrder;
+        readonly string withoutMaster = "-";
         StatusOrderEnum statusOrder;
         public bool show = true;
         public bool logIn;
@@ -116,7 +117,7 @@ namespace WinFormsApp1
         private void UpdateComboBox(ElementOfRepairEnum elementOfRepair)
         {
             mastersDTO = masterRepository.GetMastersForOutput();
-            mastersDTO.Insert(0, new MasterDTO() { Id = null, NameMaster = "-" });
+            mastersDTO.Insert(0, new MasterDTO() { Id = null, NameMaster = withoutMaster });
             switch (elementOfRepair)
             {
                 case ElementOfRepairEnum.MainMasterElement:
@@ -152,9 +153,6 @@ namespace WinFormsApp1
 
         public void OrderComplete()
         {
-            int summDetails = 0;
-            int sumPrice = 0;
-
             var detailsDTO = warehouseRepository.GetDetailsInOrder(idOrder);
 
             List<TextBox> problem = [textBoxProblem1, textBoxProblem2, textBoxProblem3];
@@ -166,9 +164,8 @@ namespace WinFormsApp1
             for (int i = 0; i < detailsDTO.Count; i++)
             {
                 listBox1.Items.Add(String.Format("{0}. {1} ({2} руб.)", i + 1, detailsDTO[i].NameDetail, detailsDTO[i].PriceSale));
-                summDetails += detailsDTO[i].PriceSale;
             }
-            textBoxPriceDetails.Text = String.Format("{0} руб.", summDetails);
+            textBoxPriceDetails.Text = String.Format("{0} руб.", detailsDTO.Sum(i => i.PriceSale));
             textBoxCountDetails.Text = String.Format("{0} шт.", detailsDTO.Count);
 
             var malfunctionOrderDTO = malfunctionOrderRepository.GetMalfunctionOrdersByIdOrder(idOrder);
@@ -182,9 +179,8 @@ namespace WinFormsApp1
                 lProblem[i].ForeColor = Color.Black;
                 lPrice[i].ForeColor = Color.Black;
                 lRub[i].ForeColor = Color.Black;
-                sumPrice += malfunctionOrderDTO[i].Price;
             }
-            textBoxSumPrice.Text = sumPrice.ToString();
+            textBoxSumPrice.Text = malfunctionOrderDTO.Sum(i => i.Price).ToString();
         }
 
         public void OrderIssue()
@@ -216,7 +212,7 @@ namespace WinFormsApp1
                 textBoxAvailabilityGuarantee.Text = "Отсутствует";
 
             textBoxGuaranteePeriod.Text = String.Format("{0} мес.", orderDTO.Guarantee);
-            textBoxEndGuarantee.Text = orderDTO.DateEndGuarantee.ToString();
+            textBoxEndGuarantee.Text = orderDTO.DateEndGuarantee.Value.ToShortDateString();
 
             if (((int)(orderDTO.DateEndGuarantee.Value - DateTime.Now).TotalDays) > 0)
                 textBoxGuaranteeLeft.Text = String.Format("{0} дн.",
@@ -259,7 +255,8 @@ namespace WinFormsApp1
                 if (statusOrder == StatusOrderEnum.GuaranteeIssue || statusOrder == StatusOrderEnum.Archive)
                     dateIssue.Enabled = true;
                 linkLabelLogIn.Text = Properties.Settings.Default.Login;
-                textBoxMaxPrice.Enabled = true;
+                if (checkBoxPriceAgreed.Checked)
+                    textBoxMaxPrice.Enabled = true;
                 checkBoxPriceAgreed.Enabled = true;
             }
             else
@@ -270,6 +267,90 @@ namespace WinFormsApp1
                 linkLabelLogIn.Text = "Войти (Ctrl+D)";
                 textBoxMaxPrice.Enabled = false;
                 checkBoxPriceAgreed.Enabled = false;
+            }
+        }
+
+        private void FeaturesOrder_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.D)
+            {
+                LogInToTheSystem();
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void FillingListBox(ListBox listBox, bool equipment = false, bool diagnosis = false, bool click = false)
+        {
+            if (click)
+            {
+                if (listBox.Visible)
+                {
+                    listBox.Visible = false;
+                    return;
+                }
+            }
+
+            listBox.Items.Clear();
+
+            if (equipment)
+            {
+                equipmentsDTO = equipmentRepository.GetEquipmentsByName(textBoxEquipment.Text);
+                foreach (var item in equipmentsDTO)
+                {
+                    listBox.Items.Add(item.Name);
+                }
+            }
+            else if (diagnosis)
+            {
+                diagnosesDTO = diagnosisRepository.GetDiagnosesByName(textBoxDiagnosis.Text);
+                foreach (var item in diagnosesDTO)
+                {
+                    listBox.Items.Add(item.Name);
+                }
+            }
+            if (listBox.Items.Count > 0)
+                listBox.Visible = true;
+            else
+                listBox.Visible = false;
+        }
+
+        private void TextBoxKeyDown(Keys keyCode, TextBox textBox, ListBox listBox)
+        {
+            if (keyCode == Keys.Enter)
+            {
+                if (listBox.Visible)
+                    listBox.Visible = false;
+                textBox.Focus();
+            }
+            else if (keyCode == Keys.Down)
+            {
+                listBox.Focus();
+                try
+                {
+                    if (listBox.SelectedIndex < listBox1.Items.Count)
+                        listBox.SelectedIndex += 1;
+                }
+                catch { }
+            }
+            else if (keyCode == Keys.Up)
+            {
+                listBox.Focus();
+                try
+                {
+                    if (listBox.SelectedIndex > 1)
+                        listBox.SelectedIndex -= 1;
+                }
+                catch { }
+            }
+        }
+
+        private void SelectingElementsListBox(ListBox listBox, TextBox textBoxCurrent, TextBox textBoxNext)
+        {
+            if (listBox.SelectedIndex >= 0)
+            {
+                textBoxCurrent.Text = listBox.Items[listBox.SelectedIndex].ToString();
+                listBox.Visible = false;
+                textBoxNext.Focus();
             }
         }
 
@@ -304,6 +385,177 @@ namespace WinFormsApp1
             UpdateComboBox(ElementOfRepairEnum.BrandDeviceElement);
         }
 
+        private void TextBoxPriceRepair_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
+        }
+
+        private void LinkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            textBoxDateLastCall.Text = DateTime.Now.ToShortDateString();
+        }
+
+        private void TextBoxDateLastCall_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
+        }
+
+        private void FeaturesOrder_Load(object sender, EventArgs e)
+        {
+            timer1.Interval = 200;
+            timer1.Enabled = true;
+        }
+
+        private void Timer1_Tick(object sender, EventArgs e)
+        {
+            if (show)
+            {
+                if (!orderDTO.PriceAgreed)
+                {
+                    show = false;
+                    Warning warning = new()
+                    {
+                        StartPosition = FormStartPosition.CenterParent,
+                        LabelText = "Цена не согласована!"
+                    };
+                    warning.ShowDialog();
+                }
+            }
+        }
+
+        private void TextBoxMaxPrice_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !KeyPressHelper.CheckKeyPress(true, textBoxMaxPrice.Text, e.KeyChar);
+        }
+
+        private void CheckBoxPriceAgreed_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxPriceAgreed.Checked)
+                textBoxMaxPrice.Enabled = true;
+            else
+                textBoxMaxPrice.Enabled = false;
+        }
+
+        private void CheckBoxPriceAgreed_KeyDown(object sender, KeyEventArgs e)
+        {
+            checkBoxPriceAgreed.Checked = !checkBoxPriceAgreed.Checked;
+        }
+
+        private void TextBoxEquipment_Click(object sender, EventArgs e)
+        {
+            FillingListBox(listBoxEquipment, equipment: true, click: true);
+        }
+
+        private void TextBoxDiagnosis_Click(object sender, EventArgs e)
+        {
+            FillingListBox(listBoxDiagnosis, diagnosis: true, click: true);
+        }
+
+        private void TextBoxEquipment_TextChanged(object sender, EventArgs e)
+        {
+            FillingListBox(listBoxEquipment, equipment: true);
+        }
+
+        private void TextBoxDiagnosis_TextChanged(object sender, EventArgs e)
+        {
+            FillingListBox(listBoxDiagnosis, diagnosis: true);
+        }
+
+        private void TextBoxEquipment_KeyDown(object sender, KeyEventArgs e)
+        {
+            TextBoxKeyDown(e.KeyCode, textBoxDiagnosis, listBoxEquipment);
+        }
+
+        private void TextBoxDiagnosis_KeyDown(object sender, KeyEventArgs e)
+        {
+            TextBoxKeyDown(e.KeyCode, textBoxNote, listBoxDiagnosis);
+        }
+
+        private void TextBoxEquipment_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (KeyPressHelper.CheckKeyTab(e.KeyCode, listBoxEquipment.Visible))
+                listBoxEquipment.Visible = false;
+        }
+
+        private void TextBoxDiagnosis_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (KeyPressHelper.CheckKeyTab(e.KeyCode, listBoxDiagnosis.Visible))
+                listBoxDiagnosis.Visible = false;
+        }
+
+        private void ListBoxEquipment_Click(object sender, EventArgs e)
+        {
+            SelectingElementsListBox(listBoxEquipment, textBoxEquipment, textBoxDiagnosis);
+        }
+
+        private void ListBoxEquipment_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                SelectingElementsListBox(listBoxEquipment, textBoxEquipment, textBoxDiagnosis);
+            else if (e.KeyCode == Keys.Up && listBoxEquipment.SelectedIndex == 0)
+                textBoxEquipment.Focus();
+        }
+
+        private void ListBoxDiagnosis_Click(object sender, EventArgs e)
+        {
+            SelectingElementsListBox(listBoxDiagnosis, textBoxDiagnosis, textBoxNote);
+        }
+
+        private void ListBoxDiagnosis_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                SelectingElementsListBox(listBoxDiagnosis, textBoxDiagnosis, textBoxNote);
+            else if (e.KeyCode == Keys.Up && listBoxEquipment.SelectedIndex == 0)
+                textBoxDiagnosis.Focus();
+        }
+
+        private void LinkLabelLogIn_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            LogInToTheSystem();
+        }
+
+        private void ComboBoxMainMaster_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxMainMaster.Text != withoutMaster)
+                comboBoxAdditionalMaster.Enabled = true;
+            else
+                comboBoxAdditionalMaster.Enabled = false;
+
+            if (comboBoxMainMaster.Text == comboBoxAdditionalMaster.Text)
+                comboBoxMainMaster.SelectedIndex = 0;
+        }
+
+        private void ComboBoxAdditionalMaster_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxMainMaster.Text == comboBoxAdditionalMaster.Text)
+                comboBoxAdditionalMaster.SelectedIndex = 0;
+        }
+
+        private void ComboBoxDevice_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateComboBox(ElementOfRepairEnum.BrandDeviceElement);
+        }
+
+        private void DateIssue_ValueChanged(object sender, EventArgs e)
+        {
+            if (dateIssue.Value < orderDTO.DateCompleted.Value)
+                dateIssue.Value = orderDTO.DateCompleted.Value;
+
+            textBoxEndGuarantee.Text = dateIssue.Value.AddMonths(orderDTO.Guarantee).ToShortDateString();
+            if (((int)(DateTime.Parse(textBoxEndGuarantee.Text) - DateTime.Now).TotalDays) > 0)
+                textBoxGuaranteeLeft.Text = String.Format("{0} дн.", (int)(DateTime.Parse(textBoxEndGuarantee.Text) - DateTime.Now).TotalDays);
+            else
+                textBoxGuaranteeLeft.Text = "Закончилась";
+
+            if (orderDTO.Guarantee > 0)
+            {
+                if (DateTime.Now < DateTime.Parse(textBoxEndGuarantee.Text))
+                    textBoxAvailabilityGuarantee.Text = "Присутствует";
+                else
+                    textBoxAvailabilityGuarantee.Text = "Закончилась";
+            }
+        }
+
         private void ButtonExit_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
@@ -336,7 +588,7 @@ namespace WinFormsApp1
             else if (checkBoxPriceAgreed.Checked)
                 maxPrice = Convert.ToInt32(textBoxMaxPrice.Text);
 
-            if (comboBoxMainMaster.Text != "-")
+            if (comboBoxMainMaster.Text != withoutMaster)
             {
                 if (orderDTO.DateStartWork == null)
                     dateStartWork = DateTime.Now;
@@ -346,7 +598,7 @@ namespace WinFormsApp1
             {
                 case StatusOrderEnum.InRepair:
                     int countDay = 0;
-                    if (comboBoxMainMaster.Text != "-")
+                    if (comboBoxMainMaster.Text != withoutMaster)
                         countDay = (DateTime.Now - dateStartWork.Value).Days;
                     else
                     {
@@ -441,193 +693,6 @@ namespace WinFormsApp1
 
             DialogResult = DialogResult.OK;
             Close();
-        }
-
-        private void TextBoxPriceRepair_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
-        }
-
-        private void DateIssue_ValueChanged(object sender, EventArgs e)
-        {
-            if (dateIssue.Value < orderDTO.DateCompleted.Value)
-                dateIssue.Value = orderDTO.DateCompleted.Value;
-
-            textBoxEndGuarantee.Text = (dateIssue.Value.AddMonths(orderDTO.Guarantee)).ToShortDateString();
-            if (((int)(DateTime.Parse(textBoxEndGuarantee.Text) - DateTime.Now).TotalDays) > 0)
-                textBoxGuaranteeLeft.Text = String.Format("{0} дн.", (int)(DateTime.Parse(textBoxEndGuarantee.Text) - DateTime.Now).TotalDays);
-            else
-                textBoxGuaranteeLeft.Text = "Закончилась";
-
-            if (orderDTO.Guarantee > 0)
-            {
-                if (DateTime.Now < DateTime.Parse(textBoxEndGuarantee.Text))
-                    textBoxAvailabilityGuarantee.Text = "Присутствует";
-                else
-                    textBoxAvailabilityGuarantee.Text = "Закончилась";
-            }
-        }
-
-        private void FeaturesOrder_Activated(object sender, EventArgs e)
-        {
-        }
-
-        private void LinkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            textBoxDateLastCall.Text = DateTime.Now.ToShortDateString();
-        }
-
-        private void TextBoxDateLastCall_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
-        }
-
-        private void FeaturesOrder_Load(object sender, EventArgs e)
-        {
-            timer1.Interval = 200;
-            timer1.Enabled = true;
-        }
-
-        private void Timer1_Tick(object sender, EventArgs e)
-        {
-            if (show)
-            {
-                if (!orderDTO.PriceAgreed)
-                {
-                    show = false;
-                    Warning warning = new()
-                    {
-                        StartPosition = FormStartPosition.CenterParent,
-                        LabelText = "Цена не согласована!"
-                    };
-                    warning.ShowDialog();
-                }
-            }
-        }
-
-        private void TextBoxMaxPrice_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = !KeyPressHelper.CheckKeyPress(true, textBoxMaxPrice.Text, e.KeyChar);
-        }
-
-        private void CheckBoxPriceAgreed_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBoxPriceAgreed.Checked)
-                textBoxMaxPrice.Enabled = true;
-            else
-                textBoxMaxPrice.Enabled = false;
-        }
-
-        private void FeaturesOrder_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Control && e.KeyCode == Keys.D)
-            {
-                LogInToTheSystem();
-                e.SuppressKeyPress = true;
-            }
-        }
-
-        private void TextBoxEquipment_Click(object sender, EventArgs e)
-        {
-            if (listBoxEquipment.Visible)
-                listBoxEquipment.Visible = false;
-            else
-                listBoxEquipment.Visible = true;
-        }
-
-        private void TextBoxDiagnosis_Click(object sender, EventArgs e)
-        {
-            if (listBoxDiagnosis.Visible)
-                listBoxDiagnosis.Visible = false;
-            else
-                listBoxDiagnosis.Visible = true;
-        }
-
-        private void TextBoxEquipment_TextChanged(object sender, EventArgs e)
-        {
-            listBoxEquipment.Items.Clear();
-            listBoxEquipment.Visible = false;
-            equipmentsDTO = equipmentRepository.GetEquipmentsByName(textBoxEquipment.Text);
-
-            foreach (var equipment in equipmentsDTO)
-            {
-                listBoxEquipment.Visible = true;
-                listBoxEquipment.Items.Add(equipment.Name);
-            }
-        }
-
-        private void TextBoxDiagnosis_TextChanged(object sender, EventArgs e)
-        {
-            listBoxDiagnosis.Items.Clear();
-            listBoxDiagnosis.Visible = false;
-            diagnosesDTO = diagnosisRepository.GetDiagnosesByName(textBoxDiagnosis.Text);
-
-            foreach (var diagnosis in diagnosesDTO)
-            {
-                listBoxDiagnosis.Visible = true;
-                listBoxDiagnosis.Items.Add(diagnosis.Name);
-            }
-        }
-
-        private void ListBoxEquipment_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (listBoxEquipment.SelectedIndex >= 0)
-            {
-                textBoxEquipment.Text = listBoxEquipment.Items[listBoxEquipment.SelectedIndex].ToString();
-                listBoxEquipment.Visible = false;
-            }
-        }
-
-        private void ListBoxDiagnosis_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (listBoxDiagnosis.SelectedIndex >= 0)
-            {
-                textBoxDiagnosis.Text = listBoxDiagnosis.Items[listBoxDiagnosis.SelectedIndex].ToString();
-                listBoxDiagnosis.Visible = false;
-            }
-        }
-
-        private void TextBoxEquipment_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter && listBoxEquipment.Visible)
-            {
-                listBoxEquipment.Visible = false;
-            }
-        }
-
-        private void TextBoxDiagnosis_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter && listBoxDiagnosis.Visible)
-            {
-                listBoxDiagnosis.Visible = false;
-            }
-        }
-
-        private void LinkLabelLogIn_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            LogInToTheSystem();
-        }
-
-        private void ComboBoxMainMaster_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (comboBoxMainMaster.Text != "-")
-                comboBoxAdditionalMaster.Enabled = true;
-            else
-                comboBoxAdditionalMaster.Enabled = false;
-
-            if (comboBoxMainMaster.Text == comboBoxAdditionalMaster.Text)
-                comboBoxMainMaster.SelectedIndex = 0;
-        }
-
-        private void ComboBoxAdditionalMaster_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (comboBoxMainMaster.Text == comboBoxAdditionalMaster.Text)
-                comboBoxAdditionalMaster.SelectedIndex = 0;
-        }
-
-        private void ComboBoxDevice_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            UpdateComboBox(ElementOfRepairEnum.BrandDeviceElement);
         }
     }
 }

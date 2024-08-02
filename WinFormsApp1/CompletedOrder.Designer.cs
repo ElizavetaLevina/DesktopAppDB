@@ -248,6 +248,7 @@
             textBoxFoundProblem1.Click += TextBoxFoundProblem1_Click;
             textBoxFoundProblem1.TextChanged += TextBoxFoundProblem1_TextChanged;
             textBoxFoundProblem1.KeyDown += TextBoxFoundProblem1_KeyDown;
+            textBoxFoundProblem1.PreviewKeyDown += TextBoxFoundProblem1_PreviewKeyDown;
             // 
             // label12
             // 
@@ -313,6 +314,7 @@
             textBoxFoundProblem2.Click += TextBoxFoundProblem2_Click;
             textBoxFoundProblem2.TextChanged += TextBoxFoundProblem2_TextChanged;
             textBoxFoundProblem2.KeyDown += TextBoxFoundProblem2_KeyDown;
+            textBoxFoundProblem2.PreviewKeyDown += TextBoxFoundProblem2_PreviewKeyDown;
             // 
             // label15
             // 
@@ -360,6 +362,7 @@
             textBoxFoundProblem3.Click += TextBoxFoundProblem3_Click;
             textBoxFoundProblem3.TextChanged += TextBoxFoundProblem3_TextChanged;
             textBoxFoundProblem3.KeyDown += TextBoxFoundProblem3_KeyDown;
+            textBoxFoundProblem3.PreviewKeyDown += TextBoxFoundProblem3_PreviewKeyDown;
             // 
             // label18
             // 
@@ -401,7 +404,7 @@
             // 
             listBox1.FormattingEnabled = true;
             listBox1.ItemHeight = 25;
-            listBox1.Location = new Point(507, 309);
+            listBox1.Location = new Point(507, 315);
             listBox1.Name = "listBox1";
             listBox1.Size = new Size(317, 79);
             listBox1.TabIndex = 44;
@@ -530,7 +533,7 @@
             textBoxAdditional.MaxLength = 2;
             textBoxAdditional.Name = "textBoxAdditional";
             textBoxAdditional.Size = new Size(66, 31);
-            textBoxAdditional.TabIndex = 60;
+            textBoxAdditional.TabIndex = 16;
             textBoxAdditional.TextChanged += TextBoxAdditional_TextChanged;
             textBoxAdditional.KeyPress += TextBoxAdditional_KeyPress;
             // 
@@ -540,7 +543,7 @@
             textBoxMain.MaxLength = 2;
             textBoxMain.Name = "textBoxMain";
             textBoxMain.Size = new Size(66, 31);
-            textBoxMain.TabIndex = 59;
+            textBoxMain.TabIndex = 15;
             textBoxMain.TextChanged += TextBoxMain_TextChanged;
             textBoxMain.KeyPress += TextBoxMain_KeyPress;
             // 
@@ -560,7 +563,7 @@
             linkLabelFeaturesOrder.Location = new Point(819, 20);
             linkLabelFeaturesOrder.Name = "linkLabelFeaturesOrder";
             linkLabelFeaturesOrder.Size = new Size(145, 25);
-            linkLabelFeaturesOrder.TabIndex = 59;
+            linkLabelFeaturesOrder.TabIndex = 12;
             linkLabelFeaturesOrder.TabStop = true;
             linkLabelFeaturesOrder.Text = "Свойства заказа";
             linkLabelFeaturesOrder.LinkClicked += LinkLabelFeaturesOrder_LinkClicked;
@@ -618,6 +621,7 @@
             MaximizeBox = false;
             Name = "CompletedOrder";
             Text = "Пометка аппарата как отремонтированного";
+            Activated += CompletedOrder_Activated;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             panelMasters.ResumeLayout(false);
             panelMasters.PerformLayout();

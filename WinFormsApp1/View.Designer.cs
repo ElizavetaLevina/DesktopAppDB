@@ -90,7 +90,7 @@
             button2.Location = new Point(547, 116);
             button2.Name = "button2";
             button2.Size = new Size(40, 40);
-            button2.TabIndex = 4;
+            button2.TabIndex = 9;
             button2.UseVisualStyleBackColor = true;
             button2.Click += Button2_Click;
             // 
@@ -99,7 +99,7 @@
             button3.Location = new Point(434, 179);
             button3.Name = "button3";
             button3.Size = new Size(40, 40);
-            button3.TabIndex = 5;
+            button3.TabIndex = 13;
             button3.UseVisualStyleBackColor = true;
             button3.Click += Button3_Click;
             // 
@@ -108,7 +108,7 @@
             buttonSave.Location = new Point(382, 260);
             buttonSave.Name = "buttonSave";
             buttonSave.Size = new Size(189, 43);
-            buttonSave.TabIndex = 6;
+            buttonSave.TabIndex = 14;
             buttonSave.Text = "Сохранить";
             buttonSave.UseVisualStyleBackColor = true;
             buttonSave.Click += ButtonSave_Click;
@@ -118,7 +118,7 @@
             buttonExit.Location = new Point(599, 260);
             buttonExit.Name = "buttonExit";
             buttonExit.Size = new Size(189, 43);
-            buttonExit.TabIndex = 7;
+            buttonExit.TabIndex = 15;
             buttonExit.Text = "Отмена";
             buttonExit.UseVisualStyleBackColor = true;
             buttonExit.Click += ButtonExit_Click;
@@ -129,7 +129,7 @@
             label3.Location = new Point(93, 124);
             label3.Name = "label3";
             label3.Size = new Size(114, 25);
-            label3.TabIndex = 8;
+            label3.TabIndex = 4;
             label3.Text = "Хранение от";
             // 
             // textBoxSecondLevelFrom
@@ -138,7 +138,7 @@
             textBoxSecondLevelFrom.Name = "textBoxSecondLevelFrom";
             textBoxSecondLevelFrom.ReadOnly = true;
             textBoxSecondLevelFrom.Size = new Size(84, 31);
-            textBoxSecondLevelFrom.TabIndex = 9;
+            textBoxSecondLevelFrom.TabIndex = 5;
             // 
             // label4
             // 
@@ -146,7 +146,7 @@
             label4.Location = new Point(302, 124);
             label4.Name = "label4";
             label4.Size = new Size(33, 25);
-            label4.TabIndex = 10;
+            label4.TabIndex = 6;
             label4.Text = "до";
             // 
             // textBoxSecondLevelBefore
@@ -154,7 +154,7 @@
             textBoxSecondLevelBefore.Location = new Point(338, 121);
             textBoxSecondLevelBefore.Name = "textBoxSecondLevelBefore";
             textBoxSecondLevelBefore.Size = new Size(84, 31);
-            textBoxSecondLevelBefore.TabIndex = 11;
+            textBoxSecondLevelBefore.TabIndex = 7;
             textBoxSecondLevelBefore.TextChanged += TextBoxSecondLevelBefore_TextChanged;
             textBoxSecondLevelBefore.KeyPress += TextBoxSecondLevelBefore_KeyPress;
             // 
@@ -164,7 +164,7 @@
             label5.Location = new Point(427, 124);
             label5.Name = "label5";
             label5.Size = new Size(114, 25);
-            label5.TabIndex = 12;
+            label5.TabIndex = 8;
             label5.Text = "дн.       Цвет:";
             // 
             // label6
@@ -173,7 +173,7 @@
             label6.Location = new Point(61, 190);
             label6.Name = "label6";
             label6.Size = new Size(144, 25);
-            label6.TabIndex = 13;
+            label6.TabIndex = 10;
             label6.Text = "Хранение более";
             // 
             // textBoxThirdLevel
@@ -182,7 +182,7 @@
             textBoxThirdLevel.Name = "textBoxThirdLevel";
             textBoxThirdLevel.ReadOnly = true;
             textBoxThirdLevel.Size = new Size(84, 31);
-            textBoxThirdLevel.TabIndex = 14;
+            textBoxThirdLevel.TabIndex = 11;
             // 
             // label7
             // 
@@ -190,7 +190,7 @@
             label7.Location = new Point(302, 190);
             label7.Name = "label7";
             label7.Size = new Size(114, 25);
-            label7.TabIndex = 15;
+            label7.TabIndex = 12;
             label7.Text = "дн.       Цвет:";
             // 
             // label8

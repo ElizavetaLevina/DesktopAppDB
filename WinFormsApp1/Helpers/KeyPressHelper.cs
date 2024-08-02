@@ -20,5 +20,12 @@
             }
             return true;
         }
+
+        public static bool CheckKeyTab(Keys keyChar, bool listBoxVisibility)
+        {
+            if (keyChar == Keys.Tab && listBoxVisibility)
+                return true;
+            return false;
+        }
     }
 }

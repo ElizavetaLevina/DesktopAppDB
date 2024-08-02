@@ -63,6 +63,7 @@
             textBoxName.Name = "textBoxName";
             textBoxName.Size = new Size(306, 31);
             textBoxName.TabIndex = 2;
+            textBoxName.KeyDown += TextBoxName_KeyDown;
             // 
             // textBoxPrice
             // 
@@ -70,6 +71,7 @@
             textBoxPrice.Name = "textBoxPrice";
             textBoxPrice.Size = new Size(149, 31);
             textBoxPrice.TabIndex = 3;
+            textBoxPrice.KeyDown += TextBoxPrice_KeyDown;
             textBoxPrice.KeyPress += TextBoxPrice_KeyPress;
             // 
             // labelRub
@@ -109,7 +111,7 @@
             buttonExit.UseVisualStyleBackColor = true;
             buttonExit.Click += ButtonExit_Click;
             // 
-            // MalfunctionChange
+            // MalfunctionEquipmentDiagnosisEdit
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -124,7 +126,7 @@
             Controls.Add(label1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Name = "MalfunctionChange";
+            Name = "MalfunctionEquipmentDiagnosisEdit";
             Text = "Добавить неисправность";
             ResumeLayout(false);
             PerformLayout();

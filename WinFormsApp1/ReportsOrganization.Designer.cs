@@ -79,7 +79,7 @@
             comboBoxYear.Location = new Point(26, 91);
             comboBoxYear.Name = "comboBoxYear";
             comboBoxYear.Size = new Size(187, 33);
-            comboBoxYear.TabIndex = 5;
+            comboBoxYear.TabIndex = 0;
             comboBoxYear.SelectedIndexChanged += ComboBoxYear_SelectedIndexChanged;
             // 
             // panel1
@@ -100,7 +100,7 @@
             comboBoxMaster.Location = new Point(29, 88);
             comboBoxMaster.Name = "comboBoxMaster";
             comboBoxMaster.Size = new Size(186, 33);
-            comboBoxMaster.TabIndex = 2;
+            comboBoxMaster.TabIndex = 3;
             comboBoxMaster.SelectedIndexChanged += ComboBoxMaster_SelectedIndexChanged;
             // 
             // radioButtonMaster
@@ -109,7 +109,7 @@
             radioButtonMaster.Location = new Point(29, 53);
             radioButtonMaster.Name = "radioButtonMaster";
             radioButtonMaster.Size = new Size(213, 29);
-            radioButtonMaster.TabIndex = 1;
+            radioButtonMaster.TabIndex = 2;
             radioButtonMaster.Text = "Отдельно по мастеру";
             radioButtonMaster.UseVisualStyleBackColor = true;
             radioButtonMaster.CheckedChanged += RadioButtonMaster_CheckedChanged;
@@ -121,7 +121,7 @@
             radioButtonOrganization.Location = new Point(29, 14);
             radioButtonOrganization.Name = "radioButtonOrganization";
             radioButtonOrganization.Size = new Size(218, 29);
-            radioButtonOrganization.TabIndex = 0;
+            radioButtonOrganization.TabIndex = 1;
             radioButtonOrganization.TabStop = true;
             radioButtonOrganization.Text = "Организация в целом";
             radioButtonOrganization.UseVisualStyleBackColor = true;
@@ -143,7 +143,7 @@
             radioButtonProfit.Location = new Point(29, 106);
             radioButtonProfit.Name = "radioButtonProfit";
             radioButtonProfit.Size = new Size(112, 29);
-            radioButtonProfit.TabIndex = 2;
+            radioButtonProfit.TabIndex = 6;
             radioButtonProfit.Text = "Прибыль";
             radioButtonProfit.UseVisualStyleBackColor = true;
             radioButtonProfit.CheckedChanged += RadioButtonProfit_CheckedChanged;
@@ -154,7 +154,7 @@
             radioButtonExpensesForDetails.Location = new Point(29, 61);
             radioButtonExpensesForDetails.Name = "radioButtonExpensesForDetails";
             radioButtonExpensesForDetails.Size = new Size(186, 29);
-            radioButtonExpensesForDetails.TabIndex = 1;
+            radioButtonExpensesForDetails.TabIndex = 5;
             radioButtonExpensesForDetails.Text = "Затраты на детали";
             radioButtonExpensesForDetails.UseVisualStyleBackColor = true;
             radioButtonExpensesForDetails.CheckedChanged += RadioButtonExpensesForDetails_CheckedChanged;
@@ -166,7 +166,7 @@
             radioButtonCountOrders.Location = new Point(29, 15);
             radioButtonCountOrders.Name = "radioButtonCountOrders";
             radioButtonCountOrders.Size = new Size(212, 29);
-            radioButtonCountOrders.TabIndex = 0;
+            radioButtonCountOrders.TabIndex = 4;
             radioButtonCountOrders.TabStop = true;
             radioButtonCountOrders.Text = "Выполненные заказы";
             radioButtonCountOrders.UseVisualStyleBackColor = true;

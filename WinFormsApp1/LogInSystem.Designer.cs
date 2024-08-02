@@ -107,10 +107,11 @@
             checkBoxShowPassword.Location = new Point(190, 152);
             checkBoxShowPassword.Name = "checkBoxShowPassword";
             checkBoxShowPassword.Size = new Size(177, 29);
-            checkBoxShowPassword.TabIndex = 7;
+            checkBoxShowPassword.TabIndex = 4;
             checkBoxShowPassword.Text = "Показать пароль";
             checkBoxShowPassword.UseVisualStyleBackColor = true;
             checkBoxShowPassword.CheckedChanged += CheckBoxShowPassword_CheckedChanged;
+            checkBoxShowPassword.KeyDown += CheckBoxShowPassword_KeyDown;
             // 
             // LogInSystem
             // 

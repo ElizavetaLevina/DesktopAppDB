@@ -5,6 +5,8 @@ using WinFormsApp1.DTO;
 using WinFormsApp1.Repository;
 using WinFormsApp1.Reports;
 using WinFormsApp1.Enum;
+using ClosedXML.Excel;
+using System.Data;
 
 namespace WinFormsApp1
 {
@@ -13,13 +15,13 @@ namespace WinFormsApp1
         public int idOrder;
         StatusOrderEnum status;
         public bool logInSystem = false;
-
         OrderRepository orderRepository = new();
         WarehouseRepository warehouseRepository = new();
         ClientRepository clientRepository = new();
         GettingReport gettingReport = new();
         IssuingReport issuingReport = new();
         MalfunctionOrderRepository malfunctionOrderRepository = new();
+        List<OrderTableDTO> orders;
         public Form1()
         {
             InitializeComponent();
@@ -50,25 +52,25 @@ namespace WinFormsApp1
         private void UpdateTable()
         {
             dataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView1.Columns[0].Visible = false;
-            dataGridView1.Columns[1].HeaderText = "№";
-            dataGridView1.Columns[2].HeaderText = "Дата приема";
-            dataGridView1.Columns[3].HeaderText = "Дата начала ремонта";
-            dataGridView1.Columns[3].Visible = true;
-            dataGridView1.Columns[4].HeaderText = "Дата окончания ремонта";
-            dataGridView1.Columns[4].Visible = true;
-            dataGridView1.Columns[5].HeaderText = "Дата выдачи аппарата";
-            dataGridView1.Columns[5].Visible = true;
-            dataGridView1.Columns[6].HeaderText = "Мастер";
-            dataGridView1.Columns[7].HeaderText = "Тип аппарата/Производитель/Модель";
-            dataGridView1.Columns[8].HeaderText = "Заказчик";
-            dataGridView1.Columns[9].HeaderText = "Диагноз";
-            dataGridView1.Columns[9].Visible = false;
-            dataGridView1.Columns[10].Visible = false;
-            dataGridView1.Columns[11].Visible = false;
-            dataGridView1.Columns[12].Visible = false;
-            dataGridView1.Columns[13].Visible = false;
-            dataGridView1.Columns[14].Visible = false;
+            dataGridView1.Columns[nameof(OrderTableDTO.Id)].Visible = false;
+            dataGridView1.Columns[nameof(OrderTableDTO.NumberOrder)].HeaderText = "№";
+            dataGridView1.Columns[nameof(OrderTableDTO.DateCreation)].HeaderText = "Дата приема";
+            dataGridView1.Columns[nameof(OrderTableDTO.DateStartWork)].HeaderText = "Дата начала ремонта";
+            dataGridView1.Columns[nameof(OrderTableDTO.DateStartWork)].Visible = true;
+            dataGridView1.Columns[nameof(OrderTableDTO.DateCompleted)].HeaderText = "Дата окончания ремонта";
+            dataGridView1.Columns[nameof(OrderTableDTO.DateCompleted)].Visible = true;
+            dataGridView1.Columns[nameof(OrderTableDTO.DateIssue)].HeaderText = "Дата выдачи аппарата";
+            dataGridView1.Columns[nameof(OrderTableDTO.DateIssue)].Visible = true;
+            dataGridView1.Columns[nameof(OrderTableDTO.MasterName)].HeaderText = "Мастер";
+            dataGridView1.Columns[nameof(OrderTableDTO.NameDevice)].HeaderText = "Тип аппарата/Производитель/Модель";
+            dataGridView1.Columns[nameof(OrderTableDTO.IdClient)].HeaderText = "Заказчик";
+            dataGridView1.Columns[nameof(OrderTableDTO.Diagnosis)].HeaderText = "Диагноз";
+            dataGridView1.Columns[nameof(OrderTableDTO.Diagnosis)].Visible = false;
+            dataGridView1.Columns[nameof(OrderTableDTO.Deleted)].Visible = false;
+            dataGridView1.Columns[nameof(OrderTableDTO.ReturnUnderGuarantee)].Visible = false;
+            dataGridView1.Columns[nameof(OrderTableDTO.Guarantee)].Visible = false;
+            dataGridView1.Columns[nameof(OrderTableDTO.DateEndGuarantee)].Visible = false;
+            dataGridView1.Columns[nameof(OrderTableDTO.ColorRow)].Visible = false;
 
             int[] percentInRepair = [0, 8, 11, 11, 0, 0, 12, 34, 12, 12, 0, 0, 0, 0, 0];
             int[] percentCompleted = [0, 8, 12, 0, 12, 0, 14, 40, 14, 0, 0, 0, 0, 0, 0];
@@ -131,7 +133,7 @@ namespace WinFormsApp1
             status = StatusOrderEnum.InRepair;
             try
             {
-                List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(statusOrder: status, deleted: false, dateCreation: true);
+                orders = orderRepository.GetOrdersForTable(statusOrder: status, deleted: false, dateCreation: true);
                 dataGridView1.DataSource = Funcs.ToDataTable(orders);
                 UpdateTable();
                 ChangeColorRows();
@@ -144,7 +146,7 @@ namespace WinFormsApp1
             status = StatusOrderEnum.Completed;
             try
             {
-                List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(statusOrder: status, deleted: false, dateCompleted: true);
+                orders = orderRepository.GetOrdersForTable(statusOrder: status, deleted: false, dateCompleted: true);
                 dataGridView1.DataSource = Funcs.ToDataTable(orders);
                 UpdateTable();
                 ChangeColorRows();
@@ -157,7 +159,7 @@ namespace WinFormsApp1
             status = StatusOrderEnum.GuaranteeIssue;
             try
             {
-                List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(statusOrder: status, deleted: false, dateIssue: true);
+                orders = orderRepository.GetOrdersForTable(statusOrder: status, deleted: false, dateIssue: true);
 
                 for (int i = 0; i < orders.Count; i++)
                 {
@@ -176,8 +178,7 @@ namespace WinFormsApp1
             status = StatusOrderEnum.Archive;
             try
             {
-                List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(statusOrder: status, deleted: false, dateIssue: true);
-                dataGridView1.DataSource = Funcs.ToDataTable(orders);
+                orders = orderRepository.GetOrdersForTable(statusOrder: status, deleted: false, dateIssue: true);
 
                 for (int i = 0; i < orders.Count; i++)
                 {
@@ -196,7 +197,7 @@ namespace WinFormsApp1
             status = StatusOrderEnum.Trash;
             try
             {
-                List<OrderTableDTO> orders = orderRepository.GetOrdersForTable(deleted: true, dateCompleted: true);
+                orders = orderRepository.GetOrdersForTable(deleted: true, dateCompleted: true);
                 dataGridView1.DataSource = Funcs.ToDataTable(orders);
                 UpdateTable();
                 ChangeColorRows();
@@ -642,6 +643,23 @@ namespace WinFormsApp1
                 UpdateTableData();
             }
             FocusButton(status);
+        }
+
+        private void ExportTableToExcel()
+        {
+            string folderPath = "D:\\Excel\\";
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+            using XLWorkbook workbook = new();
+            var table = Funcs.ToDataTable(orders.Select(a => new OrderTableExcelDTO(a)).ToList());
+
+            var wsDetailedData = workbook.Worksheets.Add(table, "Orders");
+            wsDetailedData.Columns().AdjustToContents();
+            workbook.SaveAs(folderPath + "DataGridViewExport.xlsx");
+
+            MessageBox.Show("Таблица сохранена");
         }
 
         private void ButtonInProgress_Click(object sender, EventArgs e)
@@ -1332,6 +1350,15 @@ namespace WinFormsApp1
             FocusButton(status);
         }
 
+        private void ItemExportToExcel_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ExportTableToExcel();
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+
         private void ItemCopyBD_Click(object sender, EventArgs e)
         {
             try
@@ -1648,12 +1675,12 @@ namespace WinFormsApp1
 
         private void Search()
         {
-            var ordersDTO = orderRepository.GetOrdersBySearch(numberOrder: textBoxIdOrder.Text,
+            orders = orderRepository.GetOrdersBySearch(numberOrder: textBoxIdOrder.Text,
                 dateCreation: textBoxDateCreation.Text, dateStartWork: textBoxDateStartWork.Text,
                 masterName: textBoxNameMaster.Text, typeTechnic: textBoxTypeDevice.Text,
                 brandTechnic: textBoxBrandDevice.Text, modelTechnic: textBoxModel.Text, idClient: textBoxNameClient.Text);
 
-            dataGridView1.DataSource = Funcs.ToDataTable(ordersDTO);
+            dataGridView1.DataSource = Funcs.ToDataTable(orders);
             ChangeColorRows();
             if (CheckNoFilters())
                 UpdateTableData();

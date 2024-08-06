@@ -73,8 +73,9 @@ namespace WinFormsApp1.Repository
                 set = set.Where(i => i.Client.IdClient.Contains(idClient));
 
             var result = set.ToList();
-            //if (!string.IsNullOrEmpty(masterName))
-            //    result = result.Where(i => i.Master?.NameMaster.ToLower()?.Contains(masterName.ToLower()) ?? false).ToList();
+            if (!string.IsNullOrEmpty(masterName))
+                result = result.Where(i => (i.MainMaster?.NameMaster?.ToLower()?.Contains(masterName.ToLower()) ?? false) || 
+                (i.AdditionalMaster?.NameMaster?.ToLower()?.Contains(masterName.ToLower()) ?? false)).ToList();
             if (!string.IsNullOrEmpty(typeTechnic))
                 result = result.Where(i => i.TypeTechnic?.NameTypeTechnic?.ToLower()?.StartsWith(typeTechnic.ToLower()) ?? false).ToList();
             if (!string.IsNullOrEmpty(brandTechnic))

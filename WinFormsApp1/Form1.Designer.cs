@@ -32,7 +32,7 @@ namespace WinFormsApp1
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             dataGridView1 = new DataGridView();
             buttonInProgress = new Button();
@@ -135,6 +135,7 @@ namespace WinFormsApp1
             itemGetting = new ToolStripMenuItem();
             itemIssuing = new ToolStripMenuItem();
             contextButton4 = new ContextMenuStrip(components);
+            itemReportOrganization = new ToolStripMenuItem();
             itemSalary = new ToolStripMenuItem();
             textBoxIdOrder = new TextBox();
             labelIdOrder = new Label();
@@ -167,7 +168,7 @@ namespace WinFormsApp1
             itemChangeData = new ToolStripMenuItem();
             itemLogOut = new ToolStripMenuItem();
             labelClientId = new Label();
-            itemReportOrganization = new ToolStripMenuItem();
+            itemExportToExcel = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             contextMenu1.SuspendLayout();
             toolStrip1.SuspendLayout();
@@ -185,14 +186,14 @@ namespace WinFormsApp1
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.BackgroundColor = Color.FromArgb(224, 224, 224);
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Window;
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.GradientInactiveCaption;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
-            dataGridView1.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.GradientInactiveCaption;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
             dataGridView1.Location = new Point(11, 85);
             dataGridView1.MultiSelect = false;
             dataGridView1.Name = "dataGridView1";
@@ -655,9 +656,9 @@ namespace WinFormsApp1
             // contextButton1
             // 
             contextButton1.ImageScalingSize = new Size(24, 24);
-            contextButton1.Items.AddRange(new ToolStripItem[] { itemAddMasters, itemAddBrand, itemAddDevice, itemClients, itemWarehouse, itemMalfunction, itemDiagnosis, itemEquipment, toolStripSeparator9, itemCopyBD, itemUpdateService, toolStripSeparator10, itemPathDB, toolStripSeparator18, itemOrg, toolStripSeparator20, itemLogIn, toolStripSeparator21, itemExit });
+            contextButton1.Items.AddRange(new ToolStripItem[] { itemAddMasters, itemAddBrand, itemAddDevice, itemClients, itemWarehouse, itemMalfunction, itemDiagnosis, itemEquipment, toolStripSeparator9, itemExportToExcel, itemCopyBD, itemUpdateService, toolStripSeparator10, itemPathDB, toolStripSeparator18, itemOrg, toolStripSeparator20, itemLogIn, toolStripSeparator21, itemExit });
             contextButton1.Name = "contextMenuStripButton1";
-            contextButton1.Size = new Size(364, 482);
+            contextButton1.Size = new Size(364, 547);
             // 
             // itemAddMasters
             // 
@@ -1072,7 +1073,14 @@ namespace WinFormsApp1
             contextButton4.ImageScalingSize = new Size(24, 24);
             contextButton4.Items.AddRange(new ToolStripItem[] { itemReportOrganization, itemSalary });
             contextButton4.Name = "contextButton4";
-            contextButton4.Size = new Size(364, 101);
+            contextButton4.Size = new Size(364, 68);
+            // 
+            // itemReportOrganization
+            // 
+            itemReportOrganization.Name = "itemReportOrganization";
+            itemReportOrganization.Size = new Size(363, 32);
+            itemReportOrganization.Text = "Отчет работы организации за год";
+            itemReportOrganization.Click += ItemReportOrganization_Click;
             // 
             // itemSalary
             // 
@@ -1341,12 +1349,12 @@ namespace WinFormsApp1
             labelClientId.Text = "0";
             labelClientId.Visible = false;
             // 
-            // itemReportOrganization
+            // itemExportToExcel
             // 
-            itemReportOrganization.Name = "itemReportOrganization";
-            itemReportOrganization.Size = new Size(363, 32);
-            itemReportOrganization.Text = "Отчет работы организации за год";
-            itemReportOrganization.Click += ItemReportOrganization_Click;
+            itemExportToExcel.Name = "itemExportToExcel";
+            itemExportToExcel.Size = new Size(363, 32);
+            itemExportToExcel.Text = "Экспортировать таблицу в Excel";
+            itemExportToExcel.Click += ItemExportToExcel_Click;
             // 
             // Form1
             // 
@@ -1548,5 +1556,6 @@ namespace WinFormsApp1
         private ToolStripMenuItem itemLogOut;
         private Label labelClientId;
         private ToolStripMenuItem itemReportOrganization;
+        private ToolStripMenuItem itemExportToExcel;
     }
 }

@@ -9,9 +9,15 @@ namespace WinFormsApp1
         {
             PropertyDescriptorCollection properties =
                 TypeDescriptor.GetProperties(typeof(T));
-            DataTable table = new DataTable();
+            DataTable table = new();
             foreach (PropertyDescriptor prop in properties)
-                table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+            {
+                DataColumn column = new(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType)
+                {
+                    Caption = prop.DisplayName ?? prop.Name
+                };
+                table.Columns.Add(column);
+            }
             foreach (T item in data)
             {
                 DataRow row = table.NewRow();

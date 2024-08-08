@@ -5,10 +5,20 @@ namespace WinFormsApp1.Repository
 {
     public class NoteSalaryMasterRepository
     {
+        /// <summary>
+        /// Получение списка примечаний по зарплате мастера по дате
+        /// </summary>
+        /// <param name="date">Дата</param>
+        /// <returns></returns>
+        public List<NoteSalaryMasterEditDTO> GetNoteSalaryMasters(DateTime date)
+        {
+            Context context = new();
+            return context.NoteSalaryMasters.Where(i => i.Date == date).Select(a => new NoteSalaryMasterEditDTO(a)).ToList();
+        } 
 
         public async Task SaveNoteSalaryMasterAsync(NoteSalaryMasterEditDTO noteSalaryMasterDTO, CancellationToken token = default)
         {
-            Context db = new();
+            Context context = new();
             NoteSalaryMaster noteSalaryMaster = new()
             {
                 Id = noteSalaryMasterDTO.Id,
@@ -20,23 +30,11 @@ namespace WinFormsApp1.Repository
             try
             {
                 if (noteSalaryMaster.Id == 0)
-                    db.NoteSalaryMasters.Add(noteSalaryMaster);
+                    context.NoteSalaryMasters.Add(noteSalaryMaster);
                 else
-                    db.NoteSalaryMasters.Update(noteSalaryMaster);
+                    context.NoteSalaryMasters.Update(noteSalaryMaster);
 
-                await db.SaveChangesAsync(token);
-            }
-            catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
-        }
-
-        public async Task RemoveNoteSalaryMasterAsync(NoteSalaryMasterEditDTO noteSalaryMasterDTO, CancellationToken token = default)
-        {
-            Context db = new();
-            try
-            {
-                var noteSalaryMaster = db.NoteSalaryMasters.FirstOrDefault(c => c.Id == noteSalaryMasterDTO.Id);
-                db.NoteSalaryMasters.Remove(noteSalaryMaster);
-                await db.SaveChangesAsync(token);
+                await context.SaveChangesAsync(token);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }

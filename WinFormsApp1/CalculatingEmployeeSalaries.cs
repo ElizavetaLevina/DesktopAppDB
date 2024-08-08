@@ -48,7 +48,7 @@ namespace WinFormsApp1
                 dataGridView1.Columns[i].ReadOnly = readOnly[i];
             }
 
-            switch ((MonthEnum)DateTime.Now.Month) 
+            switch ((MonthEnum)DateTime.Now.Month)
             {
                 case MonthEnum.Январь:
                     radioButton1.Checked = true; break;
@@ -87,7 +87,8 @@ namespace WinFormsApp1
 
         private void UpdateTable()
         {
-            dataGridView1.Rows.Clear();
+            //dataGridView1.Rows.Clear();
+            
             SalaryCalculation();
         }
 
@@ -104,20 +105,34 @@ namespace WinFormsApp1
             ordersDTO = orderRepository.GetOrdersForSalaries(dateCompleted: dateCompleted, dateIssue: dateIssue);
 
             DateTime date = (DateTime)(dateCompleted != null ? dateCompleted : dateIssue);
-            
+
 
             var mastersDTO = masterRepository.GetMasters();
+            var noteMastersDTO = noteSalaryMasterRepository.GetNoteSalaryMasters(date);
+
+
+            //dataGridView1.DataSource = noteMastersDTO;
+            List <NoteSalaryMasterEditDTO>  dataSource = new();
 
             foreach (var master in mastersDTO)
             {
                 var rateMastersDTO = rateMasterRepository.GetRateMasterByDate(master.Id, date);
-                dataGridView1.Rows.Add(master.NameMaster, CalculationSalaryHelper.SalaryCalculation(master, ordersDTO, rateMastersDTO), string.Empty);
+                var noteMaster = noteMastersDTO.FirstOrDefault(i => i.MasterId == master.Id) ?? 
+                    new NoteSalaryMasterEditDTO() { MasterId = master.Id, Date = date};
+                noteMaster.NameMaster = master.NameMaster;
+                noteMaster.Salary = CalculationSalaryHelper.SalaryCalculation(master, ordersDTO, rateMastersDTO);
+                /*dataGridView1.Rows.Add(master.NameMaster,
+                    CalculationSalaryHelper.SalaryCalculation(master, ordersDTO, rateMastersDTO),
+                    noteMastersDTO.FirstOrDefault(i => i.MasterId == master.Id)?.Note);*/
+
+                dataSource.Add(noteMaster);
             }
+            dataGridView1.DataSource = dataSource;
         }
 
         private void RadioButton1_CheckedChanged(object sender, EventArgs e)
         {
-            if (radioButton1.Checked) 
+            if (radioButton1.Checked)
                 UpdateTable();
         }
 
@@ -195,28 +210,47 @@ namespace WinFormsApp1
 
         private void DataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            //TODO разобраться когда вызывается
             if (e.ColumnIndex == 2)
             {
-                var nameMaster = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[0].Value.ToString();
-                var masterDTO = masterRepository.GetMasterByName(nameMaster);
-                var year = comboBoxYears.SelectedValue;
-                NoteSalaryMasterEditDTO noteSalaryMasterDTO = new()
-                {
-                    MasterId = masterDTO.Id,
-                    Note = (string)dataGridView1.Rows[e.RowIndex].Cells[2].Value,
-                    Date = DateTime.Parse(string.Format("{0}.{1}.{2}", 1, NumberSelectedMonth(), comboBoxYears.SelectedValue))
-                };
-                Task.Run(async () =>
-                {
-                    await noteSalaryMasterRepository.SaveNoteSalaryMasterAsync(noteSalaryMasterDTO);
-                });
+                
             }
         }
 
         private void ButtonExit_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+            var dataSource = dataGridView1.DataSource as List<NoteSalaryMasterEditDTO>;
+
+            foreach (var item in dataSource)
+            {
+                Task.Run(async () =>
+                {
+                    await noteSalaryMasterRepository.SaveNoteSalaryMasterAsync(item);
+                });
+            }
+            /*for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                var nameMaster = dataGridView1.Rows[i].Cells[0].Value.ToString();
+                var masterDTO = masterRepository.GetMasterByName(nameMaster);
+                var year = comboBoxYears.SelectedValue;
+                NoteSalaryMasterEditDTO noteSalaryMasterDTO = new()
+                {
+                    MasterId = masterDTO.Id,
+                    Note = (string)dataGridView1.Rows[i].Cells[2].Value,
+                    Date = DateTime.Parse(string.Format("{0}.{1}.{2}", 1, NumberSelectedMonth(), comboBoxYears.SelectedValue))
+                };
+
+                Task.Run(async () =>
+                {
+                    await noteSalaryMasterRepository.SaveNoteSalaryMasterAsync(noteSalaryMasterDTO);
+                });
+            }*/
+
+            
         }
     }
 }

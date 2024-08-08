@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Data;
 
-namespace WinFormsApp1
+namespace WinFormsApp1.Helpers
 {
     static class Funcs
     {

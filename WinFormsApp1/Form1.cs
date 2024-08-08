@@ -7,6 +7,7 @@ using WinFormsApp1.Reports;
 using WinFormsApp1.Enum;
 using ClosedXML.Excel;
 using System.Data;
+using WinFormsApp1.Helpers;
 
 namespace WinFormsApp1
 {

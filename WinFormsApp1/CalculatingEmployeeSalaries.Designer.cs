@@ -57,6 +57,7 @@
             buttonExit = new Button();
             label8 = new Label();
             comboBoxCalculationByDate = new ComboBox();
+            buttonSave = new Button();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
@@ -239,6 +240,7 @@
             // 
             // colMaster
             // 
+            colMaster.DataPropertyName = "NameMaster";
             colMaster.HeaderText = "Мастер";
             colMaster.MinimumWidth = 8;
             colMaster.Name = "colMaster";
@@ -246,6 +248,7 @@
             // 
             // colSalary
             // 
+            colSalary.DataPropertyName = "Salary";
             colSalary.HeaderText = "Зарплата";
             colSalary.MinimumWidth = 8;
             colSalary.Name = "colSalary";
@@ -253,6 +256,7 @@
             // 
             // colNote
             // 
+            colNote.DataPropertyName = "Note";
             colNote.HeaderText = "Примечание";
             colNote.MinimumWidth = 8;
             colNote.Name = "colNote";
@@ -346,11 +350,22 @@
             comboBoxCalculationByDate.TabIndex = 2;
             comboBoxCalculationByDate.SelectedIndexChanged += ComboBoxCalculationByDate_SelectedIndexChanged;
             // 
+            // buttonSave
+            // 
+            buttonSave.Location = new Point(865, 514);
+            buttonSave.Name = "buttonSave";
+            buttonSave.Size = new Size(204, 43);
+            buttonSave.TabIndex = 14;
+            buttonSave.Text = "Сохранить";
+            buttonSave.UseVisualStyleBackColor = true;
+            buttonSave.Click += buttonSave_Click;
+            // 
             // CalculatingEmployeeSalaries
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1081, 626);
+            Controls.Add(buttonSave);
             Controls.Add(comboBoxCalculationByDate);
             Controls.Add(label8);
             Controls.Add(buttonExit);
@@ -400,6 +415,7 @@
         private Button buttonExit;
         private Label label8;
         private ComboBox comboBoxCalculationByDate;
+        private Button buttonSave;
         private DataGridViewTextBoxColumn colMaster;
         private DataGridViewTextBoxColumn colSalary;
         private DataGridViewTextBoxColumn colNote;

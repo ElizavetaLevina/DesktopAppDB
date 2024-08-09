@@ -8,6 +8,7 @@ using WinFormsApp1.Enum;
 using ClosedXML.Excel;
 using System.Data;
 using WinFormsApp1.Helpers;
+using System.Windows.Forms;
 
 namespace WinFormsApp1
 {
@@ -648,17 +649,16 @@ namespace WinFormsApp1
 
         private void ExportTableToExcel()
         {
-            string folderPath = "D:\\Excel\\";
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
+            if (saveFileDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+
+            string folderPath = saveFileDialog1.FileName;
             using XLWorkbook workbook = new();
             var table = Funcs.ToDataTable(orders.Select(a => new OrderTableExcelDTO(a)).ToList());
 
             var wsDetailedData = workbook.Worksheets.Add(table, "Orders");
             wsDetailedData.Columns().AdjustToContents();
-            workbook.SaveAs(folderPath + "DataGridViewExport.xlsx");
+            workbook.SaveAs(folderPath);
 
             MessageBox.Show("Таблица сохранена");
         }

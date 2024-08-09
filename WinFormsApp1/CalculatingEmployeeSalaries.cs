@@ -85,13 +85,6 @@ namespace WinFormsApp1
             return (int)selectedMonthEnum;
         }
 
-        private void UpdateTable()
-        {
-            //dataGridView1.Rows.Clear();
-            
-            SalaryCalculation();
-        }
-
         private void SalaryCalculation()
         {
             DateTime? dateCompleted = null;
@@ -110,8 +103,6 @@ namespace WinFormsApp1
             var mastersDTO = masterRepository.GetMasters();
             var noteMastersDTO = noteSalaryMasterRepository.GetNoteSalaryMasters(date);
 
-
-            //dataGridView1.DataSource = noteMastersDTO;
             List <NoteSalaryMasterEditDTO>  dataSource = new();
 
             foreach (var master in mastersDTO)
@@ -121,9 +112,6 @@ namespace WinFormsApp1
                     new NoteSalaryMasterEditDTO() { MasterId = master.Id, Date = date};
                 noteMaster.NameMaster = master.NameMaster;
                 noteMaster.Salary = CalculationSalaryHelper.SalaryCalculation(master, ordersDTO, rateMastersDTO);
-                /*dataGridView1.Rows.Add(master.NameMaster,
-                    CalculationSalaryHelper.SalaryCalculation(master, ordersDTO, rateMastersDTO),
-                    noteMastersDTO.FirstOrDefault(i => i.MasterId == master.Id)?.Note);*/
 
                 dataSource.Add(noteMaster);
             }
@@ -133,124 +121,97 @@ namespace WinFormsApp1
         private void RadioButton1_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton1.Checked)
-                UpdateTable();
+                SalaryCalculation();
         }
 
         private void RadioButton2_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton2.Checked)
-                UpdateTable();
+                SalaryCalculation();
         }
 
         private void RadioButton3_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton3.Checked)
-                UpdateTable();
+                SalaryCalculation();
         }
 
         private void RadioButton4_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton4.Checked)
-                UpdateTable();
+                SalaryCalculation();
         }
 
         private void RadioButton5_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton5.Checked)
-                UpdateTable();
+                SalaryCalculation();
         }
 
         private void RadioButton6_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton6.Checked)
-                UpdateTable();
+                SalaryCalculation();
         }
 
         private void RadioButton7_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton7.Checked)
-                UpdateTable();
+                SalaryCalculation();
         }
 
         private void RadioButton8_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton8.Checked)
-                UpdateTable();
+                SalaryCalculation();
         }
 
         private void RadioButton9_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton9.Checked)
-                UpdateTable();
+                SalaryCalculation();
         }
 
         private void RadioButton10_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton10.Checked)
-                UpdateTable();
+                SalaryCalculation();
         }
 
         private void RadioButton11_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton11.Checked)
-                UpdateTable();
+                SalaryCalculation();
         }
 
         private void RadioButton12_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton12.Checked)
-                UpdateTable();
+                SalaryCalculation();
         }
 
         private void ComboBoxCalculationByDate_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!loading)
-                UpdateTable();
+                SalaryCalculation();
         }
 
-        private void DataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        private void ButtonSave_Click(object sender, EventArgs e)
         {
-            if (e.ColumnIndex == 2)
-            {
-                
-            }
-        }
+            var noteSalaryMasters = dataGridView1.DataSource as List<NoteSalaryMasterEditDTO>;
 
-        private void ButtonExit_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void buttonSave_Click(object sender, EventArgs e)
-        {
-            var dataSource = dataGridView1.DataSource as List<NoteSalaryMasterEditDTO>;
-
-            foreach (var item in dataSource)
+            foreach (var item in noteSalaryMasters)
             {
                 Task.Run(async () =>
                 {
                     await noteSalaryMasterRepository.SaveNoteSalaryMasterAsync(item);
                 });
-            }
-            /*for (int i = 0; i < dataGridView1.Rows.Count; i++)
-            {
-                var nameMaster = dataGridView1.Rows[i].Cells[0].Value.ToString();
-                var masterDTO = masterRepository.GetMasterByName(nameMaster);
-                var year = comboBoxYears.SelectedValue;
-                NoteSalaryMasterEditDTO noteSalaryMasterDTO = new()
-                {
-                    MasterId = masterDTO.Id,
-                    Note = (string)dataGridView1.Rows[i].Cells[2].Value,
-                    Date = DateTime.Parse(string.Format("{0}.{1}.{2}", 1, NumberSelectedMonth(), comboBoxYears.SelectedValue))
-                };
+            }            
+        }
 
-                Task.Run(async () =>
-                {
-                    await noteSalaryMasterRepository.SaveNoteSalaryMasterAsync(noteSalaryMasterDTO);
-                });
-            }*/
-
-            
+        private void ButtonExit_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

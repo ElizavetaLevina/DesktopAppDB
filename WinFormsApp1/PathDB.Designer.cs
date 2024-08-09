@@ -87,7 +87,8 @@
             // 
             // openFileDialog1
             // 
-            openFileDialog1.FileName = "openFileDialog1";
+            openFileDialog1.FileName = "computerservice";
+            openFileDialog1.Filter = "Data base files(*.db)|*.db|All files(*.*)|*.*";
             // 
             // PathDB
             // 

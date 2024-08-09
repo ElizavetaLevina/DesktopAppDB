@@ -16,9 +16,7 @@
         private void LinkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             var dir = Path.GetDirectoryName(Properties.Settings.Default.PathDB);
-            openFileDialog1.FileName = "computerservice";
             openFileDialog1.InitialDirectory = dir;
-            openFileDialog1.Filter = "Data base files(*.db)|*.db|All files(*.*)|*.*";
             if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
                 return;
 

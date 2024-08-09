@@ -236,7 +236,6 @@
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.Size = new Size(836, 481);
             dataGridView1.TabIndex = 3;
-            dataGridView1.CellValidating += DataGridView1_CellValidating;
             // 
             // colMaster
             // 
@@ -358,7 +357,7 @@
             buttonSave.TabIndex = 14;
             buttonSave.Text = "Сохранить";
             buttonSave.UseVisualStyleBackColor = true;
-            buttonSave.Click += buttonSave_Click;
+            buttonSave.Click += ButtonSave_Click;
             // 
             // CalculatingEmployeeSalaries
             // 

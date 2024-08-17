@@ -77,7 +77,7 @@ namespace WinFormsApp1
 
             UpdateData();
 
-            var clientDTO = clientRepository.GetClient(orderDTO.ClientId);
+            var clientDTO = clientRepository.GetClient(orderDTO.ClientId.ToString());
 
             switch (clientDTO.TypeClient)
             {

@@ -1,29 +1,28 @@
-using System.Net;
-using FluentFTP;
 using Color = System.Drawing.Color;
 using WinFormsApp1.DTO;
-using WinFormsApp1.Repository;
-using WinFormsApp1.Reports;
 using WinFormsApp1.Enum;
-using ClosedXML.Excel;
 using System.Data;
 using WinFormsApp1.Helpers;
-using System.Windows.Forms;
+using System.Diagnostics;
+using WinFormsApp1.Logic;
 
 namespace WinFormsApp1
 {
     public partial class Form1 : Form
     {
-        public int idOrder;
+        public int idOrder { get { return Convert.ToInt32(dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].
+            Cells[nameof(OrderTableDTO.Id)].Value);} }
+        public string idClient { get { return dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].
+            Cells[nameof(OrderTableDTO.IdClient)].Value.ToString(); } }
         StatusOrderEnum status;
         public bool logInSystem = false;
-        OrderRepository orderRepository = new();
-        WarehouseRepository warehouseRepository = new();
-        ClientRepository clientRepository = new();
-        GettingReport gettingReport = new();
-        IssuingReport issuingReport = new();
-        MalfunctionOrderRepository malfunctionOrderRepository = new();
+        WarehouseLogic warehouseLogic = new();
+        OrdersLogic ordersLogic = new();
+        ClientsLogic clientsLogic = new();
+        ReportsLogic reportsLogic = new();
         List<OrderTableDTO> orders;
+        List<(long elapsedTime, string name)> some = new();
+        Stopwatch stopwatch = Stopwatch.StartNew();
         public Form1()
         {
             InitializeComponent();
@@ -35,49 +34,40 @@ namespace WinFormsApp1
             try
             {
                 InProgress();
+                NameColumns();
                 ToolStripEnabled();
-                var screenSize = (ScreenSizeEnum)System.Enum.Parse(typeof(ScreenSizeEnum), Properties.Settings.Default.Size);
-                if (screenSize == ScreenSizeEnum.Small)
-                {
-                    Width = Properties.Settings.Default.WidthSmall;
-                    Height = Properties.Settings.Default.HeightSmall;
-                }
-                else if (screenSize == ScreenSizeEnum.Medium)
-                {
-                    Width = Properties.Settings.Default.WidthMedium;
-                    Height = Properties.Settings.Default.HeightMedium;
-                }
+                Width = Properties.Settings.Default.WidthMedium;
+                Height = Properties.Settings.Default.HeightMedium;
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
-        private void UpdateTable()
+        private void NameColumns() 
         {
             dataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridView1.Columns[nameof(OrderTableDTO.Id)].Visible = false;
             dataGridView1.Columns[nameof(OrderTableDTO.NumberOrder)].HeaderText = "№";
             dataGridView1.Columns[nameof(OrderTableDTO.DateCreation)].HeaderText = "Дата приема";
             dataGridView1.Columns[nameof(OrderTableDTO.DateStartWork)].HeaderText = "Дата начала ремонта";
-            dataGridView1.Columns[nameof(OrderTableDTO.DateStartWork)].Visible = true;
             dataGridView1.Columns[nameof(OrderTableDTO.DateCompleted)].HeaderText = "Дата окончания ремонта";
-            dataGridView1.Columns[nameof(OrderTableDTO.DateCompleted)].Visible = true;
             dataGridView1.Columns[nameof(OrderTableDTO.DateIssue)].HeaderText = "Дата выдачи аппарата";
-            dataGridView1.Columns[nameof(OrderTableDTO.DateIssue)].Visible = true;
             dataGridView1.Columns[nameof(OrderTableDTO.MasterName)].HeaderText = "Мастер";
             dataGridView1.Columns[nameof(OrderTableDTO.NameDevice)].HeaderText = "Тип аппарата/Производитель/Модель";
             dataGridView1.Columns[nameof(OrderTableDTO.IdClient)].HeaderText = "Заказчик";
             dataGridView1.Columns[nameof(OrderTableDTO.Diagnosis)].HeaderText = "Диагноз";
-            dataGridView1.Columns[nameof(OrderTableDTO.Diagnosis)].Visible = false;
             dataGridView1.Columns[nameof(OrderTableDTO.Deleted)].Visible = false;
             dataGridView1.Columns[nameof(OrderTableDTO.ReturnUnderGuarantee)].Visible = false;
             dataGridView1.Columns[nameof(OrderTableDTO.Guarantee)].Visible = false;
             dataGridView1.Columns[nameof(OrderTableDTO.DateEndGuarantee)].Visible = false;
             dataGridView1.Columns[nameof(OrderTableDTO.ColorRow)].Visible = false;
+        }
 
-            int[] percentInRepair = [0, 8, 11, 11, 0, 0, 12, 34, 12, 12, 0, 0, 0, 0, 0];
-            int[] percentCompleted = [0, 8, 12, 0, 12, 0, 14, 40, 14, 0, 0, 0, 0, 0, 0];
-            int[] percentOthers = [0, 7, 10, 10, 10, 10, 9, 32, 12, 0, 0, 0, 0, 0, 0];
-
+        private void UpdateVisibilityColumns()
+        {
+            dataGridView1.Columns[nameof(OrderTableDTO.DateStartWork)].Visible = true;
+            dataGridView1.Columns[nameof(OrderTableDTO.DateCompleted)].Visible = true;
+            dataGridView1.Columns[nameof(OrderTableDTO.DateIssue)].Visible = true;
+            dataGridView1.Columns[nameof(OrderTableDTO.Diagnosis)].Visible = false;
             switch (status)
             {
                 case StatusOrderEnum.InRepair:
@@ -90,6 +80,14 @@ namespace WinFormsApp1
                     dataGridView1.Columns[nameof(OrderTableDTO.DateIssue)].Visible = false;
                     break;
             }
+            
+        }
+
+        private void UpdateWidthColumns()
+        {
+            int[] percentInRepair = [0, 8, 11, 11, 0, 0, 12, 34, 12, 12, 0, 0, 0, 0, 0];
+            int[] percentCompleted = [0, 8, 12, 0, 12, 0, 14, 40, 14, 0, 0, 0, 0, 0, 0];
+            int[] percentOthers = [0, 7, 10, 10, 10, 10, 9, 32, 12, 0, 0, 0, 0, 0, 0];
             for (int i = 0; i < dataGridView1.Columns.Count; i++)
             {
                 if (dataGridView1.Columns[i].Visible)
@@ -130,57 +128,81 @@ namespace WinFormsApp1
                     break;
             }
         }
+
         private void InProgress()
         {
+            Enabled = false;
             status = StatusOrderEnum.InRepair;
             try
             {
-                orders = orderRepository.GetOrdersForTable(statusOrder: status, deleted: false, dateCreation: true);
+                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "InProgress1"));
+                orders = ordersLogic.GetOrdersForTable(statusOrder: status, deleted: false, dateCreation: true);
+                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "InProgress2"));
                 dataGridView1.DataSource = Funcs.ToDataTable(orders);
-                UpdateTable();
+                UpdateVisibilityColumns();
+                UpdateWidthColumns();
+                //some.Add(stopwatch.ElapsedMilliseconds - some.Sum());
                 ChangeColorRows();
+                //some.Add(stopwatch.ElapsedMilliseconds - some.Sum());
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
+            Enabled = true;
         }
 
         private void OrderСompleted()
         {
+            Enabled = false;
             status = StatusOrderEnum.Completed;
             try
             {
-                orders = orderRepository.GetOrdersForTable(statusOrder: status, deleted: false, dateCompleted: true);
+                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "complet1"));
+                orders = ordersLogic.GetOrdersForTable(statusOrder: status, deleted: false, dateCompleted: true);
+                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "complet2"));
                 dataGridView1.DataSource = Funcs.ToDataTable(orders);
-                UpdateTable();
+                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "complet3"));
+                UpdateVisibilityColumns();
+                UpdateWidthColumns();
+                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "complet4"));
                 ChangeColorRows();
+                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "complet5"));
             }
-            catch { }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            Enabled = true;
         }
 
         private void OrderGuarantee()
         {
+            Enabled = false;
             status = StatusOrderEnum.GuaranteeIssue;
             try
             {
-                orders = orderRepository.GetOrdersForTable(statusOrder: status, deleted: false, dateIssue: true);
+                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Guarantee1"));
+                orders = ordersLogic.GetOrdersForTable(statusOrder: status, deleted: false, dateIssue: true);
+                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Guarantee2"));
 
                 for (int i = 0; i < orders.Count; i++)
                 {
                     if (orders[i].DateEndGuarantee.Value.Date < DateTime.Now.Date)
                         orders.Remove(orders[i]);
                 }
-
+                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Guarantee3"));
                 dataGridView1.DataSource = Funcs.ToDataTable(orders);
-                UpdateTable();
+                UpdateVisibilityColumns();
+                UpdateWidthColumns();
             }
-            catch { }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            Enabled = true;
         }
 
         private void OrderArchive()
         {
+            Enabled = false;
             status = StatusOrderEnum.Archive;
             try
             {
-                orders = orderRepository.GetOrdersForTable(statusOrder: status, deleted: false, dateIssue: true);
+                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Archive1"));
+                orders = ordersLogic.GetOrdersForTable(statusOrder: status, deleted: false, dateIssue: true);
+                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Archive2"));
 
                 for (int i = 0; i < orders.Count; i++)
                 {
@@ -188,33 +210,42 @@ namespace WinFormsApp1
                         orders.Remove(orders[i]);
                 }
 
+                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Archive3"));
                 dataGridView1.DataSource = Funcs.ToDataTable(orders);
-                UpdateTable();
+                UpdateVisibilityColumns();
+                UpdateWidthColumns();
             }
-            catch { }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            Enabled = true;
         }
 
         private void Trash()
         {
+            Enabled = false;
             status = StatusOrderEnum.Trash;
             try
             {
-                orders = orderRepository.GetOrdersForTable(deleted: true, dateCompleted: true);
+                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Trash1"));
+                orders = ordersLogic.GetOrdersForTable(deleted: true, dateCompleted: true);
+                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Trash2"));
                 dataGridView1.DataSource = Funcs.ToDataTable(orders);
-                UpdateTable();
+                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Trash3"));
+                UpdateVisibilityColumns();
+                UpdateWidthColumns();
                 ChangeColorRows();
             }
-            catch { }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            Enabled = true;
         }
 
         private void AddDeviceIntoRepair()
         {
-            AddDeviceIntoRepair addDeviceForRepair = new()
+            AddDeviceIntoRepair addDeviceIntoRepair = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };
 
-            if (addDeviceForRepair.ShowDialog() == DialogResult.OK)
+            if (addDeviceIntoRepair.ShowDialog() == DialogResult.OK)
             {
                 status = StatusOrderEnum.InRepair;
                 /*UpdateDB();*/
@@ -224,405 +255,257 @@ namespace WinFormsApp1
             FocusButton(status);
         }
 
-        private void FeaturesOrderItem()
+        private void PropertiesOrder()
         {
-            try
+            if (dataGridView1.Rows.Count == 0)
+                return;
+            FeaturesOrder featuresOrder = new(idOrder, status, logInSystem)
             {
-                int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
-                FeaturesOrder featuresOrder = new(idOrder, status, logInSystem)
-                {
-                    StartPosition = FormStartPosition.CenterParent
-                };
-                featuresOrder.ShowDialog();
-                if (featuresOrder.logIn)
-                {
-                    logInSystem = true;
-                    labelLogIn.Text = Properties.Settings.Default.Login;
-                }
-                FocusButton(status);
-                UpdateTableData();
-                /*if (featuresOrder.pressBtnSave)
-                    UpdateDB();*/
+                StartPosition = FormStartPosition.CenterParent
+            };
+            featuresOrder.ShowDialog();
+            if (featuresOrder.logIn)
+            {
+                logInSystem = true;
+                labelLogIn.Text = Properties.Settings.Default.Login;
             }
-            catch { }
+            FocusButton(status);
+            UpdateTableData();
+            /*if (featuresOrder.pressBtnSave)
+                UpdateDB();*/
         }
 
-        private void DetailsItem()
+        private void DetailsInOrder()
         {
-            try
+            if (dataGridView1.Rows.Count == 0)
+                return;
+            DetailsInOrder detailsInOrder = new(idOrder)
             {
-                int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
-                DetailsInOrder detailsInOrder = new(idOrder)
-                {
-                    StartPosition = FormStartPosition.CenterParent
-                };
-                detailsInOrder.ShowDialog();
-            }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+                StartPosition = FormStartPosition.CenterParent
+            };
+            detailsInOrder.ShowDialog();
         }
 
-        private void DeleteOrder()
+        private void RemoveOrder()
         {
-            try
+            if (dataGridView1.Rows.Count == 0)
+                return;
+            Warning warning = new()
             {
-                int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
-                var orderDTO = orderRepository.GetOrder(idOrder);
+                StartPosition = FormStartPosition.CenterParent,
+                LabelText = status == StatusOrderEnum.Trash ? "Вы действительно хотите удалить аппарат из корзины?" :
+                "Вы действительно хотите переместить аппарат в корзину?",
+                ButtonNoText = "Нет",
+                ButtonVisible = true
+            };
 
+            if (warning.ShowDialog() == DialogResult.OK)
+            {
+                ordersLogic.RemoveOrder(idOrder);
                 if (status == StatusOrderEnum.Trash)
-                {
-                    Warning warning = new()
-                    {
-                        StartPosition = FormStartPosition.CenterParent,
-                        LabelText = "Вы действительно хотите удалить аппарат из корзины?",
-                        ButtonNoText = "Нет",
-                        ButtonVisible = true
-                    };
-
-                    if (warning.ShowDialog() == DialogResult.OK)
-                    {
-                        orderRepository.RemoveOrder(orderDTO);
-                        Trash();
-                    }
-                    FocusButton(status);
-                }
+                    Trash();
                 else
-                {
-                    Warning warning = new()
-                    {
-                        StartPosition = FormStartPosition.CenterParent,
-                        LabelText = "Вы действительно хотите переместить аппарат в корзину?",
-                        ButtonNoText = "Нет",
-                        ButtonVisible = true
-                    };
-
-                    if (warning.ShowDialog() == DialogResult.OK)
-                    {
-                        orderDTO.Deleted = true;
-                        var task = Task.Run(async () =>
-                        {
-                            await orderRepository.SaveOrderAsync(orderDTO);
-                        });
-                        task.Wait();
-                        UpdateTableData();
-                        /*UpdateDB();*/
-                    }
-                    FocusButton(status);
-                }
+                    UpdateTableData();
             }
-            catch { }
+            FocusButton(status);
         }
 
         private void RecoveryOrder()
         {
-            try
-            {
-                int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
-                var orderDTO = orderRepository.GetOrder(idOrder);
-                orderDTO.Deleted = false;
-                var task = Task.Run(async () =>
-                {
-                    await orderRepository.SaveOrderAsync(orderDTO);
-                });
-                task.Wait();
-                Trash();
-                /*UpdateDB();*/
-            }
-            catch { }
+            if (dataGridView1.Rows.Count == 0)
+                return;
+            ordersLogic.RecoveryOrder(idOrder);
+            Trash();
+            /*UpdateDB();*/
         }
 
         private void CompletedTag()
         {
-            try
+            if (dataGridView1.Rows.Count == 0)
+                return;
+            int numberRow = dataGridView1.CurrentCell.RowIndex;
+            var nameMaster = dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.MasterName)].Value.ToString();
+            var returnUnderGuarantee = Convert.ToBoolean(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.ReturnUnderGuarantee)].Value);
+            Warning warning = new() 
             {
-                int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
-                var orderDTO = orderRepository.GetOrder(idOrder);
-                Warning warning = new();
-                if (orderDTO.MainMasterId == null)
+                StartPosition = FormStartPosition.CenterParent
+            };
+            if (string.IsNullOrEmpty(nameMaster))
+            {
+                warning.LabelText = "Мастер в заказе не указан!";
+                warning.ShowDialog();
+                return;
+            }
+            if (!logInSystem)
+            {
+                warning.LabelText = "Войдите в систему!";
+                warning.ButtonYesText = "Войти";
+                warning.ButtonNoText = "Отмена";
+                warning.ButtonVisible = true;
+                if (warning.ShowDialog() == DialogResult.OK)
                 {
-                    warning = new()
-                    {
-                        StartPosition = FormStartPosition.CenterParent,
-                        LabelText = "Мастер в заказе не указан!"
-                    };
-                    warning.ShowDialog();
-                    return;
+                    LogInToTheSystem();
+                    if (!logInSystem)
+                        return;
                 }
-                if (!logInSystem)
+                else return;
+            }
+
+
+            if (warehouseLogic.GetCountDetailsInOrder(idOrder) == 0)
+            {
+                warning = new()
                 {
-                    warning = new()
-                    {
-                        StartPosition = FormStartPosition.CenterParent,
-                        LabelText = "Войдите в систему!",
-                        ButtonYesText = "Войти",
-                        ButtonNoText = "Отмена",
-                        ButtonVisible = true
-                    };
-                    if (warning.ShowDialog() == DialogResult.OK)
-                    {
-                        LogInToTheSystem();
-                        if (!logInSystem)
-                            return;
-                    }
-                    else return;
-                }
-
-
-                bool enabledPrice = true;
-
-                if (orderDTO.ReturnUnderGuarantee)
-                    enabledPrice = false;
-
-
-                var detailsList = warehouseRepository.GetDetailsInOrder(idOrder);
-                if (detailsList.Count == 0)
+                    StartPosition = FormStartPosition.CenterParent,
+                    LabelText = "Вы не использовали ни одной детали для ремонта данного устройства. " +
+                        "\nХотите ли вы редактировать список деталей?",
+                    ButtonNoText = "Нет",
+                    ButtonVisible = true
+                };
+                if (warning.ShowDialog() == DialogResult.OK)
                 {
-                    warning = new()
+                    DetailsInOrder detailsInOrder = new(idOrder)
                     {
-                        StartPosition = FormStartPosition.CenterParent,
-                        LabelText = "Вы не использовали ни одной детали для ремонта данного устройства. " +
-                            "\nХотите ли вы редактировать список деталей?",
-                        ButtonNoText = "Нет",
-                        ButtonVisible = true
+                        StartPosition = FormStartPosition.CenterParent
                     };
-                    if (warning.ShowDialog() == DialogResult.OK)
-                    {
-                        DetailsInOrder detailsInOrder = new(idOrder)
-                        {
-                            StartPosition = FormStartPosition.CenterParent
-                        };
-                        detailsInOrder.ShowDialog();
-                    }
-                }
-                if (status == StatusOrderEnum.InRepair)
-                {
-                    CompletedOrder completedOrder = new(idOrder)
-                    {
-                        StartPosition = FormStartPosition.CenterParent,
-                        EnabledPrice = enabledPrice
-                    };
-                    if (completedOrder.ShowDialog() == DialogResult.OK)
-                    {
-                        InProgress();
-                        /*UpdateDB(); */
-                    }
-                    FocusButton(status);
+                    detailsInOrder.ShowDialog();
                 }
             }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            if (status == StatusOrderEnum.InRepair)
+            {
+                CompletedOrder completedOrder = new(idOrder)
+                {
+                    StartPosition = FormStartPosition.CenterParent,
+                    EnabledPrice = !returnUnderGuarantee
+                };
+                if (completedOrder.ShowDialog() == DialogResult.OK)
+                {
+                    InProgress();
+                    /*UpdateDB(); */
+                }
+                FocusButton(status);
+            }
         }
 
         private void IssueToClient()
         {
-            try
+            if (dataGridView1.Rows.Count == 0)
+                return;
+            if (status == StatusOrderEnum.Completed)
             {
-                int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
-
-                if (status == StatusOrderEnum.Completed)
+                IssuingClient issuingClient = new(idOrder)
                 {
-                    IssuingClient issuingClient = new(idOrder)
-                    {
-                        StartPosition = FormStartPosition.CenterParent
-                    };
-                    if (issuingClient.ShowDialog() == DialogResult.OK)
-                    {
-                        OrderСompleted();
-                    }
-                    FocusButton(status);
+                    StartPosition = FormStartPosition.CenterParent
+                };
+                if (issuingClient.ShowDialog() == DialogResult.OK)
+                {
+                    OrderСompleted();
                 }
+                FocusButton(status);
             }
-            catch { }
         }
 
-        private void ReturnInRepair()
+        private void ReturnIntoRepair()
         {
-            try
+            if (dataGridView1.Rows.Count == 0)
+                return;
+            Warning warning = new()
             {
-                int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
-                var orderDTO = orderRepository.GetOrder(idOrder);
-                var malfunctionsOrderDTO = malfunctionOrderRepository.GetMalfunctionOrdersByIdOrder(idOrder);
-                Warning warning = new()
-                {
-                    StartPosition = FormStartPosition.CenterParent,
-                    LabelText = "Вы действительно хотите отправить аппарат в доработку?",
-                    ButtonNoText = "Нет",
-                    ButtonVisible = true
-                };
+                StartPosition = FormStartPosition.CenterParent,
+                LabelText = "Вы действительно хотите отправить аппарат в доработку?",
+                ButtonNoText = "Нет",
+                ButtonVisible = true
+            };
 
-                if (warning.ShowDialog() == DialogResult.OK)
+            if (warning.ShowDialog() == DialogResult.OK)
+            {
+                if (status == StatusOrderEnum.Completed)
                 {
-                    if (status == StatusOrderEnum.Completed)
-                    {
-                        orderDTO.StatusOrder = StatusOrderEnum.InRepair;
-                        if (orderDTO.ReturnUnderGuarantee)
-                            orderDTO.DateCompletedReturn = null;
-                        else
-                            orderDTO.DateCompleted = null;
-                        var task = Task.Run(async () =>
-                        {
-                            await orderRepository.SaveOrderAsync(orderDTO);
-                        });
-                        task.Wait();
-
-                        foreach (var malfunctionOrder in malfunctionsOrderDTO)
-                        {
-                            malfunctionOrderRepository.RemoveMalfunctionOrder(malfunctionOrder);
-                        }
-                        OrderСompleted();
-                    }
-                    /*UpdateDB();*/
-                    FocusButton(status);
+                    ordersLogic.ReturnInRepair(idOrder);
+                    OrderСompleted();
                 }
+                /*UpdateDB();*/
+                FocusButton(status);
             }
-            catch { }
         }
 
         private void ReturnGuarantee()
         {
-            try
+            if (dataGridView1.Rows.Count == 0)
+                return;
+            Warning warning = new()
             {
-                int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
-                var orderDTO = orderRepository.GetOrder(idOrder);
-                Warning warning = new()
-                {
-                    StartPosition = FormStartPosition.CenterParent,
-                    LabelText = "Вы действительно хотите вернуть аппарат по гарантии?",
-                    ButtonNoText = "Нет",
-                    ButtonVisible = true
-                };
+                StartPosition = FormStartPosition.CenterParent,
+                LabelText = "Вы действительно хотите вернуть аппарат по гарантии?",
+                ButtonNoText = "Нет",
+                ButtonVisible = true
+            };
 
-                if (warning.ShowDialog() == DialogResult.OK)
+            if (warning.ShowDialog() == DialogResult.OK)
+            {
+                if (status == StatusOrderEnum.GuaranteeIssue)
                 {
-                    if (status == StatusOrderEnum.GuaranteeIssue)
-                    {
-                        orderDTO.DateCreation = DateTime.Now;
-                        orderDTO.DateStartWork = DateTime.Now;
-                        orderDTO.StatusOrder = StatusOrderEnum.InRepair;
-                        orderDTO.ReturnUnderGuarantee = true;
-
-                        var task = Task.Run(async () =>
-                        {
-                            await orderRepository.SaveOrderAsync(orderDTO);
-                        });
-                        task.Wait();
-                        OrderGuarantee();
-                    }
-                    /*UpdateDB();*/
-                    FocusButton(status);
+                    ordersLogic.ReturnGuarantee(idOrder);
+                    OrderGuarantee();
                 }
+                /*UpdateDB();*/
+                FocusButton(status);
             }
-            catch { }
         }
 
         private void SendMessage()
         {
-            try
+            if (dataGridView1.Rows.Count == 0)
+                return;
+            MessageToClient message = new(idClient)
             {
-                int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
-                var orderDTO = orderRepository.GetOrder(idOrder);
-                int idClient = orderDTO.ClientId;
-                MessageToClient message = new(idClient)
-                {
-                    StartPosition = FormStartPosition.CenterParent
-                };
-                message.ShowDialog();
-            }
-            catch { }
+                StartPosition = FormStartPosition.CenterParent
+            };
+            message.ShowDialog();
         }
 
-        private void FeaturesClient()
+        private void PropertiesClient()
         {
-            try
+            if (dataGridView1.Rows.Count == 0)
+                return;
+            FeaturesClient featuresClient = new(idClient)
             {
-                int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
-                var orderDTO = orderRepository.GetOrder(idOrder);
-                int idClient = orderDTO.ClientId;
+                StartPosition = FormStartPosition.CenterParent
+            };
 
-                FeaturesClient featuresClient = new(idClient)
-                {
-                    StartPosition = FormStartPosition.CenterParent
-                };
-
-                if (featuresClient.ShowDialog() == DialogResult.OK)
-                    UpdateTableData();
-                FocusButton(status);
-            }
-            catch { }
+            if (featuresClient.ShowDialog() == DialogResult.OK)
+                UpdateTableData();
+            FocusButton(status);
         }
 
         private void AddInWhitelist()
         {
-            try
-            {
-                int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
-                var orderDTO = orderRepository.GetOrder(idOrder);
-                var clientDTO = clientRepository.GetClient(orderDTO.ClientId);
-                clientDTO.TypeClient = TypeClientEnum.white;
-                var task = Task.Run(async () =>
-                {
-                    await clientRepository.SaveClientAsync(clientDTO);
-                });
-                task.Wait();
-            }
-            catch { }
+            if (dataGridView1.Rows.Count == 0)
+                return;
+            clientsLogic.SetTypeClient(idClient, TypeClientEnum.white);
         }
 
         private void AddInBlacklist()
         {
-            try
-            {
-                int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
-                var orderDTO = orderRepository.GetOrder(idOrder);
-                var clientDTO = clientRepository.GetClient(orderDTO.ClientId);
-                clientDTO.TypeClient = TypeClientEnum.black;
-                var task = Task.Run(async () =>
-                {
-                    await clientRepository.SaveClientAsync(clientDTO);
-                });
-                task.Wait();
-            }
-            catch { }
+            if (dataGridView1.Rows.Count == 0)
+                return;
+            clientsLogic.SetTypeClient(idClient, TypeClientEnum.black);
         }
 
         private void RemoveMarks()
         {
-            try
-            {
-                int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
-                var orderDTO = orderRepository.GetOrder(idOrder);
-                var clientDTO = clientRepository.GetClient(orderDTO.ClientId);
-                clientDTO.TypeClient = TypeClientEnum.normal;
-                var task = Task.Run(async () =>
-                {
-                    await clientRepository.SaveClientAsync(clientDTO);
-                });
-                task.Wait();
-            }
-            catch { }
+            if (dataGridView1.Rows.Count == 0)
+                return;
+            clientsLogic.SetTypeClient(idClient, TypeClientEnum.normal);
         }
 
         private void NewOrder()
         {
-            int numberRow = dataGridView1.CurrentCell.RowIndex;
-            idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
-            var orderDTO = orderRepository.GetOrder(idOrder);
+            var orderDTO = ordersLogic.GetOrder(idOrder);
 
             AddDeviceIntoRepair newOrder = new()
             {
                 StartPosition = FormStartPosition.CenterParent,
-
                 MainMasterName = orderDTO.MainMasterId == null ? "-" : orderDTO.MainMaster?.NameMaster,
                 AdditionalMasterName = orderDTO.AdditionalMasterId == null ? "-" : orderDTO.AdditionalMaster?.NameMaster,
                 TypeDevice = orderDTO.TypeTechnic.Name,
@@ -651,16 +534,7 @@ namespace WinFormsApp1
         {
             if (saveFileDialog1.ShowDialog() == DialogResult.Cancel)
                 return;
-
-            string folderPath = saveFileDialog1.FileName;
-            using XLWorkbook workbook = new();
-            var table = Funcs.ToDataTable(orders.Select(a => new OrderTableExcelDTO(a)).ToList());
-
-            var wsDetailedData = workbook.Worksheets.Add(table, "Orders");
-            wsDetailedData.Columns().AdjustToContents();
-            workbook.SaveAs(folderPath);
-
-            MessageBox.Show("Таблица сохранена");
+            reportsLogic.ExportMainTable(saveFileDialog1.FileName, orders);
         }
 
         private void ButtonInProgress_Click(object sender, EventArgs e)
@@ -697,26 +571,16 @@ namespace WinFormsApp1
         {
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
-                idOrder = Convert.ToInt32(dataGridView1.Rows[i].Cells[nameof(OrderTableDTO.Id)].Value);
-                var orderDTO = orderRepository.GetOrder(idOrder);
-                if (orderDTO.MainMasterId == null)
+                if (string.IsNullOrEmpty(dataGridView1.Rows[i].Cells[nameof(OrderTableDTO.MasterName)].Value.ToString()))
                 {
                     dataGridView1.Rows[i].DefaultCellStyle.ForeColor = Color.DimGray;
                     dataGridView1.Rows[i].DefaultCellStyle.SelectionForeColor = Color.DimGray;
                     continue;
                 }
                 string hexColor = dataGridView1.Rows[i].Cells[nameof(OrderTableDTO.ColorRow)].Value.ToString();
-                Color color = ColorTranslator.FromHtml(hexColor);
-                if (color != CheckColor(idOrder))
-                {
-                    color = CheckColor(idOrder);
-                    orderDTO.ColorRow = ColorTranslator.ToHtml(color);
-                    var task = Task.Run(async () =>
-                    {
-                        await orderRepository.SaveOrderAsync(orderDTO);
-                    });
-                    task.Wait();
-                }
+
+                var color = ordersLogic.ChangeColorRows(Convert.ToInt32(dataGridView1.Rows[i].Cells[nameof(OrderTableDTO.Id)].Value), 
+                    status, hexColor);
                 dataGridView1.Rows[i].DefaultCellStyle.ForeColor = color;
                 dataGridView1.Rows[i].DefaultCellStyle.SelectionForeColor = color;
 
@@ -727,85 +591,59 @@ namespace WinFormsApp1
             }
         }
 
-        private Color CheckColor(int idOrder)
-        {
-            Color color;
-            var orderDTO = orderRepository.GetOrder(idOrder);
-            var countDays = 0;
-            switch (status)
-            {
-                case StatusOrderEnum.InRepair:
-                    countDays = (DateTime.Now - orderDTO.DateStartWork.Value).Days;
-                    break;
-                case StatusOrderEnum.Completed:
-                    countDays = (DateTime.Now - orderDTO.DateCompleted.Value).Days;
-                    break;
-            }
-
-            if (countDays < Convert.ToInt32(Properties.Settings.Default.FirstLevelText))
-                color = Properties.Settings.Default.FirstLevelColor;
-            else if (countDays > Convert.ToInt32(Properties.Settings.Default.SecondLevelText))
-                color = Properties.Settings.Default.ThirdLevelColor;
-            else if (orderDTO.StatusOrder == StatusOrderEnum.GuaranteeIssue || orderDTO.StatusOrder == StatusOrderEnum.Archive)
-                color = Color.Black;
-            else
-                color = Properties.Settings.Default.SecondLevelColor;
-            return color;
-        }
-
         private void ToolStripEnabled()
         {
             switch (status)
             {
                 case StatusOrderEnum.InRepair:
                     buttonDetails.Enabled = true;
-                    buttonDelete.Enabled = true;
-                    buttonRecoveryOrder.Enabled = false;
+                    buttonRemove.Enabled = true;
+                    buttonRecovery.Enabled = false;
                     buttonCompletedTag.Enabled = true;
                     buttonIssue.Enabled = false;
-                    buttonReturnInRepair.Enabled = false;
+                    buttonReturnIntoRepair.Enabled = false;
                     buttonReturnGuarantee.Enabled = false;
-                    buttonFeaturesOrder.Enabled = true;
+                    buttonPropertiesOrder.Enabled = true;
                     break;
                 case StatusOrderEnum.Completed:
                     buttonDetails.Enabled = false;
-                    buttonDelete.Enabled = true;
-                    buttonRecoveryOrder.Enabled = false;
+                    buttonRemove.Enabled = true;
+                    buttonRecovery.Enabled = false;
                     buttonCompletedTag.Enabled = false;
                     buttonIssue.Enabled = true;
-                    buttonReturnInRepair.Enabled = true;
+                    buttonReturnIntoRepair.Enabled = true;
                     buttonReturnGuarantee.Enabled = false;
-                    buttonFeaturesOrder.Enabled = true;
+                    buttonPropertiesOrder.Enabled = true;
                     break;
                 case StatusOrderEnum.GuaranteeIssue:
                     buttonDetails.Enabled = false;
-                    buttonDelete.Enabled = true;
-                    buttonRecoveryOrder.Enabled = false;
+                    buttonRemove.Enabled = true;
+                    buttonRecovery.Enabled = false;
                     buttonCompletedTag.Enabled = false;
                     buttonIssue.Enabled = false;
-                    buttonReturnInRepair.Enabled = false;
+                    buttonReturnIntoRepair.Enabled = false;
                     buttonReturnGuarantee.Enabled = true;
-                    buttonFeaturesOrder.Enabled = true;
+                    buttonPropertiesOrder.Enabled = true;
                     break;
                 case StatusOrderEnum.Archive:
                     buttonDetails.Enabled = false;
-                    buttonDelete.Enabled = true;
-                    buttonRecoveryOrder.Enabled = false;
+                    buttonRemove.Enabled = true;
+                    buttonRecovery.Enabled = false;
                     buttonCompletedTag.Enabled = false;
                     buttonIssue.Enabled = false;
-                    buttonReturnInRepair.Enabled = false;
+                    buttonReturnIntoRepair.Enabled = false;
                     buttonReturnGuarantee.Enabled = false;
-                    buttonFeaturesOrder.Enabled = true;
+                    buttonPropertiesOrder.Enabled = true;
                     break;
                 case StatusOrderEnum.Trash:
                     buttonDetails.Enabled = false;
-                    buttonDelete.Enabled = true;
-                    buttonRecoveryOrder.Enabled = true;
+                    buttonRemove.Enabled = true;
+                    buttonRecovery.Enabled = true;
                     buttonCompletedTag.Enabled = false;
                     buttonIssue.Enabled = false;
-                    buttonReturnInRepair.Enabled = false;
+                    buttonReturnIntoRepair.Enabled = false;
                     buttonReturnGuarantee.Enabled = false;
-                    buttonFeaturesOrder.Enabled = false;
+                    buttonPropertiesOrder.Enabled = false;
                     break;
             }
         }
@@ -815,77 +653,77 @@ namespace WinFormsApp1
             switch (status)
             {
                 case StatusOrderEnum.InRepair:
-                    itemFeaturesOrder.Enabled = true;
-                    itemDetails.Enabled = true;
-                    itemDeleteOrder.Enabled = true;
-                    itemRecoveryOrder.Enabled = false;
-                    itemActionsOrder.Enabled = true;
-                    itemOrderCompleted.Enabled = true;
-                    itemOrderIssued.Enabled = false;
-                    itemReturnToRevision.Enabled = false;
-                    itemReturnUnderGuarantee.Enabled = false;
-                    itemFeaturesClient.Enabled = true;
-                    itemAddToWhitelist.Enabled = true;
-                    itemAddToBlacklist.Enabled = true;
-                    itemRemoveMarks.Enabled = true;
+                    itemPropertiesMenuWorkingWithData.Enabled = true;
+                    itemDetailsMenuWorkingWithData.Enabled = true;
+                    itemRemoveMenuWorkingWithData.Enabled = true;
+                    itemRecoveryMenuWorkingWithData.Enabled = false;
+                    itemActionsDeviceMenuWorkingWithData.Enabled = true;
+                    itemCompletedTagMenuWorkingWithData.Enabled = true;
+                    itemIssueMenuWorkingWithData.Enabled = false;
+                    itemReturnMenuWorkingWithData.Enabled = false;
+                    itemReturnGuaranteeMenuWorkingWithData.Enabled = false;
+                    itemPropertiesClientMenuWorkingWithData.Enabled = true;
+                    itemWhiteListWorkingWithData.Enabled = true;
+                    itemBlackListWorkingWithData.Enabled = true;
+                    itemUnmarkWorkingWithData.Enabled = true;
                     break;
                 case StatusOrderEnum.Completed:
-                    itemFeaturesOrder.Enabled = true;
-                    itemDetails.Enabled = false;
-                    itemDeleteOrder.Enabled = true;
-                    itemRecoveryOrder.Enabled = false;
-                    itemActionsOrder.Enabled = true;
-                    itemOrderCompleted.Enabled = false;
-                    itemOrderIssued.Enabled = true;
-                    itemReturnToRevision.Enabled = true;
-                    itemReturnUnderGuarantee.Enabled = false;
-                    itemFeaturesClient.Enabled = true;
-                    itemAddToWhitelist.Enabled = true;
-                    itemAddToBlacklist.Enabled = true;
-                    itemRemoveMarks.Enabled = true;
+                    itemPropertiesMenuWorkingWithData.Enabled = true;
+                    itemDetailsMenuWorkingWithData.Enabled = false;
+                    itemRemoveMenuWorkingWithData.Enabled = true;
+                    itemRecoveryMenuWorkingWithData.Enabled = false;
+                    itemActionsDeviceMenuWorkingWithData.Enabled = true;
+                    itemCompletedTagMenuWorkingWithData.Enabled = false;
+                    itemIssueMenuWorkingWithData.Enabled = true;
+                    itemReturnMenuWorkingWithData.Enabled = true;
+                    itemReturnGuaranteeMenuWorkingWithData.Enabled = false;
+                    itemPropertiesClientMenuWorkingWithData.Enabled = true;
+                    itemWhiteListWorkingWithData.Enabled = true;
+                    itemBlackListWorkingWithData.Enabled = true;
+                    itemUnmarkWorkingWithData.Enabled = true;
                     break;
                 case StatusOrderEnum.GuaranteeIssue:
-                    itemFeaturesOrder.Enabled = true;
-                    itemDetails.Enabled = false;
-                    itemDeleteOrder.Enabled = true;
-                    itemRecoveryOrder.Enabled = false;
-                    itemActionsOrder.Enabled = true;
-                    itemOrderCompleted.Enabled = false;
-                    itemOrderIssued.Enabled = false;
-                    itemReturnToRevision.Enabled = false;
-                    itemReturnUnderGuarantee.Enabled = true;
-                    itemFeaturesClient.Enabled = true;
-                    itemAddToWhitelist.Enabled = true;
-                    itemAddToBlacklist.Enabled = true;
-                    itemRemoveMarks.Enabled = true;
+                    itemPropertiesMenuWorkingWithData.Enabled = true;
+                    itemDetailsMenuWorkingWithData.Enabled = false;
+                    itemRemoveMenuWorkingWithData.Enabled = true;
+                    itemRecoveryMenuWorkingWithData.Enabled = false;
+                    itemActionsDeviceMenuWorkingWithData.Enabled = true;
+                    itemCompletedTagMenuWorkingWithData.Enabled = false;
+                    itemIssueMenuWorkingWithData.Enabled = false;
+                    itemReturnMenuWorkingWithData.Enabled = false;
+                    itemReturnGuaranteeMenuWorkingWithData.Enabled = true;
+                    itemPropertiesClientMenuWorkingWithData.Enabled = true;
+                    itemWhiteListWorkingWithData.Enabled = true;
+                    itemBlackListWorkingWithData.Enabled = true;
+                    itemUnmarkWorkingWithData.Enabled = true;
                     break;
                 case StatusOrderEnum.Archive:
-                    itemFeaturesOrder.Enabled = true;
-                    itemDetails.Enabled = false;
-                    itemDeleteOrder.Enabled = true;
-                    itemRecoveryOrder.Enabled = false;
-                    itemActionsOrder.Enabled = false;
-                    itemFeaturesClient.Enabled = true;
-                    itemAddToWhitelist.Enabled = true;
-                    itemAddToBlacklist.Enabled = true;
-                    itemRemoveMarks.Enabled = true;
+                    itemPropertiesMenuWorkingWithData.Enabled = true;
+                    itemDetailsMenuWorkingWithData.Enabled = false;
+                    itemRemoveMenuWorkingWithData.Enabled = true;
+                    itemRecoveryMenuWorkingWithData.Enabled = false;
+                    itemActionsDeviceMenuWorkingWithData.Enabled = false;
+                    itemPropertiesClientMenuWorkingWithData.Enabled = true;
+                    itemWhiteListWorkingWithData.Enabled = true;
+                    itemBlackListWorkingWithData.Enabled = true;
+                    itemUnmarkWorkingWithData.Enabled = true;
                     break;
                 case StatusOrderEnum.Trash:
-                    itemFeaturesOrder.Enabled = false;
-                    itemDetails.Enabled = false;
-                    itemDeleteOrder.Enabled = true;
-                    itemRecoveryOrder.Enabled = true;
-                    itemActionsOrder.Enabled = false;
-                    itemFeaturesClient.Enabled = true;
-                    itemAddToWhitelist.Enabled = true;
-                    itemAddToBlacklist.Enabled = true;
-                    itemRemoveMarks.Enabled = true;
+                    itemPropertiesMenuWorkingWithData.Enabled = false;
+                    itemDetailsMenuWorkingWithData.Enabled = false;
+                    itemRemoveMenuWorkingWithData.Enabled = true;
+                    itemRecoveryMenuWorkingWithData.Enabled = true;
+                    itemActionsDeviceMenuWorkingWithData.Enabled = false;
+                    itemPropertiesClientMenuWorkingWithData.Enabled = true;
+                    itemWhiteListWorkingWithData.Enabled = true;
+                    itemBlackListWorkingWithData.Enabled = true;
+                    itemUnmarkWorkingWithData.Enabled = true;
                     break;
             }
             if (dataGridView1.RowCount > 0)
-                itemCreateOrder.Enabled = true;
+                itemNewOrderAsCurrentMenuWorkingWithData.Enabled = true;
             else
-                itemCreateOrder.Enabled = false;
+                itemNewOrderAsCurrentMenuWorkingWithData.Enabled = false;
 
         }
 
@@ -894,24 +732,24 @@ namespace WinFormsApp1
             switch (status)
             {
                 case StatusOrderEnum.InRepair:
-                    itemGetting.Enabled = true;
-                    itemIssuing.Enabled = false;
+                    itemGettingDevice.Enabled = true;
+                    itemIssuingDevice.Enabled = false;
                     break;
                 case StatusOrderEnum.Completed:
-                    itemGetting.Enabled = true;
-                    itemIssuing.Enabled = false;
+                    itemGettingDevice.Enabled = true;
+                    itemIssuingDevice.Enabled = false;
                     break;
                 case StatusOrderEnum.GuaranteeIssue:
-                    itemGetting.Enabled = true;
-                    itemIssuing.Enabled = true;
+                    itemGettingDevice.Enabled = true;
+                    itemIssuingDevice.Enabled = true;
                     break;
                 case StatusOrderEnum.Archive:
-                    itemGetting.Enabled = true;
-                    itemIssuing.Enabled = true;
+                    itemGettingDevice.Enabled = true;
+                    itemIssuingDevice.Enabled = true;
                     break;
                 case StatusOrderEnum.Trash:
-                    itemGetting.Enabled = false;
-                    itemIssuing.Enabled = false;
+                    itemGettingDevice.Enabled = false;
+                    itemIssuingDevice.Enabled = false;
                     break;
             }
         }
@@ -927,55 +765,55 @@ namespace WinFormsApp1
 
             if (e.Button == MouseButtons.Right && ht.Type != DataGridViewHitTestType.None)
             {
-                contextMenu1.Show(MousePosition);
+                contextMenuRightMouse.Show(MousePosition);
                 switch (status)
                 {
                     case StatusOrderEnum.InRepair:
-                        item1.Enabled = true;
-                        item2.Enabled = true;
-                        item3.Enabled = true;
-                        item4.Enabled = false;
-                        item5.Enabled = true;
-                        item5_1.Enabled = true;
-                        item5_2.Enabled = false;
-                        item5_3.Enabled = false;
-                        item5_4.Enabled = false;
+                        itemPropertiesMenuRightMouse.Enabled = true;
+                        itemDetailsMenuRightMouse.Enabled = true;
+                        itemRemoveMenuRightMouse.Enabled = true;
+                        itemRecoveryMenuRightMouse.Enabled = false;
+                        itemActionDeviceMenuRightMouse.Enabled = true;
+                        itemCompletedTagMenuRightMouse.Enabled = true;
+                        itemIssueMenuRightMouse.Enabled = false;
+                        itemReturnIntoRepairMenuRightMouse.Enabled = false;
+                        itemReturnGuaranteeMenuRightMouse.Enabled = false;
                         break;
                     case StatusOrderEnum.Completed:
-                        item1.Enabled = true;
-                        item2.Enabled = false;
-                        item3.Enabled = true;
-                        item4.Enabled = false;
-                        item5.Enabled = true;
-                        item5_1.Enabled = false;
-                        item5_2.Enabled = true;
-                        item5_3.Enabled = true;
-                        item5_4.Enabled = false;
+                        itemPropertiesMenuRightMouse.Enabled = true;
+                        itemDetailsMenuRightMouse.Enabled = false;
+                        itemRemoveMenuRightMouse.Enabled = true;
+                        itemRecoveryMenuRightMouse.Enabled = false;
+                        itemActionDeviceMenuRightMouse.Enabled = true;
+                        itemCompletedTagMenuRightMouse.Enabled = false;
+                        itemIssueMenuRightMouse.Enabled = true;
+                        itemReturnIntoRepairMenuRightMouse.Enabled = true;
+                        itemReturnGuaranteeMenuRightMouse.Enabled = false;
                         break;
                     case StatusOrderEnum.GuaranteeIssue:
-                        item1.Enabled = true;
-                        item2.Enabled = false;
-                        item3.Enabled = true;
-                        item4.Enabled = false;
-                        item5.Enabled = true;
-                        item5_1.Enabled = false;
-                        item5_2.Enabled = false;
-                        item5_3.Enabled = false;
-                        item5_4.Enabled = true;
+                        itemPropertiesMenuRightMouse.Enabled = true;
+                        itemDetailsMenuRightMouse.Enabled = false;
+                        itemRemoveMenuRightMouse.Enabled = true;
+                        itemRecoveryMenuRightMouse.Enabled = false;
+                        itemActionDeviceMenuRightMouse.Enabled = true;
+                        itemCompletedTagMenuRightMouse.Enabled = false;
+                        itemIssueMenuRightMouse.Enabled = false;
+                        itemReturnIntoRepairMenuRightMouse.Enabled = false;
+                        itemReturnGuaranteeMenuRightMouse.Enabled = true;
                         break;
                     case StatusOrderEnum.Archive:
-                        item1.Enabled = true;
-                        item2.Enabled = false;
-                        item3.Enabled = true;
-                        item4.Enabled = false;
-                        item5.Enabled = false;
+                        itemPropertiesMenuRightMouse.Enabled = true;
+                        itemDetailsMenuRightMouse.Enabled = false;
+                        itemRemoveMenuRightMouse.Enabled = true;
+                        itemRecoveryMenuRightMouse.Enabled = false;
+                        itemActionDeviceMenuRightMouse.Enabled = false;
                         break;
                     case StatusOrderEnum.Trash:
-                        item1.Enabled = false;
-                        item2.Enabled = false;
-                        item3.Enabled = true;
-                        item4.Enabled = true;
-                        item5.Enabled = false;
+                        itemPropertiesMenuRightMouse.Enabled = false;
+                        itemDetailsMenuRightMouse.Enabled = false;
+                        itemRemoveMenuRightMouse.Enabled = true;
+                        itemRecoveryMenuRightMouse.Enabled = true;
+                        itemActionDeviceMenuRightMouse.Enabled = false;
                         break;
                 }
             }
@@ -992,80 +830,80 @@ namespace WinFormsApp1
         private void DataGridView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (status != StatusOrderEnum.Trash)
-                FeaturesOrderItem();
+                PropertiesOrder();
         }
 
-        private void Item1_Click(object sender, EventArgs e)
+        private void ItemPropertiesMenuRightMouse_Click(object sender, EventArgs e)
         {
-            FeaturesOrderItem();
+            PropertiesOrder();
         }
 
-        private void Item2_Click(object sender, EventArgs e)
+        private void ItemDetailsMenuRightMouse_Click(object sender, EventArgs e)
         {
-            DetailsItem();
+            DetailsInOrder();
         }
 
-        private void Item3_Click(object sender, EventArgs e)
+        private void ItemRemoveMenuRightMouse_Click(object sender, EventArgs e)
         {
-            DeleteOrder();
+            RemoveOrder();
         }
 
-        private void Item4_Click(object sender, EventArgs e)
+        private void ItemRecoveryMenuRightMouse_Click(object sender, EventArgs e)
         {
             RecoveryOrder();
         }
 
-        private void Item5_1_Click(object sender, EventArgs e)
+        private void ItemCompletedTagMenuRightMouse_Click(object sender, EventArgs e)
         {
             CompletedTag();
         }
 
-        private void Item5_2_Click(object sender, EventArgs e)
+        private void ItemIssueMenuRightMouse_Click(object sender, EventArgs e)
         {
             IssueToClient();
         }
 
-        private void Item5_3_Click(object sender, EventArgs e)
+        private void ItemReturnIntoRepairMenuRightMouse_Click(object sender, EventArgs e)
         {
-            ReturnInRepair();
+            ReturnIntoRepair();
         }
 
-        private void Item5_4_Click(object sender, EventArgs e)
+        private void ItemReturnGuaranteeMenuRightMouse_Click(object sender, EventArgs e)
         {
             ReturnGuarantee();
         }
 
-        private void Item6_1_Click(object sender, EventArgs e)
+        private void ItemPropertiesClientMenuRightMouse_Click(object sender, EventArgs e)
         {
-            FeaturesClient();
+            PropertiesClient();
         }
 
-        private void Item6_2_Click(object sender, EventArgs e)
+        private void ItemMessageClientMenuRightMouse_Click(object sender, EventArgs e)
         {
             SendMessage();
         }
 
-        private void Item6_3_1_Click(object sender, EventArgs e)
+        private void ItemWhiteListMenuRightMouse_Click(object sender, EventArgs e)
         {
             AddInWhitelist();
         }
 
-        private void Item6_3_2_Click(object sender, EventArgs e)
+        private void ItemBlackListMenuRightMouse_Click(object sender, EventArgs e)
         {
             AddInBlacklist();
         }
 
-        private void Item6_3_3_Click(object sender, EventArgs e)
+        private void ItemUnmarkMenuRightMouse_Click(object sender, EventArgs e)
         {
             RemoveMarks();
         }
 
-        private void Item7_Click(object sender, EventArgs e)
+        private void ItemNewOrderAsCurrentMenuRightMouse_Click(object sender, EventArgs e)
         {
             NewOrder();
         }
 
-        private void ButtonAddDevice_Click(object sender, EventArgs e)
+        private void ButtonAddDeviceIntoRepair_Click(object sender, EventArgs e)
         {
             AddDeviceIntoRepair();
         }
@@ -1080,7 +918,7 @@ namespace WinFormsApp1
             FocusButton(status);
         }
 
-        private void ButtonDevice_Click(object sender, EventArgs e)
+        private void ButtonTypesDevices_Click(object sender, EventArgs e)
         {
             TypesTechnic addDevice = new()
             {
@@ -1107,15 +945,15 @@ namespace WinFormsApp1
 
         private void ButtonDetails_Click(object sender, EventArgs e)
         {
-            DetailsItem();
+            DetailsInOrder();
         }
 
-        private void ButtonDelete_Click(object sender, EventArgs e)
+        private void ButtonRemove_Click(object sender, EventArgs e)
         {
-            DeleteOrder();
+            RemoveOrder();
         }
 
-        private void ButtonRestoring_Click(object sender, EventArgs e)
+        private void ButtonRecovery_Click(object sender, EventArgs e)
         {
             RecoveryOrder();
         }
@@ -1130,9 +968,9 @@ namespace WinFormsApp1
             IssueToClient();
         }
 
-        private void ButtonReturnInRepair_Click(object sender, EventArgs e)
+        private void ButtonReturnIntoRepair_Click(object sender, EventArgs e)
         {
-            ReturnInRepair();
+            ReturnIntoRepair();
         }
 
         private void ButtonReturnGuarantee_Click(object sender, EventArgs e)
@@ -1140,28 +978,24 @@ namespace WinFormsApp1
             ReturnGuarantee();
         }
 
-        private void ButtonFeaturesOrder_Click(object sender, EventArgs e)
-        {
-            try
+        private void ButtonPropertiesOrder_Click(object sender, EventArgs e)
+        {  
+            if (dataGridView1.Rows.Count == 0)
+                return;
+            FeaturesOrder featuresOrder = new(idOrder, status, logInSystem)
             {
-                int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
-                FeaturesOrder featuresOrder = new(idOrder, status, logInSystem)
-                {
-                    StartPosition = FormStartPosition.CenterParent
-                };
-                featuresOrder.ShowDialog();
-                FocusButton(status);
-                UpdateTableData();
-                /*if (featuresOrder.pressBtnSave)
-                    UpdateDB();*/
-            }
-            catch { }
+                StartPosition = FormStartPosition.CenterParent
+            };
+            featuresOrder.ShowDialog();
+            FocusButton(status);
+            UpdateTableData();
+            /*if (featuresOrder.pressBtnSave)
+                UpdateDB();*/
         }
 
-        private void ButtonFeaturesClient_Click(object sender, EventArgs e)
+        private void ButtonPropertiesClient_Click(object sender, EventArgs e)
         {
-            FeaturesClient();
+            PropertiesClient();
         }
 
         private void LabelDataBase_MouseEnter(object sender, EventArgs e)
@@ -1239,36 +1073,36 @@ namespace WinFormsApp1
         private void LabelDataBase_Click(object sender, EventArgs e)
         {
             var screenPos = labelDataBase.PointToScreen(Point.Empty);
-            contextButton1.Show(new Point(screenPos.X, screenPos.Y + labelDataBase.Height));
+            contextMenuDataBase.Show(new Point(screenPos.X, screenPos.Y + labelDataBase.Height));
         }
 
         private void LabelWorkData_Click(object sender, EventArgs e)
         {
             ContextButton2();
             var screenPos = labelWorkData.PointToScreen(Point.Empty);
-            contextButton2.Show(new Point(screenPos.X, screenPos.Y + labelWorkData.Height));
+            contextMenuWorkingWithData.Show(new Point(screenPos.X, screenPos.Y + labelWorkData.Height));
         }
 
         private void LabelDocuments_Click(object sender, EventArgs e)
         {
             ContextButton3();
             var screenPos = labelDocuments.PointToScreen(Point.Empty);
-            contextButton3.Show(new Point(screenPos.X, screenPos.Y + labelDocuments.Height));
+            contextMenuPayments.Show(new Point(screenPos.X, screenPos.Y + labelDocuments.Height));
         }
 
         private void LabelReports_Click(object sender, EventArgs e)
         {
             var screenPos = labelReports.PointToScreen(Point.Empty);
-            contextButton4.Show(new Point(screenPos.X, screenPos.Y + labelReports.Height));
+            contextMenuReports.Show(new Point(screenPos.X, screenPos.Y + labelReports.Height));
         }
 
         private void LabelView_Click(object sender, EventArgs e)
         {
             var screenPos = labelView.PointToScreen(Point.Empty);
-            contextButton5.Show(new Point(screenPos.X, screenPos.Y + labelReports.Height));
+            contextMenuView.Show(new Point(screenPos.X, screenPos.Y + labelReports.Height));
         }
 
-        private void ItemAddMasters_Click(object sender, EventArgs e)
+        private void ItemMasters_Click(object sender, EventArgs e)
         {
             Masters addMaster = new()
             {
@@ -1278,7 +1112,7 @@ namespace WinFormsApp1
             FocusButton(status);
         }
 
-        private void ItemAddBrand_Click(object sender, EventArgs e)
+        private void ItemBrands_Click(object sender, EventArgs e)
         {
             BrandsTechnic addBrand = new()
             {
@@ -1287,7 +1121,8 @@ namespace WinFormsApp1
             addBrand.ShowDialog();
             FocusButton(status);
         }
-        private void ItemAddDevice_Click(object sender, EventArgs e)
+
+        private void ItemTypesDevices_Click(object sender, EventArgs e)
         {
             TypesTechnic addDevice = new()
             {
@@ -1297,7 +1132,7 @@ namespace WinFormsApp1
             FocusButton(status);
         }
 
-        private void ItemClients_Click(object sender, EventArgs e)
+        private void ItemClientsDirectory_Click(object sender, EventArgs e)
         {
             GuideClients guideClients = new()
             {
@@ -1364,11 +1199,7 @@ namespace WinFormsApp1
         {
             try
             {
-                var pickDatabaseFrom = Environment.CurrentDirectory;
-                var srcFile = Path.Combine(pickDatabaseFrom, "computerservice.db");
-                var destFile = Path.Combine(pickDatabaseFrom, "./Res/computerservice.db");
-                if (File.Exists(destFile))
-                    File.Delete(destFile);
+                DBLogic.CopyDB("./Res/computerservice.db");
             }
             catch
             {
@@ -1397,13 +1228,13 @@ namespace WinFormsApp1
             UpdateTableData();
         }
 
-        private void ItemOrg_Click(object sender, EventArgs e)
+        private void ItemOrganization_Click(object sender, EventArgs e)
         {
-            Organization org = new()
+            Organization organization = new()
             {
                 StartPosition = FormStartPosition.CenterParent
             };
-            org.ShowDialog();
+            organization.ShowDialog();
         }
 
         private void ItemLogIn_Click(object sender, EventArgs e)
@@ -1426,77 +1257,77 @@ namespace WinFormsApp1
             FocusButton(status);
         }
 
-        private void ItemAddDeviceForRepair_Click(object sender, EventArgs e)
+        private void ItemNewOrderMenuWorkingWithData_Click(object sender, EventArgs e)
         {
             AddDeviceIntoRepair();
         }
 
-        private void ItemFeaturesOrder_Click(object sender, EventArgs e)
+        private void ItemPropertiesMenuWorkingWithData_Click(object sender, EventArgs e)
         {
-            FeaturesOrderItem();
+            PropertiesOrder();
         }
 
-        private void ItemDetails_Click(object sender, EventArgs e)
+        private void ItemDetailsMenuWorkingWithData_Click(object sender, EventArgs e)
         {
-            DetailsItem();
+            DetailsInOrder();
         }
 
-        private void ItemDeleteOrder_Click(object sender, EventArgs e)
+        private void ItemRemoveMenuWorkingWithData_Click(object sender, EventArgs e)
         {
-            DeleteOrder();
+            RemoveOrder();
         }
 
-        private void ItemRecoveryOrder_Click(object sender, EventArgs e)
+        private void ItemRecoveryMenuWorkingWithData_Click(object sender, EventArgs e)
         {
             RecoveryOrder();
         }
 
-        private void ItemOrderCompleted_Click(object sender, EventArgs e)
+        private void ItemCompletedTagMenuWorkingWithData_Click(object sender, EventArgs e)
         {
             CompletedTag();
         }
 
-        private void ItemOrderIssued_Click(object sender, EventArgs e)
+        private void ItemIssueMenuWorkingWithData_Click(object sender, EventArgs e)
         {
             IssueToClient();
         }
 
-        private void ItemReturnToRevision_Click(object sender, EventArgs e)
+        private void ItemReturnMenuWorkingWithData_Click(object sender, EventArgs e)
         {
-            ReturnInRepair();
+            ReturnIntoRepair();
         }
 
-        private void ItemReturnUnderGuarantee_Click(object sender, EventArgs e)
+        private void ItemReturnGuaranteeMenuWorkingWithData_Click(object sender, EventArgs e)
         {
             ReturnGuarantee();
         }
 
-        private void ItemFeaturesClient_Click(object sender, EventArgs e)
+        private void ItemPropertiesClientMenuWorkingWithData_Click(object sender, EventArgs e)
         {
-            FeaturesClient();
+            PropertiesClient();
         }
 
-        private void ItemMessageToClient_Click(object sender, EventArgs e)
+        private void ItemMessageClientMenuWorkingWithData_Click(object sender, EventArgs e)
         {
             SendMessage();
         }
 
-        private void ItemAddToWhitelist_Click(object sender, EventArgs e)
+        private void ItemWhiteListWorkingWithData_Click(object sender, EventArgs e)
         {
             AddInWhitelist();
         }
 
-        private void ItemAddToBlacklist_Click(object sender, EventArgs e)
+        private void ItemBlackListWorkingWithData_Click(object sender, EventArgs e)
         {
             AddInBlacklist();
         }
 
-        private void ItemRemoveMarks_Click(object sender, EventArgs e)
+        private void ItemUnmarkWorkingWithData_Click(object sender, EventArgs e)
         {
             RemoveMarks();
         }
 
-        private void ItemSearchOrder_Click(object sender, EventArgs e)
+        private void ItemNewOrderAsCurrentMenuWorkingWithData_Click(object sender, EventArgs e)
         {
             NewOrder();
         }
@@ -1531,32 +1362,20 @@ namespace WinFormsApp1
             UpdateTableData();
         }
 
-        private void ItemGetting_Click(object sender, EventArgs e)
+        private void ItemGettingDevice_Click(object sender, EventArgs e)
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            try
-            {
-                int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
-                gettingReport.Report(idOrder);
-                FocusButton(status);
-            }
-            catch { }
+            reportsLogic.GettingDeviceReport(idOrder);
+            FocusButton(status);
         }
 
-        private void ItemIssuing_Click(object sender, EventArgs e)
+        private void ItemIssuingDevice_Click(object sender, EventArgs e)
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            try
-            {
-                int numberRow = dataGridView1.CurrentCell.RowIndex;
-                idOrder = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.Id)].Value);
-                issuingReport.Report(idOrder);
-                FocusButton(status);
-            }
-            catch { }
+            reportsLogic.IssuingDeviceReport(idOrder);
+            FocusButton(status);
         }
 
         private void DataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -1586,30 +1405,11 @@ namespace WinFormsApp1
             }
         }
 
-        private static void CopyDBForService()
-        {
-            var pickDatabaseFrom = Environment.CurrentDirectory;
-            var srcFile = Path.Combine(pickDatabaseFrom, "computerservice.db");
-            var destFile = Path.Combine(pickDatabaseFrom, "./Service/computerservice.db");
-            if (File.Exists(destFile))
-                File.Delete(destFile);
-
-            File.Copy(srcFile, destFile);
-        }
-
         private static void UpdateDB()
         {
             try
             {
-                CopyDBForService();
-                var path = Path.Combine(Environment.CurrentDirectory, "./Service/computerservice.db");
-                FtpClient client = new()
-                {
-                    Host = "198.37.116.30",
-                    Credentials = new NetworkCredential("lizaveta", "wYwu6@L?2mhUT2?")
-                };
-                client.Connect();
-                client.UploadFile(path, "www.webappdb.somee.com//computerservice.db");
+                DBLogic.UpdateDB();
 
             }
             catch (Exception exp)
@@ -1654,17 +1454,7 @@ namespace WinFormsApp1
             Search();
         }
 
-        private void TextBoxTypeDevice_TextChanged(object sender, EventArgs e)
-        {
-            Search();
-        }
-
-        private void TextBoxBrandDevice_TextChanged(object sender, EventArgs e)
-        {
-            Search();
-        }
-
-        private void TextBoxModel_TextChanged(object sender, EventArgs e)
+        private void TextBoxDevice_TextChanged(object sender, EventArgs e)
         {
             Search();
         }
@@ -1674,48 +1464,44 @@ namespace WinFormsApp1
             Search();
         }
 
+        private void CheckBoxSearch_CheckedChanged(object sender, EventArgs e)
+        {
+            Search();
+        }
+
         private void Search()
         {
-            orders = orderRepository.GetOrdersBySearch(numberOrder: textBoxIdOrder.Text,
+            if (CheckNoFilters())
+            {
+                UpdateTableData();
+                return;
+            }
+            StatusOrderEnum? statusOrder = null;
+            if (!checkBoxSearch.Checked)
+                statusOrder = status;
+            orders = ordersLogic.GetOrdersBySearch(numberOrder: textBoxIdOrder.Text,
                 dateCreation: textBoxDateCreation.Text, dateStartWork: textBoxDateStartWork.Text,
-                masterName: textBoxNameMaster.Text, typeTechnic: textBoxTypeDevice.Text,
-                brandTechnic: textBoxBrandDevice.Text, modelTechnic: textBoxModel.Text, idClient: textBoxNameClient.Text);
+                masterName: textBoxNameMaster.Text, device: textBoxDevice.Text, idClient: textBoxNameClient.Text,
+                statusOrder: statusOrder);
 
             dataGridView1.DataSource = Funcs.ToDataTable(orders);
-            ChangeColorRows();
-            if (CheckNoFilters())
-                UpdateTableData();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            var screenSize = (ScreenSizeEnum)System.Enum.Parse(typeof(ScreenSizeEnum), Properties.Settings.Default.Size);
-            if (screenSize == ScreenSizeEnum.Small)
-            {
-                Properties.Settings.Default.WidthSmall = Width;
-                Properties.Settings.Default.HeightSmall = Height;
-                Properties.Settings.Default.Save();
-            }
-            else if (screenSize == ScreenSizeEnum.Medium)
-            {
-                Properties.Settings.Default.WidthMedium = Width;
-                Properties.Settings.Default.HeightMedium = Height;
-                Properties.Settings.Default.Save();
-            }
+            Properties.Settings.Default.WidthMedium = Width;
+            Properties.Settings.Default.HeightMedium = Height;
+            Properties.Settings.Default.Save();
         }
 
         private bool CheckNoFilters()
         {
-            if (string.IsNullOrEmpty(textBoxIdOrder.Text) &&
+            return (string.IsNullOrEmpty(textBoxIdOrder.Text) &&
                 string.IsNullOrEmpty(textBoxDateCreation.Text) &&
                 string.IsNullOrEmpty(textBoxDateStartWork.Text) &&
                 string.IsNullOrEmpty(textBoxNameMaster.Text) &&
-                string.IsNullOrEmpty(textBoxTypeDevice.Text) &&
-                string.IsNullOrEmpty(textBoxBrandDevice.Text) &&
-                string.IsNullOrEmpty(textBoxModel.Text) &&
-                string.IsNullOrEmpty(textBoxNameClient.Text))
-                return true;
-            else return false;
+                string.IsNullOrEmpty(textBoxDevice.Text) &&
+                string.IsNullOrEmpty(textBoxNameClient.Text));
         }
 
         private void ButtonReset_Click(object sender, EventArgs e)
@@ -1724,173 +1510,56 @@ namespace WinFormsApp1
             textBoxDateCreation.Text = string.Empty;
             textBoxDateStartWork.Text = string.Empty;
             textBoxNameMaster.Text = string.Empty;
-            textBoxTypeDevice.Text = string.Empty;
-            textBoxBrandDevice.Text = string.Empty;
-            textBoxModel.Text = string.Empty;
+            textBoxDevice.Text = string.Empty;
             textBoxNameClient.Text = string.Empty;
             UpdateTableData();
             FocusButton(status);
         }
 
-        private void ItemSmall_Click(object sender, EventArgs e)
-        {
-            var screenSize = (ScreenSizeEnum)System.Enum.Parse(typeof(ScreenSizeEnum), Properties.Settings.Default.Size);
-            if (screenSize == ScreenSizeEnum.Medium)
-            {
-                Properties.Settings.Default.WidthMedium = Width;
-                Properties.Settings.Default.HeightMedium = Height;
-                Properties.Settings.Default.Save();
-            }
-            Properties.Settings.Default.Size = ScreenSizeEnum.Small.ToString();
-            Properties.Settings.Default.Save();
-
-            Width = Properties.Settings.Default.WidthSmall;
-            Height = Properties.Settings.Default.HeightSmall;
-        }
-
-        private void ItemMedium_Click(object sender, EventArgs e)
-        {
-            var screenSize = (ScreenSizeEnum)System.Enum.Parse(typeof(ScreenSizeEnum), Properties.Settings.Default.Size);
-            if (screenSize == ScreenSizeEnum.Small)
-            {
-                Properties.Settings.Default.WidthSmall = Width;
-                Properties.Settings.Default.HeightSmall = Height;
-                Properties.Settings.Default.Save();
-            }
-
-            Properties.Settings.Default.Size = ScreenSizeEnum.Medium.ToString();
-            Properties.Settings.Default.Save();
-
-            Width = Properties.Settings.Default.WidthMedium;
-            Height = Properties.Settings.Default.HeightMedium;
-        }
-
-        private void SmallWindow()
+        private void ChangeSizeAndLocation()
         {
             int buttonMenuX = Width - buttonInProgress.Width - 25;
             int heightButtonMenu = buttonInProgress.Height;
-
             dataGridView1.Width = Width - buttonInProgress.Width - 50;
-            dataGridView1.Height = Height - dataGridView1.Location.Y - heightButtonMenu - 70;
+            dataGridView1.Height = Height - dataGridView1.Location.Y - heightButtonMenu - 50;
 
-            int endTable = dataGridView1.Width + dataGridView1.Location.X;
-            int marginHeightMenuX = (dataGridView1.Height - heightButtonMenu * 4) / 3;
-
-            labelLogIn.Location = new Point(buttonMenuX, labelLogIn.Location.Y);
-            buttonInProgress.Location = new Point(buttonMenuX, buttonInProgress.Location.Y);
-            buttonCompleted.Location = new Point(buttonMenuX, buttonInProgress.Location.Y + heightButtonMenu + marginHeightMenuX);
-            buttonGuarantee.Location = new Point(buttonMenuX, buttonCompleted.Location.Y + heightButtonMenu + marginHeightMenuX);
-            buttonArchive.Location = new Point(buttonMenuX, buttonGuarantee.Location.Y + heightButtonMenu + marginHeightMenuX);
-            buttonTrash.Location = new Point(buttonMenuX, Height - buttonTrash.Height - 60);
-            buttonReset.Location = new Point(endTable - buttonReset.Width, buttonTrash.Location.Y);
-            buttonReset.Height = heightButtonMenu;
-
-            int widthTextBox = 74;
-            int widthLT = 4;
-            int thirdLine = buttonReset.Location.Y + buttonReset.Height - labelDateCreation.Height;
-            int secondLine = thirdLine - labelDateCreation.Height - 11;
-            int thirdColumn = buttonReset.Location.X - widthTextBox - 15;
-            int marginWidthFilter = ((thirdColumn + textBoxTypeDevice.Width) - (widthTextBox + widthLT) * 3 -
-                labelIdOrder.Width - labelDateStartWork.Width - labelTypeDevice.Width) / 2;
-
-            labelIdOrder.Location = new Point(labelIdOrder.Location.X, buttonReset.Location.Y);
-            textBoxIdOrder.Location = new Point(textBoxIdOrder.Location.X, buttonReset.Location.Y);
-            textBoxIdOrder.Width = widthTextBox;
-            int secondColumn = textBoxIdOrder.Location.X + textBoxIdOrder.Width + marginWidthFilter;
-            labelDateStartWork.Location = new Point(secondColumn, buttonReset.Location.Y);
-            textBoxDateStartWork.Location = new Point(secondColumn + labelDateStartWork.Width + widthLT, buttonReset.Location.Y);
-            textBoxDateStartWork.Width = widthTextBox;
-            textBoxTypeDevice.Location = new Point(thirdColumn, buttonReset.Location.Y);
-            textBoxTypeDevice.Width = widthTextBox;
-            labelTypeDevice.Location = new Point(thirdColumn - labelTypeDevice.Width - widthLT, buttonReset.Location.Y);
-            textBoxModel.Location = new Point(textBoxIdOrder.Location.X, thirdLine);
-            textBoxModel.Width = widthTextBox;
-            labelModel.Location = new Point(textBoxModel.Location.X - labelModel.Width - widthLT, thirdLine);
-
-            labelDateCreation.Location = new Point(labelDateCreation.Location.X, secondLine);
-            textBoxDateCreation.Location = new Point(textBoxDateCreation.Location.X, secondLine);
-            textBoxDateCreation.Width = widthTextBox;
-            labelNameMaster.Location = new Point(secondColumn, secondLine);
-            textBoxNameMaster.Location = new Point(secondColumn + labelNameMaster.Width + widthLT, secondLine);
-            textBoxNameMaster.Width = widthTextBox;
-            textBoxBrandDevice.Location = new Point(thirdColumn, secondLine);
-            textBoxBrandDevice.Width = widthTextBox;
-            labelBrandDevice.Location = new Point(thirdColumn - labelBrandDevice.Width - widthLT, secondLine);
-            textBoxNameClient.Location = new Point(textBoxNameMaster.Location.X, thirdLine);
-            textBoxNameClient.Width = widthTextBox;
-            labelNameClient.Location = new Point(textBoxNameClient.Location.X - labelNameClient.Width - widthLT, thirdLine);
-        }
-
-        private void MediumWindow()
-        {
-            int buttonMenuX = Width - buttonInProgress.Width - 25;
-            int heightButtonMenu = buttonInProgress.Height;
-            int heightReset = 77;
-
-            dataGridView1.Width = Width - buttonInProgress.Width - 50;
-            dataGridView1.Height = Height - dataGridView1.Location.Y - heightReset - 70;
-
-            int bottomTable = dataGridView1.Height + dataGridView1.Location.Y;
             int marginHeightMenuX = (dataGridView1.Height - heightButtonMenu * 5) / 4;
-
+            int bottomTable = dataGridView1.Height + dataGridView1.Location.Y;
             labelLogIn.Location = new Point(buttonMenuX, labelLogIn.Location.Y);
             buttonInProgress.Location = new Point(buttonMenuX, buttonInProgress.Location.Y);
             buttonCompleted.Location = new Point(buttonMenuX, buttonInProgress.Location.Y + heightButtonMenu + marginHeightMenuX);
             buttonGuarantee.Location = new Point(buttonMenuX, buttonCompleted.Location.Y + heightButtonMenu + marginHeightMenuX);
             buttonArchive.Location = new Point(buttonMenuX, buttonGuarantee.Location.Y + heightButtonMenu + marginHeightMenuX);
             buttonTrash.Location = new Point(buttonMenuX, bottomTable - buttonTrash.Height);
-            buttonReset.Location = new Point(buttonMenuX, Height - heightReset - 60);
-            buttonReset.Height = heightReset;
+            buttonReset.Location = new Point(buttonMenuX, bottomTable + 20);
 
-            int bottomMargin = buttonReset.Location.Y + buttonReset.Height - labelDateCreation.Height;
             int endTable = dataGridView1.Width + dataGridView1.Location.X;
-            int widthTextBox = 120;
+            int widthTextBox = textBoxIdOrder.Width;
             int widthLT = 4;
-            int marginWidthFilter = (endTable - (widthTextBox + widthLT) * 4 - labelIdOrder.Width - labelDateStartWork.Width -
-                labelTypeDevice.Width - labelModel.Width) / 3;
+            int marginWidthFilter = (endTable - checkBoxSearch.Width - (widthTextBox + widthLT) * 3 - labelIdOrder.Width - 
+                labelDateStartWork.Width - labelDevice.Width) / 3;
 
+
+            int secondColumn = textBoxIdOrder.Location.X + textBoxIdOrder.Width + marginWidthFilter;
             labelIdOrder.Location = new Point(labelIdOrder.Location.X, buttonReset.Location.Y);
             textBoxIdOrder.Location = new Point(textBoxIdOrder.Location.X, buttonReset.Location.Y);
-            textBoxIdOrder.Width = widthTextBox;
-            int secondColumn = textBoxIdOrder.Location.X + textBoxIdOrder.Width + marginWidthFilter;
             labelDateStartWork.Location = new Point(secondColumn, buttonReset.Location.Y);
             textBoxDateStartWork.Location = new Point(secondColumn + labelDateStartWork.Width + widthLT, buttonReset.Location.Y);
-            textBoxDateStartWork.Width = widthTextBox;
             int thirdColumn = textBoxDateStartWork.Location.X + textBoxDateStartWork.Width + marginWidthFilter;
-            labelTypeDevice.Location = new Point(thirdColumn, buttonReset.Location.Y);
-            textBoxTypeDevice.Location = new Point(thirdColumn + labelTypeDevice.Width + widthLT, buttonReset.Location.Y);
-            textBoxTypeDevice.Width = widthTextBox;
-            textBoxModel.Location = new Point(endTable - widthTextBox, buttonReset.Location.Y);
-            textBoxModel.Width = widthTextBox;
-            labelModel.Location = new Point(textBoxModel.Location.X - labelModel.Width - widthLT, buttonReset.Location.Y);
+            labelDevice.Location = new Point(thirdColumn, buttonReset.Location.Y);
+            textBoxDevice.Location = new Point(thirdColumn + labelDevice.Width + widthLT, buttonReset.Location.Y);
 
+            checkBoxSearch.Location = new Point(textBoxDevice.Location.X + textBoxDevice.Width + marginWidthFilter, bottomTable + 20);
 
+            int bottomMargin = buttonReset.Location.Y + buttonReset.Height - labelDateCreation.Height;
             labelDateCreation.Location = new Point(labelDateCreation.Location.X, bottomMargin);
             textBoxDateCreation.Location = new Point(textBoxDateCreation.Location.X, bottomMargin);
-            textBoxDateCreation.Width = widthTextBox;
             labelNameMaster.Location = new Point(secondColumn, bottomMargin);
             textBoxNameMaster.Location = new Point(secondColumn + labelNameMaster.Width + widthLT, bottomMargin);
-            textBoxNameMaster.Width = widthTextBox;
-            labelBrandDevice.Location = new Point(thirdColumn, bottomMargin);
-            textBoxBrandDevice.Location = new Point(thirdColumn + labelBrandDevice.Width + widthLT, bottomMargin);
-            textBoxBrandDevice.Width = widthTextBox;
-            textBoxNameClient.Location = new Point(endTable - widthTextBox, bottomMargin);
-            textBoxNameClient.Width = widthTextBox;
-            labelNameClient.Location = new Point(textBoxNameClient.Location.X - labelNameClient.Width - widthLT, bottomMargin);
-        }
+            labelNameClient.Location = new Point(thirdColumn, bottomMargin);
+            textBoxNameClient.Location = new Point(thirdColumn + labelNameClient.Width + widthLT, bottomMargin);
 
-        private void ChangeSizeAndLocation()
-        {
-            var screenSize = (ScreenSizeEnum)System.Enum.Parse(typeof(ScreenSizeEnum), Properties.Settings.Default.Size);
-            if (screenSize == ScreenSizeEnum.Small)
-                SmallWindow();
-            else if (screenSize == ScreenSizeEnum.Medium)
-                MediumWindow();
-            try
-            {
-                UpdateTable();
-            }
-            catch { }
+            UpdateWidthColumns();
         }
 
         private void DataGridView1_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
@@ -1941,7 +1610,7 @@ namespace WinFormsApp1
             if (logInSystem)
             {
                 var screenPos = labelLogIn.PointToScreen(Point.Empty);
-                contextAccount.Show(new Point(screenPos.X - (contextAccount.Width - labelLogIn.Width),
+                contextMenuAccount.Show(new Point(screenPos.X - (contextMenuAccount.Width - labelLogIn.Width),
                     screenPos.Y + labelLogIn.Height));
             }
             else LogInToTheSystem();

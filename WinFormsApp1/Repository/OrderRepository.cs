@@ -1,4 +1,5 @@
-﻿using WinFormsApp1.DTO;
+﻿using System.Data.Entity;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Model;
 
@@ -38,9 +39,18 @@ namespace WinFormsApp1.Repository
             if(id == true)
                 set = set.OrderByDescending(i => i.Id);
 
-            return set
+            var list = set.Include(i => i.MainMaster)
+                .Include(i => i.AdditionalMaster)
+                .Include(i => i.TypeTechnic)
+                .Include(i => i.BrandTechnic)
+                .Include(i => i.Client)
+                .Include(i => i.Diagnosis).ToList();
+
+            /*return set
                 .Select(a => new OrderTableDTO(a))
-                .ToList();
+                .ToList();*/
+
+            return list.Select(a => new OrderTableDTO(a)).ToList();
         }
 
 
@@ -57,7 +67,7 @@ namespace WinFormsApp1.Repository
         /// <param name="idClient"></param>
         /// <returns>Список заказов</returns>
         public List<OrderTableDTO> GetOrdersBySearch(string numberOrder, string dateCreation, string dateStartWork, string masterName,
-            string typeTechnic, string brandTechnic, string modelTechnic, string idClient)
+            string device, string idClient, StatusOrderEnum? statusOrder)
         {
             Context context = new();
             
@@ -71,17 +81,23 @@ namespace WinFormsApp1.Repository
                 set = set.Where(i => i.DateStartWork != null && i.DateStartWork.ToString().StartsWith(dateStartWork));
             if (!string.IsNullOrEmpty(idClient))
                 set = set.Where(i => i.Client.IdClient.Contains(idClient));
+            if (statusOrder != null)
+                set = set.Where(i => i.StatusOrder == statusOrder);
 
             var result = set.ToList();
             if (!string.IsNullOrEmpty(masterName))
                 result = result.Where(i => (i.MainMaster?.NameMaster?.ToLower()?.Contains(masterName.ToLower()) ?? false) || 
                 (i.AdditionalMaster?.NameMaster?.ToLower()?.Contains(masterName.ToLower()) ?? false)).ToList();
-            if (!string.IsNullOrEmpty(typeTechnic))
+            if (!string.IsNullOrEmpty(device))
+                result = result.Where(i => (i.TypeTechnic?.NameTypeTechnic?.ToLower()?.Contains(device.ToLower()) ?? false) ||
+                (i.BrandTechnic?.NameBrandTechnic?.ToLower()?.Contains(device.ToLower()) ?? false) ||
+                (i.ModelTechnic?.ToLower()?.Contains(device.ToLower()) ?? false)).ToList();
+            /*if (!string.IsNullOrEmpty(typeTechnic))
                 result = result.Where(i => i.TypeTechnic?.NameTypeTechnic?.ToLower()?.StartsWith(typeTechnic.ToLower()) ?? false).ToList();
             if (!string.IsNullOrEmpty(brandTechnic))
                 result = result.Where(i => i.BrandTechnic?.NameBrandTechnic?.ToLower()?.StartsWith(brandTechnic.ToLower()) ?? false).ToList();
             if (!string.IsNullOrEmpty(modelTechnic))
-                result = result.Where(i => i.ModelTechnic?.ToLower()?.StartsWith(modelTechnic.ToLower()) ?? false).ToList();
+                result = result.Where(i => i.ModelTechnic?.ToLower()?.StartsWith(modelTechnic.ToLower()) ?? false).ToList();*/
 
             return result
                 .OrderByDescending(i => i.NumberOrder)

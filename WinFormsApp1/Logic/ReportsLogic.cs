@@ -1,15 +1,68 @@
-﻿using ClosedXML.Report;
+﻿
+using ClosedXML.Excel;
+using ClosedXML.Report;
 using System.Diagnostics;
+using WinFormsApp1.DTO;
+using WinFormsApp1.Helpers;
 using WinFormsApp1.Repository;
 
-namespace WinFormsApp1.Reports
+namespace WinFormsApp1.Logic
 {
-    public class IssuingReport
+    public class ReportsLogic
     {
         OrderRepository orderRepository = new();
         WarehouseRepository warehouseRepository = new();
         MalfunctionOrderRepository malfunctionOrderRepository = new();
-        public void Report(int idOrder) 
+        public void GettingDeviceReport(int idOrder)
+        {
+            try
+            {
+                const string outputFile = @"Output\reportGetting.xlsx";
+                var template = new XLTemplate(@"Templates\reportGetting.xlsx");
+                var orderDTO = orderRepository.GetOrder(idOrder);
+
+                string device = String.Format("{0} {1} {2}", orderDTO.TypeTechnic?.Name,
+                    orderDTO.BrandTechnic?.Name, orderDTO.ModelTechnic);
+
+                template.AddVariable("Id", value: orderDTO.NumberOrder);
+                template.AddVariable("MasterName", value: orderDTO.MainMaster?.NameMaster);
+                template.AddVariable("IdClient", value: orderDTO.Client?.IdClient);
+                template.AddVariable("ClientNameAndAddress", value: orderDTO.Client?.NameAndAddressClient);
+                template.AddVariable("ClientSecondPhone", value: orderDTO.Client?.NumberSecondPhone);
+                template.AddVariable("Device", value: device);
+                template.AddVariable("FactoryNumber", value: orderDTO.FactoryNumber);
+                template.AddVariable("Equipment", value: orderDTO.Equipment?.Name);
+                template.AddVariable("Diagnosis", value: orderDTO.Diagnosis?.Name);
+                template.AddVariable("Note", value: orderDTO.Note);
+                template.AddVariable("DateCreation", value: orderDTO.DateCreation.Value.ToShortDateString());
+                template.AddVariable("OrgName", value: Properties.Settings.Default.NameOrg);
+                template.AddVariable("OrgAddress", value: Properties.Settings.Default.AddressOrg);
+                template.AddVariable("OrgPhone", value: Properties.Settings.Default.PhoneOrg);
+                template.AddVariable("OrgFax", value: Properties.Settings.Default.FaxOrg);
+                template.AddVariable("OrgMail", value: Properties.Settings.Default.MailOrg);
+                template.Generate();
+                try
+                {
+                    template.SaveAs(outputFile);
+                }
+                catch (Exception)
+                {
+                    Warning warning = new()
+                    {
+                        StartPosition = FormStartPosition.CenterParent,
+                        LabelText = "Закройте файл reportGetting.xlsx и повторите попытку!"
+                    };
+                    warning.ShowDialog();
+                }
+                Process.Start(new ProcessStartInfo(outputFile) { UseShellExecute = true });
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message);
+            }
+        }
+
+        public void IssuingDeviceReport(int idOrder)
         {
             try
             {
@@ -29,19 +82,19 @@ namespace WinFormsApp1.Reports
                 var detalsDTO = warehouseRepository.GetDetailsInOrder(idOrder);
                 var malfunctionOrderDTO = malfunctionOrderRepository.GetMalfunctionOrdersByIdOrder(idOrder);
 
-                for(int i = 0; i < 5; i++)
+                for (int i = 0; i < 5; i++)
                 {
                     nameDetailsInFail.Add(String.Format("NameDetails{0}", i));
                     priceDetailsInFail.Add(String.Format("PriceDetails{0}", i));
                 }
 
-                for(int i = 0; i < 3; i++)
+                for (int i = 0; i < 3; i++)
                 {
                     nameProblemInFail.Add(String.Format("FoundProblem{0}", i));
                     priceProblemInFail.Add(String.Format("PriceRepair{0}", i));
                 }
 
-                foreach(var malfunction in malfunctionOrderDTO)
+                foreach (var malfunction in malfunctionOrderDTO)
                 {
                     nameProblem.Add(malfunction.Malfunction.Name);
                     priceProblem.Add(malfunction.Price);
@@ -127,5 +180,19 @@ namespace WinFormsApp1.Reports
                 MessageBox.Show(exp.Message);
             }
         }
+
+
+        public void ExportMainTable(string folderPath, List<OrderTableDTO> orders)
+        {
+            using XLWorkbook workbook = new();
+            var table = Funcs.ToDataTable(orders.Select(a => new OrderTableExcelDTO(a)).ToList());
+
+            var wsDetailedData = workbook.Worksheets.Add(table, "Orders");
+            wsDetailedData.Columns().AdjustToContents();
+            workbook.SaveAs(folderPath);
+
+            MessageBox.Show("Таблица сохранена");
+        }
+
     }
 }

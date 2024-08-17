@@ -32,7 +32,7 @@ namespace WinFormsApp1
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             dataGridView1 = new DataGridView();
             buttonInProgress = new Button();
@@ -40,53 +40,53 @@ namespace WinFormsApp1
             buttonGuarantee = new Button();
             buttonArchive = new Button();
             buttonTrash = new Button();
-            contextMenu1 = new ContextMenuStrip(components);
-            item1 = new ToolStripMenuItem();
+            contextMenuRightMouse = new ContextMenuStrip(components);
+            itemPropertiesMenuRightMouse = new ToolStripMenuItem();
             toolStripSeparator4 = new ToolStripSeparator();
-            item2 = new ToolStripMenuItem();
+            itemDetailsMenuRightMouse = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
-            item3 = new ToolStripMenuItem();
-            item4 = new ToolStripMenuItem();
+            itemRemoveMenuRightMouse = new ToolStripMenuItem();
+            itemRecoveryMenuRightMouse = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
-            item5 = new ToolStripMenuItem();
-            item5_1 = new ToolStripMenuItem();
-            item5_2 = new ToolStripMenuItem();
+            itemActionDeviceMenuRightMouse = new ToolStripMenuItem();
+            itemCompletedTagMenuRightMouse = new ToolStripMenuItem();
+            itemIssueMenuRightMouse = new ToolStripMenuItem();
             toolStripSeparator3 = new ToolStripSeparator();
-            item5_3 = new ToolStripMenuItem();
-            item5_4 = new ToolStripMenuItem();
-            item6 = new ToolStripMenuItem();
-            item6_1 = new ToolStripMenuItem();
-            item6_2 = new ToolStripMenuItem();
-            item6_3 = new ToolStripMenuItem();
-            item6_3_1 = new ToolStripMenuItem();
-            item6_3_2 = new ToolStripMenuItem();
-            item6_3_3 = new ToolStripMenuItem();
+            itemReturnIntoRepairMenuRightMouse = new ToolStripMenuItem();
+            itemReturnGuaranteeMenuRightMouse = new ToolStripMenuItem();
+            itemActionClientMenuRightMouse = new ToolStripMenuItem();
+            itemPropertiesClientMenuRightMouse = new ToolStripMenuItem();
+            itemMessageClientMenuRightMouse = new ToolStripMenuItem();
+            itemPriorityClientMenuRightMouse = new ToolStripMenuItem();
+            itemWhiteListMenuRightMouse = new ToolStripMenuItem();
+            itemBlackListMenuRightMouse = new ToolStripMenuItem();
+            itemUnmarkMenuRightMouse = new ToolStripMenuItem();
             toolStripSeparator19 = new ToolStripSeparator();
-            item7 = new ToolStripMenuItem();
+            itemNewOrderAsCurrentMenuRightMouse = new ToolStripMenuItem();
             toolStrip1 = new ToolStrip();
-            buttonAddDevice = new ToolStripButton();
+            buttonAddDeviceIntoRepair = new ToolStripButton();
             buttonMasters = new ToolStripButton();
-            buttonDevice = new ToolStripButton();
+            buttonTypesDevices = new ToolStripButton();
             toolStripSeparator5 = new ToolStripSeparator();
             buttonExit = new ToolStripButton();
             toolStripSeparator6 = new ToolStripSeparator();
             buttonDetails = new ToolStripButton();
-            buttonDelete = new ToolStripButton();
-            buttonRecoveryOrder = new ToolStripButton();
+            buttonRemove = new ToolStripButton();
+            buttonRecovery = new ToolStripButton();
             buttonCompletedTag = new ToolStripButton();
             buttonIssue = new ToolStripButton();
-            buttonReturnInRepair = new ToolStripButton();
+            buttonReturnIntoRepair = new ToolStripButton();
             buttonReturnGuarantee = new ToolStripButton();
             toolStripSeparator7 = new ToolStripSeparator();
-            buttonFeaturesOrder = new ToolStripButton();
-            buttonFeaturesClient = new ToolStripButton();
+            buttonPropertiesOrder = new ToolStripButton();
+            buttonPropertiesClient = new ToolStripButton();
             toolStripSeparator8 = new ToolStripSeparator();
             labelDataBase = new Label();
-            contextButton1 = new ContextMenuStrip(components);
-            itemAddMasters = new ToolStripMenuItem();
-            itemAddBrand = new ToolStripMenuItem();
-            itemAddDevice = new ToolStripMenuItem();
-            itemClients = new ToolStripMenuItem();
+            contextMenuDataBase = new ContextMenuStrip(components);
+            itemMasters = new ToolStripMenuItem();
+            itemBrands = new ToolStripMenuItem();
+            itemTypesDevices = new ToolStripMenuItem();
+            itemClientsDirectory = new ToolStripMenuItem();
             itemWarehouse = new ToolStripMenuItem();
             itemMalfunction = new ToolStripMenuItem();
             itemDiagnosis = new ToolStripMenuItem();
@@ -98,44 +98,44 @@ namespace WinFormsApp1
             toolStripSeparator10 = new ToolStripSeparator();
             itemPathDB = new ToolStripMenuItem();
             toolStripSeparator18 = new ToolStripSeparator();
-            itemOrg = new ToolStripMenuItem();
+            itemOrganization = new ToolStripMenuItem();
             toolStripSeparator20 = new ToolStripSeparator();
             itemLogIn = new ToolStripMenuItem();
             toolStripSeparator21 = new ToolStripSeparator();
             itemExit = new ToolStripMenuItem();
-            contextButton2 = new ContextMenuStrip(components);
-            itemAddDeviceForRepair = new ToolStripMenuItem();
-            itemFeaturesOrder = new ToolStripMenuItem();
+            contextMenuWorkingWithData = new ContextMenuStrip(components);
+            itemNewOrderMenuWorkingWithData = new ToolStripMenuItem();
+            itemPropertiesMenuWorkingWithData = new ToolStripMenuItem();
             toolStripSeparator11 = new ToolStripSeparator();
-            itemDetails = new ToolStripMenuItem();
+            itemDetailsMenuWorkingWithData = new ToolStripMenuItem();
             toolStripSeparator12 = new ToolStripSeparator();
-            itemDeleteOrder = new ToolStripMenuItem();
-            itemRecoveryOrder = new ToolStripMenuItem();
+            itemRemoveMenuWorkingWithData = new ToolStripMenuItem();
+            itemRecoveryMenuWorkingWithData = new ToolStripMenuItem();
             toolStripSeparator13 = new ToolStripSeparator();
-            itemActionsOrder = new ToolStripMenuItem();
-            itemOrderCompleted = new ToolStripMenuItem();
-            itemOrderIssued = new ToolStripMenuItem();
+            itemActionsDeviceMenuWorkingWithData = new ToolStripMenuItem();
+            itemCompletedTagMenuWorkingWithData = new ToolStripMenuItem();
+            itemIssueMenuWorkingWithData = new ToolStripMenuItem();
             toolStripSeparator14 = new ToolStripSeparator();
-            itemReturnToRevision = new ToolStripMenuItem();
-            itemReturnUnderGuarantee = new ToolStripMenuItem();
-            itemActionsClient = new ToolStripMenuItem();
-            itemFeaturesClient = new ToolStripMenuItem();
+            itemReturnMenuWorkingWithData = new ToolStripMenuItem();
+            itemReturnGuaranteeMenuWorkingWithData = new ToolStripMenuItem();
+            itemActionsClientMenuWorkingWithData = new ToolStripMenuItem();
+            itemPropertiesClientMenuWorkingWithData = new ToolStripMenuItem();
             toolStripSeparator15 = new ToolStripSeparator();
-            itemMessageToClient = new ToolStripMenuItem();
+            itemMessageClientMenuWorkingWithData = new ToolStripMenuItem();
             toolStripSeparator16 = new ToolStripSeparator();
-            itemPriorityClient = new ToolStripMenuItem();
-            itemAddToWhitelist = new ToolStripMenuItem();
-            itemAddToBlacklist = new ToolStripMenuItem();
-            itemRemoveMarks = new ToolStripMenuItem();
+            itemPriorityClientMenuWorkingWithData = new ToolStripMenuItem();
+            itemWhiteListWorkingWithData = new ToolStripMenuItem();
+            itemBlackListWorkingWithData = new ToolStripMenuItem();
+            itemUnmarkWorkingWithData = new ToolStripMenuItem();
             toolStripSeparator17 = new ToolStripSeparator();
-            itemCreateOrder = new ToolStripMenuItem();
+            itemNewOrderAsCurrentMenuWorkingWithData = new ToolStripMenuItem();
             labelWorkData = new Label();
             labelDocuments = new Label();
             labelReports = new Label();
-            contextButton3 = new ContextMenuStrip(components);
-            itemGetting = new ToolStripMenuItem();
-            itemIssuing = new ToolStripMenuItem();
-            contextButton4 = new ContextMenuStrip(components);
+            contextMenuPayments = new ContextMenuStrip(components);
+            itemGettingDevice = new ToolStripMenuItem();
+            itemIssuingDevice = new ToolStripMenuItem();
+            contextMenuReports = new ContextMenuStrip(components);
             itemReportOrganization = new ToolStripMenuItem();
             itemSalary = new ToolStripMenuItem();
             textBoxIdOrder = new TextBox();
@@ -145,41 +145,34 @@ namespace WinFormsApp1
             labelDateStartWork = new Label();
             labelNameMaster = new Label();
             textBoxDateStartWork = new TextBox();
-            labelTypeDevice = new Label();
-            labelBrandDevice = new Label();
-            labelModel = new Label();
+            labelDevice = new Label();
             labelNameClient = new Label();
             textBoxNameMaster = new TextBox();
-            textBoxTypeDevice = new TextBox();
-            textBoxBrandDevice = new TextBox();
-            textBoxModel = new TextBox();
+            textBoxDevice = new TextBox();
             textBoxNameClient = new TextBox();
             labelView = new Label();
-            contextButton5 = new ContextMenuStrip(components);
+            contextMenuView = new ContextMenuStrip(components);
             itemColor = new ToolStripMenuItem();
-            itemSize = new ToolStripMenuItem();
-            itemSmall = new ToolStripMenuItem();
-            itemMedium = new ToolStripMenuItem();
             buttonReset = new Button();
-            contextPhone = new ContextMenuStrip(components);
-            numberPhone = new ToolStripMenuItem();
             timer1 = new System.Windows.Forms.Timer(components);
             labelLogIn = new Label();
-            contextAccount = new ContextMenuStrip(components);
+            contextMenuAccount = new ContextMenuStrip(components);
             itemChangeData = new ToolStripMenuItem();
             itemLogOut = new ToolStripMenuItem();
             labelClientId = new Label();
             saveFileDialog1 = new SaveFileDialog();
+            checkBoxSearch = new CheckBox();
+            itemSmall = new ToolStripMenuItem();
+            itemMedium = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
-            contextMenu1.SuspendLayout();
+            contextMenuRightMouse.SuspendLayout();
             toolStrip1.SuspendLayout();
-            contextButton1.SuspendLayout();
-            contextButton2.SuspendLayout();
-            contextButton3.SuspendLayout();
-            contextButton4.SuspendLayout();
-            contextButton5.SuspendLayout();
-            contextPhone.SuspendLayout();
-            contextAccount.SuspendLayout();
+            contextMenuDataBase.SuspendLayout();
+            contextMenuWorkingWithData.SuspendLayout();
+            contextMenuPayments.SuspendLayout();
+            contextMenuReports.SuspendLayout();
+            contextMenuView.SuspendLayout();
+            contextMenuAccount.SuspendLayout();
             SuspendLayout();
             // 
             // dataGridView1
@@ -187,14 +180,14 @@ namespace WinFormsApp1
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.BackgroundColor = Color.FromArgb(224, 224, 224);
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Window;
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.GradientInactiveCaption;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
-            dataGridView1.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.GradientInactiveCaption;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
             dataGridView1.Location = new Point(11, 85);
             dataGridView1.MultiSelect = false;
             dataGridView1.Name = "dataGridView1";
@@ -280,197 +273,197 @@ namespace WinFormsApp1
             buttonTrash.UseVisualStyleBackColor = true;
             buttonTrash.Click += ButtonTrash_Click;
             // 
-            // contextMenu1
+            // contextMenuRightMouse
             // 
-            contextMenu1.ImageScalingSize = new Size(24, 24);
-            contextMenu1.Items.AddRange(new ToolStripItem[] { item1, toolStripSeparator4, item2, toolStripSeparator1, item3, item4, toolStripSeparator2, item5, item6, toolStripSeparator19, item7 });
-            contextMenu1.Name = "contextMenu";
-            contextMenu1.Size = new Size(407, 252);
+            contextMenuRightMouse.ImageScalingSize = new Size(24, 24);
+            contextMenuRightMouse.Items.AddRange(new ToolStripItem[] { itemPropertiesMenuRightMouse, toolStripSeparator4, itemDetailsMenuRightMouse, toolStripSeparator1, itemRemoveMenuRightMouse, itemRecoveryMenuRightMouse, toolStripSeparator2, itemActionDeviceMenuRightMouse, itemActionClientMenuRightMouse, toolStripSeparator19, itemNewOrderAsCurrentMenuRightMouse });
+            contextMenuRightMouse.Name = "contextMenu";
+            contextMenuRightMouse.Size = new Size(407, 285);
             // 
-            // item1
+            // itemPropertiesMenuRightMouse
             // 
-            item1.BackgroundImageLayout = ImageLayout.Zoom;
-            item1.Image = Properties.Resources.m1;
-            item1.ImageScaling = ToolStripItemImageScaling.None;
-            item1.Name = "item1";
-            item1.Size = new Size(406, 32);
-            item1.Text = "Свойства аппарата";
-            item1.Click += Item1_Click;
+            itemPropertiesMenuRightMouse.BackgroundImageLayout = ImageLayout.Zoom;
+            itemPropertiesMenuRightMouse.Image = Properties.Resources.m1;
+            itemPropertiesMenuRightMouse.ImageScaling = ToolStripItemImageScaling.None;
+            itemPropertiesMenuRightMouse.Name = "itemPropertiesMenuRightMouse";
+            itemPropertiesMenuRightMouse.Size = new Size(406, 32);
+            itemPropertiesMenuRightMouse.Text = "Свойства аппарата";
+            itemPropertiesMenuRightMouse.Click += ItemPropertiesMenuRightMouse_Click;
             // 
             // toolStripSeparator4
             // 
             toolStripSeparator4.Name = "toolStripSeparator4";
             toolStripSeparator4.Size = new Size(403, 6);
             // 
-            // item2
+            // itemDetailsMenuRightMouse
             // 
-            item2.Image = Properties.Resources.m2;
-            item2.ImageScaling = ToolStripItemImageScaling.None;
-            item2.Name = "item2";
-            item2.Size = new Size(406, 32);
-            item2.Text = "Детали на ремонт аппарата";
-            item2.Click += Item2_Click;
+            itemDetailsMenuRightMouse.Image = Properties.Resources.m2;
+            itemDetailsMenuRightMouse.ImageScaling = ToolStripItemImageScaling.None;
+            itemDetailsMenuRightMouse.Name = "itemDetailsMenuRightMouse";
+            itemDetailsMenuRightMouse.Size = new Size(406, 32);
+            itemDetailsMenuRightMouse.Text = "Детали на ремонт аппарата";
+            itemDetailsMenuRightMouse.Click += ItemDetailsMenuRightMouse_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
             toolStripSeparator1.Size = new Size(403, 6);
             // 
-            // item3
+            // itemRemoveMenuRightMouse
             // 
-            item3.Image = Properties.Resources.m3;
-            item3.ImageScaling = ToolStripItemImageScaling.None;
-            item3.Name = "item3";
-            item3.Size = new Size(406, 32);
-            item3.Text = "Удаление аппарата";
-            item3.Click += Item3_Click;
+            itemRemoveMenuRightMouse.Image = Properties.Resources.m3;
+            itemRemoveMenuRightMouse.ImageScaling = ToolStripItemImageScaling.None;
+            itemRemoveMenuRightMouse.Name = "itemRemoveMenuRightMouse";
+            itemRemoveMenuRightMouse.Size = new Size(406, 32);
+            itemRemoveMenuRightMouse.Text = "Удаление аппарата";
+            itemRemoveMenuRightMouse.Click += ItemRemoveMenuRightMouse_Click;
             // 
-            // item4
+            // itemRecoveryMenuRightMouse
             // 
-            item4.Image = Properties.Resources.m4;
-            item4.ImageScaling = ToolStripItemImageScaling.None;
-            item4.Name = "item4";
-            item4.Size = new Size(406, 32);
-            item4.Text = "Восстановление аппарата из корзины";
-            item4.Click += Item4_Click;
+            itemRecoveryMenuRightMouse.Image = Properties.Resources.m4;
+            itemRecoveryMenuRightMouse.ImageScaling = ToolStripItemImageScaling.None;
+            itemRecoveryMenuRightMouse.Name = "itemRecoveryMenuRightMouse";
+            itemRecoveryMenuRightMouse.Size = new Size(406, 32);
+            itemRecoveryMenuRightMouse.Text = "Восстановление аппарата из корзины";
+            itemRecoveryMenuRightMouse.Click += ItemRecoveryMenuRightMouse_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
             toolStripSeparator2.Size = new Size(403, 6);
             // 
-            // item5
+            // itemActionDeviceMenuRightMouse
             // 
-            item5.DropDownItems.AddRange(new ToolStripItem[] { item5_1, item5_2, toolStripSeparator3, item5_3, item5_4 });
-            item5.Image = Properties.Resources.m5;
-            item5.ImageScaling = ToolStripItemImageScaling.None;
-            item5.Name = "item5";
-            item5.Size = new Size(406, 32);
-            item5.Text = "Операции над аппаратом";
+            itemActionDeviceMenuRightMouse.DropDownItems.AddRange(new ToolStripItem[] { itemCompletedTagMenuRightMouse, itemIssueMenuRightMouse, toolStripSeparator3, itemReturnIntoRepairMenuRightMouse, itemReturnGuaranteeMenuRightMouse });
+            itemActionDeviceMenuRightMouse.Image = Properties.Resources.m5;
+            itemActionDeviceMenuRightMouse.ImageScaling = ToolStripItemImageScaling.None;
+            itemActionDeviceMenuRightMouse.Name = "itemActionDeviceMenuRightMouse";
+            itemActionDeviceMenuRightMouse.Size = new Size(406, 32);
+            itemActionDeviceMenuRightMouse.Text = "Операции над аппаратом";
             // 
-            // item5_1
+            // itemCompletedTagMenuRightMouse
             // 
-            item5_1.Image = Properties.Resources.m5_1;
-            item5_1.ImageScaling = ToolStripItemImageScaling.None;
-            item5_1.Name = "item5_1";
-            item5_1.Size = new Size(473, 34);
-            item5_1.Text = "Пометить аппарат как отремонтированный";
-            item5_1.Click += Item5_1_Click;
+            itemCompletedTagMenuRightMouse.Image = Properties.Resources.m5_1;
+            itemCompletedTagMenuRightMouse.ImageScaling = ToolStripItemImageScaling.None;
+            itemCompletedTagMenuRightMouse.Name = "itemCompletedTagMenuRightMouse";
+            itemCompletedTagMenuRightMouse.Size = new Size(473, 34);
+            itemCompletedTagMenuRightMouse.Text = "Пометить аппарат как отремонтированный";
+            itemCompletedTagMenuRightMouse.Click += ItemCompletedTagMenuRightMouse_Click;
             // 
-            // item5_2
+            // itemIssueMenuRightMouse
             // 
-            item5_2.Image = Properties.Resources.m5_2;
-            item5_2.ImageScaling = ToolStripItemImageScaling.None;
-            item5_2.Name = "item5_2";
-            item5_2.Size = new Size(473, 34);
-            item5_2.Text = "Выдать аппарат клиенту";
-            item5_2.Click += Item5_2_Click;
+            itemIssueMenuRightMouse.Image = Properties.Resources.m5_2;
+            itemIssueMenuRightMouse.ImageScaling = ToolStripItemImageScaling.None;
+            itemIssueMenuRightMouse.Name = "itemIssueMenuRightMouse";
+            itemIssueMenuRightMouse.Size = new Size(473, 34);
+            itemIssueMenuRightMouse.Text = "Выдать аппарат клиенту";
+            itemIssueMenuRightMouse.Click += ItemIssueMenuRightMouse_Click;
             // 
             // toolStripSeparator3
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
             toolStripSeparator3.Size = new Size(470, 6);
             // 
-            // item5_3
+            // itemReturnIntoRepairMenuRightMouse
             // 
-            item5_3.Image = Properties.Resources.m5_3;
-            item5_3.ImageScaling = ToolStripItemImageScaling.None;
-            item5_3.Name = "item5_3";
-            item5_3.Size = new Size(473, 34);
-            item5_3.Text = "Возврат аппарата в доработку";
-            item5_3.Click += Item5_3_Click;
+            itemReturnIntoRepairMenuRightMouse.Image = Properties.Resources.m5_3;
+            itemReturnIntoRepairMenuRightMouse.ImageScaling = ToolStripItemImageScaling.None;
+            itemReturnIntoRepairMenuRightMouse.Name = "itemReturnIntoRepairMenuRightMouse";
+            itemReturnIntoRepairMenuRightMouse.Size = new Size(473, 34);
+            itemReturnIntoRepairMenuRightMouse.Text = "Возврат аппарата в доработку";
+            itemReturnIntoRepairMenuRightMouse.Click += ItemReturnIntoRepairMenuRightMouse_Click;
             // 
-            // item5_4
+            // itemReturnGuaranteeMenuRightMouse
             // 
-            item5_4.Image = Properties.Resources.m5_4;
-            item5_4.ImageScaling = ToolStripItemImageScaling.None;
-            item5_4.Name = "item5_4";
-            item5_4.Size = new Size(473, 34);
-            item5_4.Text = "Возврат аппарата по гарантии";
-            item5_4.Click += Item5_4_Click;
+            itemReturnGuaranteeMenuRightMouse.Image = Properties.Resources.m5_4;
+            itemReturnGuaranteeMenuRightMouse.ImageScaling = ToolStripItemImageScaling.None;
+            itemReturnGuaranteeMenuRightMouse.Name = "itemReturnGuaranteeMenuRightMouse";
+            itemReturnGuaranteeMenuRightMouse.Size = new Size(473, 34);
+            itemReturnGuaranteeMenuRightMouse.Text = "Возврат аппарата по гарантии";
+            itemReturnGuaranteeMenuRightMouse.Click += ItemReturnGuaranteeMenuRightMouse_Click;
             // 
-            // item6
+            // itemActionClientMenuRightMouse
             // 
-            item6.DropDownItems.AddRange(new ToolStripItem[] { item6_1, item6_2, item6_3 });
-            item6.Image = Properties.Resources.m6;
-            item6.ImageScaling = ToolStripItemImageScaling.None;
-            item6.Name = "item6";
-            item6.Size = new Size(406, 32);
-            item6.Text = "Операции над клиентом";
+            itemActionClientMenuRightMouse.DropDownItems.AddRange(new ToolStripItem[] { itemPropertiesClientMenuRightMouse, itemMessageClientMenuRightMouse, itemPriorityClientMenuRightMouse });
+            itemActionClientMenuRightMouse.Image = Properties.Resources.m6;
+            itemActionClientMenuRightMouse.ImageScaling = ToolStripItemImageScaling.None;
+            itemActionClientMenuRightMouse.Name = "itemActionClientMenuRightMouse";
+            itemActionClientMenuRightMouse.Size = new Size(406, 32);
+            itemActionClientMenuRightMouse.Text = "Операции над клиентом";
             // 
-            // item6_1
+            // itemPropertiesClientMenuRightMouse
             // 
-            item6_1.Image = Properties.Resources.m6_1;
-            item6_1.ImageScaling = ToolStripItemImageScaling.None;
-            item6_1.Name = "item6_1";
-            item6_1.Size = new Size(316, 34);
-            item6_1.Text = "Свойства клиента";
-            item6_1.Click += Item6_1_Click;
+            itemPropertiesClientMenuRightMouse.Image = Properties.Resources.m6_1;
+            itemPropertiesClientMenuRightMouse.ImageScaling = ToolStripItemImageScaling.None;
+            itemPropertiesClientMenuRightMouse.Name = "itemPropertiesClientMenuRightMouse";
+            itemPropertiesClientMenuRightMouse.Size = new Size(316, 34);
+            itemPropertiesClientMenuRightMouse.Text = "Свойства клиента";
+            itemPropertiesClientMenuRightMouse.Click += ItemPropertiesClientMenuRightMouse_Click;
             // 
-            // item6_2
+            // itemMessageClientMenuRightMouse
             // 
-            item6_2.Image = Properties.Resources.m6_2;
-            item6_2.ImageScaling = ToolStripItemImageScaling.None;
-            item6_2.Name = "item6_2";
-            item6_2.Size = new Size(316, 34);
-            item6_2.Text = "Сообщение клиенту";
-            item6_2.Click += Item6_2_Click;
+            itemMessageClientMenuRightMouse.Image = Properties.Resources.m6_2;
+            itemMessageClientMenuRightMouse.ImageScaling = ToolStripItemImageScaling.None;
+            itemMessageClientMenuRightMouse.Name = "itemMessageClientMenuRightMouse";
+            itemMessageClientMenuRightMouse.Size = new Size(316, 34);
+            itemMessageClientMenuRightMouse.Text = "Сообщение клиенту";
+            itemMessageClientMenuRightMouse.Click += ItemMessageClientMenuRightMouse_Click;
             // 
-            // item6_3
+            // itemPriorityClientMenuRightMouse
             // 
-            item6_3.DropDownItems.AddRange(new ToolStripItem[] { item6_3_1, item6_3_2, item6_3_3 });
-            item6_3.Image = Properties.Resources.m6_3;
-            item6_3.ImageScaling = ToolStripItemImageScaling.None;
-            item6_3.Name = "item6_3";
-            item6_3.Size = new Size(316, 34);
-            item6_3.Text = "Приоритетность клиента";
+            itemPriorityClientMenuRightMouse.DropDownItems.AddRange(new ToolStripItem[] { itemWhiteListMenuRightMouse, itemBlackListMenuRightMouse, itemUnmarkMenuRightMouse });
+            itemPriorityClientMenuRightMouse.Image = Properties.Resources.m6_3;
+            itemPriorityClientMenuRightMouse.ImageScaling = ToolStripItemImageScaling.None;
+            itemPriorityClientMenuRightMouse.Name = "itemPriorityClientMenuRightMouse";
+            itemPriorityClientMenuRightMouse.Size = new Size(316, 34);
+            itemPriorityClientMenuRightMouse.Text = "Приоритетность клиента";
             // 
-            // item6_3_1
+            // itemWhiteListMenuRightMouse
             // 
-            item6_3_1.Image = Properties.Resources.m6_3_1;
-            item6_3_1.ImageScaling = ToolStripItemImageScaling.None;
-            item6_3_1.Name = "item6_3_1";
-            item6_3_1.Size = new Size(347, 34);
-            item6_3_1.Text = "Добавить в белый список";
-            item6_3_1.Click += Item6_3_1_Click;
+            itemWhiteListMenuRightMouse.Image = Properties.Resources.m6_3_1;
+            itemWhiteListMenuRightMouse.ImageScaling = ToolStripItemImageScaling.None;
+            itemWhiteListMenuRightMouse.Name = "itemWhiteListMenuRightMouse";
+            itemWhiteListMenuRightMouse.Size = new Size(347, 34);
+            itemWhiteListMenuRightMouse.Text = "Добавить в белый список";
+            itemWhiteListMenuRightMouse.Click += ItemWhiteListMenuRightMouse_Click;
             // 
-            // item6_3_2
+            // itemBlackListMenuRightMouse
             // 
-            item6_3_2.Image = Properties.Resources.m6_3_2;
-            item6_3_2.ImageScaling = ToolStripItemImageScaling.None;
-            item6_3_2.Name = "item6_3_2";
-            item6_3_2.Size = new Size(347, 34);
-            item6_3_2.Text = "Добавить в черный список";
-            item6_3_2.Click += Item6_3_2_Click;
+            itemBlackListMenuRightMouse.Image = Properties.Resources.m6_3_2;
+            itemBlackListMenuRightMouse.ImageScaling = ToolStripItemImageScaling.None;
+            itemBlackListMenuRightMouse.Name = "itemBlackListMenuRightMouse";
+            itemBlackListMenuRightMouse.Size = new Size(347, 34);
+            itemBlackListMenuRightMouse.Text = "Добавить в черный список";
+            itemBlackListMenuRightMouse.Click += ItemBlackListMenuRightMouse_Click;
             // 
-            // item6_3_3
+            // itemUnmarkMenuRightMouse
             // 
-            item6_3_3.Image = Properties.Resources.m6_1;
-            item6_3_3.ImageScaling = ToolStripItemImageScaling.None;
-            item6_3_3.Name = "item6_3_3";
-            item6_3_3.Size = new Size(347, 34);
-            item6_3_3.Text = "Снять с клиента все пометки";
-            item6_3_3.Click += Item6_3_3_Click;
+            itemUnmarkMenuRightMouse.Image = Properties.Resources.m6_1;
+            itemUnmarkMenuRightMouse.ImageScaling = ToolStripItemImageScaling.None;
+            itemUnmarkMenuRightMouse.Name = "itemUnmarkMenuRightMouse";
+            itemUnmarkMenuRightMouse.Size = new Size(347, 34);
+            itemUnmarkMenuRightMouse.Text = "Снять с клиента все пометки";
+            itemUnmarkMenuRightMouse.Click += ItemUnmarkMenuRightMouse_Click;
             // 
             // toolStripSeparator19
             // 
             toolStripSeparator19.Name = "toolStripSeparator19";
             toolStripSeparator19.Size = new Size(403, 6);
             // 
-            // item7
+            // itemNewOrderAsCurrentMenuRightMouse
             // 
-            item7.Image = Properties.Resources.b2_8;
-            item7.ImageScaling = ToolStripItemImageScaling.None;
-            item7.Name = "item7";
-            item7.Size = new Size(406, 32);
-            item7.Text = "Создать квитанцию на основе текущей";
-            item7.Click += Item7_Click;
+            itemNewOrderAsCurrentMenuRightMouse.Image = Properties.Resources.b2_8;
+            itemNewOrderAsCurrentMenuRightMouse.ImageScaling = ToolStripItemImageScaling.None;
+            itemNewOrderAsCurrentMenuRightMouse.Name = "itemNewOrderAsCurrentMenuRightMouse";
+            itemNewOrderAsCurrentMenuRightMouse.Size = new Size(406, 32);
+            itemNewOrderAsCurrentMenuRightMouse.Text = "Создать квитанцию на основе текущей";
+            itemNewOrderAsCurrentMenuRightMouse.Click += ItemNewOrderAsCurrentMenuRightMouse_Click;
             // 
             // toolStrip1
             // 
             toolStrip1.Dock = DockStyle.None;
             toolStrip1.ImageScalingSize = new Size(24, 24);
-            toolStrip1.Items.AddRange(new ToolStripItem[] { buttonAddDevice, buttonMasters, buttonDevice, toolStripSeparator5, buttonExit, toolStripSeparator6, buttonDetails, buttonDelete, buttonRecoveryOrder, buttonCompletedTag, buttonIssue, buttonReturnInRepair, buttonReturnGuarantee, toolStripSeparator7, buttonFeaturesOrder, buttonFeaturesClient, toolStripSeparator8 });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { buttonAddDeviceIntoRepair, buttonMasters, buttonTypesDevices, toolStripSeparator5, buttonExit, toolStripSeparator6, buttonDetails, buttonRemove, buttonRecovery, buttonCompletedTag, buttonIssue, buttonReturnIntoRepair, buttonReturnGuarantee, toolStripSeparator7, buttonPropertiesOrder, buttonPropertiesClient, toolStripSeparator8 });
             toolStrip1.Location = new Point(20, 43);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Padding = new Padding(0, 0, 3, 0);
@@ -478,16 +471,16 @@ namespace WinFormsApp1
             toolStrip1.TabIndex = 17;
             toolStrip1.Text = "toolStrip1";
             // 
-            // buttonAddDevice
+            // buttonAddDeviceIntoRepair
             // 
-            buttonAddDevice.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            buttonAddDevice.Image = Properties.Resources.b2_1;
-            buttonAddDevice.ImageScaling = ToolStripItemImageScaling.None;
-            buttonAddDevice.ImageTransparentColor = Color.Magenta;
-            buttonAddDevice.Name = "buttonAddDevice";
-            buttonAddDevice.Size = new Size(34, 20);
-            buttonAddDevice.Text = "Добавление аппарата";
-            buttonAddDevice.Click += ButtonAddDevice_Click;
+            buttonAddDeviceIntoRepair.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            buttonAddDeviceIntoRepair.Image = Properties.Resources.b2_1;
+            buttonAddDeviceIntoRepair.ImageScaling = ToolStripItemImageScaling.None;
+            buttonAddDeviceIntoRepair.ImageTransparentColor = Color.Magenta;
+            buttonAddDeviceIntoRepair.Name = "buttonAddDeviceIntoRepair";
+            buttonAddDeviceIntoRepair.Size = new Size(34, 20);
+            buttonAddDeviceIntoRepair.Text = "Добавление аппарата";
+            buttonAddDeviceIntoRepair.Click += ButtonAddDeviceIntoRepair_Click;
             // 
             // buttonMasters
             // 
@@ -500,16 +493,16 @@ namespace WinFormsApp1
             buttonMasters.Text = "Работа с данными о мастерах организации";
             buttonMasters.Click += ButtonMasters_Click;
             // 
-            // buttonDevice
+            // buttonTypesDevices
             // 
-            buttonDevice.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            buttonDevice.Image = Properties.Resources.main2;
-            buttonDevice.ImageScaling = ToolStripItemImageScaling.None;
-            buttonDevice.ImageTransparentColor = Color.Magenta;
-            buttonDevice.Name = "buttonDevice";
-            buttonDevice.Size = new Size(34, 20);
-            buttonDevice.Text = "Тип ремонтируемых устройств";
-            buttonDevice.Click += ButtonDevice_Click;
+            buttonTypesDevices.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            buttonTypesDevices.Image = Properties.Resources.main2;
+            buttonTypesDevices.ImageScaling = ToolStripItemImageScaling.None;
+            buttonTypesDevices.ImageTransparentColor = Color.Magenta;
+            buttonTypesDevices.Name = "buttonTypesDevices";
+            buttonTypesDevices.Size = new Size(34, 20);
+            buttonTypesDevices.Text = "Тип ремонтируемых устройств";
+            buttonTypesDevices.Click += ButtonTypesDevices_Click;
             // 
             // toolStripSeparator5
             // 
@@ -543,27 +536,27 @@ namespace WinFormsApp1
             buttonDetails.Text = "Детали, использованые в ремонте устройства";
             buttonDetails.Click += ButtonDetails_Click;
             // 
-            // buttonDelete
+            // buttonRemove
             // 
-            buttonDelete.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            buttonDelete.Image = Properties.Resources.m3;
-            buttonDelete.ImageScaling = ToolStripItemImageScaling.None;
-            buttonDelete.ImageTransparentColor = Color.Magenta;
-            buttonDelete.Name = "buttonDelete";
-            buttonDelete.Size = new Size(34, 20);
-            buttonDelete.Text = "Удаление объекта из базы данных";
-            buttonDelete.Click += ButtonDelete_Click;
+            buttonRemove.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            buttonRemove.Image = Properties.Resources.m3;
+            buttonRemove.ImageScaling = ToolStripItemImageScaling.None;
+            buttonRemove.ImageTransparentColor = Color.Magenta;
+            buttonRemove.Name = "buttonRemove";
+            buttonRemove.Size = new Size(34, 20);
+            buttonRemove.Text = "Удаление объекта из базы данных";
+            buttonRemove.Click += ButtonRemove_Click;
             // 
-            // buttonRecoveryOrder
+            // buttonRecovery
             // 
-            buttonRecoveryOrder.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            buttonRecoveryOrder.Image = Properties.Resources.m4;
-            buttonRecoveryOrder.ImageScaling = ToolStripItemImageScaling.None;
-            buttonRecoveryOrder.ImageTransparentColor = Color.Magenta;
-            buttonRecoveryOrder.Name = "buttonRecoveryOrder";
-            buttonRecoveryOrder.Size = new Size(34, 20);
-            buttonRecoveryOrder.Text = "Восстановление удаленного ранее устройства";
-            buttonRecoveryOrder.Click += ButtonRestoring_Click;
+            buttonRecovery.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            buttonRecovery.Image = Properties.Resources.m4;
+            buttonRecovery.ImageScaling = ToolStripItemImageScaling.None;
+            buttonRecovery.ImageTransparentColor = Color.Magenta;
+            buttonRecovery.Name = "buttonRecovery";
+            buttonRecovery.Size = new Size(34, 20);
+            buttonRecovery.Text = "Восстановление удаленного ранее устройства";
+            buttonRecovery.Click += ButtonRecovery_Click;
             // 
             // buttonCompletedTag
             // 
@@ -587,16 +580,16 @@ namespace WinFormsApp1
             buttonIssue.Text = "Выдача устройства клиенту после ремонта";
             buttonIssue.Click += ButtonIssue_Click;
             // 
-            // buttonReturnInRepair
+            // buttonReturnIntoRepair
             // 
-            buttonReturnInRepair.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            buttonReturnInRepair.Image = Properties.Resources.m5_3;
-            buttonReturnInRepair.ImageScaling = ToolStripItemImageScaling.None;
-            buttonReturnInRepair.ImageTransparentColor = Color.Magenta;
-            buttonReturnInRepair.Name = "buttonReturnInRepair";
-            buttonReturnInRepair.Size = new Size(34, 20);
-            buttonReturnInRepair.Text = "Возвращение аппарата в доработку";
-            buttonReturnInRepair.Click += ButtonReturnInRepair_Click;
+            buttonReturnIntoRepair.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            buttonReturnIntoRepair.Image = Properties.Resources.m5_3;
+            buttonReturnIntoRepair.ImageScaling = ToolStripItemImageScaling.None;
+            buttonReturnIntoRepair.ImageTransparentColor = Color.Magenta;
+            buttonReturnIntoRepair.Name = "buttonReturnIntoRepair";
+            buttonReturnIntoRepair.Size = new Size(34, 20);
+            buttonReturnIntoRepair.Text = "Возвращение аппарата в доработку";
+            buttonReturnIntoRepair.Click += ButtonReturnIntoRepair_Click;
             // 
             // buttonReturnGuarantee
             // 
@@ -614,27 +607,27 @@ namespace WinFormsApp1
             toolStripSeparator7.Name = "toolStripSeparator7";
             toolStripSeparator7.Size = new Size(6, 25);
             // 
-            // buttonFeaturesOrder
+            // buttonPropertiesOrder
             // 
-            buttonFeaturesOrder.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            buttonFeaturesOrder.Image = Properties.Resources.m1;
-            buttonFeaturesOrder.ImageScaling = ToolStripItemImageScaling.None;
-            buttonFeaturesOrder.ImageTransparentColor = Color.Magenta;
-            buttonFeaturesOrder.Name = "buttonFeaturesOrder";
-            buttonFeaturesOrder.Size = new Size(34, 20);
-            buttonFeaturesOrder.Text = "Свойства и параметры ремонтируемого объекта";
-            buttonFeaturesOrder.Click += ButtonFeaturesOrder_Click;
+            buttonPropertiesOrder.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            buttonPropertiesOrder.Image = Properties.Resources.m1;
+            buttonPropertiesOrder.ImageScaling = ToolStripItemImageScaling.None;
+            buttonPropertiesOrder.ImageTransparentColor = Color.Magenta;
+            buttonPropertiesOrder.Name = "buttonPropertiesOrder";
+            buttonPropertiesOrder.Size = new Size(34, 20);
+            buttonPropertiesOrder.Text = "Свойства и параметры ремонтируемого объекта";
+            buttonPropertiesOrder.Click += ButtonPropertiesOrder_Click;
             // 
-            // buttonFeaturesClient
+            // buttonPropertiesClient
             // 
-            buttonFeaturesClient.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            buttonFeaturesClient.Image = Properties.Resources.m6;
-            buttonFeaturesClient.ImageScaling = ToolStripItemImageScaling.None;
-            buttonFeaturesClient.ImageTransparentColor = Color.Magenta;
-            buttonFeaturesClient.Name = "buttonFeaturesClient";
-            buttonFeaturesClient.Size = new Size(34, 20);
-            buttonFeaturesClient.Text = "Свойства клиента";
-            buttonFeaturesClient.Click += ButtonFeaturesClient_Click;
+            buttonPropertiesClient.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            buttonPropertiesClient.Image = Properties.Resources.m6;
+            buttonPropertiesClient.ImageScaling = ToolStripItemImageScaling.None;
+            buttonPropertiesClient.ImageTransparentColor = Color.Magenta;
+            buttonPropertiesClient.Name = "buttonPropertiesClient";
+            buttonPropertiesClient.Size = new Size(34, 20);
+            buttonPropertiesClient.Text = "Свойства клиента";
+            buttonPropertiesClient.Click += ButtonPropertiesClient_Click;
             // 
             // toolStripSeparator8
             // 
@@ -654,48 +647,48 @@ namespace WinFormsApp1
             labelDataBase.MouseEnter += LabelDataBase_MouseEnter;
             labelDataBase.MouseLeave += LabelDataBase_MouseLeave;
             // 
-            // contextButton1
+            // contextMenuDataBase
             // 
-            contextButton1.ImageScalingSize = new Size(24, 24);
-            contextButton1.Items.AddRange(new ToolStripItem[] { itemAddMasters, itemAddBrand, itemAddDevice, itemClients, itemWarehouse, itemMalfunction, itemDiagnosis, itemEquipment, toolStripSeparator9, itemExportToExcel, itemCopyBD, itemUpdateService, toolStripSeparator10, itemPathDB, toolStripSeparator18, itemOrg, toolStripSeparator20, itemLogIn, toolStripSeparator21, itemExit });
-            contextButton1.Name = "contextMenuStripButton1";
-            contextButton1.Size = new Size(364, 514);
+            contextMenuDataBase.ImageScalingSize = new Size(24, 24);
+            contextMenuDataBase.Items.AddRange(new ToolStripItem[] { itemMasters, itemBrands, itemTypesDevices, itemClientsDirectory, itemWarehouse, itemMalfunction, itemDiagnosis, itemEquipment, toolStripSeparator9, itemExportToExcel, itemCopyBD, itemUpdateService, toolStripSeparator10, itemPathDB, toolStripSeparator18, itemOrganization, toolStripSeparator20, itemLogIn, toolStripSeparator21, itemExit });
+            contextMenuDataBase.Name = "contextMenuStripButton1";
+            contextMenuDataBase.Size = new Size(364, 514);
             // 
-            // itemAddMasters
+            // itemMasters
             // 
-            itemAddMasters.Image = Properties.Resources.main1;
-            itemAddMasters.ImageScaling = ToolStripItemImageScaling.None;
-            itemAddMasters.Name = "itemAddMasters";
-            itemAddMasters.Size = new Size(363, 32);
-            itemAddMasters.Text = "Работники организации";
-            itemAddMasters.Click += ItemAddMasters_Click;
+            itemMasters.Image = Properties.Resources.main1;
+            itemMasters.ImageScaling = ToolStripItemImageScaling.None;
+            itemMasters.Name = "itemMasters";
+            itemMasters.Size = new Size(363, 32);
+            itemMasters.Text = "Работники организации";
+            itemMasters.Click += ItemMasters_Click;
             // 
-            // itemAddBrand
+            // itemBrands
             // 
-            itemAddBrand.Image = Properties.Resources.b1_2;
-            itemAddBrand.ImageScaling = ToolStripItemImageScaling.None;
-            itemAddBrand.Name = "itemAddBrand";
-            itemAddBrand.Size = new Size(363, 32);
-            itemAddBrand.Text = "Фирмы-производители устройств";
-            itemAddBrand.Click += ItemAddBrand_Click;
+            itemBrands.Image = Properties.Resources.b1_2;
+            itemBrands.ImageScaling = ToolStripItemImageScaling.None;
+            itemBrands.Name = "itemBrands";
+            itemBrands.Size = new Size(363, 32);
+            itemBrands.Text = "Фирмы-производители устройств";
+            itemBrands.Click += ItemBrands_Click;
             // 
-            // itemAddDevice
+            // itemTypesDevices
             // 
-            itemAddDevice.Image = Properties.Resources.main2;
-            itemAddDevice.ImageScaling = ToolStripItemImageScaling.None;
-            itemAddDevice.Name = "itemAddDevice";
-            itemAddDevice.Size = new Size(363, 32);
-            itemAddDevice.Text = "Типы устройств";
-            itemAddDevice.Click += ItemAddDevice_Click;
+            itemTypesDevices.Image = Properties.Resources.main2;
+            itemTypesDevices.ImageScaling = ToolStripItemImageScaling.None;
+            itemTypesDevices.Name = "itemTypesDevices";
+            itemTypesDevices.Size = new Size(363, 32);
+            itemTypesDevices.Text = "Типы устройств";
+            itemTypesDevices.Click += ItemTypesDevices_Click;
             // 
-            // itemClients
+            // itemClientsDirectory
             // 
-            itemClients.Image = Properties.Resources.men;
-            itemClients.ImageScaling = ToolStripItemImageScaling.None;
-            itemClients.Name = "itemClients";
-            itemClients.Size = new Size(363, 32);
-            itemClients.Text = "Справочник клиентов";
-            itemClients.Click += ItemClients_Click;
+            itemClientsDirectory.Image = Properties.Resources.men;
+            itemClientsDirectory.ImageScaling = ToolStripItemImageScaling.None;
+            itemClientsDirectory.Name = "itemClientsDirectory";
+            itemClientsDirectory.Size = new Size(363, 32);
+            itemClientsDirectory.Text = "Справочник клиентов";
+            itemClientsDirectory.Click += ItemClientsDirectory_Click;
             // 
             // itemWarehouse
             // 
@@ -734,6 +727,8 @@ namespace WinFormsApp1
             // 
             // itemExportToExcel
             // 
+            itemExportToExcel.Image = Properties.Resources.b2_12;
+            itemExportToExcel.ImageScaling = ToolStripItemImageScaling.None;
             itemExportToExcel.Name = "itemExportToExcel";
             itemExportToExcel.Size = new Size(363, 32);
             itemExportToExcel.Text = "Экспортировать таблицу в Excel";
@@ -776,14 +771,14 @@ namespace WinFormsApp1
             toolStripSeparator18.Name = "toolStripSeparator18";
             toolStripSeparator18.Size = new Size(360, 6);
             // 
-            // itemOrg
+            // itemOrganization
             // 
-            itemOrg.Image = Properties.Resources.b2_10;
-            itemOrg.ImageScaling = ToolStripItemImageScaling.None;
-            itemOrg.Name = "itemOrg";
-            itemOrg.Size = new Size(363, 32);
-            itemOrg.Text = "Сведения об организации";
-            itemOrg.Click += ItemOrg_Click;
+            itemOrganization.Image = Properties.Resources.b2_10;
+            itemOrganization.ImageScaling = ToolStripItemImageScaling.None;
+            itemOrganization.Name = "itemOrganization";
+            itemOrganization.Size = new Size(363, 32);
+            itemOrganization.Text = "Сведения об организации";
+            itemOrganization.Click += ItemOrganization_Click;
             // 
             // toolStripSeparator20
             // 
@@ -792,6 +787,8 @@ namespace WinFormsApp1
             // 
             // itemLogIn
             // 
+            itemLogIn.Image = Properties.Resources.b2_11;
+            itemLogIn.ImageScaling = ToolStripItemImageScaling.None;
             itemLogIn.Name = "itemLogIn";
             itemLogIn.ShortcutKeys = Keys.Control | Keys.D;
             itemLogIn.Size = new Size(363, 32);
@@ -812,209 +809,209 @@ namespace WinFormsApp1
             itemExit.Text = "Выход из программы";
             itemExit.Click += ItemExit_Click;
             // 
-            // contextButton2
+            // contextMenuWorkingWithData
             // 
-            contextButton2.ImageScalingSize = new Size(24, 24);
-            contextButton2.Items.AddRange(new ToolStripItem[] { itemAddDeviceForRepair, itemFeaturesOrder, toolStripSeparator11, itemDetails, toolStripSeparator12, itemDeleteOrder, itemRecoveryOrder, toolStripSeparator13, itemActionsOrder, itemActionsClient, toolStripSeparator17, itemCreateOrder });
-            contextButton2.Name = "contextMenuStripButton2";
-            contextButton2.Size = new Size(407, 284);
+            contextMenuWorkingWithData.ImageScalingSize = new Size(24, 24);
+            contextMenuWorkingWithData.Items.AddRange(new ToolStripItem[] { itemNewOrderMenuWorkingWithData, itemPropertiesMenuWorkingWithData, toolStripSeparator11, itemDetailsMenuWorkingWithData, toolStripSeparator12, itemRemoveMenuWorkingWithData, itemRecoveryMenuWorkingWithData, toolStripSeparator13, itemActionsDeviceMenuWorkingWithData, itemActionsClientMenuWorkingWithData, toolStripSeparator17, itemNewOrderAsCurrentMenuWorkingWithData });
+            contextMenuWorkingWithData.Name = "contextMenuStripButton2";
+            contextMenuWorkingWithData.Size = new Size(407, 284);
             // 
-            // itemAddDeviceForRepair
+            // itemNewOrderMenuWorkingWithData
             // 
-            itemAddDeviceForRepair.Image = Properties.Resources.b2_1;
-            itemAddDeviceForRepair.ImageScaling = ToolStripItemImageScaling.None;
-            itemAddDeviceForRepair.Name = "itemAddDeviceForRepair";
-            itemAddDeviceForRepair.Size = new Size(406, 32);
-            itemAddDeviceForRepair.Text = "Добавление аппарата";
-            itemAddDeviceForRepair.Click += ItemAddDeviceForRepair_Click;
+            itemNewOrderMenuWorkingWithData.Image = Properties.Resources.b2_1;
+            itemNewOrderMenuWorkingWithData.ImageScaling = ToolStripItemImageScaling.None;
+            itemNewOrderMenuWorkingWithData.Name = "itemNewOrderMenuWorkingWithData";
+            itemNewOrderMenuWorkingWithData.Size = new Size(406, 32);
+            itemNewOrderMenuWorkingWithData.Text = "Добавление аппарата";
+            itemNewOrderMenuWorkingWithData.Click += ItemNewOrderMenuWorkingWithData_Click;
             // 
-            // itemFeaturesOrder
+            // itemPropertiesMenuWorkingWithData
             // 
-            itemFeaturesOrder.Image = Properties.Resources.m1;
-            itemFeaturesOrder.ImageScaling = ToolStripItemImageScaling.None;
-            itemFeaturesOrder.Name = "itemFeaturesOrder";
-            itemFeaturesOrder.Size = new Size(406, 32);
-            itemFeaturesOrder.Text = "Свойства аппарата";
-            itemFeaturesOrder.Click += ItemFeaturesOrder_Click;
+            itemPropertiesMenuWorkingWithData.Image = Properties.Resources.m1;
+            itemPropertiesMenuWorkingWithData.ImageScaling = ToolStripItemImageScaling.None;
+            itemPropertiesMenuWorkingWithData.Name = "itemPropertiesMenuWorkingWithData";
+            itemPropertiesMenuWorkingWithData.Size = new Size(406, 32);
+            itemPropertiesMenuWorkingWithData.Text = "Свойства аппарата";
+            itemPropertiesMenuWorkingWithData.Click += ItemPropertiesMenuWorkingWithData_Click;
             // 
             // toolStripSeparator11
             // 
             toolStripSeparator11.Name = "toolStripSeparator11";
             toolStripSeparator11.Size = new Size(403, 6);
             // 
-            // itemDetails
+            // itemDetailsMenuWorkingWithData
             // 
-            itemDetails.Image = Properties.Resources.m2;
-            itemDetails.ImageScaling = ToolStripItemImageScaling.None;
-            itemDetails.Name = "itemDetails";
-            itemDetails.Size = new Size(406, 32);
-            itemDetails.Text = "Детали на ремонт аппарата";
-            itemDetails.Click += ItemDetails_Click;
+            itemDetailsMenuWorkingWithData.Image = Properties.Resources.m2;
+            itemDetailsMenuWorkingWithData.ImageScaling = ToolStripItemImageScaling.None;
+            itemDetailsMenuWorkingWithData.Name = "itemDetailsMenuWorkingWithData";
+            itemDetailsMenuWorkingWithData.Size = new Size(406, 32);
+            itemDetailsMenuWorkingWithData.Text = "Детали на ремонт аппарата";
+            itemDetailsMenuWorkingWithData.Click += ItemDetailsMenuWorkingWithData_Click;
             // 
             // toolStripSeparator12
             // 
             toolStripSeparator12.Name = "toolStripSeparator12";
             toolStripSeparator12.Size = new Size(403, 6);
             // 
-            // itemDeleteOrder
+            // itemRemoveMenuWorkingWithData
             // 
-            itemDeleteOrder.Image = Properties.Resources.m3;
-            itemDeleteOrder.ImageScaling = ToolStripItemImageScaling.None;
-            itemDeleteOrder.Name = "itemDeleteOrder";
-            itemDeleteOrder.Size = new Size(406, 32);
-            itemDeleteOrder.Text = "Удаление аппарата";
-            itemDeleteOrder.Click += ItemDeleteOrder_Click;
+            itemRemoveMenuWorkingWithData.Image = Properties.Resources.m3;
+            itemRemoveMenuWorkingWithData.ImageScaling = ToolStripItemImageScaling.None;
+            itemRemoveMenuWorkingWithData.Name = "itemRemoveMenuWorkingWithData";
+            itemRemoveMenuWorkingWithData.Size = new Size(406, 32);
+            itemRemoveMenuWorkingWithData.Text = "Удаление аппарата";
+            itemRemoveMenuWorkingWithData.Click += ItemRemoveMenuWorkingWithData_Click;
             // 
-            // itemRecoveryOrder
+            // itemRecoveryMenuWorkingWithData
             // 
-            itemRecoveryOrder.Image = Properties.Resources.m4;
-            itemRecoveryOrder.ImageScaling = ToolStripItemImageScaling.None;
-            itemRecoveryOrder.Name = "itemRecoveryOrder";
-            itemRecoveryOrder.Size = new Size(406, 32);
-            itemRecoveryOrder.Text = "Восстановление аппарата из корзины";
-            itemRecoveryOrder.Click += ItemRecoveryOrder_Click;
+            itemRecoveryMenuWorkingWithData.Image = Properties.Resources.m4;
+            itemRecoveryMenuWorkingWithData.ImageScaling = ToolStripItemImageScaling.None;
+            itemRecoveryMenuWorkingWithData.Name = "itemRecoveryMenuWorkingWithData";
+            itemRecoveryMenuWorkingWithData.Size = new Size(406, 32);
+            itemRecoveryMenuWorkingWithData.Text = "Восстановление аппарата из корзины";
+            itemRecoveryMenuWorkingWithData.Click += ItemRecoveryMenuWorkingWithData_Click;
             // 
             // toolStripSeparator13
             // 
             toolStripSeparator13.Name = "toolStripSeparator13";
             toolStripSeparator13.Size = new Size(403, 6);
             // 
-            // itemActionsOrder
+            // itemActionsDeviceMenuWorkingWithData
             // 
-            itemActionsOrder.DropDownItems.AddRange(new ToolStripItem[] { itemOrderCompleted, itemOrderIssued, toolStripSeparator14, itemReturnToRevision, itemReturnUnderGuarantee });
-            itemActionsOrder.Image = Properties.Resources.m5;
-            itemActionsOrder.ImageScaling = ToolStripItemImageScaling.None;
-            itemActionsOrder.Name = "itemActionsOrder";
-            itemActionsOrder.Size = new Size(406, 32);
-            itemActionsOrder.Text = "Операции над аппаратом";
+            itemActionsDeviceMenuWorkingWithData.DropDownItems.AddRange(new ToolStripItem[] { itemCompletedTagMenuWorkingWithData, itemIssueMenuWorkingWithData, toolStripSeparator14, itemReturnMenuWorkingWithData, itemReturnGuaranteeMenuWorkingWithData });
+            itemActionsDeviceMenuWorkingWithData.Image = Properties.Resources.m5;
+            itemActionsDeviceMenuWorkingWithData.ImageScaling = ToolStripItemImageScaling.None;
+            itemActionsDeviceMenuWorkingWithData.Name = "itemActionsDeviceMenuWorkingWithData";
+            itemActionsDeviceMenuWorkingWithData.Size = new Size(406, 32);
+            itemActionsDeviceMenuWorkingWithData.Text = "Операции над аппаратом";
             // 
-            // itemOrderCompleted
+            // itemCompletedTagMenuWorkingWithData
             // 
-            itemOrderCompleted.Image = Properties.Resources.m5_1;
-            itemOrderCompleted.ImageScaling = ToolStripItemImageScaling.None;
-            itemOrderCompleted.Name = "itemOrderCompleted";
-            itemOrderCompleted.Size = new Size(473, 34);
-            itemOrderCompleted.Text = "Пометить аппарат как отремонтированный";
-            itemOrderCompleted.Click += ItemOrderCompleted_Click;
+            itemCompletedTagMenuWorkingWithData.Image = Properties.Resources.m5_1;
+            itemCompletedTagMenuWorkingWithData.ImageScaling = ToolStripItemImageScaling.None;
+            itemCompletedTagMenuWorkingWithData.Name = "itemCompletedTagMenuWorkingWithData";
+            itemCompletedTagMenuWorkingWithData.Size = new Size(473, 34);
+            itemCompletedTagMenuWorkingWithData.Text = "Пометить аппарат как отремонтированный";
+            itemCompletedTagMenuWorkingWithData.Click += ItemCompletedTagMenuWorkingWithData_Click;
             // 
-            // itemOrderIssued
+            // itemIssueMenuWorkingWithData
             // 
-            itemOrderIssued.Image = Properties.Resources.m5_2;
-            itemOrderIssued.ImageScaling = ToolStripItemImageScaling.None;
-            itemOrderIssued.Name = "itemOrderIssued";
-            itemOrderIssued.Size = new Size(473, 34);
-            itemOrderIssued.Text = "Выдать аппарат клиенту";
-            itemOrderIssued.Click += ItemOrderIssued_Click;
+            itemIssueMenuWorkingWithData.Image = Properties.Resources.m5_2;
+            itemIssueMenuWorkingWithData.ImageScaling = ToolStripItemImageScaling.None;
+            itemIssueMenuWorkingWithData.Name = "itemIssueMenuWorkingWithData";
+            itemIssueMenuWorkingWithData.Size = new Size(473, 34);
+            itemIssueMenuWorkingWithData.Text = "Выдать аппарат клиенту";
+            itemIssueMenuWorkingWithData.Click += ItemIssueMenuWorkingWithData_Click;
             // 
             // toolStripSeparator14
             // 
             toolStripSeparator14.Name = "toolStripSeparator14";
             toolStripSeparator14.Size = new Size(470, 6);
             // 
-            // itemReturnToRevision
+            // itemReturnMenuWorkingWithData
             // 
-            itemReturnToRevision.Image = Properties.Resources.m5_3;
-            itemReturnToRevision.ImageScaling = ToolStripItemImageScaling.None;
-            itemReturnToRevision.Name = "itemReturnToRevision";
-            itemReturnToRevision.Size = new Size(473, 34);
-            itemReturnToRevision.Text = "Возврат аппарата в доработку";
-            itemReturnToRevision.Click += ItemReturnToRevision_Click;
+            itemReturnMenuWorkingWithData.Image = Properties.Resources.m5_3;
+            itemReturnMenuWorkingWithData.ImageScaling = ToolStripItemImageScaling.None;
+            itemReturnMenuWorkingWithData.Name = "itemReturnMenuWorkingWithData";
+            itemReturnMenuWorkingWithData.Size = new Size(473, 34);
+            itemReturnMenuWorkingWithData.Text = "Возврат аппарата в доработку";
+            itemReturnMenuWorkingWithData.Click += ItemReturnMenuWorkingWithData_Click;
             // 
-            // itemReturnUnderGuarantee
+            // itemReturnGuaranteeMenuWorkingWithData
             // 
-            itemReturnUnderGuarantee.Image = Properties.Resources.m5_4;
-            itemReturnUnderGuarantee.ImageScaling = ToolStripItemImageScaling.None;
-            itemReturnUnderGuarantee.Name = "itemReturnUnderGuarantee";
-            itemReturnUnderGuarantee.Size = new Size(473, 34);
-            itemReturnUnderGuarantee.Text = "Возврат аппарата по гарантии";
-            itemReturnUnderGuarantee.Click += ItemReturnUnderGuarantee_Click;
+            itemReturnGuaranteeMenuWorkingWithData.Image = Properties.Resources.m5_4;
+            itemReturnGuaranteeMenuWorkingWithData.ImageScaling = ToolStripItemImageScaling.None;
+            itemReturnGuaranteeMenuWorkingWithData.Name = "itemReturnGuaranteeMenuWorkingWithData";
+            itemReturnGuaranteeMenuWorkingWithData.Size = new Size(473, 34);
+            itemReturnGuaranteeMenuWorkingWithData.Text = "Возврат аппарата по гарантии";
+            itemReturnGuaranteeMenuWorkingWithData.Click += ItemReturnGuaranteeMenuWorkingWithData_Click;
             // 
-            // itemActionsClient
+            // itemActionsClientMenuWorkingWithData
             // 
-            itemActionsClient.DropDownItems.AddRange(new ToolStripItem[] { itemFeaturesClient, toolStripSeparator15, itemMessageToClient, toolStripSeparator16, itemPriorityClient });
-            itemActionsClient.Image = Properties.Resources.m6;
-            itemActionsClient.ImageScaling = ToolStripItemImageScaling.None;
-            itemActionsClient.Name = "itemActionsClient";
-            itemActionsClient.Size = new Size(406, 32);
-            itemActionsClient.Text = "Операции над клиентом";
+            itemActionsClientMenuWorkingWithData.DropDownItems.AddRange(new ToolStripItem[] { itemPropertiesClientMenuWorkingWithData, toolStripSeparator15, itemMessageClientMenuWorkingWithData, toolStripSeparator16, itemPriorityClientMenuWorkingWithData });
+            itemActionsClientMenuWorkingWithData.Image = Properties.Resources.m6;
+            itemActionsClientMenuWorkingWithData.ImageScaling = ToolStripItemImageScaling.None;
+            itemActionsClientMenuWorkingWithData.Name = "itemActionsClientMenuWorkingWithData";
+            itemActionsClientMenuWorkingWithData.Size = new Size(406, 32);
+            itemActionsClientMenuWorkingWithData.Text = "Операции над клиентом";
             // 
-            // itemFeaturesClient
+            // itemPropertiesClientMenuWorkingWithData
             // 
-            itemFeaturesClient.Image = Properties.Resources.m6_1;
-            itemFeaturesClient.ImageScaling = ToolStripItemImageScaling.None;
-            itemFeaturesClient.Name = "itemFeaturesClient";
-            itemFeaturesClient.Size = new Size(278, 34);
-            itemFeaturesClient.Text = "Свойства клиента";
-            itemFeaturesClient.Click += ItemFeaturesClient_Click;
+            itemPropertiesClientMenuWorkingWithData.Image = Properties.Resources.m6_1;
+            itemPropertiesClientMenuWorkingWithData.ImageScaling = ToolStripItemImageScaling.None;
+            itemPropertiesClientMenuWorkingWithData.Name = "itemPropertiesClientMenuWorkingWithData";
+            itemPropertiesClientMenuWorkingWithData.Size = new Size(278, 34);
+            itemPropertiesClientMenuWorkingWithData.Text = "Свойства клиента";
+            itemPropertiesClientMenuWorkingWithData.Click += ItemPropertiesClientMenuWorkingWithData_Click;
             // 
             // toolStripSeparator15
             // 
             toolStripSeparator15.Name = "toolStripSeparator15";
             toolStripSeparator15.Size = new Size(275, 6);
             // 
-            // itemMessageToClient
+            // itemMessageClientMenuWorkingWithData
             // 
-            itemMessageToClient.Image = Properties.Resources.m6_2;
-            itemMessageToClient.ImageScaling = ToolStripItemImageScaling.None;
-            itemMessageToClient.Name = "itemMessageToClient";
-            itemMessageToClient.Size = new Size(278, 34);
-            itemMessageToClient.Text = "Сообщение клиенту";
-            itemMessageToClient.Click += ItemMessageToClient_Click;
+            itemMessageClientMenuWorkingWithData.Image = Properties.Resources.m6_2;
+            itemMessageClientMenuWorkingWithData.ImageScaling = ToolStripItemImageScaling.None;
+            itemMessageClientMenuWorkingWithData.Name = "itemMessageClientMenuWorkingWithData";
+            itemMessageClientMenuWorkingWithData.Size = new Size(278, 34);
+            itemMessageClientMenuWorkingWithData.Text = "Сообщение клиенту";
+            itemMessageClientMenuWorkingWithData.Click += ItemMessageClientMenuWorkingWithData_Click;
             // 
             // toolStripSeparator16
             // 
             toolStripSeparator16.Name = "toolStripSeparator16";
             toolStripSeparator16.Size = new Size(275, 6);
             // 
-            // itemPriorityClient
+            // itemPriorityClientMenuWorkingWithData
             // 
-            itemPriorityClient.DropDownItems.AddRange(new ToolStripItem[] { itemAddToWhitelist, itemAddToBlacklist, itemRemoveMarks });
-            itemPriorityClient.Image = Properties.Resources.m6_3;
-            itemPriorityClient.ImageScaling = ToolStripItemImageScaling.None;
-            itemPriorityClient.Name = "itemPriorityClient";
-            itemPriorityClient.Size = new Size(278, 34);
-            itemPriorityClient.Text = "Приоритет клиента";
+            itemPriorityClientMenuWorkingWithData.DropDownItems.AddRange(new ToolStripItem[] { itemWhiteListWorkingWithData, itemBlackListWorkingWithData, itemUnmarkWorkingWithData });
+            itemPriorityClientMenuWorkingWithData.Image = Properties.Resources.m6_3;
+            itemPriorityClientMenuWorkingWithData.ImageScaling = ToolStripItemImageScaling.None;
+            itemPriorityClientMenuWorkingWithData.Name = "itemPriorityClientMenuWorkingWithData";
+            itemPriorityClientMenuWorkingWithData.Size = new Size(278, 34);
+            itemPriorityClientMenuWorkingWithData.Text = "Приоритет клиента";
             // 
-            // itemAddToWhitelist
+            // itemWhiteListWorkingWithData
             // 
-            itemAddToWhitelist.Image = Properties.Resources.m6_3_1;
-            itemAddToWhitelist.ImageScaling = ToolStripItemImageScaling.None;
-            itemAddToWhitelist.Name = "itemAddToWhitelist";
-            itemAddToWhitelist.Size = new Size(406, 34);
-            itemAddToWhitelist.Text = "Добавить клиента в \"белый список\"";
-            itemAddToWhitelist.Click += ItemAddToWhitelist_Click;
+            itemWhiteListWorkingWithData.Image = Properties.Resources.m6_3_1;
+            itemWhiteListWorkingWithData.ImageScaling = ToolStripItemImageScaling.None;
+            itemWhiteListWorkingWithData.Name = "itemWhiteListWorkingWithData";
+            itemWhiteListWorkingWithData.Size = new Size(406, 34);
+            itemWhiteListWorkingWithData.Text = "Добавить клиента в \"белый список\"";
+            itemWhiteListWorkingWithData.Click += ItemWhiteListWorkingWithData_Click;
             // 
-            // itemAddToBlacklist
+            // itemBlackListWorkingWithData
             // 
-            itemAddToBlacklist.Image = Properties.Resources.m6_3_2;
-            itemAddToBlacklist.ImageScaling = ToolStripItemImageScaling.None;
-            itemAddToBlacklist.Name = "itemAddToBlacklist";
-            itemAddToBlacklist.Size = new Size(406, 34);
-            itemAddToBlacklist.Text = "Добавить в \"черный список\"";
-            itemAddToBlacklist.Click += ItemAddToBlacklist_Click;
+            itemBlackListWorkingWithData.Image = Properties.Resources.m6_3_2;
+            itemBlackListWorkingWithData.ImageScaling = ToolStripItemImageScaling.None;
+            itemBlackListWorkingWithData.Name = "itemBlackListWorkingWithData";
+            itemBlackListWorkingWithData.Size = new Size(406, 34);
+            itemBlackListWorkingWithData.Text = "Добавить в \"черный список\"";
+            itemBlackListWorkingWithData.Click += ItemBlackListWorkingWithData_Click;
             // 
-            // itemRemoveMarks
+            // itemUnmarkWorkingWithData
             // 
-            itemRemoveMarks.Image = Properties.Resources.m6_1;
-            itemRemoveMarks.ImageScaling = ToolStripItemImageScaling.None;
-            itemRemoveMarks.Name = "itemRemoveMarks";
-            itemRemoveMarks.Size = new Size(406, 34);
-            itemRemoveMarks.Text = "Снять все метки с клиента";
-            itemRemoveMarks.Click += ItemRemoveMarks_Click;
+            itemUnmarkWorkingWithData.Image = Properties.Resources.m6_1;
+            itemUnmarkWorkingWithData.ImageScaling = ToolStripItemImageScaling.None;
+            itemUnmarkWorkingWithData.Name = "itemUnmarkWorkingWithData";
+            itemUnmarkWorkingWithData.Size = new Size(406, 34);
+            itemUnmarkWorkingWithData.Text = "Снять все метки с клиента";
+            itemUnmarkWorkingWithData.Click += ItemUnmarkWorkingWithData_Click;
             // 
             // toolStripSeparator17
             // 
             toolStripSeparator17.Name = "toolStripSeparator17";
             toolStripSeparator17.Size = new Size(403, 6);
             // 
-            // itemCreateOrder
+            // itemNewOrderAsCurrentMenuWorkingWithData
             // 
-            itemCreateOrder.Image = Properties.Resources.b2_8;
-            itemCreateOrder.ImageScaling = ToolStripItemImageScaling.None;
-            itemCreateOrder.Name = "itemCreateOrder";
-            itemCreateOrder.Size = new Size(406, 32);
-            itemCreateOrder.Text = "Создать квитанцию на основе текущей";
-            itemCreateOrder.Click += ItemSearchOrder_Click;
+            itemNewOrderAsCurrentMenuWorkingWithData.Image = Properties.Resources.b2_8;
+            itemNewOrderAsCurrentMenuWorkingWithData.ImageScaling = ToolStripItemImageScaling.None;
+            itemNewOrderAsCurrentMenuWorkingWithData.Name = "itemNewOrderAsCurrentMenuWorkingWithData";
+            itemNewOrderAsCurrentMenuWorkingWithData.Size = new Size(406, 32);
+            itemNewOrderAsCurrentMenuWorkingWithData.Text = "Создать квитанцию на основе текущей";
+            itemNewOrderAsCurrentMenuWorkingWithData.Click += ItemNewOrderAsCurrentMenuWorkingWithData_Click;
             // 
             // labelWorkData
             // 
@@ -1055,36 +1052,42 @@ namespace WinFormsApp1
             labelReports.MouseEnter += LabelReports_MouseEnter;
             labelReports.MouseLeave += LabelReports_MouseLeave;
             // 
-            // contextButton3
+            // contextMenuPayments
             // 
-            contextButton3.ImageScalingSize = new Size(24, 24);
-            contextButton3.Items.AddRange(new ToolStripItem[] { itemGetting, itemIssuing });
-            contextButton3.Name = "contextMenuStripButton3";
-            contextButton3.Size = new Size(361, 68);
+            contextMenuPayments.ImageScalingSize = new Size(24, 24);
+            contextMenuPayments.Items.AddRange(new ToolStripItem[] { itemGettingDevice, itemIssuingDevice });
+            contextMenuPayments.Name = "contextMenuStripButton3";
+            contextMenuPayments.Size = new Size(361, 68);
             // 
-            // itemGetting
+            // itemGettingDevice
             // 
-            itemGetting.Name = "itemGetting";
-            itemGetting.Size = new Size(360, 32);
-            itemGetting.Text = "Квитанция о получении в ремонт";
-            itemGetting.Click += ItemGetting_Click;
+            itemGettingDevice.Image = Properties.Resources.b2_13;
+            itemGettingDevice.ImageScaling = ToolStripItemImageScaling.None;
+            itemGettingDevice.Name = "itemGettingDevice";
+            itemGettingDevice.Size = new Size(360, 32);
+            itemGettingDevice.Text = "Квитанция о получении в ремонт";
+            itemGettingDevice.Click += ItemGettingDevice_Click;
             // 
-            // itemIssuing
+            // itemIssuingDevice
             // 
-            itemIssuing.Name = "itemIssuing";
-            itemIssuing.Size = new Size(360, 32);
-            itemIssuing.Text = "Квитанция о выдачи аппарата";
-            itemIssuing.Click += ItemIssuing_Click;
+            itemIssuingDevice.Image = Properties.Resources.b2_13;
+            itemIssuingDevice.ImageScaling = ToolStripItemImageScaling.None;
+            itemIssuingDevice.Name = "itemIssuingDevice";
+            itemIssuingDevice.Size = new Size(360, 32);
+            itemIssuingDevice.Text = "Квитанция о выдачи аппарата";
+            itemIssuingDevice.Click += ItemIssuingDevice_Click;
             // 
-            // contextButton4
+            // contextMenuReports
             // 
-            contextButton4.ImageScalingSize = new Size(24, 24);
-            contextButton4.Items.AddRange(new ToolStripItem[] { itemReportOrganization, itemSalary });
-            contextButton4.Name = "contextButton4";
-            contextButton4.Size = new Size(364, 68);
+            contextMenuReports.ImageScalingSize = new Size(24, 24);
+            contextMenuReports.Items.AddRange(new ToolStripItem[] { itemReportOrganization, itemSalary });
+            contextMenuReports.Name = "contextButton4";
+            contextMenuReports.Size = new Size(364, 68);
             // 
             // itemReportOrganization
             // 
+            itemReportOrganization.Image = Properties.Resources.b2_14;
+            itemReportOrganization.ImageScaling = ToolStripItemImageScaling.None;
             itemReportOrganization.Name = "itemReportOrganization";
             itemReportOrganization.Size = new Size(363, 32);
             itemReportOrganization.Text = "Отчет работы организации за год";
@@ -1092,6 +1095,8 @@ namespace WinFormsApp1
             // 
             // itemSalary
             // 
+            itemSalary.Image = Properties.Resources.b2_14;
+            itemSalary.ImageScaling = ToolStripItemImageScaling.None;
             itemSalary.Name = "itemSalary";
             itemSalary.Size = new Size(363, 32);
             itemSalary.Text = "Расчет зарплаты";
@@ -1158,36 +1163,18 @@ namespace WinFormsApp1
             textBoxDateStartWork.TabIndex = 31;
             textBoxDateStartWork.TextChanged += TextBoxDateStartWork_TextChanged;
             // 
-            // labelTypeDevice
+            // labelDevice
             // 
-            labelTypeDevice.Location = new Point(666, 787);
-            labelTypeDevice.Name = "labelTypeDevice";
-            labelTypeDevice.Size = new Size(140, 31);
-            labelTypeDevice.TabIndex = 32;
-            labelTypeDevice.Text = "Тип аппарата";
-            labelTypeDevice.TextAlign = ContentAlignment.MiddleRight;
-            // 
-            // labelBrandDevice
-            // 
-            labelBrandDevice.Location = new Point(666, 833);
-            labelBrandDevice.Name = "labelBrandDevice";
-            labelBrandDevice.Size = new Size(140, 31);
-            labelBrandDevice.TabIndex = 33;
-            labelBrandDevice.Text = "Производитель";
-            labelBrandDevice.TextAlign = ContentAlignment.MiddleRight;
-            // 
-            // labelModel
-            // 
-            labelModel.Location = new Point(967, 787);
-            labelModel.Name = "labelModel";
-            labelModel.Size = new Size(86, 31);
-            labelModel.TabIndex = 34;
-            labelModel.Text = "Модель";
-            labelModel.TextAlign = ContentAlignment.MiddleRight;
+            labelDevice.Location = new Point(720, 787);
+            labelDevice.Name = "labelDevice";
+            labelDevice.Size = new Size(86, 31);
+            labelDevice.TabIndex = 32;
+            labelDevice.Text = "Аппарат";
+            labelDevice.TextAlign = ContentAlignment.MiddleRight;
             // 
             // labelNameClient
             // 
-            labelNameClient.Location = new Point(967, 834);
+            labelNameClient.Location = new Point(720, 833);
             labelNameClient.Name = "labelNameClient";
             labelNameClient.Size = new Size(86, 31);
             labelNameClient.TabIndex = 35;
@@ -1202,33 +1189,17 @@ namespace WinFormsApp1
             textBoxNameMaster.TabIndex = 36;
             textBoxNameMaster.TextChanged += TextBoxNameMaster_TextChanged;
             // 
-            // textBoxTypeDevice
+            // textBoxDevice
             // 
-            textBoxTypeDevice.Location = new Point(810, 787);
-            textBoxTypeDevice.Name = "textBoxTypeDevice";
-            textBoxTypeDevice.Size = new Size(150, 31);
-            textBoxTypeDevice.TabIndex = 37;
-            textBoxTypeDevice.TextChanged += TextBoxTypeDevice_TextChanged;
-            // 
-            // textBoxBrandDevice
-            // 
-            textBoxBrandDevice.Location = new Point(810, 833);
-            textBoxBrandDevice.Name = "textBoxBrandDevice";
-            textBoxBrandDevice.Size = new Size(150, 31);
-            textBoxBrandDevice.TabIndex = 38;
-            textBoxBrandDevice.TextChanged += TextBoxBrandDevice_TextChanged;
-            // 
-            // textBoxModel
-            // 
-            textBoxModel.Location = new Point(1057, 787);
-            textBoxModel.Name = "textBoxModel";
-            textBoxModel.Size = new Size(150, 31);
-            textBoxModel.TabIndex = 39;
-            textBoxModel.TextChanged += TextBoxModel_TextChanged;
+            textBoxDevice.Location = new Point(810, 787);
+            textBoxDevice.Name = "textBoxDevice";
+            textBoxDevice.Size = new Size(150, 31);
+            textBoxDevice.TabIndex = 37;
+            textBoxDevice.TextChanged += TextBoxDevice_TextChanged;
             // 
             // textBoxNameClient
             // 
-            textBoxNameClient.Location = new Point(1057, 833);
+            textBoxNameClient.Location = new Point(810, 832);
             textBoxNameClient.Name = "textBoxNameClient";
             textBoxNameClient.Size = new Size(150, 31);
             textBoxNameClient.TabIndex = 40;
@@ -1248,40 +1219,19 @@ namespace WinFormsApp1
             labelView.MouseEnter += LabelView_MouseEnter;
             labelView.MouseLeave += LabelView_MouseLeave;
             // 
-            // contextButton5
+            // contextMenuView
             // 
-            contextButton5.ImageScalingSize = new Size(24, 24);
-            contextButton5.Items.AddRange(new ToolStripItem[] { itemColor, itemSize });
-            contextButton5.Name = "contextButton5";
-            contextButton5.Size = new Size(189, 68);
+            contextMenuView.ImageScalingSize = new Size(24, 24);
+            contextMenuView.Items.AddRange(new ToolStripItem[] { itemColor });
+            contextMenuView.Name = "contextButton5";
+            contextMenuView.Size = new Size(133, 36);
             // 
             // itemColor
             // 
             itemColor.Name = "itemColor";
-            itemColor.Size = new Size(188, 32);
+            itemColor.Size = new Size(132, 32);
             itemColor.Text = "Цвета";
             itemColor.Click += ItemColor_Click;
-            // 
-            // itemSize
-            // 
-            itemSize.DropDownItems.AddRange(new ToolStripItem[] { itemSmall, itemMedium });
-            itemSize.Name = "itemSize";
-            itemSize.Size = new Size(188, 32);
-            itemSize.Text = "Размер окна";
-            // 
-            // itemSmall
-            // 
-            itemSmall.Name = "itemSmall";
-            itemSmall.Size = new Size(205, 34);
-            itemSmall.Text = "Маленький";
-            itemSmall.Click += ItemSmall_Click;
-            // 
-            // itemMedium
-            // 
-            itemMedium.Name = "itemMedium";
-            itemMedium.Size = new Size(205, 34);
-            itemMedium.Text = "Средний";
-            itemMedium.Click += ItemMedium_Click;
             // 
             // buttonReset
             // 
@@ -1293,20 +1243,6 @@ namespace WinFormsApp1
             buttonReset.Text = "Сброс фильтров";
             buttonReset.UseVisualStyleBackColor = false;
             buttonReset.Click += ButtonReset_Click;
-            // 
-            // contextPhone
-            // 
-            contextPhone.ImageScalingSize = new Size(24, 24);
-            contextPhone.Items.AddRange(new ToolStripItem[] { numberPhone });
-            contextPhone.Name = "contextPhone";
-            contextPhone.Size = new Size(132, 42);
-            // 
-            // numberPhone
-            // 
-            numberPhone.Font = new Font("Segoe UI", 12F);
-            numberPhone.Name = "numberPhone";
-            numberPhone.Size = new Size(131, 38);
-            numberPhone.Text = "One";
             // 
             // timer1
             // 
@@ -1325,12 +1261,12 @@ namespace WinFormsApp1
             labelLogIn.MouseEnter += LabelLogIn_MouseEnter;
             labelLogIn.MouseLeave += LabelLogIn_MouseLeave;
             // 
-            // contextAccount
+            // contextMenuAccount
             // 
-            contextAccount.ImageScalingSize = new Size(24, 24);
-            contextAccount.Items.AddRange(new ToolStripItem[] { itemChangeData, itemLogOut });
-            contextAccount.Name = "contextAccount";
-            contextAccount.Size = new Size(282, 68);
+            contextMenuAccount.ImageScalingSize = new Size(24, 24);
+            contextMenuAccount.Items.AddRange(new ToolStripItem[] { itemChangeData, itemLogOut });
+            contextMenuAccount.Name = "contextAccount";
+            contextMenuAccount.Size = new Size(282, 68);
             // 
             // itemChangeData
             // 
@@ -1362,24 +1298,44 @@ namespace WinFormsApp1
             saveFileDialog1.FileName = "MainTable";
             saveFileDialog1.Filter = "Excel file(*.xlsx)|*.xlsx";
             // 
+            // checkBoxSearch
+            // 
+            checkBoxSearch.AutoSize = true;
+            checkBoxSearch.Checked = true;
+            checkBoxSearch.CheckState = CheckState.Checked;
+            checkBoxSearch.Location = new Point(1016, 789);
+            checkBoxSearch.Name = "checkBoxSearch";
+            checkBoxSearch.Size = new Size(189, 29);
+            checkBoxSearch.TabIndex = 45;
+            checkBoxSearch.Text = "Глобальный поиск";
+            checkBoxSearch.UseVisualStyleBackColor = true;
+            checkBoxSearch.CheckedChanged += CheckBoxSearch_CheckedChanged;
+            // 
+            // itemSmall
+            // 
+            itemSmall.Name = "itemSmall";
+            itemSmall.Size = new Size(32, 19);
+            // 
+            // itemMedium
+            // 
+            itemMedium.Name = "itemMedium";
+            itemMedium.Size = new Size(32, 19);
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1337, 878);
+            Controls.Add(checkBoxSearch);
             Controls.Add(labelClientId);
             Controls.Add(labelLogIn);
             Controls.Add(buttonReset);
             Controls.Add(labelView);
             Controls.Add(textBoxNameClient);
-            Controls.Add(textBoxModel);
-            Controls.Add(textBoxBrandDevice);
-            Controls.Add(textBoxTypeDevice);
+            Controls.Add(textBoxDevice);
             Controls.Add(textBoxNameMaster);
             Controls.Add(labelNameClient);
-            Controls.Add(labelModel);
-            Controls.Add(labelBrandDevice);
-            Controls.Add(labelTypeDevice);
+            Controls.Add(labelDevice);
             Controls.Add(textBoxDateStartWork);
             Controls.Add(labelNameMaster);
             Controls.Add(labelDateStartWork);
@@ -1410,16 +1366,15 @@ namespace WinFormsApp1
             SizeChanged += Form1_SizeChanged;
             KeyDown += Form1_KeyDown;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
-            contextMenu1.ResumeLayout(false);
+            contextMenuRightMouse.ResumeLayout(false);
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
-            contextButton1.ResumeLayout(false);
-            contextButton2.ResumeLayout(false);
-            contextButton3.ResumeLayout(false);
-            contextButton4.ResumeLayout(false);
-            contextButton5.ResumeLayout(false);
-            contextPhone.ResumeLayout(false);
-            contextAccount.ResumeLayout(false);
+            contextMenuDataBase.ResumeLayout(false);
+            contextMenuWorkingWithData.ResumeLayout(false);
+            contextMenuPayments.ResumeLayout(false);
+            contextMenuReports.ResumeLayout(false);
+            contextMenuView.ResumeLayout(false);
+            contextMenuAccount.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1431,91 +1386,91 @@ namespace WinFormsApp1
         private Button buttonGuarantee;
         private Button buttonArchive;
         private Button buttonTrash;
-        private ContextMenuStrip contextMenu1;
-        private ToolStripMenuItem item1;
-        private ToolStripMenuItem item2;
-        private ToolStripMenuItem item3;
-        private ToolStripMenuItem item4;
+        private ContextMenuStrip contextMenuRightMouse;
+        private ToolStripMenuItem itemPropertiesMenuRightMouse;
+        private ToolStripMenuItem itemDetailsMenuRightMouse;
+        private ToolStripMenuItem itemRemoveMenuRightMouse;
+        private ToolStripMenuItem itemRecoveryMenuRightMouse;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripSeparator toolStripSeparator2;
-        private ToolStripMenuItem item5;
-        private ToolStripMenuItem item6;
-        private ToolStripMenuItem item5_1;
+        private ToolStripMenuItem itemActionDeviceMenuRightMouse;
+        private ToolStripMenuItem itemActionClientMenuRightMouse;
+        private ToolStripMenuItem itemCompletedTagMenuRightMouse;
         private ToolStripSeparator toolStripSeparator3;
-        private ToolStripMenuItem item5_2;
-        private ToolStripMenuItem item5_3;
-        private ToolStripMenuItem item5_4;
-        private ToolStripMenuItem item6_1;
+        private ToolStripMenuItem itemIssueMenuRightMouse;
+        private ToolStripMenuItem itemReturnIntoRepairMenuRightMouse;
+        private ToolStripMenuItem itemReturnGuaranteeMenuRightMouse;
+        private ToolStripMenuItem itemPropertiesClientMenuRightMouse;
         private ToolStripSeparator toolStripSeparator4;
-        private ToolStripMenuItem item6_2;
-        private ToolStripMenuItem item6_3;
-        private ToolStripMenuItem item6_3_1;
-        private ToolStripMenuItem item6_3_2;
-        private ToolStripMenuItem item6_3_3;
+        private ToolStripMenuItem itemMessageClientMenuRightMouse;
+        private ToolStripMenuItem itemPriorityClientMenuRightMouse;
+        private ToolStripMenuItem itemWhiteListMenuRightMouse;
+        private ToolStripMenuItem itemBlackListMenuRightMouse;
+        private ToolStripMenuItem itemUnmarkMenuRightMouse;
         private ToolStrip toolStrip1;
         private ToolStripButton buttonMasters;
-        private ToolStripButton buttonDevice;
+        private ToolStripButton buttonTypesDevices;
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripButton buttonSettings;
         private ToolStripButton buttonPrinter;
         private ToolStripButton buttonExit;
         private ToolStripSeparator toolStripSeparator6;
         private ToolStripButton buttonDetails;
-        private ToolStripButton buttonDelete;
-        private ToolStripButton buttonRecoveryOrder;
+        private ToolStripButton buttonRemove;
+        private ToolStripButton buttonRecovery;
         private ToolStripButton buttonCompletedTag;
         private ToolStripButton buttonIssue;
-        private ToolStripButton buttonReturnInRepair;
+        private ToolStripButton buttonReturnIntoRepair;
         private ToolStripButton buttonReturnGuarantee;
         private ToolStripSeparator toolStripSeparator7;
-        private ToolStripButton buttonFeaturesOrder;
-        private ToolStripButton buttonFeaturesClient;
+        private ToolStripButton buttonPropertiesOrder;
+        private ToolStripButton buttonPropertiesClient;
         private ToolStripSeparator toolStripSeparator8;
         private Label labelDataBase;
-        private ContextMenuStrip contextButton1;
-        private ToolStripMenuItem itemAddMasters;
-        private ContextMenuStrip contextButton2;
-        private ToolStripMenuItem itemAddDeviceForRepair;
+        private ContextMenuStrip contextMenuDataBase;
+        private ToolStripMenuItem itemMasters;
+        private ContextMenuStrip contextMenuWorkingWithData;
+        private ToolStripMenuItem itemNewOrderMenuWorkingWithData;
         private Label labelWorkData;
         private Label labelDocuments;
         private Label labelReports;
-        private ContextMenuStrip contextButton3;
-        private ToolStripMenuItem itemAddBrand;
-        private ToolStripMenuItem itemAddDevice;
-        private ToolStripMenuItem itemClients;
+        private ContextMenuStrip contextMenuPayments;
+        private ToolStripMenuItem itemBrands;
+        private ToolStripMenuItem itemTypesDevices;
+        private ToolStripMenuItem itemClientsDirectory;
         private ToolStripSeparator toolStripSeparator9;
         private ToolStripMenuItem itemCopyBD;
         private ToolStripMenuItem itemPrinter;
         private ToolStripSeparator toolStripSeparator10;
         private ToolStripMenuItem itemExit;
-        private ToolStripMenuItem itemFeaturesOrder;
+        private ToolStripMenuItem itemPropertiesMenuWorkingWithData;
         private ToolStripSeparator toolStripSeparator11;
-        private ToolStripMenuItem itemDetails;
+        private ToolStripMenuItem itemDetailsMenuWorkingWithData;
         private ToolStripSeparator toolStripSeparator12;
-        private ToolStripMenuItem itemDeleteOrder;
-        private ToolStripMenuItem itemRecoveryOrder;
+        private ToolStripMenuItem itemRemoveMenuWorkingWithData;
+        private ToolStripMenuItem itemRecoveryMenuWorkingWithData;
         private ToolStripSeparator toolStripSeparator13;
-        private ToolStripMenuItem itemActionsClient;
-        private ToolStripMenuItem itemActionsOrder;
-        private ToolStripMenuItem itemOrderCompleted;
-        private ToolStripMenuItem itemOrderIssued;
+        private ToolStripMenuItem itemActionsClientMenuWorkingWithData;
+        private ToolStripMenuItem itemActionsDeviceMenuWorkingWithData;
+        private ToolStripMenuItem itemCompletedTagMenuWorkingWithData;
+        private ToolStripMenuItem itemIssueMenuWorkingWithData;
         private ToolStripSeparator toolStripSeparator14;
-        private ToolStripMenuItem itemReturnToRevision;
-        private ToolStripMenuItem itemReturnUnderGuarantee;
-        private ToolStripMenuItem itemFeaturesClient;
+        private ToolStripMenuItem itemReturnMenuWorkingWithData;
+        private ToolStripMenuItem itemReturnGuaranteeMenuWorkingWithData;
+        private ToolStripMenuItem itemPropertiesClientMenuWorkingWithData;
         private ToolStripSeparator toolStripSeparator15;
-        private ToolStripMenuItem itemMessageToClient;
+        private ToolStripMenuItem itemMessageClientMenuWorkingWithData;
         private ToolStripSeparator toolStripSeparator16;
-        private ToolStripMenuItem itemPriorityClient;
-        private ToolStripMenuItem itemAddToWhitelist;
-        private ToolStripMenuItem itemAddToBlacklist;
-        private ToolStripMenuItem itemRemoveMarks;
+        private ToolStripMenuItem itemPriorityClientMenuWorkingWithData;
+        private ToolStripMenuItem itemWhiteListWorkingWithData;
+        private ToolStripMenuItem itemBlackListWorkingWithData;
+        private ToolStripMenuItem itemUnmarkWorkingWithData;
         private ToolStripSeparator toolStripSeparator17;
-        private ToolStripMenuItem itemCreateOrder;
-        private ContextMenuStrip contextButton4;
+        private ToolStripMenuItem itemNewOrderAsCurrentMenuWorkingWithData;
+        private ContextMenuStrip contextMenuReports;
         private ToolStripMenuItem itemSalary;
-        private ToolStripMenuItem itemGetting;
-        private ToolStripMenuItem itemIssuing;
+        private ToolStripMenuItem itemGettingDevice;
+        private ToolStripMenuItem itemIssuingDevice;
         private ToolStripMenuItem itemUpdateService;
         private TextBox textBoxIdOrder;
         private Label labelIdOrder;
@@ -1524,32 +1479,23 @@ namespace WinFormsApp1
         private Label labelDateStartWork;
         private Label labelNameMaster;
         private TextBox textBoxDateStartWork;
-        private Label labelTypeDevice;
-        private Label labelBrandDevice;
-        private Label labelModel;
+        private Label labelDevice;
         private Label labelNameClient;
         private TextBox textBoxNameMaster;
-        private TextBox textBoxTypeDevice;
-        private TextBox textBoxBrandDevice;
-        private TextBox textBoxModel;
+        private TextBox textBoxDevice;
         private TextBox textBoxNameClient;
         private Label labelView;
-        private ContextMenuStrip contextButton5;
+        private ContextMenuStrip contextMenuView;
         private ToolStripMenuItem itemColor;
         private Button buttonReset;
-        private ToolStripMenuItem itemSize;
-        private ToolStripMenuItem itemSmall;
-        private ToolStripMenuItem itemMedium;
         private ToolStripMenuItem itemPathDB;
         private ToolStripSeparator toolStripSeparator18;
         private ToolStripSeparator toolStripSeparator19;
-        private ToolStripMenuItem item7;
+        private ToolStripMenuItem itemNewOrderAsCurrentMenuRightMouse;
         private ToolStripMenuItem itemWarehouse;
-        private ContextMenuStrip contextPhone;
-        private ToolStripMenuItem numberPhone;
-        private ToolStripMenuItem itemOrg;
+        private ToolStripMenuItem itemOrganization;
         private ToolStripSeparator toolStripSeparator20;
-        private ToolStripButton buttonAddDevice;
+        private ToolStripButton buttonAddDeviceIntoRepair;
         private ToolStripMenuItem itemMalfunction;
         private ToolStripMenuItem itemDiagnosis;
         private ToolStripMenuItem itemEquipment;
@@ -1557,12 +1503,15 @@ namespace WinFormsApp1
         private ToolStripSeparator toolStripSeparator21;
         private System.Windows.Forms.Timer timer1;
         private Label labelLogIn;
-        private ContextMenuStrip contextAccount;
+        private ContextMenuStrip contextMenuAccount;
         private ToolStripMenuItem itemChangeData;
         private ToolStripMenuItem itemLogOut;
         private Label labelClientId;
         private ToolStripMenuItem itemReportOrganization;
         private ToolStripMenuItem itemExportToExcel;
         private SaveFileDialog saveFileDialog1;
+        private CheckBox checkBoxSearch;
+        private ToolStripMenuItem itemSmall;
+        private ToolStripMenuItem itemMedium;
     }
 }

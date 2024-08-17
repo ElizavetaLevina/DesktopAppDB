@@ -115,6 +115,54 @@ namespace WinFormsApp1.Properties {
         }
 
         /// <summary>
+        ///  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap b2_11
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("b2_11", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+
+        /// <summary>
+        ///  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap b2_12
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("b2_12", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+
+        /// <summary>
+        ///  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap b2_13
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("b2_13", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+
+        /// <summary>
+        ///  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap b2_14
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("b2_14", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+
+        /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap complite {

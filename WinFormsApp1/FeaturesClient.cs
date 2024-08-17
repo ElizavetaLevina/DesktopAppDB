@@ -1,4 +1,5 @@
-﻿using WinFormsApp1.DTO;
+﻿using System.Windows.Forms;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Repository;
 
@@ -8,12 +9,12 @@ namespace WinFormsApp1
     {
         ClientRepository clientRepository = new();
         ClientEditDTO clientDTO;
-        public int clientId;
-        public FeaturesClient(int id = 0)
+        public string idClient;
+        public FeaturesClient(string _idClient)
         {
             InitializeComponent();
-            clientId = id;
-            clientDTO = clientRepository.GetClient(id);
+            idClient = _idClient;
+            clientDTO = clientRepository.GetClient(idClient);
             textBoxID.Text = clientDTO.IdClient;
             textBoxNameAddress.Text = clientDTO.NameAndAddressClient;
             textBoxSecondPhone.Text = clientDTO.NumberSecondPhone;

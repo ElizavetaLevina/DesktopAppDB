@@ -1,4 +1,5 @@
-﻿using WinFormsApp1.DTO;
+﻿using System.Windows.Forms;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Model;
 
@@ -11,10 +12,10 @@ namespace WinFormsApp1.Repository
         /// </summary>
         /// <param name="id">Идентификатор</param>
         /// <returns>Запись</returns>
-        public ClientEditDTO GetClient(int id)
+        public ClientEditDTO GetClient(string idClient)
         {
             Context context = new();
-            return new ClientEditDTO(context.Clients.First(i => i.Id == id));
+            return new ClientEditDTO(context.Clients.First(i => i.IdClient == idClient));
         }
 
         /// <summary>

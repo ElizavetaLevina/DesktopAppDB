@@ -1,8 +1,8 @@
-﻿using System.Windows.Forms;
+﻿using System.Diagnostics;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Helpers;
-using WinFormsApp1.Reports;
+using WinFormsApp1.Logic;
 using WinFormsApp1.Repository;
 using Color = System.Drawing.Color;
 
@@ -20,6 +20,7 @@ namespace WinFormsApp1
         List<DiagnosisEditDTO> diagnosesDTO;
         List<EquipmentEditDTO> equipmentsDTO;
         NameTableToEditEnum nameTextBox;
+        ReportsLogic reportsLogic = new();
         OrderRepository orderRepository = new();
         ClientRepository clientRepository = new();
         DiagnosisRepository diagnosisRepository = new();
@@ -27,10 +28,14 @@ namespace WinFormsApp1
         MasterRepository masterRepository = new();
         TypeBrandRepository typeBrandRepository = new();
         TypeTechnicRepository typeTechnicRepository = new();
+        List<(long elapsedTime, string name)> some = new();
+        Stopwatch stopwatch = null;// Stopwatch.StartNew();
         public AddDeviceIntoRepair()
         {
+            stopwatch = Stopwatch.StartNew();
             InitializeComponent();
             InitializeElementsForm();
+            some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "1"));
         }
 
         private void InitializeElementsForm()
@@ -122,6 +127,7 @@ namespace WinFormsApp1
 
         private void SaveOrder()
         {
+            some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Save1"));
             if (!CheckComboBox())
                 return;
 
@@ -154,6 +160,8 @@ namespace WinFormsApp1
                 task.Wait();
             }
 
+            some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Save2"));
+
             var equipmentDTO = equipmentRepository.GetEquipmentByName(textBoxEquipment.Text);
             int? idEquipment = equipmentDTO.Id;
             if (idEquipment == 0)
@@ -169,6 +177,8 @@ namespace WinFormsApp1
                 else idEquipment = null;
             }
 
+            some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Save3"));
+
             var diagnosisDTO = diagnosisRepository.GetDiagnosisByName(textBoxDiagnosis.Text);
             int? idDiagnosis = diagnosisDTO.Id;
             if (idDiagnosis == 0)
@@ -183,6 +193,8 @@ namespace WinFormsApp1
                 }
                 else idDiagnosis = null;
             }
+
+            some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Save4"));
 
             var orderDTO = new OrderEditDTO()
             {
@@ -204,6 +216,8 @@ namespace WinFormsApp1
                 ColorRow = FindColor()
             };
 
+            some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Save5"));
+
             int idOrder = 0;
             task = Task.Run(async () =>
             {
@@ -218,12 +232,9 @@ namespace WinFormsApp1
                 ButtonNoText = "Нет",
                 ButtonVisible = true
             };
-
+            some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Save6"));
             if (warning.ShowDialog() == DialogResult.OK)
-            {
-                GettingReport gettingReport = new();
-                gettingReport.Report(idOrder);
-            }
+                reportsLogic.GettingDeviceReport(idOrder);
             DialogResult = DialogResult.OK;
             Close();
         }
@@ -679,11 +690,13 @@ namespace WinFormsApp1
             if (checkBox1.Checked) textBoxMaxPrice.Enabled = true;
             else textBoxMaxPrice.Enabled = false;
         }
+
         private void CheckBox1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
                 checkBox1.Checked = !checkBox1.Checked;
         }
+
         private void TextBoxMaxPrice_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !KeyPressHelper.CheckKeyPress(true, textBoxMaxPrice.Text, e.KeyChar);

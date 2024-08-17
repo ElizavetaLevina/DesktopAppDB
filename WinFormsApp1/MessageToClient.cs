@@ -6,13 +6,13 @@ namespace WinFormsApp1
 {
     public partial class MessageToClient : Form
     {
-        public int idClient;
+        public string idClient;
         ClientRepository clientRepository = new();
         ClientEditDTO clientDTO;
-        public MessageToClient(int id)
+        public MessageToClient(string _idClient)
         {
             InitializeComponent();
-            idClient = id;
+            idClient = _idClient;
             clientDTO = clientRepository.GetClient(idClient);
             textBoxPhone.Text = clientDTO.IdClient;
         }

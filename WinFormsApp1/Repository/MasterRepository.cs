@@ -15,6 +15,10 @@ namespace WinFormsApp1.Repository
             return context.Masters.Select(c => new MasterEditDTO(c)).ToList();
         }
 
+        /// <summary>
+        /// Получение списка мастеров для отображения в теблице/comboBox
+        /// </summary>
+        /// <returns>Список мастеров</returns>
         public List<MasterDTO> GetMastersForOutput()
         {
             Context context = new();

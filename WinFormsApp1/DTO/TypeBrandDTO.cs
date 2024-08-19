@@ -17,5 +17,9 @@ namespace WinFormsApp1.DTO
             BrandTechnic = new BrandTechnicEditDTO(typeBrand.BrandTechnic);
             TypeTechnic = new TypeTechnicEditDTO(typeBrand.TypeTechnic);
         }
+
+        public TypeBrandDTO()
+        {
+        }
     }
 }

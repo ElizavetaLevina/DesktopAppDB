@@ -1,16 +1,15 @@
-﻿using System.Windows.Forms;
-using WinFormsApp1.DTO;
+﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
 {
-    public partial class FeaturesClient : Form
+    public partial class PropertiesClient : Form
     {
         ClientRepository clientRepository = new();
         ClientEditDTO clientDTO;
         public string idClient;
-        public FeaturesClient(string _idClient)
+        public PropertiesClient(string _idClient)
         {
             InitializeComponent();
             idClient = _idClient;

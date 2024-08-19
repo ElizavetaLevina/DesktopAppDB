@@ -259,12 +259,12 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            FeaturesOrder featuresOrder = new(idOrder, status, logInSystem)
+            PropertiesOrder propertiesOrder = new(idOrder, status, logInSystem)
             {
                 StartPosition = FormStartPosition.CenterParent
             };
-            featuresOrder.ShowDialog();
-            if (featuresOrder.logIn)
+            propertiesOrder.ShowDialog();
+            if (propertiesOrder.logIn)
             {
                 logInSystem = true;
                 labelLogIn.Text = Properties.Settings.Default.Login;
@@ -468,12 +468,12 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            FeaturesClient featuresClient = new(idClient)
+            PropertiesClient propertiesClient = new(idClient)
             {
                 StartPosition = FormStartPosition.CenterParent
             };
 
-            if (featuresClient.ShowDialog() == DialogResult.OK)
+            if (propertiesClient.ShowDialog() == DialogResult.OK)
                 UpdateTableData();
             FocusButton(status);
         }
@@ -577,10 +577,10 @@ namespace WinFormsApp1
                     dataGridView1.Rows[i].DefaultCellStyle.SelectionForeColor = Color.DimGray;
                     continue;
                 }
-                string hexColor = dataGridView1.Rows[i].Cells[nameof(OrderTableDTO.ColorRow)].Value.ToString();
+                var savedColor = ColorTranslator.FromHtml(dataGridView1.Rows[i].Cells[nameof(OrderTableDTO.ColorRow)].Value.ToString());
 
                 var color = ordersLogic.ChangeColorRows(Convert.ToInt32(dataGridView1.Rows[i].Cells[nameof(OrderTableDTO.Id)].Value), 
-                    status, hexColor);
+                    status, savedColor);
                 dataGridView1.Rows[i].DefaultCellStyle.ForeColor = color;
                 dataGridView1.Rows[i].DefaultCellStyle.SelectionForeColor = color;
 
@@ -982,14 +982,14 @@ namespace WinFormsApp1
         {  
             if (dataGridView1.Rows.Count == 0)
                 return;
-            FeaturesOrder featuresOrder = new(idOrder, status, logInSystem)
+            PropertiesOrder propertiesOrder = new(idOrder, status, logInSystem)
             {
                 StartPosition = FormStartPosition.CenterParent
             };
-            featuresOrder.ShowDialog();
+            propertiesOrder.ShowDialog();
             FocusButton(status);
             UpdateTableData();
-            /*if (featuresOrder.pressBtnSave)
+            /*if (propertiesOrder.pressBtnSave)
                 UpdateDB();*/
         }
 

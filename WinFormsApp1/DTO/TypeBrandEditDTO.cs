@@ -8,4 +8,6 @@
         public int BrandTechnicsId { get; set; }
         public int TypeTechnicsId { get; set; }
     }
+
+
 }

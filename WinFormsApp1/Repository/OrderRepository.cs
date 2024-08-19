@@ -10,13 +10,12 @@ namespace WinFormsApp1.Repository
         /// <summary>
         /// Получение списка заказов для главной таблицы
         /// </summary>
-        /// <param name="inProgress">В ремонте</param>
+        /// <param name="statusOrder">Статус заказа</param>
         /// <param name="deleted">Удален</param>
-        /// <param name="issue">Выдан</param>
         /// <param name="dateCreation">Дата создания заказа</param>
         /// <param name="dateCompleted">Дата выполнения заказа</param>
         /// <param name="dateIssue">Дата выдачи</param>
-        /// <param name="id">Номер заказа</param>
+        /// <param name="id">Идентификатор заказа</param>
         /// <returns>Список заказов для главной таблицы</returns>
         public List<OrderTableDTO> GetOrdersForTable(StatusOrderEnum? statusOrder = null, bool? deleted = null, bool dateCreation = false, 
             bool dateCompleted = false, bool dateIssue = false, bool id = false)

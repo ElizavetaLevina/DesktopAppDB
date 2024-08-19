@@ -1,6 +1,6 @@
 ﻿namespace WinFormsApp1
 {
-    partial class FeaturesClient
+    partial class PropertiesClient
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FeaturesClient));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PropertiesClient));
             label1 = new Label();
             textBoxID = new TextBox();
             textBoxNameAddress = new TextBox();

@@ -502,11 +502,11 @@ namespace WinFormsApp1
 
         private void LinkLabelFeaturesOrder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            FeaturesOrder featuresOrder = new(idOrder, StatusOrderEnum.InRepair, true)
+            PropertiesOrder propertiesOrder = new(idOrder, StatusOrderEnum.InRepair, true)
             {
                 StartPosition = FormStartPosition.CenterParent
             };
-            if (featuresOrder.ShowDialog() == DialogResult.OK)
+            if (propertiesOrder.ShowDialog() == DialogResult.OK)
             {
                 orderDTO = orderRepository.GetOrder(idOrder);
                 if (orderDTO.AdditionalMasterId != null)

@@ -8,6 +8,11 @@ namespace WinFormsApp1.Logic
     {
         WarehouseRepository warehouseRepository = new();
 
+        /// <summary>
+        /// Получение списка деталей в заказе
+        /// </summary>
+        /// <param name="idOrder">Идентификатор заказа</param>
+        /// <returns></returns>
         public int GetCountDetailsInOrder(int idOrder) 
         {
             return warehouseRepository.GetDetailsInOrder(idOrder).Count();

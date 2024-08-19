@@ -6,7 +6,7 @@ using Color = System.Drawing.Color;
 
 namespace WinFormsApp1
 {
-    public partial class FeaturesOrder : Form
+    public partial class PropertiesOrder : Form
     {
         public int idOrder;
         readonly string withoutMaster = "-";
@@ -26,7 +26,7 @@ namespace WinFormsApp1
         List<DiagnosisEditDTO> diagnosesDTO;
         List<EquipmentEditDTO> equipmentsDTO;
         List<MasterDTO> mastersDTO;
-        public FeaturesOrder(int id, StatusOrderEnum status, bool _logIn)
+        public PropertiesOrder(int id, StatusOrderEnum status, bool _logIn)
         {
             InitializeComponent();
             logIn = _logIn;

@@ -16,6 +16,11 @@ namespace WinFormsApp1.DTO
             Name = typeTechnic.NameTypeTechnic;
         }
 
+        public TypeTechnicEditDTO(string name)
+        {
+            Name = name;
+        }
+
         public TypeTechnicEditDTO()
         {
         }

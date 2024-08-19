@@ -10,36 +10,6 @@ namespace WinFormsApp1
             InitializeComponent();
         }
 
-        public string LabelText
-        {
-            get { return label1.Text; }
-            set { label1.Text = value; }
-        }
-
-        public string ButtonNoText
-        {
-            get { return buttonExit.Text; }
-            set { buttonExit.Text = value; }
-        }
-
-        public string ButtonYesText
-        {
-            get { return buttonYes.Text; }
-            set { buttonYes.Text = value; }
-        }
-
-        public bool ButtonVisible
-        {
-            get {  return buttonYes.Visible; }
-            set {  buttonYes.Visible = value; }
-        }
-
-        public bool VisibleChangePrice
-        {
-            get { return linkLabelChangeMaxPrice.Visible; }
-            set { linkLabelChangeMaxPrice.Visible = value; }
-        }
-
         private void Warning_Activated(object sender, EventArgs e)
         {
             if (buttonYes.Visible)
@@ -61,13 +31,43 @@ namespace WinFormsApp1
 
         private void LinkLabelChangeMaxPrice_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            FeaturesOrder featuresOrder = new(id, StatusOrderEnum.InRepair, true)
+            PropertiesOrder propertiesOrder = new(id, StatusOrderEnum.InRepair, true)
             {
                 StartPosition = FormStartPosition.CenterParent
             };
-            featuresOrder.ShowDialog();
+            propertiesOrder.ShowDialog();
             DialogResult = DialogResult.OK;
             Close();
+        }
+
+        public string LabelText
+        {
+            get { return label1.Text; }
+            set { label1.Text = value; }
+        }
+
+        public string ButtonNoText
+        {
+            get { return buttonExit.Text; }
+            set { buttonExit.Text = value; }
+        }
+
+        public string ButtonYesText
+        {
+            get { return buttonYes.Text; }
+            set { buttonYes.Text = value; }
+        }
+
+        public bool ButtonVisible
+        {
+            get { return buttonYes.Visible; }
+            set { buttonYes.Visible = value; }
+        }
+
+        public bool VisibleChangePrice
+        {
+            get { return linkLabelChangeMaxPrice.Visible; }
+            set { linkLabelChangeMaxPrice.Visible = value; }
         }
     }
 }

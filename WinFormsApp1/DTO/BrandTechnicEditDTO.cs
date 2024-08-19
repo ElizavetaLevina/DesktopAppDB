@@ -16,6 +16,11 @@ namespace WinFormsApp1.DTO
             Name = brandTechnic.NameBrandTechnic;
         }
 
+        public BrandTechnicEditDTO(string name)
+        {
+            Name = name;
+        }
+
         public BrandTechnicEditDTO()
         {
         }

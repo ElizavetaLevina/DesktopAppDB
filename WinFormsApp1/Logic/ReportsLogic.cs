@@ -13,6 +13,11 @@ namespace WinFormsApp1.Logic
         OrderRepository orderRepository = new();
         WarehouseRepository warehouseRepository = new();
         MalfunctionOrderRepository malfunctionOrderRepository = new();
+
+        /// <summary>
+        /// Создание квитанции принятие устройства в ремонт в Excel 
+        /// </summary>
+        /// <param name="idOrder">Идентификтор заказа</param>
         public void GettingDeviceReport(int idOrder)
         {
             try
@@ -62,6 +67,10 @@ namespace WinFormsApp1.Logic
             }
         }
 
+        /// <summary>
+        /// Создание квитанции выдача отремонтированного устройства клиенту в Excel
+        /// </summary>
+        /// <param name="idOrder">Идентификатор заказа</param>
         public void IssuingDeviceReport(int idOrder)
         {
             try
@@ -181,7 +190,11 @@ namespace WinFormsApp1.Logic
             }
         }
 
-
+        /// <summary>
+        /// Экспорт главной таблицы в Excel
+        /// </summary>
+        /// <param name="folderPath">Путь для сохранения</param>
+        /// <param name="orders">DTO заказов</param>
         public void ExportMainTable(string folderPath, List<OrderTableDTO> orders)
         {
             using XLWorkbook workbook = new();

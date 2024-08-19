@@ -1,7 +1,6 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Helpers;
-using WinFormsApp1.Reports;
 using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
@@ -116,8 +115,8 @@ namespace WinFormsApp1
 
                 if (warning.ShowDialog() == DialogResult.OK)
                 {
-                    IssuingReport issuingReport = new();
-                    issuingReport.Report(idOrder);
+                    /*IssuingReport issuingReport = new();
+                    issuingReport.Report(idOrder);*/
                 }
                 DialogResult = DialogResult.OK;
                 Close();

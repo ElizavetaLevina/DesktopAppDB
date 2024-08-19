@@ -1,6 +1,6 @@
 ﻿namespace WinFormsApp1
 {
-    partial class FeaturesOrder
+    partial class PropertiesOrder
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FeaturesOrder));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PropertiesOrder));
             tabControl1 = new TabControl();
             tabPageOrder = new TabPage();
             textBoxStored = new TextBox();

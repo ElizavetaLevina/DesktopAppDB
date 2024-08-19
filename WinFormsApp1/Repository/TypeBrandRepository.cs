@@ -6,10 +6,10 @@ namespace WinFormsApp1.Repository
     public class TypeBrandRepository
     {
         /// <summary>
-        /// Получение списка бренд-тип
+        /// Получение списка тип-бренд устройства по идентификатору бренда или типа устройства
         /// </summary>
-        /// <param name="idBrand">Id бренда</param>
-        /// <param name="idType">Id типа</param>
+        /// <param name="idBrand">Идентификатор бренда</param>
+        /// <param name="idType">Идентификатор типа устройства</param>
         /// <returns>Список бренд-тип</returns>
         public List<TypeBrandDTO> GetTypeBrand(int idBrand = 0, int idType = 0)
         {
@@ -33,13 +33,13 @@ namespace WinFormsApp1.Repository
             return context.TypeBrands.Where(i => i.TypeTechnic.NameTypeTechnic == nameType).Select(a => new TypeBrandComboBoxDTO(a)).ToList();
         }
 
-        public async Task SaveTypeBrandAsync(TypeBrandEditDTO typeBrandEditDTO, CancellationToken token = default)
+        public async Task SaveTypeBrandAsync(TypeBrandDTO typeBrandDTO, CancellationToken token = default)
         {
             using Context db = new();
             TypeBrand typeBrand = new()
             {
-                BrandTechnicsId = typeBrandEditDTO.BrandTechnicsId,
-                TypeTechnicsId = typeBrandEditDTO.TypeTechnicsId
+                BrandTechnicsId = typeBrandDTO.BrandTechnicsId,
+                TypeTechnicsId = typeBrandDTO.TypeTechnicsId
             };
             try
             {
@@ -49,17 +49,26 @@ namespace WinFormsApp1.Repository
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
 
-        public void RemoveTypeBrand(TypeBrandEditDTO typeBrandEditDTO)
+        public void RemoveTypesBrands(TypeBrandDTO typeBrandDTO)
         {
             try
             {
                 using Context db = new();
-                var typeBrand = db.TypeBrands.FirstOrDefault(c => c.BrandTechnicsId == typeBrandEditDTO.BrandTechnicsId &&
-                    c.TypeTechnicsId == typeBrandEditDTO.TypeTechnicsId);
+                var typeBrand = db.TypeBrands.FirstOrDefault(c => c.BrandTechnicsId == typeBrandDTO.BrandTechnicsId &&
+                    c.TypeTechnicsId == typeBrandDTO.TypeTechnicsId);
                 db.TypeBrands.Remove(typeBrand);
                 db.SaveChanges();
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
+
+        /*public void RemoveTypeBrand(TypeBrandEditDTO typeBrandEditDTO)
+        {
+            try
+            {
+                Context db = new();
+                var typeBrand = db.TypeBrands.FirstOrDefault(i => i.)
+            }
+        }*/
     }
 }

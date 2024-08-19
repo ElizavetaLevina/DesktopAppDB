@@ -20,10 +20,39 @@ namespace WinFormsApp1.Repository
         /// </summary>
         /// <param name="name">Название</param>
         /// <returns>Запись</returns>
-        public TypeTechnicDTO GetTypeTechnic(string name)
+        public TypeTechnicDTO GetTypeTechnicByName(string name)
         {
             Context context = new();
             return new TypeTechnicDTO(context.TypeTechnices.First(i => i.NameTypeTechnic == name));
+        }
+
+
+        /// <summary>
+        /// Получение типа устройства по идентификатору
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <returns>Тип устройства</returns>
+        public TypeTechnicEditDTO GetTypeTechnic(int id, string name)
+        {
+            Context context = new();
+            var typeTechnic = context.TypeTechnices.FirstOrDefault(i => i.Id == id);
+            if (typeTechnic == null)
+                return new TypeTechnicEditDTO(name);
+            else return new TypeTechnicEditDTO(typeTechnic);
+        }
+
+        /// <summary>
+        /// Получение названия типа устройства по идентификатору
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <returns>Тип устройства</returns>
+        public string GetTypeTechnicName(int id)
+        {
+            Context context = new();
+            var typeTechnic = context.TypeTechnices.FirstOrDefault(i => i.Id == id);
+            if (typeTechnic == null)
+                return string.Empty;
+            else return typeTechnic.NameTypeTechnic;
         }
 
         public async Task<int> SaveTypeTechnicAsync(TypeTechnicEditDTO typeTechnicDTO, CancellationToken token = default)

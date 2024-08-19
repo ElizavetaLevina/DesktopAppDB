@@ -21,10 +21,39 @@ namespace WinFormsApp1.Repository
         /// </summary>
         /// <param name="name">Название бренда</param>
         /// <returns>Запись</returns>
-        public BrandTechnicDTO GetBrandTechnic(string name)
+        public BrandTechnicDTO GetBrandTechnicByName(string name)
         {
             Context context = new();
             return new BrandTechnicDTO(context.BrandTechnices.First(i => i.NameBrandTechnic == name));
+        }
+
+        /// <summary>
+        /// Получение бренда устройства по идентификатору
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <param name="name">Имя</param>
+        /// <returns>Бренда устройства</returns>
+        public BrandTechnicEditDTO GetBrandTechnic(int id, string name)
+        {
+            Context context = new();
+            var brandTechnic = context.BrandTechnices.FirstOrDefault(i => i.Id == id);
+            if (brandTechnic == null)
+                return new BrandTechnicEditDTO(name);
+            else return new BrandTechnicEditDTO(brandTechnic);
+        }
+
+        /// <summary>
+        /// Получение названия бренда по идентификатору
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <returns>Бренд</returns>
+        public string GetBrandTechnicName(int id)
+        {
+            Context context = new();
+            var brandTechnic = context.BrandTechnices.FirstOrDefault(i => i.Id == id);
+            if (brandTechnic == null)
+                return string.Empty;
+            else return brandTechnic.NameBrandTechnic;
         }
 
         public async Task<int> SaveBrandTechnicAsync(BrandTechnicEditDTO brandTechnicDTO, CancellationToken token = default)

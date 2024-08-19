@@ -3,7 +3,6 @@ using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Helpers;
 using WinFormsApp1.Logic;
-using WinFormsApp1.Repository;
 using Color = System.Drawing.Color;
 
 namespace WinFormsApp1
@@ -21,21 +20,17 @@ namespace WinFormsApp1
         List<EquipmentEditDTO> equipmentsDTO;
         NameTableToEditEnum nameTextBox;
         ReportsLogic reportsLogic = new();
-        OrderRepository orderRepository = new();
-        ClientRepository clientRepository = new();
-        DiagnosisRepository diagnosisRepository = new();
-        EquipmentRepository equipmentRepository = new();
-        MasterRepository masterRepository = new();
-        TypeBrandRepository typeBrandRepository = new();
-        TypeTechnicRepository typeTechnicRepository = new();
-        List<(long elapsedTime, string name)> some = new();
-        Stopwatch stopwatch = null;// Stopwatch.StartNew();
+        OrdersLogic ordersLogic = new();
+        ClientsLogic clientsLogic = new();
+        EquipmentsLogic equipmentsLogic = new();
+        DiagnosesLogic diagnosesLogic = new();
+        MastersLogic mastersLogic = new();
+        TypesTechnicsLogic typesTechnicsLogic = new();
+        TypesBrandsLogic typesBrandsLogic = new();
         public AddDeviceIntoRepair()
         {
-            stopwatch = Stopwatch.StartNew();
             InitializeComponent();
             InitializeElementsForm();
-            some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "1"));
         }
 
         private void InitializeElementsForm()
@@ -45,22 +40,22 @@ namespace WinFormsApp1
             UpdateComboBox(ElementOfRepairEnum.TypeDeviceElement);
             UpdateComboBox(ElementOfRepairEnum.BrandDeviceElement);
 
-            textBoxNumberOrder.Text = IdKeyOrder().ToString();
+            NumberOrder = GetLastIdOrder();
 
-            var clientsDTO = clientRepository.GetClients();
+            var clientsDTO = clientsLogic.GetClients();
             foreach (var client in clientsDTO)
             {
                 oldClients.Add(client.IdClient);
                 oldClientsType.Add(client.TypeClient.ToString());
             }
 
-            diagnosesDTO = diagnosisRepository.GetDiagnoses();
+            diagnosesDTO = diagnosesLogic.GetDiagnoses();
             foreach (var diagnosis in diagnosesDTO)
             {
                 diagnosisList.Add(diagnosis.Name);
             }
 
-            equipmentsDTO = equipmentRepository.GetEquipments();
+            equipmentsDTO = equipmentsLogic.GetEquipments();
             foreach (var equipment in equipmentsDTO)
             {
                 equipmentList.Add(equipment.Name);
@@ -127,103 +122,41 @@ namespace WinFormsApp1
 
         private void SaveOrder()
         {
-            some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Save1"));
             if (!CheckComboBox())
                 return;
 
             if (!CheckIdClient())
                 return;
 
-            var mainMasterId = ((MasterDTO)comboBoxMainMaster.SelectedItem).Id;
-            var additionalMasterId = ((MasterDTO)comboBoxAdditionalMaster.SelectedItem).Id;
-            DateTime? dateStartWork = null;
-            int? maxPrice = null;
-            Task? task;
-            if (comboBoxMainMaster.Text != withoutMaster)
-                dateStartWork = dateTimePicker1.Value;
+            var clientId = clientsLogic.SaveClient(ClientName, ClientNameAddress, ClientSecondPhone);
 
-            if (checkBox1.Checked)
-                maxPrice = Convert.ToInt32(textBoxMaxPrice.Text);
+            var equipmentId = equipmentsLogic.SaveEquipment(Equipment);
 
-            var clientDTO = clientRepository.GetClientByIdClient(textBoxNameClient.Text);
-            int idClient = clientDTO.Id;
-            if (idClient == 0)
-            {
-                clientDTO.IdClient = textBoxNameClient.Text;
-                clientDTO.NameAndAddressClient = textBoxNameAddress.Text;
-                clientDTO.NumberSecondPhone = textBoxSecondPhone.Text;
-
-                task = Task.Run(async () =>
-                {
-                    idClient = await clientRepository.SaveClientAsync(clientDTO);
-                });
-                task.Wait();
-            }
-
-            some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Save2"));
-
-            var equipmentDTO = equipmentRepository.GetEquipmentByName(textBoxEquipment.Text);
-            int? idEquipment = equipmentDTO.Id;
-            if (idEquipment == 0)
-            {
-                if (!string.IsNullOrEmpty(textBoxEquipment.Text))
-                {
-                    task = Task.Run(async () =>
-                    {
-                        idEquipment = await equipmentRepository.SaveEquipmentAsync(equipmentDTO);
-                    });
-                    task.Wait();
-                }
-                else idEquipment = null;
-            }
-
-            some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Save3"));
-
-            var diagnosisDTO = diagnosisRepository.GetDiagnosisByName(textBoxDiagnosis.Text);
-            int? idDiagnosis = diagnosisDTO.Id;
-            if (idDiagnosis == 0)
-            {
-                if (!string.IsNullOrEmpty(textBoxDiagnosis.Text))
-                {
-                    task = Task.Run(async () =>
-                    {
-                        idDiagnosis = await diagnosisRepository.SaveDiagnosisAsync(diagnosisDTO);
-                    });
-                    task.Wait();
-                }
-                else idDiagnosis = null;
-            }
-
-            some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Save4"));
+            var diagnosisId = diagnosesLogic.SaveDiagnosis(Diagnosis);
 
             var orderDTO = new OrderEditDTO()
             {
                 Id = 0,
-                NumberOrder = Convert.ToInt32(textBoxNumberOrder.Text),
-                ClientId = idClient,
-                MainMasterId = mainMasterId,
-                AdditionalMasterId = additionalMasterId,
+                NumberOrder = NumberOrder,
+                ClientId = clientId,
+                MainMasterId = ((MasterDTO)comboBoxMainMaster.SelectedItem).Id,
+                AdditionalMasterId = ((MasterDTO)comboBoxAdditionalMaster.SelectedItem).Id,
                 DateCreation = dateTimePicker1.Value,
-                DateStartWork = dateStartWork,
+                DateStartWork = MainMasterName != withoutMaster ? dateTimePicker1.Value : null,
                 TypeTechnicId = ((TypeTechnicDTO)comboBoxDevice.SelectedItem).Id,
                 BrandTechnicId = ((TypeBrandComboBoxDTO)comboBoxBrand.SelectedItem).IdBrand,
-                ModelTechnic = textBoxModel.Text,
-                FactoryNumber = textBoxFactoryNumber.Text,
-                EquipmentId = idEquipment,
-                DiagnosisId = idDiagnosis,
-                Note = textBoxNote.Text,
+                ModelTechnic = Model,
+                FactoryNumber = FactoryNumber,
+                EquipmentId = equipmentId,
+                DiagnosisId = diagnosisId,
+                Note = Note,
                 StatusOrder = StatusOrderEnum.InRepair,
-                ColorRow = FindColor()
+                ColorRow = FindColor(),
+                PriceAgreed = checkBox1.Checked,
+                MaxPrice = checkBox1.Checked ? Convert.ToInt32(textBoxMaxPrice.Text) : null
             };
 
-            some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Save5"));
-
-            int idOrder = 0;
-            task = Task.Run(async () =>
-            {
-                idOrder = await orderRepository.SaveOrderAsync(orderDTO);
-            });
-            task.Wait();
+            var idOrder = ordersLogic.SaveOrder(orderDTO);
 
             Warning warning = new()
             {
@@ -232,7 +165,6 @@ namespace WinFormsApp1
                 ButtonNoText = "Нет",
                 ButtonVisible = true
             };
-            some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Save6"));
             if (warning.ShowDialog() == DialogResult.OK)
                 reportsLogic.GettingDeviceReport(idOrder);
             DialogResult = DialogResult.OK;
@@ -275,7 +207,7 @@ namespace WinFormsApp1
             }
         }
 
-        private void ShowWarningForm(string text = "Вы не заполнили обязательные поля!")
+        private static void ShowWarningForm(string text = "Вы не заполнили обязательные поля!")
         {
             Warning warning = new()
             {
@@ -363,23 +295,25 @@ namespace WinFormsApp1
             }
             listBox.Items.Clear();
             listBox.Location = new Point(listBox.Location.X, textBox.Location.Y + textBox.Height);
-            nameTextBox = NameTableToEditEnum.Equipment;
+            
 
             if (equipment)
             {
-                equipmentsDTO = equipmentRepository.GetEquipmentsByName(textBox.Text);
+                equipmentsDTO = equipmentsLogic.GetEquipmentsByName(textBox.Text);
                 foreach (var item in equipmentsDTO)
                 {
                     listBox.Items.Add(item.Name);
                 }
+                nameTextBox = NameTableToEditEnum.Equipment;
             }
             else if (diagnosis)
             {
-                diagnosesDTO = diagnosisRepository.GetDiagnosesByName(textBox.Text);
+                diagnosesDTO = diagnosesLogic.GetDiagnosesByName(textBox.Text);
                 foreach (var item in diagnosesDTO)
                 {
                     listBox.Items.Add(item.Name);
                 }
+                nameTextBox = NameTableToEditEnum.Diagnosis;
             }
 
             if (listBox.Items.Count > 0)
@@ -388,7 +322,7 @@ namespace WinFormsApp1
 
         private void UpdateComboBox(ElementOfRepairEnum elementOfRepair)
         {
-            var mastersDTO = masterRepository.GetMastersForOutput();
+            var mastersDTO = mastersLogic.GetMastersForOutput();
             mastersDTO.Insert(0, new MasterDTO() { Id = null, NameMaster = withoutMaster });
             switch (elementOfRepair)
             {
@@ -411,19 +345,19 @@ namespace WinFormsApp1
                     comboBoxDevice.Items.Clear();
                     comboBoxDevice.ValueMember = nameof(TypeTechnicDTO.Id);
                     comboBoxDevice.DisplayMember = nameof(TypeTechnicDTO.NameTypeTechnic);
-                    comboBoxDevice.DataSource = typeTechnicRepository.GetTypesTechnic();
+                    comboBoxDevice.DataSource = typesTechnicsLogic.GetTypesTechnic();
                     break;
                 case ElementOfRepairEnum.BrandDeviceElement:
                     comboBoxBrand.DataSource = null;
                     comboBoxBrand.Items.Clear();
                     comboBoxBrand.ValueMember = nameof(TypeBrandComboBoxDTO.IdBrand);
                     comboBoxBrand.DisplayMember = nameof(TypeBrandComboBoxDTO.NameBrandTechnic);
-                    comboBoxBrand.DataSource = typeBrandRepository.GetTypeBrandByNameType(comboBoxDevice.Text);
+                    comboBoxBrand.DataSource = typesBrandsLogic.GetTypeBrandByNameType(TypeDevice);
                     break;
             }
         }
 
-        private void PressKeys(ListBox listBox, TextBox textBoxNext, Keys keyCode)
+        private static void PressKeys(ListBox listBox, TextBox textBoxNext, Keys keyCode)
         {
             if (keyCode == Keys.Down)
             {
@@ -456,12 +390,12 @@ namespace WinFormsApp1
 
         private void FirstId_Click(object sender, EventArgs e)
         {
-            textBoxNumberOrder.Text = "1";
+            NumberOrder = 1;
         }
 
         private void LastId_Click(object sender, EventArgs e)
         {
-            textBoxNumberOrder.Text = IdKeyOrder().ToString();
+            NumberOrder = GetLastIdOrder();
         }
 
         private void ComboBoxMainMaster_SelectedIndexChanged(object sender, EventArgs e)
@@ -499,9 +433,9 @@ namespace WinFormsApp1
             contextMenuStrip1.Show(MousePosition);
         }
 
-        private int IdKeyOrder()
+        private int GetLastIdOrder()
         {
-            return orderRepository.GetLastNumberOrder();
+            return ordersLogic.GetLastIdOrder();
         }
 
         private void TextBoxNameClient_TextChanged(object sender, EventArgs e)
@@ -714,6 +648,11 @@ namespace WinFormsApp1
             Close();
         }
 
+        public int NumberOrder
+        {
+            get { return Convert.ToInt32(textBoxNumberOrder.Text); }
+            set { textBoxNumberOrder.Text = value.ToString(); }
+        }
 
         public string MainMasterName
         {

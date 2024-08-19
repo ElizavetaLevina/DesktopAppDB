@@ -1,31 +1,52 @@
-﻿using WinFormsApp1.DTO;
-using WinFormsApp1.Enum;
-using WinFormsApp1.Repository;
+﻿using WinFormsApp1.Enum;
+using WinFormsApp1.Logic;
 
 namespace WinFormsApp1
 {
     public partial class BrandAndTypeEdit : Form
     {
-        public bool newEntry = false;
         NameTableToEditEnum nameTable;
         public int id;
         public List<int>? idList = [];
         public List<int>? idRemoveList = [];
-        BrandTechnicRepository brandTechnicRepository = new();
-        TypeTechnicRepository typeTechnicRepository = new();
-        TypeBrandRepository typeBrandRepository = new();
-        public BrandAndTypeEdit(NameTableToEditEnum _nameTable, bool _newEntry = true, int _id = 0)
+        BrandsTechnicsLogic brandsTechnicsLogic = new();
+        TypesTechnicsLogic typesTechnicsLogic = new();
+        TypesBrandsLogic typesBrandsLogic = new();
+        public BrandAndTypeEdit(NameTableToEditEnum _nameTable, int _id = 0)
         {
             InitializeComponent();
             nameTable = _nameTable;
-            newEntry = _newEntry;
             id = _id;
-            UpdateComboBox(nameTable);
+            InitializeElementsForm();
+            UpdateComboBox();
         }
 
-        private void BtnAdd_Click(object sender, EventArgs e)
+        private void InitializeElementsForm()
         {
-            if (string.IsNullOrEmpty(nameTextBox.Text))
+            switch (nameTable)
+            {
+                case NameTableToEditEnum.TypeTechnic:
+                    var name = typesTechnicsLogic.GetTypeTechnicName(id);
+                    Text = id == 0 ? "Добавление типа устройства" : "Изменение типа устройства";
+                    BtnText = "Сохранить";
+                    NameTextBox = name;
+                    LabelSecondName = "Фирма-производитель";
+                    LabelNameInList = String.Format("Фирмы-производители {0}", name);
+                    break;
+                case NameTableToEditEnum.BrandTechnic:
+                    name = brandsTechnicsLogic.GetBrandTechnicName(id);
+                    Text = id == 0 ? "Добавление фирмы-производителя" : "Изменение названия фирмы";
+                    BtnText = "Сохранить";
+                    NameTextBox = name;
+                    LabelSecondName = "Тип устройства";
+                    LabelNameInList = String.Format("Типы устройств для {0}", name);
+                    break;
+            }
+        }
+
+        private void ButtonSave_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(NameTextBox))
             {
                 label1.ForeColor = Color.Red;
                 Warning warning = new()
@@ -36,6 +57,19 @@ namespace WinFormsApp1
             }
             else
             {
+                switch (nameTable)
+                {
+                    case NameTableToEditEnum.TypeTechnic:
+                        var idTypeTechnic = typesTechnicsLogic.SaveTypeTechnic(idType: id, NameTextBox);
+                        typesBrandsLogic.SaveTypeBrand(idList, idTypeTechnic, nameTable);
+                        typesBrandsLogic.RemoveTypeBrandByList(idRemoveList, idTypeTechnic, nameTable);
+                        break;
+                    case NameTableToEditEnum.BrandTechnic:
+                        var idBrandTechnic = brandsTechnicsLogic.SaveBrandTechnic(idBrand: id, NameTextBox);
+                        typesBrandsLogic.SaveTypeBrand(idList, idBrandTechnic, nameTable);
+                        typesBrandsLogic.RemoveTypeBrandByList(idRemoveList, idBrandTechnic, nameTable);
+                        break;
+                }
                 DialogResult = DialogResult.OK;
                 Close();
             }
@@ -65,12 +99,10 @@ namespace WinFormsApp1
                     switch (nameTable)
                     {
                         case NameTableToEditEnum.TypeTechnic:
-                            var brand = brandTechnicRepository.GetBrandTechnic(comboBoxSecondName.Text);
-                            id = brand.Id;
+                            id = brandsTechnicsLogic.GetBrandTechnic(comboBoxSecondName.Text);
                             break;
                         case NameTableToEditEnum.BrandTechnic:
-                            var type = typeTechnicRepository.GetTypeTechnic(comboBoxSecondName.Text);
-                            id = type.Id;
+                            id = typesTechnicsLogic.GetTypeTechnic(comboBoxSecondName.Text);
                             break;
                     }
 
@@ -92,12 +124,10 @@ namespace WinFormsApp1
                 switch (nameTable)
                 {
                     case NameTableToEditEnum.TypeTechnic:
-                        var brand = brandTechnicRepository.GetBrandTechnic(comboBoxSecondName.Text);
-                        id = brand.Id;
+                        id = brandsTechnicsLogic.GetBrandTechnic(comboBoxSecondName.Text);
                         break;
                     case NameTableToEditEnum.BrandTechnic:
-                        var listType = typeTechnicRepository.GetTypeTechnic(comboBoxSecondName.Text);
-                        id = listType.Id;
+                        id = typesTechnicsLogic.GetTypeTechnic(comboBoxSecondName.Text);
                         break;
                 }
 
@@ -124,126 +154,18 @@ namespace WinFormsApp1
         {
             if (Application.OpenForms.OfType<BrandAndTypeEdit>().Count() <= 2)
             {
-                NameTableToEditEnum _nameTable = NameTableToEditEnum.TypeTechnic;
-                string secondName = string.Empty;
-                string nameInList = string.Empty;
-                string textForm = string.Empty;
-                switch (nameTable)
+                BrandAndTypeEdit brandAndTypeEdit = new(nameTable == NameTableToEditEnum.TypeTechnic ? 
+                    NameTableToEditEnum.BrandTechnic : NameTableToEditEnum.TypeTechnic)
                 {
-                    case NameTableToEditEnum.TypeTechnic:
-                        _nameTable = NameTableToEditEnum.BrandTechnic;
-                        secondName = "Фирма-производитель";
-                        nameInList = "Фирмы-производители для ";
-                        textForm = "Добавление новой фирмы";
-                        break;
-                    case NameTableToEditEnum.BrandTechnic:
-                        _nameTable = NameTableToEditEnum.TypeTechnic;
-                        secondName = "Тип устройства";
-                        nameInList = "Типы устройств для ";
-                        textForm = "Добавление типа устройства";
-                        break;
-                }
-                BrandAndTypeEdit brandAndTypeEdit = new(_nameTable)
-                {
-                    StartPosition = FormStartPosition.CenterParent,
-                    LabelSecondName = secondName,
-                    LabelNameInList = nameInList,
-                    Text = textForm
+                    StartPosition = FormStartPosition.CenterParent
                 };
 
                 if (brandAndTypeEdit.ShowDialog() == DialogResult.OK)
-                {
-                    switch (nameTable)
-                    {
-                        case NameTableToEditEnum.TypeTechnic:
-                            var task = Task.Run(async () =>
-                            {
-                                var brandTechnicDTO = new BrandTechnicEditDTO() { Id = 0, Name = brandAndTypeEdit.NameTextBox };
-                                await brandTechnicRepository.SaveBrandTechnicAsync(brandTechnicDTO);
-                            });
-                            task.Wait();
-
-                            if (brandAndTypeEdit.idList != null)
-                            {
-                                for (int i = 0; i < brandAndTypeEdit.idList.Count; i++)
-                                {
-                                    if (!typeBrandRepository.GetTypeBrand(idBrand: id, idType: brandAndTypeEdit.idList[i]).Any())
-                                    {
-                                        int typeId = brandAndTypeEdit.idList[i];
-                                        task = Task.Run(async () =>
-                                        {
-                                            var typeBrandDTO = new TypeBrandEditDTO()
-                                            {
-                                                BrandTechnicsId = id,
-                                                TypeTechnicsId = typeId
-                                            };
-                                            await typeBrandRepository.SaveTypeBrandAsync(typeBrandDTO);
-                                        });
-                                        task.Wait();
-                                    }
-                                }
-                            }
-                            if (brandAndTypeEdit.idRemoveList != null)
-                            {
-                                for (int i = 0; i < brandAndTypeEdit.idRemoveList.Count; i++)
-                                {
-                                    var typeBrandDTO = new TypeBrandEditDTO()
-                                    {
-                                        BrandTechnicsId = id,
-                                        TypeTechnicsId = brandAndTypeEdit.idRemoveList[i]
-                                    };
-                                    typeBrandRepository.RemoveTypeBrand(typeBrandDTO);
-                                }
-                            }
-                            break;
-                        case NameTableToEditEnum.BrandTechnic:
-                            task = Task.Run(async () =>
-                            {
-                                var typeTechnicDTO = new TypeTechnicEditDTO() { Id = 0, Name = brandAndTypeEdit.NameTextBox };
-                                await typeTechnicRepository.SaveTypeTechnicAsync(typeTechnicDTO);
-                            });
-                            task.Wait();
-
-                            if (brandAndTypeEdit.idList != null)
-                            {
-                                for (int i = 0; i < brandAndTypeEdit.idList.Count; i++)
-                                {
-                                    if (!typeBrandRepository.GetTypeBrand(idBrand: brandAndTypeEdit.idList[i], idType: id).Any())
-                                    {
-                                        int brandId = brandAndTypeEdit.idList[i];
-                                        task = Task.Run(async () =>
-                                        {
-                                            var typeBrandDTO = new TypeBrandEditDTO()
-                                            {
-                                                BrandTechnicsId = brandId,
-                                                TypeTechnicsId = id
-                                            };
-                                            await typeBrandRepository.SaveTypeBrandAsync(typeBrandDTO);
-                                        });
-                                        task.Wait();
-                                    }
-                                }
-                            }
-                            if (brandAndTypeEdit.idRemoveList != null)
-                            {
-                                for (int i = 0; i < brandAndTypeEdit.idRemoveList.Count; i++)
-                                {
-                                    var typeBrandDTO = new TypeBrandEditDTO()
-                                    {
-                                        BrandTechnicsId = brandAndTypeEdit.idRemoveList[i],
-                                        TypeTechnicsId = id
-                                    };
-                                    typeBrandRepository.RemoveTypeBrand(typeBrandDTO);
-                                }
-                            }
-                            break;
-                    }
-                    UpdateComboBox(nameTable);
-                }
+                    UpdateComboBox();
             }
         }
 
-        private void UpdateComboBox(NameTableToEditEnum nameTable)
+        private void UpdateComboBox()
         {
             comboBoxSecondName.DataSource = null;
             comboBoxSecondName.Items.Clear();
@@ -252,10 +174,10 @@ namespace WinFormsApp1
                 case NameTableToEditEnum.TypeTechnic:
                     comboBoxSecondName.ValueMember = "Id";
                     comboBoxSecondName.DisplayMember = "NameBrandTechnic";
-                    comboBoxSecondName.DataSource = brandTechnicRepository.GetBrandsTechnic();
-                    if (!newEntry)
+                    comboBoxSecondName.DataSource = brandsTechnicsLogic.GetBrandsTechnic();
+                    if (id != 0)
                     {
-                        var list = typeBrandRepository.GetTypeBrand(idType: id);
+                        var list = typesBrandsLogic.GetTypeBrand(idType: id);
                         for (int i = 0; i < list.Count; i++)
                         {
                             if (listBox1.Items.IndexOf(list[i].BrandTechnic?.Name) < 0)
@@ -269,10 +191,10 @@ namespace WinFormsApp1
                 case NameTableToEditEnum.BrandTechnic:
                     comboBoxSecondName.ValueMember = "Id";
                     comboBoxSecondName.DisplayMember = "NameTypeTechnic";
-                    comboBoxSecondName.DataSource = typeTechnicRepository.GetTypesTechnic();
-                    if (!newEntry)
+                    comboBoxSecondName.DataSource = typesTechnicsLogic.GetTypesTechnic();
+                    if (id != 0)
                     {
-                        var list = typeBrandRepository.GetTypeBrand(idBrand: id); 
+                        var list = typesBrandsLogic.GetTypeBrand(idBrand: id); 
                         for (int i = 0; i < list.Count; i++)
                         {
                             if (listBox1.Items.IndexOf(list[i].TypeTechnic?.Name) < 0)
@@ -288,26 +210,26 @@ namespace WinFormsApp1
 
         public string BtnText
         {
-            get { return this.btnAdd.Text; }
-            set { this.btnAdd.Text = value; }
+            get { return buttonSave.Text; }
+            set { buttonSave.Text = value; }
         }
 
         public string NameTextBox
         {
-            get { return this.nameTextBox.Text; }
-            set { this.nameTextBox.Text = value; }
+            get { return nameTextBox.Text; }
+            set { nameTextBox.Text = value; }
         }
 
         public string LabelSecondName
         {
-            get { return this.labelSecondName.Text; }
-            set { this.labelSecondName.Text = value; }
+            get { return labelSecondName.Text; }
+            set { labelSecondName.Text = value; }
         }
 
         public string LabelNameInList
         {
-            get { return this.labelNameInList.Text; }
-            set { this.labelNameInList.Text = value; }
+            get { return labelNameInList.Text; }
+            set { labelNameInList.Text = value; }
         }
     }
 }

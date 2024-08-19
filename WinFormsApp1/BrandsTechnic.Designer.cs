@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BrandsTechnic));
             dataGridView1 = new DataGridView();
-            btnAddBrand = new Button();
-            btnChangeBrand = new Button();
-            btnExit = new Button();
-            btnDeleteBrand = new Button();
+            buttonAdd = new Button();
+            buttonEdit = new Button();
+            buttonExit = new Button();
+            buttonRemove = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -42,14 +42,14 @@
             // 
             dataGridView1.BackgroundColor = Color.FromArgb(224, 224, 224);
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Window;
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.GradientInactiveCaption;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
-            dataGridView1.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.GradientInactiveCaption;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
             dataGridView1.Location = new Point(12, 12);
             dataGridView1.MultiSelect = false;
             dataGridView1.Name = "dataGridView1";
@@ -60,55 +60,55 @@
             dataGridView1.Size = new Size(404, 486);
             dataGridView1.TabIndex = 0;
             // 
-            // btnAddBrand
+            // buttonAdd
             // 
-            btnAddBrand.Location = new Point(430, 15);
-            btnAddBrand.Name = "btnAddBrand";
-            btnAddBrand.Size = new Size(249, 43);
-            btnAddBrand.TabIndex = 1;
-            btnAddBrand.Text = "Добавить фирму";
-            btnAddBrand.UseVisualStyleBackColor = true;
-            btnAddBrand.Click += BtnAddBrand_Click;
+            buttonAdd.Location = new Point(430, 15);
+            buttonAdd.Name = "buttonAdd";
+            buttonAdd.Size = new Size(249, 43);
+            buttonAdd.TabIndex = 1;
+            buttonAdd.Text = "Добавить фирму";
+            buttonAdd.UseVisualStyleBackColor = true;
+            buttonAdd.Click += ButtonAdd_Click;
             // 
-            // btnChangeBrand
+            // buttonEdit
             // 
-            btnChangeBrand.Location = new Point(430, 75);
-            btnChangeBrand.Name = "btnChangeBrand";
-            btnChangeBrand.Size = new Size(249, 43);
-            btnChangeBrand.TabIndex = 2;
-            btnChangeBrand.Text = "Изменить название фирмы";
-            btnChangeBrand.UseVisualStyleBackColor = true;
-            btnChangeBrand.Click += BtnChangeBrand_Click;
+            buttonEdit.Location = new Point(430, 75);
+            buttonEdit.Name = "buttonEdit";
+            buttonEdit.Size = new Size(249, 43);
+            buttonEdit.TabIndex = 2;
+            buttonEdit.Text = "Изменить название фирмы";
+            buttonEdit.UseVisualStyleBackColor = true;
+            buttonEdit.Click += ButtonEdit_Click;
             // 
-            // btnExit
+            // buttonExit
             // 
-            btnExit.Location = new Point(430, 455);
-            btnExit.Name = "btnExit";
-            btnExit.Size = new Size(249, 43);
-            btnExit.TabIndex = 4;
-            btnExit.Text = "Выход";
-            btnExit.UseVisualStyleBackColor = true;
-            btnExit.Click += BtnExit_Click;
+            buttonExit.Location = new Point(430, 455);
+            buttonExit.Name = "buttonExit";
+            buttonExit.Size = new Size(249, 43);
+            buttonExit.TabIndex = 4;
+            buttonExit.Text = "Выход";
+            buttonExit.UseVisualStyleBackColor = true;
+            buttonExit.Click += ButtonExit_Click;
             // 
-            // btnDeleteBrand
+            // buttonRemove
             // 
-            btnDeleteBrand.Location = new Point(430, 139);
-            btnDeleteBrand.Name = "btnDeleteBrand";
-            btnDeleteBrand.Size = new Size(249, 43);
-            btnDeleteBrand.TabIndex = 3;
-            btnDeleteBrand.Text = "Удалить фирму";
-            btnDeleteBrand.UseVisualStyleBackColor = true;
-            btnDeleteBrand.Click += BtnDeleteBrand_Click;
+            buttonRemove.Location = new Point(430, 139);
+            buttonRemove.Name = "buttonRemove";
+            buttonRemove.Size = new Size(249, 43);
+            buttonRemove.TabIndex = 3;
+            buttonRemove.Text = "Удалить фирму";
+            buttonRemove.UseVisualStyleBackColor = true;
+            buttonRemove.Click += ButtonRemove_Click;
             // 
             // BrandsTechnic
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(688, 510);
-            Controls.Add(btnDeleteBrand);
-            Controls.Add(btnExit);
-            Controls.Add(btnChangeBrand);
-            Controls.Add(btnAddBrand);
+            Controls.Add(buttonRemove);
+            Controls.Add(buttonExit);
+            Controls.Add(buttonEdit);
+            Controls.Add(buttonAdd);
             Controls.Add(dataGridView1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -122,9 +122,9 @@
         #endregion
 
         private DataGridView dataGridView1;
-        private Button btnAddBrand;
-        private Button btnChangeBrand;
-        private Button btnExit;
-        private Button btnDeleteBrand;
+        private Button buttonAdd;
+        private Button buttonEdit;
+        private Button buttonExit;
+        private Button buttonRemove;
     }
 }

@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BrandAndTypeEdit));
-            btnAdd = new Button();
+            buttonSave = new Button();
             btnExit = new Button();
             label1 = new Label();
             nameTextBox = new TextBox();
@@ -43,16 +43,16 @@
             linkLabelChange = new LinkLabel();
             SuspendLayout();
             // 
-            // btnAdd
+            // buttonSave
             // 
-            btnAdd.Location = new Point(206, 394);
-            btnAdd.Name = "btnAdd";
-            btnAdd.Size = new Size(193, 43);
-            btnAdd.TabIndex = 2;
-            btnAdd.Tag = "Yes";
-            btnAdd.Text = "Добавить";
-            btnAdd.UseVisualStyleBackColor = true;
-            btnAdd.Click += BtnAdd_Click;
+            buttonSave.Location = new Point(206, 394);
+            buttonSave.Name = "buttonSave";
+            buttonSave.Size = new Size(193, 43);
+            buttonSave.TabIndex = 2;
+            buttonSave.Tag = "Yes";
+            buttonSave.Text = "Добавить";
+            buttonSave.UseVisualStyleBackColor = true;
+            buttonSave.Click += ButtonSave_Click;
             // 
             // btnExit
             // 
@@ -180,7 +180,7 @@
             Controls.Add(nameTextBox);
             Controls.Add(label1);
             Controls.Add(btnExit);
-            Controls.Add(btnAdd);
+            Controls.Add(buttonSave);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
@@ -193,7 +193,7 @@
 
         #endregion
 
-        private Button btnAdd;
+        private Button buttonSave;
         private Button btnExit;
         private Label label1;
         private TextBox nameTextBox;

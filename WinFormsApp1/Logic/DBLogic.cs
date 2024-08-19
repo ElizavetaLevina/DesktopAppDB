@@ -6,6 +6,10 @@ namespace WinFormsApp1.Logic
 {
     public class DBLogic
     {
+        /// <summary>
+        /// Копирование базы данных
+        /// </summary>
+        /// <param name="path">Путь</param>
         public static void CopyDB(string path)
         {
             var pickDatabaseFrom = Environment.CurrentDirectory;
@@ -17,6 +21,9 @@ namespace WinFormsApp1.Logic
             File.Copy(srcFile, destFile);
         }
 
+        /// <summary>
+        /// Загрузка бд на сервер
+        /// </summary>
         public static void UpdateDB()
         {
             CopyDB("./Service/computerservice.db");

@@ -60,12 +60,14 @@ namespace WinFormsApp1
                 switch (nameTable)
                 {
                     case NameTableToEditEnum.TypeTechnic:
-                        var idTypeTechnic = typesTechnicsLogic.SaveTypeTechnic(idType: id, NameTextBox);
+                        var typeTechnicDTO = typesTechnicsLogic.GetTypeTechnic(id, NameTextBox);
+                        var idTypeTechnic = typesTechnicsLogic.SaveTypeTechnic(typeTechnicDTO);
                         typesBrandsLogic.SaveTypeBrand(idList, idTypeTechnic, nameTable);
                         typesBrandsLogic.RemoveTypeBrandByList(idRemoveList, idTypeTechnic, nameTable);
                         break;
                     case NameTableToEditEnum.BrandTechnic:
-                        var idBrandTechnic = brandsTechnicsLogic.SaveBrandTechnic(idBrand: id, NameTextBox);
+                        var brandTechnicDTO = brandsTechnicsLogic.GetBrandTechnic(id, NameTextBox);
+                        var idBrandTechnic = brandsTechnicsLogic.SaveBrandTechnic(brandTechnicDTO);
                         typesBrandsLogic.SaveTypeBrand(idList, idBrandTechnic, nameTable);
                         typesBrandsLogic.RemoveTypeBrandByList(idRemoveList, idBrandTechnic, nameTable);
                         break;
@@ -99,10 +101,10 @@ namespace WinFormsApp1
                     switch (nameTable)
                     {
                         case NameTableToEditEnum.TypeTechnic:
-                            id = brandsTechnicsLogic.GetBrandTechnic(comboBoxSecondName.Text);
+                            id = brandsTechnicsLogic.GetIdBrandTechnic(comboBoxSecondName.Text);
                             break;
                         case NameTableToEditEnum.BrandTechnic:
-                            id = typesTechnicsLogic.GetTypeTechnic(comboBoxSecondName.Text);
+                            id = typesTechnicsLogic.GetIdTypeTechnic(comboBoxSecondName.Text);
                             break;
                     }
 
@@ -124,10 +126,10 @@ namespace WinFormsApp1
                 switch (nameTable)
                 {
                     case NameTableToEditEnum.TypeTechnic:
-                        id = brandsTechnicsLogic.GetBrandTechnic(comboBoxSecondName.Text);
+                        id = brandsTechnicsLogic.GetIdBrandTechnic(comboBoxSecondName.Text);
                         break;
                     case NameTableToEditEnum.BrandTechnic:
-                        id = typesTechnicsLogic.GetTypeTechnic(comboBoxSecondName.Text);
+                        id = typesTechnicsLogic.GetIdTypeTechnic(comboBoxSecondName.Text);
                         break;
                 }
 

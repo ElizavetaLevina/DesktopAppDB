@@ -11,19 +11,19 @@ namespace WinFormsApp1.Helpers
         /// <param name="textBoxProblem2">Вторая неисправность</param>
         /// <param name="textBoxProblem3">Третья неисправность</param>
         /// <returns>Список неисправностей для ListBox</returns>
-        public static List<string> GetItemsListBox(string? textBoxProblem1 = null, string? textBoxProblem2 = null, string? textBoxProblem3 = null)
+        public static List<string> GetItemsListBox(/*string? textBoxProblem1 = null, string? textBoxProblem2 = null, string? textBoxProblem3 = null*/string text)
         {
             MalfunctionRepository malfunctionRepository = new();
-            string text = string.Empty;
+            //string text = string.Empty;
             List<string> finalListProblem = [];
             var malfunctionList = malfunctionRepository.GetMalfunctions();
 
-            if (textBoxProblem1 != null)
+            /*if (textBoxProblem1 != null)
                 text = textBoxProblem1;
             else if (textBoxProblem2 != null)
                 text = textBoxProblem2;
             else if (textBoxProblem3 != null)
-                text = textBoxProblem3;
+                text = textBoxProblem3;*/
 
             foreach (var problem in malfunctionList)
             {

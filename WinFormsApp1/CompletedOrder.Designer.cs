@@ -79,7 +79,7 @@
             textBoxAdditional = new TextBox();
             textBoxMain = new TextBox();
             labelAdditionalMaster = new Label();
-            linkLabelFeaturesOrder = new LinkLabel();
+            linkLabelPropertiesOrder = new LinkLabel();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panelMasters.SuspendLayout();
             SuspendLayout();
@@ -228,7 +228,7 @@
             textBoxPrice1.Name = "textBoxPrice1";
             textBoxPrice1.Size = new Size(150, 31);
             textBoxPrice1.TabIndex = 18;
-            textBoxPrice1.KeyPress += TextBoxPriceRepair_KeyPress;
+            textBoxPrice1.KeyPress += TextBoxPrice1_KeyPress;
             // 
             // label11
             // 
@@ -556,24 +556,24 @@
             labelAdditionalMaster.Text = "Additional";
             labelAdditionalMaster.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // linkLabelFeaturesOrder
+            // linkLabelPropertiesOrder
             // 
-            linkLabelFeaturesOrder.AutoSize = true;
-            linkLabelFeaturesOrder.LinkColor = Color.FromArgb(64, 64, 64);
-            linkLabelFeaturesOrder.Location = new Point(819, 20);
-            linkLabelFeaturesOrder.Name = "linkLabelFeaturesOrder";
-            linkLabelFeaturesOrder.Size = new Size(145, 25);
-            linkLabelFeaturesOrder.TabIndex = 12;
-            linkLabelFeaturesOrder.TabStop = true;
-            linkLabelFeaturesOrder.Text = "Свойства заказа";
-            linkLabelFeaturesOrder.LinkClicked += LinkLabelFeaturesOrder_LinkClicked;
+            linkLabelPropertiesOrder.AutoSize = true;
+            linkLabelPropertiesOrder.LinkColor = Color.FromArgb(64, 64, 64);
+            linkLabelPropertiesOrder.Location = new Point(819, 20);
+            linkLabelPropertiesOrder.Name = "linkLabelPropertiesOrder";
+            linkLabelPropertiesOrder.Size = new Size(145, 25);
+            linkLabelPropertiesOrder.TabIndex = 12;
+            linkLabelPropertiesOrder.TabStop = true;
+            linkLabelPropertiesOrder.Text = "Свойства заказа";
+            linkLabelPropertiesOrder.LinkClicked += LinkLabelPropertiesOrder_LinkClicked;
             // 
             // CompletedOrder
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1210, 534);
-            Controls.Add(linkLabelFeaturesOrder);
+            Controls.Add(linkLabelPropertiesOrder);
             Controls.Add(panelMasters);
             Controls.Add(labelIdOrder);
             Controls.Add(label27);
@@ -683,6 +683,6 @@
         private Label labelAdditionalMaster;
         private TextBox textBoxAdditional;
         private TextBox textBoxMain;
-        private LinkLabel linkLabelFeaturesOrder;
+        private LinkLabel linkLabelPropertiesOrder;
     }
 }

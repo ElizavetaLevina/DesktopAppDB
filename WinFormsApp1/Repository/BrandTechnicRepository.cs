@@ -39,7 +39,7 @@ namespace WinFormsApp1.Repository
             var brandTechnic = context.BrandTechnices.FirstOrDefault(i => i.Id == id);
             if (brandTechnic == null)
                 return new BrandTechnicEditDTO(name);
-            else return new BrandTechnicEditDTO(brandTechnic);
+            else return new BrandTechnicEditDTO(brandTechnic) { Name = name };
         }
 
         /// <summary>

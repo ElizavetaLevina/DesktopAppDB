@@ -16,7 +16,7 @@ namespace WinFormsApp1
             Cells[nameof(OrderTableDTO.IdClient)].Value.ToString(); } }
         StatusOrderEnum status;
         public bool logInSystem = false;
-        WarehouseLogic warehouseLogic = new();
+        WarehousesLogic warehousesLogic = new();
         OrdersLogic ordersLogic = new();
         ClientsLogic clientsLogic = new();
         ReportsLogic reportsLogic = new();
@@ -352,7 +352,7 @@ namespace WinFormsApp1
             }
 
 
-            if (warehouseLogic.GetCountDetailsInOrder(idOrder) == 0)
+            if (warehousesLogic.GetCountDetailsInOrder(idOrder) == 0)
             {
                 warning = new()
                 {
@@ -482,21 +482,27 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            clientsLogic.SetTypeClient(idClient, TypeClientEnum.white);
+            var clientDTO = clientsLogic.GetClientByIdClient(idClient);
+            clientDTO.TypeClient = TypeClientEnum.white;
+            clientsLogic.SaveClient(clientDTO);
         }
 
         private void AddInBlacklist()
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            clientsLogic.SetTypeClient(idClient, TypeClientEnum.black);
+            var clientDTO = clientsLogic.GetClientByIdClient(idClient);
+            clientDTO.TypeClient = TypeClientEnum.black;
+            clientsLogic.SaveClient(clientDTO);
         }
 
         private void RemoveMarks()
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            clientsLogic.SetTypeClient(idClient, TypeClientEnum.normal);
+            var clientDTO = clientsLogic.GetClientByIdClient(idClient);
+            clientDTO.TypeClient = TypeClientEnum.normal;
+            clientsLogic.SaveClient(clientDTO);
         }
 
         private void NewOrder()

@@ -1,6 +1,6 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Helpers;
-using WinFormsApp1.Repository;
+using WinFormsApp1.Logic;
 
 namespace WinFormsApp1
 {
@@ -8,21 +8,19 @@ namespace WinFormsApp1
     {
         readonly List<string> nameDetails = [];
         public bool changeDetail = false;
-        bool loading = true;
-        readonly int id;
-        WarehouseRepository warehouseRepository = new();
-        public DetailEdit(bool _changeDetail, int _id = 0)
+        WarehouseEditDTO warehouseDTO;
+        WarehousesLogic warehousesLogic = new();
+        public DetailEdit(bool _changeDetail, WarehouseEditDTO _warehouseDTO)
         {
             InitializeComponent();
             changeDetail = _changeDetail;
-            id = _id;
+            warehouseDTO = _warehouseDTO;
             InitializeElementsForm();
         }
 
         private void InitializeElementsForm()
         {
-            var list = warehouseRepository.GetWarehouses();
-            listBoxDetails.Visible = false;
+            var list = warehousesLogic.GetWarehouses();            
             if (list.Count > 0)
             {
                 foreach (var item in list)
@@ -31,6 +29,15 @@ namespace WinFormsApp1
                         nameDetails.Add(item.NameDetail);
                 }
             }
+            if (changeDetail)
+            {
+                Text = "Изменение данных";
+                NameDetail = warehouseDTO.NameDetail;
+                PricePurchase = warehouseDTO.PricePurchase;
+                PriceSale = warehouseDTO.PriceSale;
+                DatePurchase = warehouseDTO.DatePurchase;
+            }
+            listBoxDetails.Visible = false;
         }
 
         private void ButtonSave_Click(object sender, EventArgs e)
@@ -61,21 +68,14 @@ namespace WinFormsApp1
             }
             else
             {
-                var warehouseDTO = new WarehouseEditDTO()
-                {
-                    Id = id,
-                    NameDetail = textBoxNameDetail.Text,
-                    PricePurchase = Convert.ToInt32(textBoxPricePurchase.Text),
-                    PriceSale = Convert.ToInt32(textBoxPriceSale.Text),
-                    DatePurchase = dateTimePicker1.Value,
-                    Availability = true,
-                    IdOrder = null
-                };
-                var task = Task.Run(async () =>
-                {
-                    await warehouseRepository.SaveWarehouseAsync(warehouseDTO);
-                });
-                task.Wait();
+                warehouseDTO.NameDetail = NameDetail;
+                warehouseDTO.PricePurchase = PricePurchase;
+                warehouseDTO.PriceSale = PriceSale;
+                warehouseDTO.DatePurchase = DatePurchase;
+                warehouseDTO.Availability = true;
+                warehouseDTO.IdOrder = null;
+
+                warehousesLogic.SaveDetail(warehouseDTO);
                 DialogResult = DialogResult.OK;
                 Close();
             }
@@ -99,8 +99,7 @@ namespace WinFormsApp1
 
             foreach(var name in nameDetails)
             {
-                if (name.StartsWith(textBoxNameDetail.Text) &&
-                    textBoxNameDetail.Text.Length > 0 && !loading)
+                if (name.StartsWith(NameDetail) && NameDetail.Length > 0)
                 {
                     listBoxDetails.Visible = true;
                     listBoxDetails.Items.Add(name);
@@ -120,10 +119,9 @@ namespace WinFormsApp1
 
         private void ListBoxDetails_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int id = listBoxDetails.SelectedIndex;
-            if (id >= 0)
+            if (listBoxDetails.SelectedIndex >= 0)
             {
-                textBoxNameDetail.Text = listBoxDetails.Items[id].ToString();
+                textBoxNameDetail.Text = listBoxDetails.Items[listBoxDetails.SelectedIndex].ToString();
 
                 listBoxDetails.Items.Clear();
                 listBoxDetails.Visible = false;
@@ -131,11 +129,6 @@ namespace WinFormsApp1
                 textBoxNameDetail.Focus();
                 textBoxNameDetail.SelectionStart = textBoxNameDetail.TextLength;
             }
-        }
-
-        private void AddDetailToWarehouse_Activated(object sender, EventArgs e)
-        {
-            loading = false;
         }
 
         private void TextBoxNameDetail_KeyPress(object sender, KeyPressEventArgs e)

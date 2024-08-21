@@ -205,7 +205,7 @@ namespace WinFormsApp1.Logic
         /// Сохранение заказа
         /// </summary>
         /// <param name="orderDTO">DTO заказа</param>
-        /// <returns></returns>
+        /// <returns>Идентификатор заказа</returns>
         public int SaveOrder(OrderEditDTO orderDTO)
         {
             int idOrder = 0;
@@ -215,6 +215,17 @@ namespace WinFormsApp1.Logic
             });
             task.Wait();
             return idOrder;
+        }
+
+        /// <summary>
+        /// Получение списка заказов для расчета зарплаты
+        /// </summary>
+        /// <param name="dateCompleted">Дата завершения заказа</param>
+        /// <param name="dateIssue">Дата выдачи заказа</param>
+        /// <returns></returns>
+        public List<OrderEditDTO> GetOrdersForSalaries(DateTime? dateCompleted = null, DateTime? dateIssue = null)
+        {
+            return orderRepository.GetOrdersForSalaries(dateCompleted: dateCompleted, dateIssue: dateIssue);
         }
     }
 }

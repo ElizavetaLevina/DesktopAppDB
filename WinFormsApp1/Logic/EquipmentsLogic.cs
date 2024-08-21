@@ -11,22 +11,14 @@ namespace WinFormsApp1.Logic
         /// </summary>
         /// <param name="name">Название</param>
         /// <returns>Идентификатор комплектации</returns>
-        public int? SaveEquipment(string name)
+        public int SaveEquipment(EquipmentEditDTO equipmentDTO)
         {
-            var equipmentDTO = equipmentRepository.GetEquipmentByName(name);
-            int? equipmentId = equipmentDTO.Id;
-            if (equipmentId == 0)
+            int equipmentId = 0;
+            var task = Task.Run(async () =>
             {
-                if (!string.IsNullOrEmpty(name))
-                {
-                    var task = Task.Run(async () =>
-                    {
-                        equipmentId = await equipmentRepository.SaveEquipmentAsync(equipmentDTO);
-                    });
-                    task.Wait();
-                }
-                else equipmentId = null;
-            }
+                equipmentId = await equipmentRepository.SaveEquipmentAsync(equipmentDTO);
+            });
+            task.Wait();
             return equipmentId;
         }
 
@@ -47,6 +39,16 @@ namespace WinFormsApp1.Logic
         public List<EquipmentEditDTO> GetEquipmentsByName(string name)
         {
             return equipmentRepository.GetEquipmentsByName(name);
+        }
+
+        /// <summary>
+        /// Получение комплектации по названию
+        /// </summary>
+        /// <param name="name">Название</param>
+        /// <returns>Комплектация</returns>
+        public EquipmentEditDTO GetEquipmentByName(string name)
+        {
+            return equipmentRepository.GetEquipmentByName(name);
         }
     }
 }

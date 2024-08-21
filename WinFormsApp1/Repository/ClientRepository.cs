@@ -1,5 +1,4 @@
-﻿using System.Windows.Forms;
-using WinFormsApp1.DTO;
+﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Model;
 
@@ -69,10 +68,10 @@ namespace WinFormsApp1.Repository
         }
 
         /// <summary>
-        /// Получение записи по id клиента
+        /// Получение клиента по idClient
         /// </summary>
-        /// <param name="idClient">Id клиента</param>
-        /// <returns>Запись</returns>
+        /// <param name="idClient">idClient</param>
+        /// <returns>Клиент</returns>
         public ClientEditDTO GetClientByIdClient(string idClient)
         {
             Context context = new();

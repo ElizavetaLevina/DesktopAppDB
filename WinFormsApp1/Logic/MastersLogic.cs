@@ -14,5 +14,14 @@ namespace WinFormsApp1.Logic
         {
             return masterRepository.GetMastersForOutput();
         }
+
+        /// <summary>
+        /// Получение списка мастеров
+        /// </summary>
+        /// <returns>Список мастеров</returns>
+        public List<MasterEditDTO> GetMasters()
+        {
+            return masterRepository.GetMasters();
+        }
     }
 }

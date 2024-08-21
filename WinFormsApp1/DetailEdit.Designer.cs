@@ -209,7 +209,6 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DetailEdit";
             Text = "Добавление детали на склад";
-            Activated += AddDetailToWarehouse_Activated;
             ResumeLayout(false);
             PerformLayout();
         }

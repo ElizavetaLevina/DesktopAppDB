@@ -39,10 +39,10 @@ namespace WinFormsApp1.Repository
         }
 
         /// <summary>
-        /// Получение записи по идентификатору
+        /// Получение детали по идентификатору
         /// </summary>
         /// <param name="id">Идентификатор</param>
-        /// <returns>Запись</returns>
+        /// <returns>Деталь</returns>
         public WarehouseEditDTO GetWarehouse(int id)
         {
             Context context = new();

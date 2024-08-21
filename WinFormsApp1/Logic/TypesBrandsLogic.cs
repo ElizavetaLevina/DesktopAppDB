@@ -30,7 +30,7 @@ namespace WinFormsApp1.Logic
         }
 
         /// <summary>
-        /// Сохранение списка тип-бренд
+        /// Сохранение списка тип-бренд по списку типов/брендов
         /// </summary>
         /// <param name="list">Список типов/брендов</param>
         /// <param name="id">Идентификатор типа/бренда</param>
@@ -62,7 +62,7 @@ namespace WinFormsApp1.Logic
         }
 
         /// <summary>
-        /// Удаление списка тип-бренд
+        /// Удаление списка тип-бренд по списку типов/брендов
         /// </summary>
         /// <param name="list">Список типов/брендов</param>
         /// <param name="id">Идентификатор типа/бренда</param>
@@ -80,18 +80,18 @@ namespace WinFormsApp1.Logic
                         BrandTechnicsId = idBrand,
                         TypeTechnicsId = idType
                     };
-                    typeBrandRepository.RemoveTypesBrands(typeBrandDTO);
+                    RemoveTypeBrand(typeBrandDTO);
                 }
             }
         }
 
-        public void RemoveTypeBrand(int idBrand = 0, int idType = 0)
+        /// <summary>
+        /// Удаление типа-бренда устройства
+        /// </summary>
+        /// <param name="typeBrandDTO">DTO типа-бренда устройства</param>
+        public void RemoveTypeBrand(TypeBrandDTO typeBrandDTO)
         {
-            var typesBrandsDTO = GetTypeBrand(idBrand, idType);
-            foreach(var typesBrand in typesBrandsDTO)
-            {
-                typeBrandRepository.RemoveTypesBrands(typesBrand);
-            }
+            typeBrandRepository.RemoveTypesBrands(typeBrandDTO);
         }
     }
 }

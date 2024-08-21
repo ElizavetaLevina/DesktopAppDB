@@ -1,7 +1,7 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Helpers;
-using WinFormsApp1.Repository;
 using WinFormsApp1.Enum;
+using WinFormsApp1.Logic;
 
 namespace WinFormsApp1
 {
@@ -9,17 +9,14 @@ namespace WinFormsApp1
     {
         DateTime dateCreate;
         readonly int idOrder;
-        int sumDetails = 0;
-        public List<string> nameProblem = [];
         private int numberProblem = 1;
         public int countProblem = 0;
+        MalfunctionsLogic malfunctionsLogic = new();
+        OrdersLogic ordersLogic = new();
+        WarehousesLogic warehousesLogic = new();
+        MalfunctionsOrdersLogic malfunctionsOrdersLogic = new();
         //bool loading = true;
-        MalfunctionRepository malfunctionRepository = new();
-        WarehouseRepository warehouseRepository = new();
-        OrderRepository orderRepository = new();
-        MalfunctionOrderRepository malfunctionOrderRepository = new();
         OrderEditDTO orderDTO;
-        MalfunctionEditDTO malfunctionDTO;
         public CompletedOrder(int id)
         {
             InitializeComponent();
@@ -29,32 +26,9 @@ namespace WinFormsApp1
 
         private void InitializeElementsForm()
         {
-            orderDTO = orderRepository.GetOrder(idOrder);
-
-            var malfunctionList = malfunctionRepository.GetMalfunctions();
-            foreach (var malfunction in malfunctionList)
-            {
-                nameProblem.Add(malfunction.Name);
-            }
-
-            var detailsList = warehouseRepository.GetDetailsInOrder(idOrder);
-            if (detailsList.Count > 0)
-            {
-                List<string> detailsListName = [];
-                List<int> detailsListSale = [];
-
-                foreach (var detail in detailsList)
-                {
-                    detailsListName.Add(detail.NameDetail);
-                    detailsListSale.Add(detail.PriceSale);
-                    sumDetails += detail.PriceSale;
-
-                }
-
-                labelPriceDetails.Text = String.Format("{0} руб.", sumDetails);
-                labelCountDetails.Text = String.Format("{0} шт.", detailsListName.Count);
-            }
-
+            orderDTO = ordersLogic.GetOrder(idOrder);
+            labelPriceDetails.Text = String.Format("{0} руб.", warehousesLogic.GetPriceDetailsInOrder(idOrder));
+            labelCountDetails.Text = String.Format("{0} шт.", warehousesLogic.GetCountDetailsInOrder(idOrder));
             dateCreate = orderDTO.DateCreation.Value;
             labelDurationRepair.Text = String.Format("{0} дн.", (int)(DateTime.Now - dateCreate).TotalDays);
             labelIdOrder.Text = orderDTO.NumberOrder.ToString();
@@ -69,13 +43,14 @@ namespace WinFormsApp1
             }
         }
 
-        private void TextBoxKeyDown(Keys keyCode, TextBox textBox)
+        private void TextBoxKeyDown(Keys keyCode, TextBox nextTextBox)
         {
             if (keyCode == Keys.Enter)
             {
+                SelectingElementsListBox();
                 if (listBox1.Visible)
                     listBox1.Visible = false;
-                textBox.Focus();
+                nextTextBox.Focus();
             }
             else if (keyCode == Keys.Down)
             {
@@ -101,32 +76,40 @@ namespace WinFormsApp1
 
         private void SelectingElementsListBox()
         {
-            MalfunctionEditDTO malfunctionDTO;
             if (listBox1.SelectedIndex >= 0)
             {
-                listBox1.Visible = false;
                 switch (numberProblem)
                 {
                     case 1:
-                        textBoxFoundProblem1.Text = listBox1.Items[listBox1.SelectedIndex].ToString();
-                        malfunctionDTO = malfunctionRepository.GetMalfunctionByName(textBoxFoundProblem1.Text);
-                        textBoxPrice1.Text = malfunctionDTO.Price.ToString();
+                        FoundProblem1 = listBox1.Items[listBox1.SelectedIndex].ToString();
+                        PriceProblem1 = malfunctionsLogic.GetMalfunctionByName(FoundProblem1).Price.ToString();
                         textBoxPrice1.Focus();
                         break;
                     case 2:
-                        textBoxFoundProblem2.Text = listBox1.Items[listBox1.SelectedIndex].ToString();
-                        malfunctionDTO = malfunctionRepository.GetMalfunctionByName(textBoxFoundProblem2.Text);
-                        textBoxPrice2.Text = malfunctionDTO.Price.ToString();
+                        FoundProblem2 = listBox1.Items[listBox1.SelectedIndex].ToString();
+                        PriceProblem2 = malfunctionsLogic.GetMalfunctionByName(FoundProblem2).Price.ToString();
                         textBoxPrice2.Focus();
                         break;
                     case 3:
-                        textBoxFoundProblem3.Text = listBox1.Items[listBox1.SelectedIndex].ToString();
-                        malfunctionDTO = malfunctionRepository.GetMalfunctionByName(textBoxFoundProblem3.Text);
-                        textBoxPrice3.Text = malfunctionDTO.Price.ToString();
+                        FoundProblem3 = listBox1.Items[listBox1.SelectedIndex].ToString();
+                        PriceProblem3 = malfunctionsLogic.GetMalfunctionByName(FoundProblem3).Price.ToString();
                         textBoxPrice3.Focus();
                         break;
                 }
+                listBox1.Visible = false;
             }
+        }
+
+        private void ClickOnFoundProblem(int number, TextBox textBox)
+        {
+            if (numberProblem == number && listBox1.Visible)
+            {
+                listBox1.Visible = false; return;
+            }
+            numberProblem = number;
+            listBox1.DataSource = FoundProblemTextChangeHelper.GetItemsListBox(textBox.Text);
+            listBox1.Location = new Point(listBox1.Location.X, textBox.Location.Y + textBox.Height);
+            listBox1.Visible = true;
         }
 
         private void LinkLabelDateNow_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -150,7 +133,8 @@ namespace WinFormsApp1
                 StartPosition = FormStartPosition.CenterParent
             };
 
-            if (orderDTO.AdditionalMasterId != null && (string.IsNullOrEmpty(textBoxMain.Text) || string.IsNullOrEmpty(textBoxAdditional.Text)))
+            if (orderDTO.AdditionalMasterId != null && 
+                (string.IsNullOrEmpty(textBoxMain.Text) || string.IsNullOrEmpty(textBoxAdditional.Text)))
             {
                 warning.ShowDialog();
                 return;
@@ -162,75 +146,66 @@ namespace WinFormsApp1
                     warning.ShowDialog();
                     return;
                 case 1:
-                    if (string.IsNullOrEmpty(textBoxPrice1.Text))
+                    if (string.IsNullOrEmpty(PriceProblem1))
                     {
                         warning.ShowDialog();
                         return;
                     }
                     foundProblem = FoundProblemTextChangeHelper.GetFoundProblem(countProblem: countProblem,
-                        textBoxProblem1: textBoxFoundProblem1.Text);
+                        textBoxProblem1: FoundProblem1);
                     priceProblem = FoundProblemTextChangeHelper.GetPriceProblem(countProblem: countProblem,
-                        textBoxPrice1: textBoxPrice1.Text);
+                        textBoxPrice1: PriceProblem1);
                     break;
                 case 2:
-                    if (string.IsNullOrEmpty(textBoxPrice1.Text) || string.IsNullOrEmpty(textBoxPrice2.Text))
+                    if (string.IsNullOrEmpty(PriceProblem1) || string.IsNullOrEmpty(PriceProblem2))
                     {
                         warning.ShowDialog();
                         return;
                     }
                     foundProblem = FoundProblemTextChangeHelper.GetFoundProblem(countProblem: countProblem,
-                        textBoxProblem1: textBoxFoundProblem1.Text, textBoxProblem2: textBoxFoundProblem2.Text);
+                        textBoxProblem1: FoundProblem1, textBoxProblem2: FoundProblem2);
                     priceProblem = FoundProblemTextChangeHelper.GetPriceProblem(countProblem: countProblem,
-                        textBoxPrice1: textBoxPrice1.Text, textBoxPrice2: textBoxPrice2.Text);
+                        textBoxPrice1: PriceProblem1, textBoxPrice2: PriceProblem2);
                     break;
                 case 3:
-                    if (string.IsNullOrEmpty(textBoxPrice1.Text) || string.IsNullOrEmpty(textBoxPrice2.Text) || string.IsNullOrEmpty(textBoxPrice3.Text))
+                    if (string.IsNullOrEmpty(PriceProblem1) || string.IsNullOrEmpty(PriceProblem2) || 
+                        string.IsNullOrEmpty(PriceProblem3))
                     {
                         warning.ShowDialog();
                         return;
                     }
                     foundProblem = FoundProblemTextChangeHelper.GetFoundProblem(countProblem: countProblem,
-                        textBoxProblem1: textBoxFoundProblem1.Text, textBoxProblem2: textBoxFoundProblem2.Text,
-                        textBoxProblem3: textBoxFoundProblem2.Text);
+                        textBoxProblem1: FoundProblem1, textBoxProblem2: FoundProblem2,
+                        textBoxProblem3: FoundProblem3);
                     priceProblem = FoundProblemTextChangeHelper.GetPriceProblem(countProblem: countProblem,
-                        textBoxPrice1: textBoxPrice1.Text, textBoxPrice2: textBoxPrice2.Text, textBoxPrice3: textBoxPrice3.Text);
+                        textBoxPrice1: PriceProblem1, textBoxPrice2: PriceProblem2, textBoxPrice3: PriceProblem3);
                     break;
             }
 
-            int? sumPrice = priceProblem.Sum() + sumDetails;
-            if (orderDTO.PriceAgreed && sumPrice > orderDTO.MaxPrice)
+            if (orderDTO.PriceAgreed && (priceProblem.Sum() + warehousesLogic.GetPriceDetailsInOrder(idOrder)) > 
+                orderDTO.MaxPrice)
             {
-                warning.LabelText = String.Format("Цена ремонта выше согласованной! \nСогласованная цена: {0} руб.", orderDTO.MaxPrice);
+                warning.LabelText = String.Format("Цена ремонта выше согласованной! \nСогласованная цена: {0} руб.", 
+                    orderDTO.MaxPrice);
                 warning.VisibleChangePrice = true;
                 warning.id = idOrder;
                 if (warning.ShowDialog() == DialogResult.OK)
-                    orderDTO = orderRepository.GetOrder(idOrder);
+                    orderDTO = ordersLogic.GetOrder(idOrder);
                 return;
             }
 
-            Task task;
-            int idMalfunction = 0;
             for (int i = 0; i < countProblem; i++)
             {
-                malfunctionDTO = malfunctionRepository.GetMalfunctionByName(foundProblem[i]);
+                var malfunctionDTO = malfunctionsLogic.GetMalfunctionByName(foundProblem[i]);
                 malfunctionDTO.Price = priceProblem[i];
-                task = Task.Run(async () =>
-                {
-                    idMalfunction = await malfunctionRepository.SaveMalfunctionAsync(malfunctionDTO);
-                });
-                task.Wait();
-
+                var idMalfunction = malfunctionsLogic.SaveMalfunction(malfunctionDTO);
                 var malfunctionOrderDTO = new MalfunctionOrderEditDTO()
                 {
                     MalfunctionId = idMalfunction,
                     OrderId = idOrder,
                     Price = priceProblem[i]
                 };
-                task = Task.Run(async () =>
-                {
-                    await malfunctionOrderRepository.SaveMalfunctionOrderAsync(malfunctionOrderDTO);
-                });
-                task.Wait();
+                malfunctionsOrdersLogic.SaveMalfunctionOrder(malfunctionOrderDTO);
             }
 
             orderDTO.StatusOrder = StatusOrderEnum.Completed;
@@ -244,14 +219,9 @@ namespace WinFormsApp1
             if (orderDTO.ReturnUnderGuarantee)
             {
                 int countDayInRepair = (orderDTO.DateCompletedReturn.Value - orderDTO.DateReturn.Value).Days;
-                DateTime? dateEndGuarantee = orderDTO.DateEndGuarantee.Value.AddDays(countDayInRepair);
-                orderDTO.DateEndGuarantee = dateEndGuarantee;
+                orderDTO.DateEndGuarantee = orderDTO.DateEndGuarantee.Value.AddDays(countDayInRepair);
             }
-            task = Task.Run(async () =>
-            {
-                await orderRepository.SaveOrderAsync(orderDTO);
-            });
-            task.Wait();
+            ordersLogic.SaveOrder(orderDTO);
             DialogResult = DialogResult.OK;
             Close();
         }
@@ -270,33 +240,32 @@ namespace WinFormsApp1
         private void TextBoxFoundProblem1_TextChanged(object sender, EventArgs e)
         {
             /*if (loading)
-                return;
-*/
+                return;*/
             numberProblem = 1;
             listBox1.Location = new Point(listBox1.Location.X, textBoxFoundProblem1.Location.Y +
                 textBoxFoundProblem1.Height);
-            listBox1.DataSource = FoundProblemTextChangeHelper.GetItemsListBox(textBoxProblem1: textBoxFoundProblem1.Text);
+            listBox1.DataSource = FoundProblemTextChangeHelper.GetItemsListBox(FoundProblem1);
 
             if (listBox1.Items.Count > 0)
                 listBox1.Visible = true;
             else listBox1.Visible = false;
                 
 
-            if (string.IsNullOrEmpty(textBoxFoundProblem1.Text))
+            if (string.IsNullOrEmpty(FoundProblem1))
             {
                 countProblem = 0;
                 textBoxFoundProblem2.Enabled = false;
                 textBoxFoundProblem3.Enabled = false;
                 textBoxPrice2.Enabled = false;
                 textBoxPrice3.Enabled = false;
-                textBoxPrice1.Text = string.Empty;
+                PriceProblem1 = string.Empty;
             }
             else
             {
                 countProblem = 1;
                 textBoxFoundProblem2.Enabled = true;
                 textBoxPrice2.Enabled = true;
-                if (!string.IsNullOrEmpty(textBoxFoundProblem2.Text))
+                if (!string.IsNullOrEmpty(FoundProblem2))
                 {
                     textBoxFoundProblem3.Enabled = true;
                     textBoxPrice3.Enabled = true;
@@ -308,29 +277,28 @@ namespace WinFormsApp1
         {
             /*if (loading)
                 return;*/
-
             numberProblem = 2;
             listBox1.Location = new Point(listBox1.Location.X, textBoxFoundProblem2.Location.Y +
                 textBoxFoundProblem2.Height);
-            listBox1.DataSource = FoundProblemTextChangeHelper.GetItemsListBox(textBoxProblem2: textBoxFoundProblem2.Text);
+            listBox1.DataSource = FoundProblemTextChangeHelper.GetItemsListBox(FoundProblem2);
 
             if (listBox1.Items.Count > 0)
                 listBox1.Visible = true;
             else listBox1.Visible = false;
 
-            if (string.IsNullOrEmpty(textBoxFoundProblem2.Text))
+            if (string.IsNullOrEmpty(FoundProblem2))
             {
                 countProblem = 1;
                 textBoxFoundProblem3.Enabled = false;
                 textBoxPrice3.Enabled = false;
-                textBoxPrice2.Text = string.Empty;
+                PriceProblem2 = string.Empty;
             }
             else
             {
                 countProblem = 2;
                 textBoxFoundProblem3.Enabled = true;
                 textBoxPrice3.Enabled = true;
-                if (!string.IsNullOrEmpty(textBoxFoundProblem3.Text))
+                if (!string.IsNullOrEmpty(FoundProblem3))
                     countProblem = 3;
             }
         }
@@ -339,20 +307,19 @@ namespace WinFormsApp1
         {
             /*if (loading)
                 return;*/
-
             numberProblem = 3;
             listBox1.Location = new Point(listBox1.Location.X, textBoxFoundProblem3.Location.Y +
                 textBoxFoundProblem3.Height);
-            listBox1.DataSource = FoundProblemTextChangeHelper.GetItemsListBox(textBoxProblem3: textBoxFoundProblem3.Text);
+            listBox1.DataSource = FoundProblemTextChangeHelper.GetItemsListBox(FoundProblem3);
 
             if (listBox1.Items.Count > 0)
                 listBox1.Visible = true;
             else listBox1.Visible = false;
 
-            if (string.IsNullOrEmpty(textBoxFoundProblem3.Text))
+            if (string.IsNullOrEmpty(FoundProblem3))
             {
                 countProblem = 2;
-                textBoxPrice3.Text = string.Empty;
+                PriceProblem3 = string.Empty;
             }
             else
                 countProblem = 3;
@@ -360,44 +327,17 @@ namespace WinFormsApp1
 
         private void TextBoxFoundProblem1_Click(object sender, EventArgs e)
         {
-            if (numberProblem == 1 && listBox1.Visible)
-            {
-                listBox1.Visible = false; return;
-            }
-            listBox1.DataSource = FoundProblemTextChangeHelper.GetItemsListBox(textBoxProblem1: textBoxFoundProblem1.Text);
-            numberProblem = 1;
-
-            listBox1.Location = new Point(listBox1.Location.X, textBoxFoundProblem1.Location.Y +
-                textBoxFoundProblem1.Height);
-            listBox1.Visible = true;
+            ClickOnFoundProblem(1, textBoxFoundProblem1);
         }
 
         private void TextBoxFoundProblem2_Click(object sender, EventArgs e)
         {
-            if (numberProblem == 2 && listBox1.Visible)
-            {
-                listBox1.Visible = false; return;
-            }
-            listBox1.DataSource = FoundProblemTextChangeHelper.GetItemsListBox(textBoxProblem2: textBoxFoundProblem2.Text);
-            numberProblem = 2;
-
-            listBox1.Location = new Point(listBox1.Location.X, textBoxFoundProblem2.Location.Y +
-                textBoxFoundProblem2.Height);
-            listBox1.Visible = true;
+            ClickOnFoundProblem(2, textBoxFoundProblem2);
         }
 
         private void TextBoxFoundProblem3_Click(object sender, EventArgs e)
         {
-            if (numberProblem == 3 && listBox1.Visible)
-            {
-                listBox1.Visible = false; return;
-            }
-            listBox1.DataSource = FoundProblemTextChangeHelper.GetItemsListBox(textBoxProblem3: textBoxFoundProblem3.Text);
-            numberProblem = 3;
-
-            listBox1.Location = new Point(listBox1.Location.X, textBoxFoundProblem3.Location.Y +
-                textBoxFoundProblem3.Height);
-            listBox1.Visible = true;
+            ClickOnFoundProblem(3, textBoxFoundProblem3);
         }
 
         private void TextBoxFoundProblem1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -418,7 +358,7 @@ namespace WinFormsApp1
                 listBox1.Visible = false;
         }
 
-        private void TextBoxPriceRepair_KeyPress(object sender, KeyPressEventArgs e)
+        private void TextBoxPrice1_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !KeyPressHelper.CheckKeyPress(false, null, e.KeyChar);
         }
@@ -435,17 +375,17 @@ namespace WinFormsApp1
 
         private void TextBoxFoundProblem1_KeyDown(object sender, KeyEventArgs e)
         {
-            TextBoxKeyDown(e.KeyCode, textBoxPrice1);
+            TextBoxKeyDown(e.KeyCode, nextTextBox: textBoxPrice1);
         }
 
         private void TextBoxFoundProblem2_KeyDown(object sender, KeyEventArgs e)
         {
-            TextBoxKeyDown(e.KeyCode, textBoxPrice2);
+            TextBoxKeyDown(e.KeyCode, nextTextBox: textBoxPrice2);
         }
 
         private void TextBoxFoundProblem3_KeyDown(object sender, KeyEventArgs e)
         {
-            TextBoxKeyDown(e.KeyCode, textBoxPrice3);
+            TextBoxKeyDown(e.KeyCode, nextTextBox: textBoxPrice3);
         }
 
         private void ListBox1_Click(object sender, EventArgs e)
@@ -500,7 +440,7 @@ namespace WinFormsApp1
             else textBoxMain.Text = string.Empty;
         }
 
-        private void LinkLabelFeaturesOrder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkLabelPropertiesOrder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             PropertiesOrder propertiesOrder = new(idOrder, StatusOrderEnum.InRepair, true)
             {
@@ -508,7 +448,7 @@ namespace WinFormsApp1
             };
             if (propertiesOrder.ShowDialog() == DialogResult.OK)
             {
-                orderDTO = orderRepository.GetOrder(idOrder);
+                orderDTO = ordersLogic.GetOrder(idOrder);
                 if (orderDTO.AdditionalMasterId != null)
                 {
                     panelMasters.Visible = true;
@@ -530,6 +470,42 @@ namespace WinFormsApp1
         {
             get { return textBoxPrice1.Enabled; }
             set { textBoxPrice1.Enabled = value; }
+        }
+
+        public string FoundProblem1
+        {
+            get { return textBoxFoundProblem1.Text; }
+            set { textBoxFoundProblem1.Text = value; }
+        }
+
+        public string FoundProblem2
+        {
+            get { return textBoxFoundProblem2.Text; }
+            set { textBoxFoundProblem2.Text = value; }
+        }
+
+        public string FoundProblem3
+        {
+            get { return textBoxFoundProblem3.Text; }
+            set { textBoxFoundProblem3.Text = value; }
+        }
+
+        public string PriceProblem1
+        {
+            get { return textBoxPrice1.Text; }
+            set { textBoxPrice1.Text = value; }
+        }
+
+        public string PriceProblem2
+        {
+            get { return textBoxPrice2.Text; }
+            set { textBoxPrice2.Text = value; }
+        }
+
+        public string PriceProblem3
+        {
+            get { return textBoxPrice3.Text; }
+            set { textBoxPrice3.Text = value; }
         }
     }
 }

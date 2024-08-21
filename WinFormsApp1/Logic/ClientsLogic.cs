@@ -7,36 +7,39 @@ namespace WinFormsApp1.Logic
     public class ClientsLogic
     {
         ClientRepository clientRepository = new();
-        public void SetTypeClient(string idClient, TypeClientEnum typeClient)
+
+        /// <summary>
+        /// Получение клиента по idClient
+        /// </summary>
+        /// <param name="idClient">idClient</param>
+        /// <returns>Клиент</returns>
+        public ClientEditDTO GetClientByIdClient(string idClient)
         {
-            var clientDTO = clientRepository.GetClient(idClient);
-            clientDTO.TypeClient = typeClient;
-            var task = Task.Run(async () =>
-            {
-                await clientRepository.SaveClientAsync(clientDTO);
-            });
-            task.Wait();
+            return clientRepository.GetClientByIdClient(idClient);
         }
 
-        public int SaveClient(string idClient, string nameAdress, string secondPhone)
+        /// <summary>
+        /// Сохранение клиента
+        /// </summary>
+        /// <param name="idClient"></param>
+        /// <param name="nameAdress"></param>
+        /// <param name="secondPhone"></param>
+        /// <returns></returns>
+        public int SaveClient(ClientEditDTO clientDTO)
         {
-            var clientDTO = clientRepository.GetClientByIdClient(idClient);
-            int id = clientDTO.Id;
-            if (id == 0)
+            int id = 0;
+            var task = Task.Run(async () =>
             {
-                clientDTO.IdClient = idClient;
-                clientDTO.NameAndAddressClient = nameAdress;
-                clientDTO.NumberSecondPhone = secondPhone;
-
-                var task = Task.Run(async () =>
-                {
-                    id = await clientRepository.SaveClientAsync(clientDTO);
-                });
-                task.Wait();
-            }
+                id = await clientRepository.SaveClientAsync(clientDTO);
+            });
+            task.Wait();
             return id;
         }
 
+        /// <summary>
+        /// Получение списка клиентов
+        /// </summary>
+        /// <returns>Список клиентов</returns>
         public List<ClientEditDTO> GetClients()
         {
             return clientRepository.GetClients();

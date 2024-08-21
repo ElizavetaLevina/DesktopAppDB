@@ -1,5 +1,4 @@
-﻿
-using WinFormsApp1.DTO;
+﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Repository;
 
 namespace WinFormsApp1.Logic
@@ -12,22 +11,14 @@ namespace WinFormsApp1.Logic
         /// </summary>
         /// <param name="name">Название</param>
         /// <returns>Идентификатор диагноза</returns>
-        public int? SaveDiagnosis(string name)
+        public int SaveDiagnosis(DiagnosisEditDTO diagnosisDTO)
         {
-            var diagnosisDTO = diagnosisRepository.GetDiagnosisByName(name);
-            int? diagnosisId = diagnosisDTO.Id;
-            if (diagnosisId == 0)
+            int diagnosisId = 0;
+            var task = Task.Run(async () =>
             {
-                if (!string.IsNullOrEmpty(name))
-                {
-                    var task = Task.Run(async () =>
-                    {
-                        diagnosisId = await diagnosisRepository.SaveDiagnosisAsync(diagnosisDTO);
-                    });
-                    task.Wait();
-                }
-                else diagnosisId = null;
-            }
+                diagnosisId = await diagnosisRepository.SaveDiagnosisAsync(diagnosisDTO);
+            });
+            task.Wait();
             return diagnosisId;
         }
 
@@ -41,13 +32,13 @@ namespace WinFormsApp1.Logic
         }
 
         /// <summary>
-        /// Получение списка диагнозов по названию
+        /// Получение диагноза по названию
         /// </summary>
         /// <param name="name">Название</param>
-        /// <returns>Список диагнозов</returns>
-        public List<DiagnosisEditDTO> GetDiagnosesByName(string name)
+        /// <returns>Диагноз</returns>
+        public DiagnosisEditDTO GetDiagnosisByName (string name)
         {
-            return diagnosisRepository.GetDiagnosesByName(name);
+            return diagnosisRepository.GetDiagnosisByName(name);
         }
     }
 }

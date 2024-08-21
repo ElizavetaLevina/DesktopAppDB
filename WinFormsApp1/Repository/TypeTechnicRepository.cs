@@ -38,7 +38,7 @@ namespace WinFormsApp1.Repository
             var typeTechnic = context.TypeTechnices.FirstOrDefault(i => i.Id == id);
             if (typeTechnic == null)
                 return new TypeTechnicEditDTO(name);
-            else return new TypeTechnicEditDTO(typeTechnic);
+            else return new TypeTechnicEditDTO(typeTechnic) { Name = name };
         }
 
         /// <summary>

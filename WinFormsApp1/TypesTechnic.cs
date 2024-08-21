@@ -54,8 +54,12 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count > 0)
             {
+                var typesBrandsDTO = typesBrandsLogic.GetTypeBrand(IdType);
+                foreach (var typesBrand in typesBrandsDTO)
+                {
+                    typesBrandsLogic.RemoveTypeBrand(typesBrand);
+                }
                 var typeTechnicDTO = new TypeTechnicEditDTO() { Id = IdType };
-                typesBrandsLogic.RemoveTypeBrand(idType: IdType);
                 typesTechnicsLogic.RemoveTypeTechnic(typeTechnicDTO);
                 UpdateTable();
             }

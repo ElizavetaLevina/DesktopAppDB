@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using WinFormsApp1.DTO;
+﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Helpers;
 using WinFormsApp1.Logic;
@@ -128,11 +127,39 @@ namespace WinFormsApp1
             if (!CheckIdClient())
                 return;
 
-            var clientId = clientsLogic.SaveClient(ClientName, ClientNameAddress, ClientSecondPhone);
+            var clientDTO = clientsLogic.GetClientByIdClient(ClientName);
+            int clientId = clientDTO.Id;
+            if (clientId == 0)
+            {
+                clientDTO.IdClient = ClientName;
+                clientDTO.NameAndAddressClient = ClientNameAddress;
+                clientDTO.NumberSecondPhone = ClientSecondPhone;
+                clientId = clientsLogic.SaveClient(clientDTO);
+            }
 
-            var equipmentId = equipmentsLogic.SaveEquipment(Equipment);
+            var equipmentDTO = equipmentsLogic.GetEquipmentByName(Equipment);
+            int? equipmentId = equipmentDTO.Id;
+            if (equipmentId == 0)
+            {
+                if (!string.IsNullOrEmpty(Equipment))
+                {
+                    equipmentDTO.Name = Equipment;
+                    equipmentId = equipmentsLogic.SaveEquipment(equipmentDTO);
+                }
+                else equipmentId = null;
+            }
 
-            var diagnosisId = diagnosesLogic.SaveDiagnosis(Diagnosis);
+            var diagnosisDTO = diagnosesLogic.GetDiagnosisByName(Diagnosis);
+            int? diagnosisId = diagnosisDTO.Id;
+            if (diagnosisId == 0)
+            {
+                if (!string.IsNullOrEmpty(Diagnosis))
+                {
+                    diagnosisDTO.Name = Diagnosis;
+                    diagnosisId = diagnosesLogic.SaveDiagnosis(diagnosisDTO);
+                }
+                else diagnosisId = null;
+            }
 
             var orderDTO = new OrderEditDTO()
             {
@@ -299,19 +326,19 @@ namespace WinFormsApp1
 
             if (equipment)
             {
-                equipmentsDTO = equipmentsLogic.GetEquipmentsByName(textBox.Text);
-                foreach (var item in equipmentsDTO)
+                foreach (var item in equipmentList)
                 {
-                    listBox.Items.Add(item.Name);
+                    if (item.Contains(textBox.Text, StringComparison.CurrentCultureIgnoreCase))
+                        listBox.Items.Add(item);
                 }
                 nameTextBox = NameTableToEditEnum.Equipment;
             }
             else if (diagnosis)
             {
-                diagnosesDTO = diagnosesLogic.GetDiagnosesByName(textBox.Text);
-                foreach (var item in diagnosesDTO)
+                foreach (var item in diagnosisList)
                 {
-                    listBox.Items.Add(item.Name);
+                    if (item.Contains(textBox.Text, StringComparison.CurrentCultureIgnoreCase))
+                        listBox.Items.Add(item);
                 }
                 nameTextBox = NameTableToEditEnum.Diagnosis;
             }

@@ -1,15 +1,17 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Helpers;
-using WinFormsApp1.Repository;
+using WinFormsApp1.Logic;
 
 namespace WinFormsApp1
 {
     public partial class DetailsInOrder : Form
     {
         public int idOrder;
+        public int IdDetail { get { return Convert.ToInt32(dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].
+            Cells[nameof(WarehouseTableDTO.Id)].Value); } }
         List<WarehouseTableDTO> list;
-        WarehouseRepository warehouseRepository = new();
-        OrderRepository orderRepository = new();
+        WarehousesLogic warehousesLogic = new();
+        OrdersLogic ordersLogic = new();
         public DetailsInOrder(int id)
         {
             InitializeComponent();
@@ -24,9 +26,7 @@ namespace WinFormsApp1
 
         private void ButtonAddDetail_Click(object sender, EventArgs e)
         {
-            var order = orderRepository.GetOrder(idOrder);
-
-            DetailsInWarehouse details = new(false, order.BrandTechnic?.Name)
+            DetailsInWarehouse details = new(false, ordersLogic.GetOrder(idOrder).BrandTechnic?.Name)
             {
                 StartPosition = FormStartPosition.CenterParent,
                 VisibleBtnAdd = true
@@ -34,25 +34,19 @@ namespace WinFormsApp1
 
             if (details.ShowDialog() == DialogResult.OK)
             {
-                var warehouse = warehouseRepository.GetWarehouse(id: details.idDetail);
-                warehouse.Availability = false;
-                warehouse.IdOrder = idOrder;
-
-                var task = Task.Run(async () => 
-                {
-                    await warehouseRepository.SaveWarehouseAsync(warehouse);
-                });
-                task.Wait();
+                var warehouseDTO = warehousesLogic.GetWarehouse(id: details.IdDetail);
+                warehouseDTO.Availability = false;
+                warehouseDTO.IdOrder = idOrder;
+                warehousesLogic.SaveDetail(warehouseDTO);
                 UpdateTable();
             }
         }
 
         private void UpdateTable()
         {
-            int summDetails = 0;
             int[] percent = [0, 70, 0, 30, 0, 0, 0];
 
-            list = warehouseRepository.GetWarehousesForTable(idOrder: idOrder);
+            list = warehousesLogic.GetWarehousesForTable(idOrder: idOrder);
             dataGridView1.DataSource = Funcs.ToDataTable(list);
 
             dataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -64,13 +58,8 @@ namespace WinFormsApp1
             dataGridView1.Columns[nameof(WarehouseTableDTO.Availability)].Visible = false;
             dataGridView1.Columns[nameof(WarehouseTableDTO.IdOrder)].Visible = false;
 
-            foreach(var detail in list)
-            {
-                summDetails += detail.PriceSale;
-            }
-
             labelCount.Text = String.Format("{0} шт.", list.Count);
-            labelPrice.Text = String.Format("{0} руб.", summDetails);
+            labelPrice.Text = String.Format("{0} руб.", list.Sum(i => i.PriceSale));
 
             for (int i = 0; i < dataGridView1.ColumnCount; i++)
             {
@@ -83,32 +72,20 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count > 0)
             {
-                int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int idDetail = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(WarehouseTableDTO.Id)].Value);
-                var warehouse = warehouseRepository.GetWarehouse(id: idDetail);
+                var warehouseDTO = warehousesLogic.GetWarehouse(id: IdDetail);
 
-                DetailEdit changeDetail = new(true, idDetail)
+                DetailEdit changeDetail = new(true, warehouseDTO)
                 {
-                    StartPosition = FormStartPosition.CenterParent,
-                    Text = "Изменение данных",
-                    NameDetail = warehouse.NameDetail,
-                    PricePurchase = warehouse.PricePurchase,
-                    PriceSale = warehouse.PriceSale,
-                    DatePurchase = warehouse.DatePurchase
+                    StartPosition = FormStartPosition.CenterParent
                 };
      
                 if (changeDetail.ShowDialog() == DialogResult.OK)
                 {
-                    warehouse.NameDetail = changeDetail.NameDetail;
-                    warehouse.PricePurchase = changeDetail.PricePurchase;
-                    warehouse.PriceSale = changeDetail.PriceSale;
-                    warehouse.DatePurchase = changeDetail.DatePurchase;
-
-                    var task = Task.Run(async () =>
-                    {
-                        await warehouseRepository.SaveWarehouseAsync(warehouse);
-                    });
-                    task.Wait();
+                    warehouseDTO.NameDetail = changeDetail.NameDetail;
+                    warehouseDTO.PricePurchase = changeDetail.PricePurchase;
+                    warehouseDTO.PriceSale = changeDetail.PriceSale;
+                    warehouseDTO.DatePurchase = changeDetail.DatePurchase;
+                    warehousesLogic.SaveDetail(warehouseDTO);
                     UpdateTable();
                 }
             }
@@ -128,17 +105,10 @@ namespace WinFormsApp1
 
                 if (warning.ShowDialog() == DialogResult.OK)
                 {
-                    int numberRow = dataGridView1.CurrentCell.RowIndex;
-                    int idDetail = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(WarehouseTableDTO.Id)].Value);
-                    var warehouse = warehouseRepository.GetWarehouse(id: idDetail);
-                    warehouse.Availability = true;
-                    warehouse.IdOrder = null;
-
-                    var task = Task.Run(async () =>
-                    {
-                        await warehouseRepository.SaveWarehouseAsync(warehouse);
-                    });
-                    task.Wait();
+                    var warehouseDTO = warehousesLogic.GetWarehouse(id: IdDetail);
+                    warehouseDTO.Availability = true;
+                    warehouseDTO.IdOrder = null;
+                    warehousesLogic.SaveDetail(warehouseDTO);
                     UpdateTable();
                 }
             }

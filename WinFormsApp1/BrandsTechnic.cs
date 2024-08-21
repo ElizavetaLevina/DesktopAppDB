@@ -1,6 +1,7 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Logic;
+using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
 {
@@ -54,8 +55,12 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count > 0)
             {
+                var typesBrandsDTO = typesBrandsLogic.GetTypeBrand(IdBrand);
+                foreach (var typesBrand in typesBrandsDTO)
+                {
+                    typesBrandsLogic.RemoveTypeBrand(typesBrand);
+                }
                 var brandTechnicDTO = new BrandTechnicEditDTO() { Id = IdBrand };
-                typesBrandsLogic.RemoveTypeBrand(idBrand: IdBrand);
                 brandsTechnicsLogic.RemoveBrandTechnic(brandTechnicDTO);
                 UpdateTable();
             }

@@ -12,9 +12,20 @@ namespace WinFormsApp1.Logic
         /// </summary>
         /// <param name="name">Название</param>
         /// <returns>Идентификатор</returns>
-        public int GetBrandTechnic(string name)
+        public int GetIdBrandTechnic(string name)
         {
             return brandTechnicRepository.GetBrandTechnicByName(name).Id;
+        }
+
+        /// <summary>
+        /// Получение бренда устройства по идентификатору
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <param name="name">Название</param>
+        /// <returns>Бренд устройства</returns>
+        public BrandTechnicEditDTO GetBrandTechnic(int id, string name)
+        {
+            return brandTechnicRepository.GetBrandTechnic(id, name);
         }
 
         /// <summary>
@@ -39,11 +50,10 @@ namespace WinFormsApp1.Logic
         /// <summary>
         /// Сохранение бренда устройтсва
         /// </summary>
-        /// <param name="name">Название бренда</param>
-        public int SaveBrandTechnic(int idBrand, string name)
+        /// <param name="brandTechnicDTO">DTO бренда</param>
+        public int SaveBrandTechnic(BrandTechnicEditDTO brandTechnicDTO)
         {
             var idBrandTechnic = 0;
-            var brandTechnicDTO = brandTechnicRepository.GetBrandTechnic(idBrand, name);
             var task = Task.Run(async () =>
             {
                 idBrandTechnic = await brandTechnicRepository.SaveBrandTechnicAsync(brandTechnicDTO);

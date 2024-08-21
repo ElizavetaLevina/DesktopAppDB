@@ -17,11 +17,11 @@ namespace WinFormsApp1.Repository
         }
 
         /// <summary>
-        /// Получение записи по идентификатору мастера и по дате
+        /// Получение ставки мастера по идентификатору мастера и по дате
         /// </summary>
         /// <param name="masterId">Идентификатор мастера</param>
         /// <param name="date">Дата</param>
-        /// <returns>Запись</returns>
+        /// <returns>Ставка мастера</returns>
         public RateMasterEditDTO GetRateMasterByDate(int masterId, DateTime date)
         {
             Context context = new();

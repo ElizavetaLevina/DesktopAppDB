@@ -22,7 +22,7 @@ namespace WinFormsApp1.Logic
         /// </summary>
         /// <param name="name">Название</param>
         /// <returns>Идентификатор</returns>
-        public int GetTypeTechnic(string name)
+        public int GetIdTypeTechnic(string name)
         {
             return typeTechnicRepository.GetTypeTechnicByName(name).Id;
         }
@@ -38,16 +38,25 @@ namespace WinFormsApp1.Logic
         }
 
         /// <summary>
+        /// Получение типа устройства по идентификатору
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <param name="name">Название</param>
+        /// <returns>Тип устройства</returns>
+        public TypeTechnicEditDTO GetTypeTechnic(int id, string name)
+        {
+            return typeTechnicRepository.GetTypeTechnic(id, name);
+        }
+
+        /// <summary>
         /// Сохранение типа устройства
         /// </summary>
-        /// <param name="name">Название</param>
-        public int SaveTypeTechnic(int idType, string name)
+        /// <param name="typeTechnicDTO">DTO типа устройства</param>
+        public int SaveTypeTechnic(TypeTechnicEditDTO typeTechnicDTO)
         {
             var idTypeTechnic = 0;
-            var typeTechnicDTO = typeTechnicRepository.GetTypeTechnic(idType, name);
             var task = Task.Run(async () =>
             {
-                //var typeTechnicDTO = new TypeTechnicEditDTO() { Id = 0, Name = name };
                 idTypeTechnic = await typeTechnicRepository.SaveTypeTechnicAsync(typeTechnicDTO);
             });
             task.Wait();

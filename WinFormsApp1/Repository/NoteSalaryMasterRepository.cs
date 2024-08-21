@@ -9,7 +9,7 @@ namespace WinFormsApp1.Repository
         /// Получение списка примечаний по зарплате мастера по дате
         /// </summary>
         /// <param name="date">Дата</param>
-        /// <returns></returns>
+        /// <returns>Список примечаний</returns>
         public List<NoteSalaryMasterEditDTO> GetNoteSalaryMasters(DateTime date)
         {
             Context context = new();

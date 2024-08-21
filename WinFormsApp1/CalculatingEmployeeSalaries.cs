@@ -1,18 +1,19 @@
 ﻿using WinFormsApp1.DTO;
-using WinFormsApp1.Repository;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Helpers;
+using WinFormsApp1.Logic;
 
 namespace WinFormsApp1
 {
     public partial class CalculatingEmployeeSalaries : Form
     {
         List<OrderEditDTO> ordersDTO;
-        OrderRepository orderRepository = new();
-        MasterRepository masterRepository = new();
-        NoteSalaryMasterRepository noteSalaryMasterRepository = new();
-        RateMasterRepository rateMasterRepository = new();
+        MastersLogic mastersLogic = new();
+        NotesSalaryMastersLogic notesSalaryMastersLogic = new();
+        RateMastersLogic rateMastersLogic = new();
+        OrdersLogic ordersLogic = new();
         bool loading = true;
+
         public CalculatingEmployeeSalaries()
         {
             InitializeComponent();
@@ -87,27 +88,21 @@ namespace WinFormsApp1
 
         private void SalaryCalculation()
         {
-            DateTime? dateCompleted = null;
-            DateTime? dateIssue = null;
-
-            if ((SalaryCalculationByEnum)comboBoxCalculationByDate.SelectedItem == SalaryCalculationByEnum.выполнения)
-                dateCompleted = DateTime.Parse(string.Format("{0}.{1}.{2}", 1, NumberSelectedMonth(), comboBoxYears.SelectedValue));
-            else
-                dateIssue = DateTime.Parse(string.Format("{0}.{1}.{2}", 1, NumberSelectedMonth(), comboBoxYears.SelectedValue));
-
-            ordersDTO = orderRepository.GetOrdersForSalaries(dateCompleted: dateCompleted, dateIssue: dateIssue);
-
-            DateTime date = (DateTime)(dateCompleted != null ? dateCompleted : dateIssue);
-
-
-            var mastersDTO = masterRepository.GetMasters();
-            var noteMastersDTO = noteSalaryMasterRepository.GetNoteSalaryMasters(date);
-
+            var selectedDate = DateTime.Parse(string.Format("{0}.{1}.{2}", 1, NumberSelectedMonth(),
+                    comboBoxYears.SelectedValue));
+            var selectedComboBoxItem = (SalaryCalculationByEnum)comboBoxCalculationByDate.SelectedItem;
+            DateTime? dateCompleted = selectedComboBoxItem == SalaryCalculationByEnum.выполнения ? selectedDate : null;
+            DateTime? dateIssue = selectedComboBoxItem == SalaryCalculationByEnum.выдачи ? selectedDate : null;
+            var date = (DateTime)(dateCompleted != null ? dateCompleted : dateIssue);
+            var mastersDTO = mastersLogic.GetMasters();
+            var noteMastersDTO = notesSalaryMastersLogic.GetNoteSalaryMasters(date);
             List <NoteSalaryMasterEditDTO>  dataSource = new();
+
+            ordersDTO = ordersLogic.GetOrdersForSalaries(dateCompleted: dateCompleted, dateIssue: dateIssue);
 
             foreach (var master in mastersDTO)
             {
-                var rateMastersDTO = rateMasterRepository.GetRateMasterByDate(master.Id, date);
+                var rateMastersDTO = rateMastersLogic.GetRateMasterByDate(master.Id, date);
                 var noteMaster = noteMastersDTO.FirstOrDefault(i => i.MasterId == master.Id) ?? 
                     new NoteSalaryMasterEditDTO() { MasterId = master.Id, Date = date};
                 noteMaster.NameMaster = master.NameMaster;
@@ -199,13 +194,9 @@ namespace WinFormsApp1
         private void ButtonSave_Click(object sender, EventArgs e)
         {
             var noteSalaryMasters = dataGridView1.DataSource as List<NoteSalaryMasterEditDTO>;
-
             foreach (var item in noteSalaryMasters)
             {
-                Task.Run(async () =>
-                {
-                    await noteSalaryMasterRepository.SaveNoteSalaryMasterAsync(item);
-                });
+                notesSalaryMastersLogic.SaveNoteSalaryMasterAsync(item);
             }            
         }
 

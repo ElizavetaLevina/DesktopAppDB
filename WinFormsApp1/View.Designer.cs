@@ -33,9 +33,9 @@
             textBoxFirstLevel = new TextBox();
             label2 = new Label();
             colorDialog1 = new ColorDialog();
-            button1 = new Button();
-            button2 = new Button();
-            button3 = new Button();
+            buttonFirstColor = new Button();
+            buttonSecondColor = new Button();
+            buttonThirdColor = new Button();
             buttonSave = new Button();
             buttonExit = new Button();
             label3 = new Label();
@@ -76,32 +76,32 @@
             label2.TabIndex = 2;
             label2.Text = "дн.       Цвет:";
             // 
-            // button1
+            // buttonFirstColor
             // 
-            button1.Location = new Point(434, 50);
-            button1.Name = "button1";
-            button1.Size = new Size(40, 40);
-            button1.TabIndex = 3;
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += Button1_Click;
+            buttonFirstColor.Location = new Point(434, 50);
+            buttonFirstColor.Name = "buttonFirstColor";
+            buttonFirstColor.Size = new Size(40, 40);
+            buttonFirstColor.TabIndex = 3;
+            buttonFirstColor.UseVisualStyleBackColor = true;
+            buttonFirstColor.Click += ButtonFirstColor_Click;
             // 
-            // button2
+            // buttonSecondColor
             // 
-            button2.Location = new Point(547, 116);
-            button2.Name = "button2";
-            button2.Size = new Size(40, 40);
-            button2.TabIndex = 9;
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += Button2_Click;
+            buttonSecondColor.Location = new Point(547, 116);
+            buttonSecondColor.Name = "buttonSecondColor";
+            buttonSecondColor.Size = new Size(40, 40);
+            buttonSecondColor.TabIndex = 9;
+            buttonSecondColor.UseVisualStyleBackColor = true;
+            buttonSecondColor.Click += ButtonSecondColor_Click;
             // 
-            // button3
+            // buttonThirdColor
             // 
-            button3.Location = new Point(434, 179);
-            button3.Name = "button3";
-            button3.Size = new Size(40, 40);
-            button3.TabIndex = 13;
-            button3.UseVisualStyleBackColor = true;
-            button3.Click += Button3_Click;
+            buttonThirdColor.Location = new Point(434, 179);
+            buttonThirdColor.Name = "buttonThirdColor";
+            buttonThirdColor.Size = new Size(40, 40);
+            buttonThirdColor.TabIndex = 13;
+            buttonThirdColor.UseVisualStyleBackColor = true;
+            buttonThirdColor.Click += ButtonThirdColor_Click;
             // 
             // buttonSave
             // 
@@ -217,9 +217,9 @@
             Controls.Add(label3);
             Controls.Add(buttonExit);
             Controls.Add(buttonSave);
-            Controls.Add(button3);
-            Controls.Add(button2);
-            Controls.Add(button1);
+            Controls.Add(buttonThirdColor);
+            Controls.Add(buttonSecondColor);
+            Controls.Add(buttonFirstColor);
             Controls.Add(label2);
             Controls.Add(textBoxFirstLevel);
             Controls.Add(label1);
@@ -227,6 +227,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "View";
             Text = "Цвета строчек";
+            Load += View_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -237,9 +238,9 @@
         private TextBox textBoxFirstLevel;
         private Label label2;
         private ColorDialog colorDialog1;
-        private Button button1;
-        private Button button2;
-        private Button button3;
+        private Button buttonFirstColor;
+        private Button buttonSecondColor;
+        private Button buttonThirdColor;
         private Button buttonSave;
         private Button buttonExit;
         private Label label3;

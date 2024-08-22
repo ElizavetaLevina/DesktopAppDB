@@ -1,13 +1,13 @@
 ﻿using WinFormsApp1.DTO;
-using WinFormsApp1.Repository;
 using WinFormsApp1.Enum;
+using WinFormsApp1.Logic;
 
 
 namespace WinFormsApp1
 {
     public partial class RateMasterEdit : Form
     {
-        RateMasterRepository rateMasterRepository = new();
+        RateMastersLogic rateMastersLogic = new();
         int masterId;
         public RateMasterEdit(int id)
         {
@@ -22,7 +22,7 @@ namespace WinFormsApp1
             comboBoxMonth.DataSource = System.Enum.GetValues(typeof(MonthEnum));
             comboBoxMonth.SelectedIndex = DateTime.Now.Month - 1;
 
-            List<int> years = new();
+            List<int> years = [];
             int startYear = 2023;
             int endYear = DateTime.Now.Year + 1;
 
@@ -38,14 +38,14 @@ namespace WinFormsApp1
 
         private void UpdateTable()
         {
-            dataGridView1.DataSource = rateMasterRepository.GetRateMasterByIdMaster(masterId);
+            dataGridView1.DataSource = rateMastersLogic.GetRateMasterByIdMaster(masterId);
             dataGridView1.Columns[nameof(RateMasterDTO.Id)].Visible = false;
         }
 
         private void UpdatePercent()
         {
             var date = DateTime.Parse(string.Format("{0}.{1}.{2}", 1, comboBoxMonth.SelectedIndex + 1, comboBoxYear.SelectedValue));
-            var rateMasterDTO = rateMasterRepository.GetRateMasterByDate(masterId, date);
+            var rateMasterDTO = rateMastersLogic.GetRateMasterByDate(masterId, date);
             if (rateMasterDTO.Id != 0)
                 textBoxPercent.Text = rateMasterDTO.PercentProfit.ToString();
             else
@@ -73,18 +73,14 @@ namespace WinFormsApp1
             labelPercent.ForeColor = Color.Black;
 
             var date = DateTime.Parse(string.Format("{0}.{1}.{2}", 1, comboBoxMonth.SelectedIndex + 1, comboBoxYear.SelectedValue));
-            var rateMasterDTO = rateMasterRepository.GetRateMasterByDate(masterId, date);
+            var rateMasterDTO = rateMastersLogic.GetRateMasterByDate(masterId, date);
 
             rateMasterDTO.MasterId = masterId;
             rateMasterDTO.PercentProfit = Convert.ToInt32(textBoxPercent.Text);
             rateMasterDTO.DateStart = date;
             rateMasterDTO.DateEnd = date;
 
-            var task = Task.Run(async () =>
-            {
-                await rateMasterRepository.SaveRateMasterAsync(rateMasterDTO);
-            });
-            task.Wait();
+            rateMastersLogic.SaveRateMaster(rateMasterDTO);
 
             UpdateTable();
         }

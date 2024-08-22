@@ -17,5 +17,28 @@ namespace WinFormsApp1.Logic
         {
             return rateMasterRepository.GetRateMasterByDate(masterId, date);
         }
+
+        /// <summary>
+        /// Получение списка ставок мастера по идентификатору мастера
+        /// </summary>
+        /// <param name="id">Идентификатор мастера</param>
+        /// <returns>Список ставок</returns>
+        public List<RateMasterDTO> GetRateMasterByIdMaster(int id)
+        {
+            return rateMasterRepository.GetRateMasterByIdMaster(id);
+        }
+
+        /// <summary>
+        /// Сохранение ставки мастера
+        /// </summary>
+        /// <param name="rateMasterDTO">DTO ставки</param>
+        public void SaveRateMaster(RateMasterEditDTO rateMasterDTO)
+        {
+            var task = Task.Run(async () =>
+            {
+                await rateMasterRepository.SaveRateMasterAsync(rateMasterDTO);
+            });
+            task.Wait();
+        }
     }
 }

@@ -16,7 +16,6 @@ namespace WinFormsApp1
                 buttonYes.Focus();
         }
 
-
         private void ButtonExit_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;

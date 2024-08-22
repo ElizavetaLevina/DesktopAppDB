@@ -2,14 +2,14 @@
 using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Helpers;
-using WinFormsApp1.Repository;
+using WinFormsApp1.Logic;
 
 namespace WinFormsApp1
 {
     public partial class ReportsOrganization : Form
     {
-        MasterRepository masterRepository = new();
-        OrderRepository orderRepository = new();
+        MastersLogic mastersLogic = new();
+        OrdersLogic ordersLogic = new();
         List<OrderEditDTO> ordersDTO;
         int[] pointsArray;
         bool loadingForm = true;
@@ -35,7 +35,7 @@ namespace WinFormsApp1
 
             comboBoxMaster.ValueMember = nameof(MasterDTO.Id);
             comboBoxMaster.DisplayMember = nameof(MasterDTO.NameMaster);
-            comboBoxMaster.DataSource = masterRepository.GetMastersForOutput();
+            comboBoxMaster.DataSource = mastersLogic.GetMastersForOutput();
 
             comboBoxYear.DataSource = years;
             comboBoxYear.SelectedItem = DateTime.Now.Year;
@@ -46,7 +46,7 @@ namespace WinFormsApp1
             var interval = 0.1666666667;
             var startPosition = interval * 6;
 
-            ordersDTO = orderRepository.GetOrdersForChart(year: Convert.ToInt32(comboBoxYear.SelectedValue));
+            ordersDTO = ordersLogic.GetOrdersForChart(year: Convert.ToInt32(comboBoxYear.SelectedValue));
             pointsArray = ArrayForChartHepler.GetArrayCountOrders(ordersDTO);
 
             chart1.ChartAreas[0].AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dash;
@@ -116,12 +116,12 @@ namespace WinFormsApp1
             int? masterId = null;
 
             if (selectedRadioButtonPanel1 == radioButtonOrganization)
-                ordersDTO = orderRepository.GetOrdersForChart(year: Convert.ToInt32(comboBoxYear.SelectedValue));
+                ordersDTO = ordersLogic.GetOrdersForChart(year: Convert.ToInt32(comboBoxYear.SelectedValue));
             else
             {
                 master = true;
                 masterId = ((MasterDTO)comboBoxMaster.SelectedItem).Id;
-                ordersDTO = orderRepository.GetOrdersForChart(year: Convert.ToInt32(comboBoxYear.SelectedValue), master: true,
+                ordersDTO = ordersLogic.GetOrdersForChart(year: Convert.ToInt32(comboBoxYear.SelectedValue), master: true,
                 masterId: masterId);
             }
 
@@ -134,7 +134,7 @@ namespace WinFormsApp1
                 return;
 
             comboBoxMaster.Enabled = false;
-            ordersDTO = orderRepository.GetOrdersForChart(year: Convert.ToInt32(comboBoxYear.SelectedValue));
+            ordersDTO = ordersLogic.GetOrdersForChart(year: Convert.ToInt32(comboBoxYear.SelectedValue));
             SelectedRadioButtonPanel2();
         }
 
@@ -144,7 +144,7 @@ namespace WinFormsApp1
                 return;
 
             comboBoxMaster.Enabled = true;
-            ordersDTO = orderRepository.GetOrdersForChart(year: Convert.ToInt32(comboBoxYear.SelectedValue), master: true,
+            ordersDTO = ordersLogic.GetOrdersForChart(year: Convert.ToInt32(comboBoxYear.SelectedValue), master: true,
                 masterId: ((MasterDTO)comboBoxMaster.SelectedItem).Id);
             SelectedRadioButtonPanel2(master: true, masterId: ((MasterDTO)comboBoxMaster.SelectedItem).Id);
         }
@@ -154,7 +154,7 @@ namespace WinFormsApp1
             if (loadingForm)
                 return;
 
-            ordersDTO = orderRepository.GetOrdersForChart(year: Convert.ToInt32(comboBoxYear.SelectedValue), master: true,
+            ordersDTO = ordersLogic.GetOrdersForChart(year: Convert.ToInt32(comboBoxYear.SelectedValue), master: true,
                 masterId: ((MasterDTO)comboBoxMaster.SelectedItem).Id);
 
             SelectedRadioButtonPanel2(master: true, masterId: ((MasterDTO)comboBoxMaster.SelectedItem).Id);

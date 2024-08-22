@@ -6,14 +6,17 @@ namespace WinFormsApp1.Repository
     public class RateMasterRepository
     {
         /// <summary>
-        /// Получение записи по идентификатору мастера
+        /// Получение списка ставок мастера по идентификатору мастера
         /// </summary>
         /// <param name="id">Идентификатор мастера</param>
-        /// <returns>Запись</returns>
+        /// <returns>Список ставок</returns>
         public List<RateMasterDTO> GetRateMasterByIdMaster(int id)
         {
             Context context = new();
-            return context.RateMaster.Where(i => i.MasterId == id).OrderBy(i => i.DateStart).Select(a => new RateMasterDTO(a)).ToList();
+            return context.RateMaster
+                .Where(i => i.MasterId == id).OrderBy(i => i.DateStart)
+                .Select(a => new RateMasterDTO(a))
+                .ToList();
         }
 
         /// <summary>

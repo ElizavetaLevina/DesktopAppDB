@@ -7,27 +7,6 @@ namespace WinFormsApp1.Logic
     public class OrdersLogic
     {
         OrderRepository orderRepository = new();
-        MalfunctionOrderRepository malfunctionOrderRepository = new();
-
-        /// <summary>
-        /// Возвращение устройства в ремонта по гарантии
-        /// </summary>
-        /// <param name="idOrder">Идентификатор заказа</param>
-        public void ReturnGuarantee(int idOrder) 
-        {
-            var orderDTO = orderRepository.GetOrder(idOrder);
-
-            orderDTO.DateCreation = DateTime.Now;
-            orderDTO.DateStartWork = DateTime.Now;
-            orderDTO.StatusOrder = StatusOrderEnum.InRepair;
-            orderDTO.ReturnUnderGuarantee = true;
-
-            var task = Task.Run(async () =>
-            {
-                await orderRepository.SaveOrderAsync(orderDTO);
-            });
-            task.Wait();
-        }
 
         /// <summary>
         /// Получение списка заказов для главной таблицы
@@ -50,65 +29,11 @@ namespace WinFormsApp1.Logic
         /// Удаление заказа
         /// </summary>
         /// <param name="idOrder">Идентификатор заказа</param>
-        public void RemoveOrder(int idOrder)
+        public void RemoveOrder(OrderEditDTO orderDTO)
         {
-            var orderDTO = orderRepository.GetOrder(idOrder);
-
-            if (orderDTO.Deleted)
-            {
-                orderRepository.RemoveOrder(orderDTO);
-            }
-            else
-            {
-                orderDTO.Deleted = true;
-                var task = Task.Run(async () =>
-                {
-                    await orderRepository.SaveOrderAsync(orderDTO);
-                });
-                task.Wait();
-            }
+            orderRepository.RemoveOrder(orderDTO);
         }
 
-        /// <summary>
-        /// Возвращение заказа из корзины
-        /// </summary>
-        /// <param name="idOrder">Идентификатор заказа</param>
-        public void RecoveryOrder(int idOrder)
-        {
-            var orderDTO = orderRepository.GetOrder(idOrder);
-            orderDTO.Deleted = false;
-            var task = Task.Run(async () =>
-            {
-                await orderRepository.SaveOrderAsync(orderDTO);
-            });
-            task.Wait();
-        }
-
-        /// <summary>
-        /// Возвращение заказа в доработку
-        /// </summary>
-        /// <param name="idOrder">Идентификатор заказа</param>
-        public void ReturnInRepair(int idOrder)
-        {
-            var orderDTO = orderRepository.GetOrder(idOrder);
-            var malfunctionsOrderDTO = malfunctionOrderRepository.GetMalfunctionOrdersByIdOrder(idOrder);
-
-            orderDTO.StatusOrder = StatusOrderEnum.InRepair;
-            if (orderDTO.ReturnUnderGuarantee)
-                orderDTO.DateCompletedReturn = null;
-            else
-                orderDTO.DateCompleted = null;
-            var task = Task.Run(async () =>
-            {
-                await orderRepository.SaveOrderAsync(orderDTO);
-            });
-            task.Wait();
-
-            foreach (var malfunctionOrder in malfunctionsOrderDTO)
-            {
-                malfunctionOrderRepository.RemoveMalfunctionOrder(malfunctionOrder);
-            }
-        }
 
         /// <summary>
         /// Получение заказа по идентификатору
@@ -118,63 +43,6 @@ namespace WinFormsApp1.Logic
         public OrderEditDTO GetOrder(int idOrder) 
         {
             return orderRepository.GetOrder(idOrder);
-        }
-
-        /// <summary>
-        /// Проверка сохраненного цвета и перезапись при несовпадении
-        /// </summary>
-        /// <param name="idOrder">Идентификатор заказа</param>
-        /// <param name="status">Статус заказа</param>
-        /// <param name="savedColor">Сохраненный цвет </param>
-        /// <returns></returns>
-        public Color ChangeColorRows(int idOrder, StatusOrderEnum status, Color savedColor)
-        {
-            var orderDTO = orderRepository.GetOrder(idOrder);
-            if (savedColor != ColorDefinition(orderDTO, status))
-            {
-                savedColor = ColorDefinition(orderDTO, status);
-                orderDTO.ColorRow = ColorTranslator.ToHtml(savedColor);
-                var task = Task.Run(async () =>
-                {
-                    await orderRepository.SaveOrderAsync(orderDTO);
-                });
-                task.Wait();
-            }
-            return savedColor;
-        }
-
-        /// <summary>
-        /// Определение цвета 
-        /// </summary>
-        /// <param name="orderDTO">DTO заказа</param>
-        /// <param name="status">Статус заказа</param>
-        /// <returns>Цвет</returns>
-        private Color ColorDefinition(OrderEditDTO orderDTO, StatusOrderEnum status)
-        {
-            Color newColor;
-            var countDays = 0;
-            switch (status)
-            {
-                case StatusOrderEnum.InRepair:
-                    if (orderDTO.MainMasterId != null)
-                        countDays = (DateTime.Now - orderDTO.DateStartWork.Value).Days;
-                    else
-                        return Color.DimGray;
-                    break;
-                case StatusOrderEnum.Completed:
-                    countDays = (DateTime.Now - orderDTO.DateCompleted.Value).Days;
-                    break;
-            }
-
-            if (countDays < Convert.ToInt32(Properties.Settings.Default.FirstLevelText))
-                newColor = Properties.Settings.Default.FirstLevelColor;
-            else if (countDays > Convert.ToInt32(Properties.Settings.Default.SecondLevelText))
-                newColor = Properties.Settings.Default.ThirdLevelColor;
-            else if (orderDTO.StatusOrder == StatusOrderEnum.GuaranteeIssue || orderDTO.StatusOrder == StatusOrderEnum.Archive)
-                newColor = Color.Black;
-            else
-                newColor = Properties.Settings.Default.SecondLevelColor;
-            return newColor;
         }
 
         /// <summary>
@@ -250,6 +118,27 @@ namespace WinFormsApp1.Logic
         public List<OrderEditDTO> GetOrdersByIdEquipment(int idEquipment)
         {
             return orderRepository.GetOrdersByIdEquipment(idEquipment);
+        }
+
+        /// <summary>
+        /// Получения списка заказов для диаграммы
+        /// </summary>
+        /// <param name="year">Год</param>
+        /// <param name="master">Указан ли мастер</param>
+        /// <param name="masterId">Идентификатор мастера</param>
+        /// <returns>Список заказов</returns>
+        public List<OrderEditDTO> GetOrdersForChart(int year, bool master = false, int? masterId = null)
+        {
+            return orderRepository.GetOrdersForChart(year, master, masterId);
+        }
+
+        /// <summary>
+        /// Получение списка заказов
+        /// </summary>
+        /// <returns>Список заказов</returns>
+        public List<OrderEditDTO> GetOrders()
+        {
+            return orderRepository.GetOrders();
         }
     }
 }

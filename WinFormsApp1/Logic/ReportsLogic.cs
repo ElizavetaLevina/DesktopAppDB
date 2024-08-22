@@ -1,30 +1,23 @@
-﻿
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using ClosedXML.Report;
 using System.Diagnostics;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Helpers;
-using WinFormsApp1.Repository;
 
 namespace WinFormsApp1.Logic
 {
     public class ReportsLogic
     {
-        OrderRepository orderRepository = new();
-        WarehouseRepository warehouseRepository = new();
-        MalfunctionOrderRepository malfunctionOrderRepository = new();
-
         /// <summary>
         /// Создание квитанции принятие устройства в ремонт в Excel 
         /// </summary>
         /// <param name="idOrder">Идентификтор заказа</param>
-        public void GettingDeviceReport(int idOrder)
+        public static void GettingDeviceReport(OrderEditDTO orderDTO)
         {
             try
             {
                 const string outputFile = @"Output\reportGetting.xlsx";
                 var template = new XLTemplate(@"Templates\reportGetting.xlsx");
-                var orderDTO = orderRepository.GetOrder(idOrder);
 
                 string device = String.Format("{0} {1} {2}", orderDTO.TypeTechnic?.Name,
                     orderDTO.BrandTechnic?.Name, orderDTO.ModelTechnic);
@@ -71,7 +64,8 @@ namespace WinFormsApp1.Logic
         /// Создание квитанции выдача отремонтированного устройства клиенту в Excel
         /// </summary>
         /// <param name="idOrder">Идентификатор заказа</param>
-        public void IssuingDeviceReport(int idOrder)
+        public static void IssuingDeviceReport(OrderEditDTO orderDTO, List<WarehouseEditDTO> detalsDTO, 
+            List<MalfunctionOrderEditDTO> malfunctionOrderDTO)
         {
             try
             {
@@ -87,9 +81,7 @@ namespace WinFormsApp1.Logic
                 int detailsSum = 0;
                 const string outputFile = @"Output\reportIssuing.xlsx";
                 var template = new XLTemplate(@"Templates\reportIssuing.xlsx");
-                var orderDTO = orderRepository.GetOrder(idOrder);
-                var detalsDTO = warehouseRepository.GetDetailsInOrder(idOrder);
-                var malfunctionOrderDTO = malfunctionOrderRepository.GetMalfunctionOrdersByIdOrder(idOrder);
+                
 
                 for (int i = 0; i < 5; i++)
                 {
@@ -195,7 +187,7 @@ namespace WinFormsApp1.Logic
         /// </summary>
         /// <param name="folderPath">Путь для сохранения</param>
         /// <param name="orders">DTO заказов</param>
-        public void ExportMainTable(string folderPath, List<OrderTableDTO> orders)
+        public static void ExportMainTable(string folderPath, List<OrderTableDTO> orders)
         {
             using XLWorkbook workbook = new();
             var table = Funcs.ToDataTable(orders.Select(a => new OrderTableExcelDTO(a)).ToList());

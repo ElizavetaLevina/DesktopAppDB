@@ -1,25 +1,26 @@
-using Color = System.Drawing.Color;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using System.Data;
 using WinFormsApp1.Helpers;
 using System.Diagnostics;
 using WinFormsApp1.Logic;
+using FluentFTP;
+using System.Net;
 
 namespace WinFormsApp1
 {
     public partial class Form1 : Form
     {
-        public int idOrder { get { return Convert.ToInt32(dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].
+        public int IdOrder { get { return Convert.ToInt32(dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].
             Cells[nameof(OrderTableDTO.Id)].Value);} }
-        public string idClient { get { return dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].
+        public string IdClient { get { return dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].
             Cells[nameof(OrderTableDTO.IdClient)].Value.ToString(); } }
         StatusOrderEnum status;
         public bool logInSystem = false;
         WarehousesLogic warehousesLogic = new();
         OrdersLogic ordersLogic = new();
         ClientsLogic clientsLogic = new();
-        ReportsLogic reportsLogic = new();
+        MalfunctionsOrdersLogic malfunctionsOrdersLogic = new();
         List<OrderTableDTO> orders;
         List<(long elapsedTime, string name)> some = new();
         Stopwatch stopwatch = Stopwatch.StartNew();
@@ -259,7 +260,7 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            PropertiesOrder propertiesOrder = new(idOrder, status, logInSystem)
+            PropertiesOrder propertiesOrder = new(IdOrder, status, logInSystem)
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -279,7 +280,7 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            DetailsInOrder detailsInOrder = new(idOrder)
+            DetailsInOrder detailsInOrder = new(IdOrder)
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -301,11 +302,15 @@ namespace WinFormsApp1
 
             if (warning.ShowDialog() == DialogResult.OK)
             {
-                ordersLogic.RemoveOrder(idOrder);
-                if (status == StatusOrderEnum.Trash)
-                    Trash();
+                var orderDTO = ordersLogic.GetOrder(IdOrder);
+                if (orderDTO.Deleted)
+                    ordersLogic.RemoveOrder(orderDTO);
                 else
-                    UpdateTableData();
+                {
+                    orderDTO.Deleted = true;
+                    ordersLogic.SaveOrder(orderDTO);
+                }
+                UpdateTableData();
             }
             FocusButton(status);
         }
@@ -314,7 +319,9 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            ordersLogic.RecoveryOrder(idOrder);
+            var orderDTO = ordersLogic.GetOrder(IdOrder);
+            orderDTO.Deleted = false;
+            ordersLogic.SaveOrder(orderDTO);
             Trash();
             /*UpdateDB();*/
         }
@@ -352,7 +359,7 @@ namespace WinFormsApp1
             }
 
 
-            if (warehousesLogic.GetCountDetailsInOrder(idOrder) == 0)
+            if (warehousesLogic.GetCountDetailsInOrder(IdOrder) == 0)
             {
                 warning = new()
                 {
@@ -364,7 +371,7 @@ namespace WinFormsApp1
                 };
                 if (warning.ShowDialog() == DialogResult.OK)
                 {
-                    DetailsInOrder detailsInOrder = new(idOrder)
+                    DetailsInOrder detailsInOrder = new(IdOrder)
                     {
                         StartPosition = FormStartPosition.CenterParent
                     };
@@ -373,7 +380,7 @@ namespace WinFormsApp1
             }
             if (status == StatusOrderEnum.InRepair)
             {
-                CompletedOrder completedOrder = new(idOrder)
+                CompletedOrder completedOrder = new(IdOrder)
                 {
                     StartPosition = FormStartPosition.CenterParent,
                     EnabledPrice = !returnUnderGuarantee
@@ -393,7 +400,7 @@ namespace WinFormsApp1
                 return;
             if (status == StatusOrderEnum.Completed)
             {
-                IssuingClient issuingClient = new(idOrder)
+                IssuingClient issuingClient = new(IdOrder)
                 {
                     StartPosition = FormStartPosition.CenterParent
                 };
@@ -421,7 +428,19 @@ namespace WinFormsApp1
             {
                 if (status == StatusOrderEnum.Completed)
                 {
-                    ordersLogic.ReturnInRepair(idOrder);
+                    var orderDTO = ordersLogic.GetOrder(IdOrder);
+                    orderDTO.StatusOrder = StatusOrderEnum.InRepair;
+                    if (orderDTO.ReturnUnderGuarantee)
+                        orderDTO.DateCompletedReturn = null;
+                    else
+                        orderDTO.DateCompleted = null;
+                    ordersLogic.SaveOrder(orderDTO);
+
+                    var malfunctionsOrderDTO = malfunctionsOrdersLogic.GetMalfunctionOrdersByIdOrder(IdOrder);
+                    foreach(var item in  malfunctionsOrderDTO)
+                    {
+                        malfunctionsOrdersLogic.RemoveMalfunctionOrder(item);
+                    }
                     Order—ompleted();
                 }
                 /*UpdateDB();*/
@@ -445,7 +464,12 @@ namespace WinFormsApp1
             {
                 if (status == StatusOrderEnum.GuaranteeIssue)
                 {
-                    ordersLogic.ReturnGuarantee(idOrder);
+                    var orderDTO = ordersLogic.GetOrder(IdOrder);
+                    orderDTO.DateCreation = DateTime.Now;
+                    orderDTO.DateStartWork = DateTime.Now;
+                    orderDTO.StatusOrder = StatusOrderEnum.InRepair;
+                    orderDTO.ReturnUnderGuarantee = true;
+                    ordersLogic.SaveOrder(orderDTO);
                     OrderGuarantee();
                 }
                 /*UpdateDB();*/
@@ -457,7 +481,7 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            MessageToClient message = new(idClient)
+            MessageToClient message = new(IdClient)
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -468,7 +492,7 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            PropertiesClient propertiesClient = new(idClient)
+            PropertiesClient propertiesClient = new(IdClient)
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -482,7 +506,7 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            var clientDTO = clientsLogic.GetClientByIdClient(idClient);
+            var clientDTO = clientsLogic.GetClientByIdClient(IdClient);
             clientDTO.TypeClient = TypeClientEnum.white;
             clientsLogic.SaveClient(clientDTO);
         }
@@ -491,7 +515,7 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            var clientDTO = clientsLogic.GetClientByIdClient(idClient);
+            var clientDTO = clientsLogic.GetClientByIdClient(IdClient);
             clientDTO.TypeClient = TypeClientEnum.black;
             clientsLogic.SaveClient(clientDTO);
         }
@@ -500,14 +524,14 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            var clientDTO = clientsLogic.GetClientByIdClient(idClient);
+            var clientDTO = clientsLogic.GetClientByIdClient(IdClient);
             clientDTO.TypeClient = TypeClientEnum.normal;
             clientsLogic.SaveClient(clientDTO);
         }
 
         private void NewOrder()
         {
-            var orderDTO = ordersLogic.GetOrder(idOrder);
+            var orderDTO = ordersLogic.GetOrder(IdOrder);
 
             AddDeviceIntoRepair newOrder = new()
             {
@@ -540,7 +564,7 @@ namespace WinFormsApp1
         {
             if (saveFileDialog1.ShowDialog() == DialogResult.Cancel)
                 return;
-            reportsLogic.ExportMainTable(saveFileDialog1.FileName, orders);
+            ReportsLogic.ExportMainTable(saveFileDialog1.FileName, orders);
         }
 
         private void ButtonInProgress_Click(object sender, EventArgs e)
@@ -577,10 +601,15 @@ namespace WinFormsApp1
         {
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
-                var savedColor = ColorTranslator.FromHtml(dataGridView1.Rows[i].
+                var color = ColorTranslator.FromHtml(dataGridView1.Rows[i].
                     Cells[nameof(OrderTableDTO.ColorRow)].Value.ToString());
-                var color = ordersLogic.ChangeColorRows(Convert.ToInt32(dataGridView1.Rows[i].Cells[nameof(OrderTableDTO.Id)].Value), 
-                    status, savedColor);
+                var orderDTO = ordersLogic.GetOrder(IdOrder);
+                if (color != ColorsRowsHelper.ColorDefinition(orderDTO))
+                {
+                    color = ColorsRowsHelper.ColorDefinition(orderDTO);
+                    orderDTO.ColorRow = ColorTranslator.ToHtml(color);
+                    ordersLogic.SaveOrder(orderDTO);
+                }
                 dataGridView1.Rows[i].DefaultCellStyle.ForeColor = color;
                 dataGridView1.Rows[i].DefaultCellStyle.SelectionForeColor = color;
 
@@ -980,7 +1009,7 @@ namespace WinFormsApp1
         {  
             if (dataGridView1.Rows.Count == 0)
                 return;
-            PropertiesOrder propertiesOrder = new(idOrder, status, logInSystem)
+            PropertiesOrder propertiesOrder = new(IdOrder, status, logInSystem)
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -1197,7 +1226,12 @@ namespace WinFormsApp1
         {
             try
             {
-                DBLogic.CopyDB("./Res/computerservice.db");
+                var pickDatabaseFrom = Environment.CurrentDirectory;
+                var srcFile = Path.Combine(pickDatabaseFrom, "computerservice.db");
+                var destFile = Path.Combine(pickDatabaseFrom, "./Res/computerservice.db");
+                if (File.Exists(destFile))
+                    File.Delete(destFile);
+                File.Copy(srcFile, destFile);
             }
             catch
             {
@@ -1364,7 +1398,8 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            reportsLogic.GettingDeviceReport(idOrder);
+            var orderDTO = ordersLogic.GetOrder(IdOrder);
+            ReportsLogic.GettingDeviceReport(orderDTO);
             FocusButton(status);
         }
 
@@ -1372,7 +1407,10 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            reportsLogic.IssuingDeviceReport(idOrder);
+            var orderDTO = ordersLogic.GetOrder(IdOrder);
+            var detalsDTO = warehousesLogic.GetDetailsInOrder(IdOrder);
+            var malfunctionOrderDTO = malfunctionsOrdersLogic.GetMalfunctionOrdersByIdOrder(IdOrder);
+            ReportsLogic.IssuingDeviceReport(orderDTO, detalsDTO, malfunctionOrderDTO);
             FocusButton(status);
         }
 
@@ -1407,18 +1445,26 @@ namespace WinFormsApp1
         {
             try
             {
-                DBLogic.UpdateDB();
+                var pickDatabaseFrom = Environment.CurrentDirectory;
+                var srcFile = Path.Combine(pickDatabaseFrom, "computerservice.db");
+                var destFile = Path.Combine(pickDatabaseFrom, "./Service/computerservice.db");
+                if (File.Exists(destFile))
+                    File.Delete(destFile);
+                File.Copy(srcFile, destFile);
+
+                var path = Path.Combine(Environment.CurrentDirectory, "./Service/computerservice.db");
+                FtpClient client = new()
+                {
+                    Host = "198.37.116.30",
+                    Credentials = new NetworkCredential("lizaveta", "wYwu6@L?2mhUT2?")
+                };
+                client.Connect();
+                client.UploadFile(path, "www.webappdb.somee.com//computerservice.db");
 
             }
             catch (Exception exp)
             {
-                Warning warning = new()
-                {
-                    LabelText = exp.Message,
-                    StartPosition = FormStartPosition.CenterParent
-                };
-
-                warning.ShowDialog();
+                MessageBox.Show(exp.Message);
             }
         }
 

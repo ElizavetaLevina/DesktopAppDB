@@ -602,9 +602,7 @@ namespace WinFormsApp1
             orderDTO.DiagnosisId = idDiagnosis;
             orderDTO.Note = textBoxNote.Text;
             orderDTO.DateEndGuarantee = orderDTO.DateIssue != null ? orderDTO.DateIssue?.AddMonths(orderDTO.Guarantee) : null;
-            orderDTO.ColorRow = ColorTranslator.ToHtml(ColorsRowsHelper.ColorDefinition(mainMaster: MainMaster,
-                dateStartWork: (DateTime)dateStartWork, dateCompleted: (DateTime)orderDTO.DateCompleted,
-                status: statusOrder));
+            orderDTO.ColorRow = ColorTranslator.ToHtml(ColorsRowsHelper.ColorDefinition(orderDTO));
             orderDTO.DateLastCall = textBoxDateLastCall.Text;
             orderDTO.PriceAgreed = PriceAgreed;
             orderDTO.MaxPrice = PriceAgreed ? Convert.ToInt32(MaxPrice) : null;

@@ -12,7 +12,6 @@ namespace WinFormsApp1
         MalfunctionsOrdersLogic malfunctionsOrdersLogic = new();
         WarehousesLogic warehousesLogic = new();
         OrderEditDTO orderDTO;
-        ReportsLogic reportsLogic = new();
         public IssuingClient(int id)
         {
             InitializeComponent();
@@ -99,7 +98,12 @@ namespace WinFormsApp1
                     ButtonVisible = true
                 };
                 if (warning.ShowDialog() == DialogResult.OK)
-                    reportsLogic.IssuingDeviceReport(idOrder);
+                {
+                    var orderDTO = ordersLogic.GetOrder(idOrder);
+                    var detalsDTO = warehousesLogic.GetDetailsInOrder(idOrder);
+                    var malfunctionOrderDTO = malfunctionsOrdersLogic.GetMalfunctionOrdersByIdOrder(idOrder);
+                    ReportsLogic.IssuingDeviceReport(orderDTO, detalsDTO, malfunctionOrderDTO);
+                }
 
                 DialogResult = DialogResult.OK;
                 Close();

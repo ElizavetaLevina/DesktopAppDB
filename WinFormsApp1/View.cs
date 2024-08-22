@@ -1,45 +1,47 @@
-﻿using WinFormsApp1.DTO;
-using WinFormsApp1.Enum;
-using WinFormsApp1.Helpers;
-using WinFormsApp1.Repository;
-using Color = System.Drawing.Color;
+﻿using WinFormsApp1.Helpers;
+using WinFormsApp1.Logic;
 
 namespace WinFormsApp1
 {
     public partial class View : Form
     {
-        OrderRepository orderRepository = new();
+        OrdersLogic ordersLogic = new();
         public View()
         {
             InitializeComponent();
+            InitializeElementsForm();
+        }
+
+        private void InitializeElementsForm()
+        {
             textBoxFirstLevel.Text = Properties.Settings.Default.FirstLevelText;
             textBoxSecondLevelFrom.Text = Properties.Settings.Default.FirstLevelText;
             textBoxSecondLevelBefore.Text = Properties.Settings.Default.SecondLevelText;
             textBoxThirdLevel.Text = Properties.Settings.Default.SecondLevelText;
-            button1.BackColor = Properties.Settings.Default.FirstLevelColor;
-            button2.BackColor = Properties.Settings.Default.SecondLevelColor;
-            button3.BackColor = Properties.Settings.Default.ThirdLevelColor;
+            buttonFirstColor.BackColor = Properties.Settings.Default.FirstLevelColor;
+            buttonSecondColor.BackColor = Properties.Settings.Default.SecondLevelColor;
+            buttonThirdColor.BackColor = Properties.Settings.Default.ThirdLevelColor;
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void ButtonFirstColor_Click(object sender, EventArgs e)
         {
-            colorDialog1.Color = button1.BackColor;
+            colorDialog1.Color = buttonFirstColor.BackColor;
             colorDialog1.ShowDialog();
-            button1.BackColor = colorDialog1.Color;
+            buttonFirstColor.BackColor = colorDialog1.Color;
         }
 
-        private void Button2_Click(object sender, EventArgs e)
+        private void ButtonSecondColor_Click(object sender, EventArgs e)
         {
-            colorDialog1.Color = button2.BackColor;
+            colorDialog1.Color = buttonSecondColor.BackColor;
             colorDialog1.ShowDialog();
-            button2.BackColor = colorDialog1.Color;
+            buttonSecondColor.BackColor = colorDialog1.Color;
         }
 
-        private void Button3_Click(object sender, EventArgs e)
+        private void ButtonThirdColor_Click(object sender, EventArgs e)
         {
-            colorDialog1.Color = button3.BackColor;
+            colorDialog1.Color = buttonThirdColor.BackColor;
             colorDialog1.ShowDialog();
-            button3.BackColor = colorDialog1.Color;
+            buttonThirdColor.BackColor = colorDialog1.Color;
         }
 
         private void ButtonSave_Click(object sender, EventArgs e)
@@ -53,33 +55,29 @@ namespace WinFormsApp1
             {
                 warning.LabelText = "Не все поля заполнены!";
                 warning.ShowDialog();
+                return;
             }
             else if (Convert.ToInt32(textBoxFirstLevel.Text) >=
                 Convert.ToInt32(textBoxSecondLevelBefore.Text))
             {
                 warning.LabelText = "Поле хранение менее должно быть меньше, чем поле хранение более!";
                 warning.ShowDialog();
+                return;
             }
-            else
-            {
-                Properties.Settings.Default.FirstLevelColor = button1.BackColor;
-                Properties.Settings.Default.SecondLevelColor = button2.BackColor;
-                Properties.Settings.Default.ThirdLevelColor = button3.BackColor;
-                Properties.Settings.Default.FirstLevelText = textBoxFirstLevel.Text;
-                Properties.Settings.Default.SecondLevelText = textBoxSecondLevelBefore.Text;
-                Properties.Settings.Default.Save();
+            Properties.Settings.Default.FirstLevelColor = buttonFirstColor.BackColor;
+            Properties.Settings.Default.SecondLevelColor = buttonSecondColor.BackColor;
+            Properties.Settings.Default.ThirdLevelColor = buttonThirdColor.BackColor;
+            Properties.Settings.Default.FirstLevelText = textBoxFirstLevel.Text;
+            Properties.Settings.Default.SecondLevelText = textBoxSecondLevelBefore.Text;
+            Properties.Settings.Default.Save();
 
-                var ordersDTO = orderRepository.GetOrders();
-                foreach(var order in ordersDTO)
-                {
-                    order.ColorRow = ColorTranslator.ToHtml(FindColor(order));
-                    Task.Run(async () =>
-                    {
-                        await orderRepository.SaveOrderAsync(order);
-                    });
-                }
-                Close();
+            var ordersDTO = ordersLogic.GetOrders();
+            foreach (var order in ordersDTO)
+            {
+                order.ColorRow = ColorTranslator.ToHtml(ColorsRowsHelper.ColorDefinition(order));
+                ordersLogic.SaveOrder(order);
             }
+            Close();
         }
 
         private void ButtonExit_Click(object sender, EventArgs e)
@@ -107,31 +105,9 @@ namespace WinFormsApp1
             textBoxThirdLevel.Text = textBoxSecondLevelBefore.Text;
         }
 
-        private Color FindColor(OrderEditDTO order)
+        private void View_Load(object sender, EventArgs e)
         {
-            Color color = Color.Black;
-            DateTime date;
-            if (order.StatusOrder == StatusOrderEnum.InRepair && !order.Deleted && order.MainMasterId != null)
-            {
-                date = order.DateStartWork.Value;
-            }
-            else if (order.StatusOrder == StatusOrderEnum.Completed && !order.Deleted)
-            {
-                date = order.DateCompleted.Value;
-            }
-            else
-                return color;
 
-            if ((DateTime.Now - date).Days < Convert.ToInt32(textBoxFirstLevel.Text))
-            {
-                color = button1.BackColor;
-            }
-            else if ((DateTime.Now - date).Days > Convert.ToInt32(textBoxThirdLevel.Text))
-            {
-                color = button3.BackColor;
-            }
-            else color = button2.BackColor;
-            return color;
         }
     }
 }

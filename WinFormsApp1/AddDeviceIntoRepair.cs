@@ -18,7 +18,6 @@ namespace WinFormsApp1
         List<DiagnosisEditDTO> diagnosesDTO;
         List<EquipmentEditDTO> equipmentsDTO;
         NameTableToEditEnum nameTextBox;
-        ReportsLogic reportsLogic = new();
         OrdersLogic ordersLogic = new();
         ClientsLogic clientsLogic = new();
         EquipmentsLogic equipmentsLogic = new();
@@ -183,7 +182,7 @@ namespace WinFormsApp1
                 MaxPrice = checkBox1.Checked ? Convert.ToInt32(textBoxMaxPrice.Text) : null
             };
 
-            var idOrder = ordersLogic.SaveOrder(orderDTO);
+            ordersLogic.SaveOrder(orderDTO);
 
             Warning warning = new()
             {
@@ -193,7 +192,7 @@ namespace WinFormsApp1
                 ButtonVisible = true
             };
             if (warning.ShowDialog() == DialogResult.OK)
-                reportsLogic.GettingDeviceReport(idOrder);
+                ReportsLogic.GettingDeviceReport(orderDTO);
             DialogResult = DialogResult.OK;
             Close();
         }

@@ -50,5 +50,24 @@ namespace WinFormsApp1.Logic
         {
             return equipmentRepository.GetEquipmentByName(name);
         }
+
+        /// <summary>
+        /// Получение комплектации по идентификатору
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <returns>Комплектация</returns>
+        public EquipmentEditDTO GetEquipment(int? id)
+        {
+            return equipmentRepository.GetEquipment(id);
+        }
+
+        /// <summary>
+        /// Удаление комплектации
+        /// </summary>
+        /// <param name="equipmentDTO">DTO комплектации</param>
+        public void RemoveEquipment(EquipmentEditDTO equipmentDTO)
+        {
+            equipmentRepository.RemoveEquipment(equipmentDTO);
+        }
     }
 }

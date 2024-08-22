@@ -9,18 +9,12 @@ namespace WinFormsApp1.Logic
         MalfunctionRepository malfunctionRepository = new();
 
         /// <summary>
-        /// 
+        /// Получение списка неисправностей
         /// </summary>
-        /// <returns></returns>
-        public List<string> GetMalfunctions()
+        /// <returns>Список неисправностей</returns>
+        public List<MalfunctionEditDTO> GetMalfunctions()
         {
-            var malfunctionDTO = malfunctionRepository.GetMalfunctions();
-            List<string> malfunctions = [];
-            foreach (var item in malfunctionDTO)
-            {
-                malfunctions.Add(item.Name);
-            }
-            return malfunctions;
+            return malfunctionRepository.GetMalfunctions();
         }
 
         /// <summary>
@@ -47,6 +41,25 @@ namespace WinFormsApp1.Logic
             });
             task.Wait();
             return idMalfunction;
+        }
+
+        /// <summary>
+        /// Получение неисправности по идентификатору
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <returns>Неисправность</returns>
+        public MalfunctionEditDTO GetMalfunction(int id)
+        {
+            return malfunctionRepository.GetMalfunction(id);
+        }
+
+        /// <summary>
+        /// Удаление неисправности
+        /// </summary>
+        /// <param name="malfunctionDTO"></param>
+        public void RemoveMalfunction(MalfunctionEditDTO malfunctionDTO)
+        {
+            malfunctionRepository.RemoveMalfunction(malfunctionDTO);
         }
     }
 }

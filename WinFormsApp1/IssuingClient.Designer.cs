@@ -174,11 +174,11 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(377, 216);
+            label11.Location = new Point(401, 216);
             label11.Name = "label11";
-            label11.Size = new Size(124, 25);
+            label11.Size = new Size(100, 25);
             label11.TabIndex = 16;
-            label11.Text = "ФИО клиента:";
+            label11.Text = "Id клиента:";
             // 
             // label12
             // 

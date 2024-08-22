@@ -44,5 +44,44 @@ namespace WinFormsApp1.Logic
         {
             return clientRepository.GetClients();
         }
+
+        /// <summary>
+        /// Получение списка клиентов для справочника
+        /// </summary>
+        /// <returns>Список клиентов</returns>
+        public List<ClientDTO> GetClientsForTable()
+        {
+            return clientRepository.GetClientsForTable();
+        }
+
+        /// <summary>
+        /// Получение списка клиентов по типу
+        /// </summary>
+        /// <param name="typeClient">Тип клиента</param>
+        /// <returns>Спиок клиентов</returns>
+        public List<ClientDTO> GetClientsByType(TypeClientEnum typeClient)
+        {
+            return clientRepository.GetClientsByType(typeClient);
+        }
+
+        /// <summary>
+        /// Получение списка клиентов по подстроке id клиента
+        /// </summary>
+        /// <param name="idClient">Id клиента</param>
+        /// <returns>Список клиентов</returns>
+        public List<ClientDTO> GetClientsByIdClient(string idClient)
+        {
+            return clientRepository.GetClientsByIdClient(idClient);
+        }
+
+        // <summary>
+        /// Получение клиента по идентификатору
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <returns>Клиент</returns>
+        public ClientEditDTO GetClient(string idClient)
+        {
+            return clientRepository.GetClient(idClient);
+        }
     }
 }

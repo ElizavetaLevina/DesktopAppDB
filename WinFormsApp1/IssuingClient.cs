@@ -1,48 +1,40 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Helpers;
-using WinFormsApp1.Repository;
+using WinFormsApp1.Logic;
 
 namespace WinFormsApp1
 {
     public partial class IssuingClient : Form
     {
         public int idOrder;
-        readonly DateTime dateСompleted;
+        OrdersLogic ordersLogic = new();
+        MalfunctionsOrdersLogic malfunctionsOrdersLogic = new();
+        WarehousesLogic warehousesLogic = new();
         OrderEditDTO orderDTO;
-        OrderRepository orderRepository = new();
-        MalfunctionOrderRepository malfunctionOrderRepository = new();
-        WarehouseRepository warehouseRepository = new();
+        ReportsLogic reportsLogic = new();
         public IssuingClient(int id)
         {
             InitializeComponent();
             idOrder = id;
-            int summDetails = 0;
-            int sumPrice = 0;
-            orderDTO = orderRepository.GetOrder(idOrder);
-            var malfunctionOrderDTO = malfunctionOrderRepository.GetMalfunctionOrdersByIdOrder(idOrder);
-            var detailsDTO = warehouseRepository.GetDetailsInOrder(idOrder);
+            InitializeElementsForm();
+        }
 
-            foreach(var detail in detailsDTO)
-            {
-                summDetails += detail.PriceSale;
-            }
+        private void InitializeElementsForm()
+        {
+            orderDTO = ordersLogic.GetOrder(idOrder);
+            var malfunctionOrderDTO = malfunctionsOrdersLogic.GetMalfunctionOrdersByIdOrder(idOrder);
+            var detailsDTO = warehousesLogic.GetDetailsInOrder(idOrder);
 
-            labelPriceDetails.Text = String.Format("{0} руб.", summDetails);
+            labelPriceDetails.Text = String.Format("{0} руб.", detailsDTO.Sum(i => i.PriceSale));
             labelCountDetails.Text = String.Format("{0} шт.", detailsDTO.Count);
-
-            foreach(var malfunction in malfunctionOrderDTO)
-            {
-                sumPrice += malfunction.Price;
-            }
-
-            labelPriceRepair.Text = sumPrice.ToString();
-            labelTotalPrice.Text = String.Format("{0} руб.", summDetails + sumPrice);
+            labelPriceRepair.Text = malfunctionOrderDTO.Sum(i => i.Price).ToString();
+            labelTotalPrice.Text = String.Format("{0} руб.", detailsDTO.Sum(i => i.PriceSale) +
+                malfunctionOrderDTO.Sum(i => i.Price));
             labelGuaranteePeriod.Text = DateTime.Now.AddMonths(Convert.ToInt32(textBoxGuarantee.Text)).Date.ToShortDateString();
-            labelNameClient.Text = orderDTO.Client?.NameAndAddressClient;
-            labelDateCreate.Text = orderDTO.DateCreation.Value.ToShortDateString();
+            labelNameClient.Text = orderDTO.Client?.IdClient;
+            labelDateCreate.Text = orderDTO.DateCreation?.ToShortDateString();
             labelEquipment.Text = orderDTO.Equipment?.Name;
-            
         }
 
         private void ButtonExit_Click(object sender, EventArgs e)
@@ -97,13 +89,7 @@ namespace WinFormsApp1
                 else
                     orderDTO.StatusOrder = StatusOrderEnum.Archive;
 
-
-                var task = Task.Run(async () =>
-                {
-                    await orderRepository.SaveOrderAsync(orderDTO);
-                });
-                task.Wait();
-
+                ordersLogic.SaveOrder(orderDTO);
 
                 Warning warning = new()
                 {
@@ -112,12 +98,9 @@ namespace WinFormsApp1
                     ButtonNoText = "Нет",
                     ButtonVisible = true
                 };
-
                 if (warning.ShowDialog() == DialogResult.OK)
-                {
-                    /*IssuingReport issuingReport = new();
-                    issuingReport.Report(idOrder);*/
-                }
+                    reportsLogic.IssuingDeviceReport(idOrder);
+
                 DialogResult = DialogResult.OK;
                 Close();
             }

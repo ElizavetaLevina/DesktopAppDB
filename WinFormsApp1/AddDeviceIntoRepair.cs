@@ -247,7 +247,9 @@ namespace WinFormsApp1
         private string FindColor()
         {
             string color;
-            if ((DateTime.Now - dateTimePicker1.Value).Days < Convert.ToInt32
+            if (comboBoxMainMaster.Text == "-")
+                color = ColorTranslator.ToHtml(Color.DimGray);
+            else if ((DateTime.Now - dateTimePicker1.Value).Days < Convert.ToInt32
                         (Properties.Settings.Default.FirstLevelText))
             {
                 color = ColorTranslator.ToHtml(Properties.Settings.Default.FirstLevelColor);

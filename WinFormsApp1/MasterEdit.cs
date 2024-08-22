@@ -1,6 +1,9 @@
-﻿using WinFormsApp1.DTO;
+﻿using System.Net;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Helpers;
+using WinFormsApp1.Logic;
+using WinFormsApp1.Model;
 using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
@@ -9,6 +12,8 @@ namespace WinFormsApp1
     {
         public bool newMaster;
         public int idMaster;
+        MastersLogic mastersLogic = new();
+        MasterEditDTO masterDTO = new();
         MasterRepository masterRepository = new();
         public MasterEdit(bool addMaster = false, int _idMaster = 0)
         {
@@ -27,7 +32,7 @@ namespace WinFormsApp1
             linkLabelRateEdit.Visible = !newMaster;
             if (!newMaster)
             {
-                var masterDTO = masterRepository.GetMaster(idMaster);
+                masterDTO = mastersLogic.GetMaster(idMaster);
 
                 textBoxName.Text = masterDTO.NameMaster;
                 textBoxName.SelectAll();
@@ -115,13 +120,9 @@ namespace WinFormsApp1
             }
             else
             {
-                var masterDTO = new MasterEditDTO()
-                {
-                    Id = idMaster,
-                    NameMaster = textBoxName.Text,
-                    Address = textBoxAddress.Text,
-                    NumberPhone = textBoxNumberPhone.Text
-                };
+                masterDTO.NameMaster = textBoxName.Text;
+                masterDTO.Address = textBoxAddress.Text;
+                masterDTO.NumberPhone = textBoxNumberPhone.Text;
                 if (radioButtonRate.Checked)
                 {
                     masterDTO.TypeSalary = TypeSalaryEnum.rate;
@@ -138,12 +139,7 @@ namespace WinFormsApp1
                     masterDTO.TypeSalary = TypeSalaryEnum.percentOrganization;
                     masterDTO.Rate = Convert.ToInt32(labelPercent.Text);
                 }
-
-                var task = Task.Run(async () =>
-                {
-                    await masterRepository.SaveMasterAsync(masterDTO);
-                });
-                task.Wait();
+                mastersLogic.SaveMaster(masterDTO);
             }
             Close();
         }

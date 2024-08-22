@@ -1,11 +1,13 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
+using WinFormsApp1.Logic;
 using WinFormsApp1.Repository;
 
 namespace WinFormsApp1
 {
     public partial class PropertiesClient : Form
     {
+        ClientsLogic clientsLogic = new();
         ClientRepository clientRepository = new();
         ClientEditDTO clientDTO;
         public string idClient;
@@ -13,7 +15,12 @@ namespace WinFormsApp1
         {
             InitializeComponent();
             idClient = _idClient;
-            clientDTO = clientRepository.GetClient(idClient);
+            InitializeElementsForms();
+        }
+
+        private void InitializeElementsForms()
+        {
+            clientDTO = clientsLogic.GetClient(idClient);
             textBoxID.Text = clientDTO.IdClient;
             textBoxNameAddress.Text = clientDTO.NameAndAddressClient;
             textBoxSecondPhone.Text = clientDTO.NumberSecondPhone;
@@ -37,11 +44,7 @@ namespace WinFormsApp1
                 clientDTO.NameAndAddressClient = textBoxNameAddress.Text;
                 clientDTO.NumberSecondPhone = textBoxSecondPhone.Text;
                 clientDTO.TypeClient = TypeClient();
-
-                Task.Run(async () =>
-                {
-                    await clientRepository.SaveClientAsync(clientDTO);
-                });
+                clientsLogic.SaveClient(clientDTO);
 
                 DialogResult = DialogResult.OK;
                 Close();

@@ -1,12 +1,12 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
-using WinFormsApp1.Repository;
+using WinFormsApp1.Logic;
 
 namespace WinFormsApp1
 {
     public partial class GuideClients : Form
     {
-        ClientRepository clientRepository = new();
+        ClientsLogic clientsLogic = new();
         List<ClientDTO> clients;
         public GuideClients()
         {
@@ -16,17 +16,17 @@ namespace WinFormsApp1
 
         private void InitializeElementsForm() 
         {
-            clients = clientRepository.GetClientsForTable();
+            clients = clientsLogic.GetClientsForTable();
             UpdateTable();
         }
 
         private void UpdateTable()
         {
             dataGridView1.DataSource = clients;
-            dataGridView1.Columns["Id"].Visible = false;
-            dataGridView1.Columns["IdClient"].HeaderText = "ID клиента";
-            dataGridView1.Columns["NameAndAddressClient"].HeaderText = "ФИО, адрес";
-            dataGridView1.Columns["NumberSecondPhone"].HeaderText = "Дополнительный телефон";
+            dataGridView1.Columns[nameof(ClientDTO.Id)].Visible = false;
+            dataGridView1.Columns[nameof(ClientDTO.IdClient)].HeaderText = "ID клиента";
+            dataGridView1.Columns[nameof(ClientDTO.NameAndAddressClient)].HeaderText = "ФИО, адрес";
+            dataGridView1.Columns[nameof(ClientDTO.NumberSecondPhone)].HeaderText = "Дополнительный телефон";
 
             int[] percent = [0, 35, 35, 30];
             for (int i = 0; i < dataGridView1.ColumnCount; i++)
@@ -39,31 +39,31 @@ namespace WinFormsApp1
 
         private void TextBoxEnterName_TextChanged(object sender, EventArgs e)
         {
-            clients = clientRepository.GetClientsByIdClient(textBoxEnterName.Text);
+            clients = clientsLogic.GetClientsByIdClient(textBoxEnterName.Text);
             UpdateTable();
         }
 
         private void ButtonAll_Click(object sender, EventArgs e)
         {
-            clients = clientRepository.GetClientsForTable();
+            clients = clientsLogic.GetClientsForTable();
             UpdateTable();
         }
 
         private void ButtonWhite_Click(object sender, EventArgs e)
         {
-            clients = clientRepository.GetClientsByType(TypeClientEnum.white);
+            clients = clientsLogic.GetClientsByType(TypeClientEnum.white);
             UpdateTable();
         }
 
         private void ButtonNormal_Click(object sender, EventArgs e)
         {
-            clients = clientRepository.GetClientsByType(TypeClientEnum.normal);
+            clients = clientsLogic.GetClientsByType(TypeClientEnum.normal);
             UpdateTable();
         }
 
         private void ButtonBlack_Click(object sender, EventArgs e)
         {
-            clients = clientRepository.GetClientsByType(TypeClientEnum.black);
+            clients = clientsLogic.GetClientsByType(TypeClientEnum.black);
             UpdateTable();
         }
 

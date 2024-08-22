@@ -26,10 +26,10 @@ namespace WinFormsApp1.Repository
         }
 
         /// <summary>
-        /// Получение записи по идентификатору
+        /// Получение мастера по идентификатору
         /// </summary>
         /// <param name="id">Идентификатор</param>
-        /// <returns>Запись</returns>
+        /// <returns>Мастер</returns>
         public MasterEditDTO GetMaster(int? id)
         {
             Context context = new();

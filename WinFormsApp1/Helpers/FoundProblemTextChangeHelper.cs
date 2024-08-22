@@ -1,29 +1,20 @@
-﻿using WinFormsApp1.Repository;
+﻿using WinFormsApp1.Logic;
 
 namespace WinFormsApp1.Helpers
 {
     public static class FoundProblemTextChangeHelper
     {
         /// <summary>
-        /// Получение списка неисправностей по строке 
+        /// Получение списка неисправностей по подстроке 
         /// </summary>
-        /// <param name="textBoxProblem1">Первая неисправность</param>
-        /// <param name="textBoxProblem2">Вторая неисправность</param>
-        /// <param name="textBoxProblem3">Третья неисправность</param>
+        /// <param name="text">Подстрока несправностей</param>
         /// <returns>Список неисправностей для ListBox</returns>
-        public static List<string> GetItemsListBox(/*string? textBoxProblem1 = null, string? textBoxProblem2 = null, string? textBoxProblem3 = null*/string text)
+        public static List<string> GetItemsListBox(string text)
         {
-            MalfunctionRepository malfunctionRepository = new();
-            //string text = string.Empty;
+            MalfunctionsLogic malfunctionsLogic = new();
             List<string> finalListProblem = [];
-            var malfunctionList = malfunctionRepository.GetMalfunctions();
+            var malfunctionList = malfunctionsLogic.GetMalfunctions();
 
-            /*if (textBoxProblem1 != null)
-                text = textBoxProblem1;
-            else if (textBoxProblem2 != null)
-                text = textBoxProblem2;
-            else if (textBoxProblem3 != null)
-                text = textBoxProblem3;*/
 
             foreach (var problem in malfunctionList)
             {

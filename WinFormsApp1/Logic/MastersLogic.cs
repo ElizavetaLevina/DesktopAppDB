@@ -23,5 +23,42 @@ namespace WinFormsApp1.Logic
         {
             return masterRepository.GetMasters();
         }
+
+        /// <summary>
+        /// Получение записи по идентификатору
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <returns>Запись</returns>
+        public MasterEditDTO GetMaster(int? id)
+        {
+            return masterRepository.GetMaster(id);
+        }
+
+        /// <summary>
+        /// Сохранение мастера
+        /// </summary>
+        /// <param name="masterDTO">DTO мастера</param>
+        public void SaveMaster(MasterEditDTO masterDTO)
+        {
+            var task = Task.Run(async () =>
+            {
+                await masterRepository.SaveMasterAsync(masterDTO);
+            });
+            task.Wait();
+        }
+
+        /// <summary>
+        /// Удаление мастера
+        /// </summary>
+        /// <param name="masterDTO">DTO мастера</param>
+        public void RemoveMaster(MasterEditDTO masterDTO)
+        {
+            var task = Task.Run(async () =>
+            {
+                await masterRepository.RemoveMasterAsync(masterDTO);
+            });
+            task.Wait();
+        }
+
     }
 }

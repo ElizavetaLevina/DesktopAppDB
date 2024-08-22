@@ -7,10 +7,10 @@ namespace WinFormsApp1.Repository
     public class ClientRepository
     {
         /// <summary>
-        /// Получение записи по идентификатору
+        /// Получение клиента по идентификатору
         /// </summary>
         /// <param name="id">Идентификатор</param>
-        /// <returns>Запись</returns>
+        /// <returns>Клиент</returns>
         public ClientEditDTO GetClient(string idClient)
         {
             Context context = new();

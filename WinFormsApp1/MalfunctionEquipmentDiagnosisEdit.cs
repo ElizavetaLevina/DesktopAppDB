@@ -21,7 +21,7 @@ namespace WinFormsApp1
             switch (status)
             {
                 case NameTableToEditEnum.Malfunction:
-                    if (!string.IsNullOrEmpty(textBoxName.Text) && !string.IsNullOrEmpty(textBoxPrice.Text))
+                    if (!string.IsNullOrEmpty(TextBoxName) && !string.IsNullOrEmpty(TextBoxPrice))
                     {
                         DialogResult = DialogResult.OK;
                         Close();
@@ -30,7 +30,7 @@ namespace WinFormsApp1
                         warning.ShowDialog();
                     break;
                 case NameTableToEditEnum.Diagnosis:
-                    if (!string.IsNullOrEmpty(textBoxName.Text))
+                    if (!string.IsNullOrEmpty(TextBoxName))
                     {
                         DialogResult = DialogResult.OK;
                         Close();
@@ -39,7 +39,7 @@ namespace WinFormsApp1
                         warning.ShowDialog();
                     break;
                 case NameTableToEditEnum.Equipment:
-                    if (!string.IsNullOrEmpty(textBoxName.Text))
+                    if (!string.IsNullOrEmpty(TextBoxName))
                     {
                         DialogResult = DialogResult.OK;
                         Close();
@@ -68,7 +68,8 @@ namespace WinFormsApp1
 
         private void TextBoxName_KeyDown(object sender, KeyEventArgs e)
         {
-            if ((status == NameTableToEditEnum.Diagnosis || status == NameTableToEditEnum.Equipment) && e.KeyCode == Keys.Enter)
+            if ((status == NameTableToEditEnum.Diagnosis || status == NameTableToEditEnum.Equipment) && 
+                e.KeyCode == Keys.Enter)
                 Save();
         }
 

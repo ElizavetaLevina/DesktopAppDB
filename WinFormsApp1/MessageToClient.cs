@@ -1,19 +1,19 @@
 ﻿using System.IO.Ports;
 using WinFormsApp1.DTO;
-using WinFormsApp1.Repository;
+using WinFormsApp1.Logic;
 
 namespace WinFormsApp1
 {
     public partial class MessageToClient : Form
     {
         public string idClient;
-        ClientRepository clientRepository = new();
+        ClientsLogic clientsLogic = new();
         ClientEditDTO clientDTO;
         public MessageToClient(string _idClient)
         {
             InitializeComponent();
             idClient = _idClient;
-            clientDTO = clientRepository.GetClient(idClient);
+            clientDTO = clientsLogic.GetClient(idClient);
             textBoxPhone.Text = clientDTO.IdClient;
         }
 

@@ -16,10 +16,10 @@ namespace WinFormsApp1.Repository
         }
 
         /// <summary>
-        /// Получение записи по идентификатору
+        /// Получение комплектации по идентификатору
         /// </summary>
         /// <param name="id">Идентификатор</param>
-        /// <returns>Запись</returns>
+        /// <returns>Комплектация</returns>
         public EquipmentEditDTO GetEquipment(int? id)
         {
             Context context = new();

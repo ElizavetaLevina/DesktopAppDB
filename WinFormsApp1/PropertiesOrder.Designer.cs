@@ -111,7 +111,7 @@
             textBoxEndGuarantee = new TextBox();
             textBoxGuaranteePeriod = new TextBox();
             textBoxAvailabilityGuarantee = new TextBox();
-            dateIssue = new DateTimePicker();
+            dateTimePickerIssue = new DateTimePicker();
             label24 = new Label();
             label23 = new Label();
             label22 = new Label();
@@ -949,7 +949,7 @@
             tabPageGuarantee.Controls.Add(textBoxEndGuarantee);
             tabPageGuarantee.Controls.Add(textBoxGuaranteePeriod);
             tabPageGuarantee.Controls.Add(textBoxAvailabilityGuarantee);
-            tabPageGuarantee.Controls.Add(dateIssue);
+            tabPageGuarantee.Controls.Add(dateTimePickerIssue);
             tabPageGuarantee.Controls.Add(label24);
             tabPageGuarantee.Controls.Add(label23);
             tabPageGuarantee.Controls.Add(label22);
@@ -1000,15 +1000,15 @@
             textBoxAvailabilityGuarantee.Size = new Size(260, 31);
             textBoxAvailabilityGuarantee.TabIndex = 3;
             // 
-            // dateIssue
+            // dateTimePickerIssue
             // 
-            dateIssue.Enabled = false;
-            dateIssue.Format = DateTimePickerFormat.Short;
-            dateIssue.Location = new Point(270, 30);
-            dateIssue.Name = "dateIssue";
-            dateIssue.Size = new Size(153, 31);
-            dateIssue.TabIndex = 1;
-            dateIssue.ValueChanged += DateIssue_ValueChanged;
+            dateTimePickerIssue.Enabled = false;
+            dateTimePickerIssue.Format = DateTimePickerFormat.Short;
+            dateTimePickerIssue.Location = new Point(270, 30);
+            dateTimePickerIssue.Name = "dateTimePickerIssue";
+            dateTimePickerIssue.Size = new Size(153, 31);
+            dateTimePickerIssue.TabIndex = 1;
+            dateTimePickerIssue.ValueChanged += DateTimePickerIssue_ValueChanged;
             // 
             // label24
             // 
@@ -1084,7 +1084,7 @@
             // 
             timer1.Tick += Timer1_Tick;
             // 
-            // FeaturesOrder
+            // PropertiesOrder
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -1096,7 +1096,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             KeyPreview = true;
             MaximizeBox = false;
-            Name = "FeaturesOrder";
+            Name = "PropertiesOrder";
             Text = "Свойства устройства";
             Load += FeaturesOrder_Load;
             KeyDown += FeaturesOrder_KeyDown;
@@ -1166,7 +1166,7 @@
         private Label label23;
         private Label label22;
         private Label label21;
-        private DateTimePicker dateIssue;
+        private DateTimePicker dateTimePickerIssue;
         private TextBox textBoxAvailabilityGuarantee;
         private TextBox textBoxGuaranteeLeft;
         private TextBox textBoxEndGuarantee;

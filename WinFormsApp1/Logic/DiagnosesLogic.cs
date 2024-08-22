@@ -40,5 +40,35 @@ namespace WinFormsApp1.Logic
         {
             return diagnosisRepository.GetDiagnosisByName(name);
         }
+
+        /// <summary>
+        /// Получение диагноза по идентификатору
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <returns>Диагноз</returns>
+        public DiagnosisEditDTO GetDiagnosis(int? id)
+        {
+            return diagnosisRepository.GetDiagnosis(id);
+        }
+
+        /// <summary>
+        /// Удаление диагноза
+        /// </summary>
+        /// <param name="diagnosisDTO">DTO диагноза</param>
+        public void RemoveDiagnosis(DiagnosisEditDTO diagnosisDTO)
+        {
+            diagnosisRepository.RemoveDiagnosis(diagnosisDTO);
+        }
+
+        /// <summary>
+        /// Получение списка неисправностей по подстроке названия
+        /// </summary>
+        /// <param name="name">Название</param>
+        /// <returns>Список неисправностей</returns>
+        public List<DiagnosisEditDTO> GetDiagnosesByName(string name)
+        {
+            return diagnosisRepository.GetDiagnosesByName(name);
+        }
     }
+
 }

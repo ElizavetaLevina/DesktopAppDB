@@ -16,10 +16,10 @@ namespace WinFormsApp1.Repository
         }
 
         /// <summary>
-        /// Получение записи по идентификатору
+        /// Получение диагноза по идентификатору
         /// </summary>
         /// <param name="id">Идентификатор</param>
-        /// <returns>Запись</returns>
+        /// <returns>Диагноз</returns>
         public DiagnosisEditDTO GetDiagnosis(int? id)
         {
             Context context = new();

@@ -156,7 +156,10 @@ namespace WinFormsApp1.Logic
             switch (status)
             {
                 case StatusOrderEnum.InRepair:
-                    countDays = (DateTime.Now - orderDTO.DateStartWork.Value).Days;
+                    if (orderDTO.MainMasterId != null)
+                        countDays = (DateTime.Now - orderDTO.DateStartWork.Value).Days;
+                    else
+                        return Color.DimGray;
                     break;
                 case StatusOrderEnum.Completed:
                     countDays = (DateTime.Now - orderDTO.DateCompleted.Value).Days;
@@ -223,9 +226,30 @@ namespace WinFormsApp1.Logic
         /// <param name="dateCompleted">Дата завершения заказа</param>
         /// <param name="dateIssue">Дата выдачи заказа</param>
         /// <returns></returns>
-        public List<OrderEditDTO> GetOrdersForSalaries(DateTime? dateCompleted = null, DateTime? dateIssue = null)
+        public List<OrderEditDTO> GetOrdersForSalaries(DateTime? dateCompleted = null, 
+            DateTime? dateIssue = null)
         {
             return orderRepository.GetOrdersForSalaries(dateCompleted: dateCompleted, dateIssue: dateIssue);
+        }
+
+        /// <summary>
+        /// Получение списка заказов по диагнозу
+        /// </summary>
+        /// <param name="idDiagnosis">Идентификатор диагноза</param>
+        /// <returns>Список заказов</returns>
+        public List<OrderEditDTO> GetOrdersByIdDiagnosis(int idDiagnosis)
+        {
+            return orderRepository.GetOrdersByIdDiagnosis(idDiagnosis);
+        }
+
+        /// <summary>
+        /// Получение списка заказов по комплектации
+        /// </summary>
+        /// <param name="idEquipment">Идентификатор комплектации</param>
+        /// <returns>Список заказов</returns>
+        public List<OrderEditDTO> GetOrdersByIdEquipment(int idEquipment)
+        {
+            return orderRepository.GetOrdersByIdEquipment(idEquipment);
         }
     }
 }

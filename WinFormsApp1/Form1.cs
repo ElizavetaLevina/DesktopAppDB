@@ -577,23 +577,15 @@ namespace WinFormsApp1
         {
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
-                if (string.IsNullOrEmpty(dataGridView1.Rows[i].Cells[nameof(OrderTableDTO.MasterName)].Value.ToString()))
-                {
-                    dataGridView1.Rows[i].DefaultCellStyle.ForeColor = Color.DimGray;
-                    dataGridView1.Rows[i].DefaultCellStyle.SelectionForeColor = Color.DimGray;
-                    continue;
-                }
-                var savedColor = ColorTranslator.FromHtml(dataGridView1.Rows[i].Cells[nameof(OrderTableDTO.ColorRow)].Value.ToString());
-
+                var savedColor = ColorTranslator.FromHtml(dataGridView1.Rows[i].
+                    Cells[nameof(OrderTableDTO.ColorRow)].Value.ToString());
                 var color = ordersLogic.ChangeColorRows(Convert.ToInt32(dataGridView1.Rows[i].Cells[nameof(OrderTableDTO.Id)].Value), 
                     status, savedColor);
                 dataGridView1.Rows[i].DefaultCellStyle.ForeColor = color;
                 dataGridView1.Rows[i].DefaultCellStyle.SelectionForeColor = color;
 
                 if (Convert.ToBoolean(dataGridView1.Rows[i].Cells[nameof(OrderTableDTO.ReturnUnderGuarantee)].Value))
-                {
                     dataGridView1.Rows[i].DefaultCellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
-                }
             }
         }
 

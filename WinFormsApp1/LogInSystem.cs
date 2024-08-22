@@ -7,11 +7,16 @@
         {
             InitializeComponent();
             logIn = _logIn;
+            InitializeElementsForm();
+        }
+
+        private void InitializeElementsForm()
+        {
             textBoxLogin.Text = Properties.Settings.Default.Login;
             if (!logIn)
             {
                 Text = "Изменение логина/пароля";
-                textBoxPassword.Text = Properties.Settings.Default.Password;
+                Password = Properties.Settings.Default.Password;
                 buttonLogIn.Text = "Сохранить";
                 checkBoxShowPassword.Checked = true;
             }
@@ -21,8 +26,8 @@
         {
             if (logIn)
             {
-                if (textBoxLogin.Text == Properties.Settings.Default.Login &&
-                    textBoxPassword.Text == Properties.Settings.Default.Password)
+                if (Login == Properties.Settings.Default.Login &&
+                    Password == Properties.Settings.Default.Password)
                 {
                     DialogResult = DialogResult.OK;
                     Close();
@@ -39,7 +44,7 @@
             }
             else
             {
-                if (!string.IsNullOrEmpty(textBoxLogin.Text) && !string.IsNullOrEmpty(textBoxPassword.Text))
+                if (!string.IsNullOrEmpty(Login) && !string.IsNullOrEmpty(Password))
                 {
                     Properties.Settings.Default.Login = textBoxLogin.Text;
                     Properties.Settings.Default.Password = textBoxPassword.Text;
@@ -69,8 +74,8 @@
             {
                 if (logIn)
                 {
-                    if (textBoxLogin.Text == Properties.Settings.Default.Login &&
-                    textBoxPassword.Text == Properties.Settings.Default.Password)
+                    if (Login == Properties.Settings.Default.Login && 
+                        Password == Properties.Settings.Default.Password)
                     {
                         DialogResult = DialogResult.OK;
                         Close();
@@ -87,7 +92,7 @@
                 }
                 else
                 {
-                    if (!string.IsNullOrEmpty(textBoxLogin.Text) && !string.IsNullOrEmpty(textBoxPassword.Text))
+                    if (!string.IsNullOrEmpty(Login) && !string.IsNullOrEmpty(Password))
                     {
                         Properties.Settings.Default.Login = textBoxLogin.Text;
                         Properties.Settings.Default.Password = textBoxPassword.Text;
@@ -121,6 +126,18 @@
         {
             if (logIn)
                 textBoxPassword.Focus();
+        }
+
+        public string Login
+        {
+            get { return textBoxLogin.Text; }
+            set { textBoxLogin.Text = value; }
+        }
+
+        public string Password
+        {
+            get { return textBoxPassword.Text; }
+            set { textBoxPassword.Text = value; }
         }
     }
 }

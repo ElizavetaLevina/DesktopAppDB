@@ -1,11 +1,11 @@
 ﻿using WinFormsApp1.DTO;
-using WinFormsApp1.Repository;
+using WinFormsApp1.Logic;
 
 namespace WinFormsApp1
 {
     public partial class Masters : Form
     {
-        MasterRepository masterRepository = new();
+        MastersLogic mastersLogic = new();
         public Masters()
         {
             InitializeComponent();
@@ -26,10 +26,7 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count > 0)
             {
-                int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(MasterDTO.Id)].Value);
-
-                MasterEdit addMasterForm = new(false, id)
+                MasterEdit addMasterForm = new(false, IdMaster)
                 {
                     StartPosition = FormStartPosition.CenterParent,
                     Text = "Изменение информации о мастере"
@@ -43,14 +40,8 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count > 0)
             {
-                int numberRow = dataGridView1.CurrentCell.RowIndex;
-                int id = Convert.ToInt32(dataGridView1.Rows[numberRow].Cells[nameof(MasterDTO.Id)].Value);
-                var masterDTO = new MasterEditDTO() { Id = id };
-                var task = Task.Run(async () =>
-                {
-                    await masterRepository.RemoveMasterAsync(masterDTO);
-                });
-                task.Wait();
+                var masterDTO = mastersLogic.GetMaster(IdMaster);
+                mastersLogic.RemoveMaster(masterDTO);
                 UpdateTable();
             }
         }
@@ -62,7 +53,7 @@ namespace WinFormsApp1
 
         private void UpdateTable()
         {
-            dataGridView1.DataSource = masterRepository.GetMastersForOutput();
+            dataGridView1.DataSource = mastersLogic.GetMastersForOutput();
             dataGridView1.Columns[nameof(MasterDTO.Id)].Visible = false;
             dataGridView1.Columns[nameof(MasterDTO.NameMaster)].HeaderText = "ФИО";
             dataGridView1.Columns[nameof(MasterDTO.NumberPhone)].HeaderText = "Телефон";
@@ -73,6 +64,12 @@ namespace WinFormsApp1
                 double width = Convert.ToDouble(dataGridView1.Width) / 100.0 * percent[i];
                 dataGridView1.Columns[i].Width = Convert.ToInt32(width);
             }
+        }
+
+        public int IdMaster
+        {
+            get { return Convert.ToInt32(dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].
+                Cells[nameof(MasterDTO.Id)].Value); }
         }
     }
 }

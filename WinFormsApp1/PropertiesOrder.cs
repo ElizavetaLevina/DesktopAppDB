@@ -1,7 +1,7 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Helpers;
-using WinFormsApp1.Repository;
+using WinFormsApp1.Logic;
 using Color = System.Drawing.Color;
 
 namespace WinFormsApp1
@@ -10,19 +10,19 @@ namespace WinFormsApp1
     {
         public int idOrder;
         readonly string withoutMaster = "-";
-        StatusOrderEnum statusOrder;
-        public bool show = true;
+        public bool showFormForTimer = true;
         public bool logIn;
+        StatusOrderEnum statusOrder;
         OrderEditDTO orderDTO;
-        OrderRepository orderRepository = new();
-        MasterRepository masterRepository = new();
-        TypeTechnicRepository typeTechnicRepository = new();
-        TypeBrandRepository typeBrandRepository = new();
-        WarehouseRepository warehouseRepository = new();
-        MalfunctionOrderRepository malfunctionOrderRepository = new();
-        ClientRepository clientRepository = new();
-        EquipmentRepository equipmentRepository = new();
-        DiagnosisRepository diagnosisRepository = new();
+        OrdersLogic ordersLogic = new();
+        MastersLogic mastersLogic = new();
+        TypesTechnicsLogic typesTechnicsLogic = new();
+        TypesBrandsLogic typesBrandsLogic = new();
+        WarehousesLogic warehousesLogic = new();
+        MalfunctionsOrdersLogic malfunctionsOrdersLogic = new();
+        ClientsLogic clientsLogic = new();
+        EquipmentsLogic equipmentsLogic = new();
+        DiagnosesLogic diagnosesLogic = new();
         List<DiagnosisEditDTO> diagnosesDTO;
         List<EquipmentEditDTO> equipmentsDTO;
         List<MasterDTO> mastersDTO;
@@ -32,12 +32,17 @@ namespace WinFormsApp1
             logIn = _logIn;
             idOrder = id;
             statusOrder = status;
-            orderDTO = orderRepository.GetOrder(idOrder);
+            orderDTO = ordersLogic.GetOrder(idOrder);
             InitializeElementsForm();
         }
 
         private void InitializeElementsForm()
         {
+            UpdateComboBox(ElementOfRepairEnum.MainMasterElement);
+            UpdateComboBox(ElementOfRepairEnum.AdditionalMasterElement);
+            UpdateComboBox(ElementOfRepairEnum.TypeDeviceElement);
+            UpdateComboBox(ElementOfRepairEnum.BrandDeviceElement);
+
             textBoxIdOrder.Text = orderDTO.NumberOrder.ToString();
             Text = String.Format("Свойства устройства (заказ № {0} )", orderDTO.NumberOrder);
 
@@ -46,39 +51,26 @@ namespace WinFormsApp1
             else
                 textBoxStatus.Text = "Отремонтирован";
 
-            textBoxEquipment.Text = equipmentRepository.GetEquipment(orderDTO.EquipmentId).Name;
-            textBoxDiagnosis.Text = diagnosisRepository.GetDiagnosis(orderDTO.DiagnosisId).Name;
-
+            Equipment = equipmentsLogic.GetEquipment(orderDTO.EquipmentId).Name;
+            Diagnosis = diagnosesLogic.GetDiagnosis(orderDTO.DiagnosisId).Name;
             listBoxEquipment.Visible = false;
             listBoxDiagnosis.Visible = false;
-
-            UpdateComboBox(ElementOfRepairEnum.MainMasterElement);
-            UpdateComboBox(ElementOfRepairEnum.AdditionalMasterElement);
-
+            dateCreation.Value = orderDTO.DateCreation.Value;
+            Model = orderDTO.ModelTechnic;
+            FactoryNumber = orderDTO.FactoryNumber;
+            PriceAgreed = orderDTO.PriceAgreed;
+            MaxPrice = orderDTO.MaxPrice.ToString();
             if (mastersDTO.Count > 0 && orderDTO.MainMasterId != null)
                 comboBoxMainMaster.SelectedIndex = comboBoxMainMaster.FindStringExact(orderDTO.MainMaster?.NameMaster);
             if (mastersDTO.Count > 0 && orderDTO.AdditionalMasterId != null)
-                comboBoxAdditionalMaster.SelectedIndex = comboBoxAdditionalMaster.FindStringExact(orderDTO.AdditionalMaster?.NameMaster);
-
-            dateCreation.Value = orderDTO.DateCreation.Value;
-
-            UpdateComboBox(ElementOfRepairEnum.TypeDeviceElement);
+                comboBoxAdditionalMaster.SelectedIndex = comboBoxAdditionalMaster.FindStringExact(
+                    orderDTO.AdditionalMaster?.NameMaster);
             comboBoxDevice.SelectedIndex = comboBoxDevice.FindStringExact(orderDTO.TypeTechnic?.Name);
-
-            UpdateComboBox(ElementOfRepairEnum.BrandDeviceElement);
             comboBoxBrand.SelectedIndex = comboBoxBrand.FindStringExact(orderDTO.BrandTechnic?.Name);
-
-            textBoxModel.Text = orderDTO.ModelTechnic;
-
-            textBoxFactoryNumber.Text = orderDTO.FactoryNumber;
-
-            checkBoxPriceAgreed.Checked = orderDTO.PriceAgreed;
-            textBoxMaxPrice.Text = orderDTO.MaxPrice.ToString();
 
             UpdateData();
 
-            var clientDTO = clientRepository.GetClient(orderDTO.ClientId.ToString());
-
+            var clientDTO = clientsLogic.GetClient(orderDTO.Client.IdClient.ToString());
             switch (clientDTO.TypeClient)
             {
                 case TypeClientEnum.normal:
@@ -116,7 +108,7 @@ namespace WinFormsApp1
 
         private void UpdateComboBox(ElementOfRepairEnum elementOfRepair)
         {
-            mastersDTO = masterRepository.GetMastersForOutput();
+            mastersDTO = mastersLogic.GetMastersForOutput();
             mastersDTO.Insert(0, new MasterDTO() { Id = null, NameMaster = withoutMaster });
             switch (elementOfRepair)
             {
@@ -139,21 +131,21 @@ namespace WinFormsApp1
                     comboBoxDevice.Items.Clear();
                     comboBoxDevice.ValueMember = nameof(TypeTechnicDTO.Id);
                     comboBoxDevice.DisplayMember = nameof(TypeTechnicDTO.NameTypeTechnic);
-                    comboBoxDevice.DataSource = typeTechnicRepository.GetTypesTechnic();
+                    comboBoxDevice.DataSource = typesTechnicsLogic.GetTypesTechnic();
                     break;
                 case ElementOfRepairEnum.BrandDeviceElement:
                     comboBoxBrand.DataSource = null;
                     comboBoxBrand.Items.Clear();
                     comboBoxBrand.ValueMember = nameof(TypeBrandComboBoxDTO.IdBrand);
                     comboBoxBrand.DisplayMember = nameof(TypeBrandComboBoxDTO.NameBrandTechnic);
-                    comboBoxBrand.DataSource = typeBrandRepository.GetTypeBrandByNameType(comboBoxDevice.Text);
+                    comboBoxBrand.DataSource = typesBrandsLogic.GetTypeBrandByNameType(comboBoxDevice.Text);
                     break;
             }
         }
 
         public void OrderComplete()
         {
-            var detailsDTO = warehouseRepository.GetDetailsInOrder(idOrder);
+            var detailsDTO = warehousesLogic.GetDetailsInOrder(idOrder);
 
             List<TextBox> problem = [textBoxProblem1, textBoxProblem2, textBoxProblem3];
             List<TextBox> price = [textBoxPrice1, textBoxPrice2, textBoxPrice3];
@@ -168,7 +160,7 @@ namespace WinFormsApp1
             textBoxPriceDetails.Text = String.Format("{0} руб.", detailsDTO.Sum(i => i.PriceSale));
             textBoxCountDetails.Text = String.Format("{0} шт.", detailsDTO.Count);
 
-            var malfunctionOrderDTO = malfunctionOrderRepository.GetMalfunctionOrdersByIdOrder(idOrder);
+            var malfunctionOrderDTO = malfunctionsOrdersLogic.GetMalfunctionOrdersByIdOrder(idOrder);
 
             for (int i = 0; i < malfunctionOrderDTO.Count; i++)
             {
@@ -199,7 +191,7 @@ namespace WinFormsApp1
             textBoxEndGuarantee.Enabled = true;
             textBoxGuaranteeLeft.Enabled = true;
 
-            dateIssue.Value = orderDTO.DateIssue.Value;
+            dateTimePickerIssue.Value = orderDTO.DateIssue.Value;
 
             if (orderDTO.Guarantee > 0)
             {
@@ -253,9 +245,9 @@ namespace WinFormsApp1
             {
                 dateCreation.Enabled = true;
                 if (statusOrder == StatusOrderEnum.GuaranteeIssue || statusOrder == StatusOrderEnum.Archive)
-                    dateIssue.Enabled = true;
+                    dateTimePickerIssue.Enabled = true;
                 linkLabelLogIn.Text = Properties.Settings.Default.Login;
-                if (checkBoxPriceAgreed.Checked)
+                if (PriceAgreed)
                     textBoxMaxPrice.Enabled = true;
                 checkBoxPriceAgreed.Enabled = true;
             }
@@ -263,7 +255,7 @@ namespace WinFormsApp1
             {
                 dateCreation.Enabled = false;
                 if (statusOrder == StatusOrderEnum.GuaranteeIssue || statusOrder == StatusOrderEnum.Archive)
-                    dateIssue.Enabled = false;
+                    dateTimePickerIssue.Enabled = false;
                 linkLabelLogIn.Text = "Войти (Ctrl+D)";
                 textBoxMaxPrice.Enabled = false;
                 checkBoxPriceAgreed.Enabled = false;
@@ -294,7 +286,7 @@ namespace WinFormsApp1
 
             if (equipment)
             {
-                equipmentsDTO = equipmentRepository.GetEquipmentsByName(textBoxEquipment.Text);
+                equipmentsDTO = equipmentsLogic.GetEquipmentsByName(textBoxEquipment.Text);
                 foreach (var item in equipmentsDTO)
                 {
                     listBox.Items.Add(item.Name);
@@ -302,7 +294,7 @@ namespace WinFormsApp1
             }
             else if (diagnosis)
             {
-                diagnosesDTO = diagnosisRepository.GetDiagnosesByName(textBoxDiagnosis.Text);
+                diagnosesDTO = diagnosesLogic.GetDiagnosesByName(textBoxDiagnosis.Text);
                 foreach (var item in diagnosesDTO)
                 {
                     listBox.Items.Add(item.Name);
@@ -408,11 +400,11 @@ namespace WinFormsApp1
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
-            if (show)
+            if (showFormForTimer)
             {
                 if (!orderDTO.PriceAgreed)
                 {
-                    show = false;
+                    showFormForTimer = false;
                     Warning warning = new()
                     {
                         StartPosition = FormStartPosition.CenterParent,
@@ -430,7 +422,7 @@ namespace WinFormsApp1
 
         private void CheckBoxPriceAgreed_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBoxPriceAgreed.Checked)
+            if (PriceAgreed)
                 textBoxMaxPrice.Enabled = true;
             else
                 textBoxMaxPrice.Enabled = false;
@@ -438,7 +430,7 @@ namespace WinFormsApp1
 
         private void CheckBoxPriceAgreed_KeyDown(object sender, KeyEventArgs e)
         {
-            checkBoxPriceAgreed.Checked = !checkBoxPriceAgreed.Checked;
+            PriceAgreed = !PriceAgreed;
         }
 
         private void TextBoxEquipment_Click(object sender, EventArgs e)
@@ -536,12 +528,12 @@ namespace WinFormsApp1
             UpdateComboBox(ElementOfRepairEnum.BrandDeviceElement);
         }
 
-        private void DateIssue_ValueChanged(object sender, EventArgs e)
+        private void DateTimePickerIssue_ValueChanged(object sender, EventArgs e)
         {
-            if (dateIssue.Value < orderDTO.DateCompleted.Value)
-                dateIssue.Value = orderDTO.DateCompleted.Value;
+            if (dateTimePickerIssue.Value < orderDTO.DateCompleted.Value)
+                dateTimePickerIssue.Value = orderDTO.DateCompleted.Value;
 
-            textBoxEndGuarantee.Text = dateIssue.Value.AddMonths(orderDTO.Guarantee).ToShortDateString();
+            textBoxEndGuarantee.Text = dateTimePickerIssue.Value.AddMonths(orderDTO.Guarantee).ToShortDateString();
             if (((int)(DateTime.Parse(textBoxEndGuarantee.Text) - DateTime.Now).TotalDays) > 0)
                 textBoxGuaranteeLeft.Text = String.Format("{0} дн.", (int)(DateTime.Parse(textBoxEndGuarantee.Text) - DateTime.Now).TotalDays);
             else
@@ -564,18 +556,7 @@ namespace WinFormsApp1
 
         private void ButtonSave_Click(object sender, EventArgs e)
         {
-            string foundProblem = string.Empty;
-            int priceRepair = 0;
-            DateTime? dateIssue = null;
-            DateTime? dateEndGuarantee = null;
-            var mainMasterId = ((MasterDTO)comboBoxMainMaster.SelectedItem).Id;
-            var additionalMasterId = ((MasterDTO)comboBoxAdditionalMaster.SelectedItem).Id;
-            DateTime? dateStartWork = orderDTO.DateStartWork;
-            Color color = Color.Black;
-            int? maxPrice = null;
-            Task task;
-
-            if (checkBoxPriceAgreed.Checked && textBoxMaxPrice.TextLength == 0)
+            if (PriceAgreed && string.IsNullOrEmpty(MaxPrice))
             {
                 Warning warning = new()
                 {
@@ -585,114 +566,93 @@ namespace WinFormsApp1
                 warning.ShowDialog();
                 return;
             }
-            else if (checkBoxPriceAgreed.Checked)
-                maxPrice = Convert.ToInt32(textBoxMaxPrice.Text);
 
-            if (comboBoxMainMaster.Text != withoutMaster)
-            {
-                if (orderDTO.DateStartWork == null)
-                    dateStartWork = DateTime.Now;
-            }
+            var dateStartWork = orderDTO.DateStartWork;
+            if (MainMaster != withoutMaster && orderDTO.DateStartWork == null)
+                dateStartWork = DateTime.Now;
 
-            switch (statusOrder)
-            {
-                case StatusOrderEnum.InRepair:
-                    int countDay = 0;
-                    if (comboBoxMainMaster.Text != withoutMaster)
-                        countDay = (DateTime.Now - dateStartWork.Value).Days;
-                    else
-                    {
-                        dateStartWork = null;
-                        countDay = (DateTime.Now - dateCreation.Value).Days;
-                    }
-                    if (countDay < Convert.ToInt32(Properties.Settings.Default.FirstLevelText))
-                        color = Properties.Settings.Default.FirstLevelColor;
-                    else if (countDay > Convert.ToInt32(Properties.Settings.Default.SecondLevelText))
-                        color = Properties.Settings.Default.ThirdLevelColor;
-                    else
-                        color = Properties.Settings.Default.SecondLevelColor;
-                    break;
-                case StatusOrderEnum.Completed:
-                    countDay = (DateTime.Now - orderDTO.DateCompleted.Value).Days;
-                    if (countDay < Convert.ToInt32(Properties.Settings.Default.FirstLevelText))
-                        color = Properties.Settings.Default.FirstLevelColor;
-                    else if (countDay > Convert.ToInt32(Properties.Settings.Default.SecondLevelText))
-                        color = Properties.Settings.Default.ThirdLevelColor;
-                    else
-                        color = Properties.Settings.Default.SecondLevelColor;
-                    foundProblem = textBoxProblem1.Text;
-                    priceRepair = Convert.ToInt32(textBoxPrice1.Text);
-                    break;
-                case StatusOrderEnum.GuaranteeIssue:
-                    foundProblem = textBoxProblem1.Text;
-                    priceRepair = Convert.ToInt32(textBoxPrice1.Text);
-                    dateIssue = dateIssue.Value;
-                    dateEndGuarantee = dateIssue.Value.AddMonths(orderDTO.Guarantee);
-                    break;
-                case StatusOrderEnum.Archive:
-                    foundProblem = textBoxProblem1.Text;
-                    priceRepair = Convert.ToInt32(textBoxPrice1.Text);
-                    dateIssue = dateIssue.Value;
-                    dateEndGuarantee = dateIssue.Value.AddMonths(orderDTO.Guarantee);
-                    break;
-            }
-
-            var equipmentDTO = equipmentRepository.GetEquipmentByName(textBoxEquipment.Text);
+            var equipmentDTO = equipmentsLogic.GetEquipmentByName(Equipment);
             int? idEquipment = equipmentDTO.Id;
             if (idEquipment == 0)
             {
-                if (!string.IsNullOrEmpty(textBoxEquipment.Text))
-                {
-                    task = Task.Run(async () =>
-                    {
-                        idEquipment = await equipmentRepository.SaveEquipmentAsync(equipmentDTO);
-                    });
-                    task.Wait();
-                }
+                if (!string.IsNullOrEmpty(Equipment))
+                    equipmentsLogic.SaveEquipment(equipmentDTO);
                 else idEquipment = null;
             }
 
-            var diagnosisDTO = diagnosisRepository.GetDiagnosisByName(textBoxDiagnosis.Text);
+            var diagnosisDTO = diagnosesLogic.GetDiagnosisByName(Diagnosis);
             int? idDiagnosis = diagnosisDTO.Id;
             if (idDiagnosis == 0)
             {
-                if (!string.IsNullOrEmpty(textBoxDiagnosis.Text))
-                {
-                    task = Task.Run(async () =>
-                    {
-                        idDiagnosis = await diagnosisRepository.SaveDiagnosisAsync(diagnosisDTO);
-                    });
-                    task.Wait();
-                }
+                if (!string.IsNullOrEmpty(Diagnosis))
+                    diagnosesLogic.SaveDiagnosis(diagnosisDTO);
                 else idDiagnosis = null;
             }
 
-            orderDTO.MainMasterId = mainMasterId;
-            orderDTO.AdditionalMasterId = additionalMasterId;
+            orderDTO.MainMasterId = ((MasterDTO)comboBoxMainMaster.SelectedItem).Id;
+            orderDTO.AdditionalMasterId = ((MasterDTO)comboBoxAdditionalMaster.SelectedItem).Id;
             orderDTO.DateCreation = dateCreation.Value;
             orderDTO.DateStartWork = dateStartWork;
-            orderDTO.DateIssue = dateIssue;
+            orderDTO.DateIssue = dateTimePickerIssue.Enabled ? dateTimePickerIssue.Value : orderDTO.DateIssue;
             orderDTO.TypeTechnicId = ((TypeTechnicDTO)comboBoxDevice.SelectedItem).Id;
             orderDTO.BrandTechnicId = ((TypeBrandComboBoxDTO)comboBoxBrand.SelectedItem).IdBrand;
-            orderDTO.ModelTechnic = textBoxModel.Text;
-            orderDTO.FactoryNumber = textBoxFactoryNumber.Text;
+            orderDTO.ModelTechnic = Model;
+            orderDTO.FactoryNumber = FactoryNumber;
             orderDTO.EquipmentId = idEquipment;
             orderDTO.DiagnosisId = idDiagnosis;
             orderDTO.Note = textBoxNote.Text;
-            orderDTO.DateEndGuarantee = dateEndGuarantee;
-            orderDTO.ColorRow = ColorTranslator.ToHtml(color);
+            orderDTO.DateEndGuarantee = orderDTO.DateIssue != null ? orderDTO.DateIssue?.AddMonths(orderDTO.Guarantee) : null;
+            orderDTO.ColorRow = ColorTranslator.ToHtml(ColorsRowsHelper.ColorDefinition(mainMaster: MainMaster,
+                dateStartWork: (DateTime)dateStartWork, dateCompleted: (DateTime)orderDTO.DateCompleted,
+                status: statusOrder));
             orderDTO.DateLastCall = textBoxDateLastCall.Text;
-            orderDTO.PriceAgreed = checkBoxPriceAgreed.Checked;
-            orderDTO.MaxPrice = maxPrice;
-
-            task = Task.Run(async () =>
-            {
-                await orderRepository.SaveOrderAsync(orderDTO);
-            });
-            task.Wait();
+            orderDTO.PriceAgreed = PriceAgreed;
+            orderDTO.MaxPrice = PriceAgreed ? Convert.ToInt32(MaxPrice) : null;
+            ordersLogic.SaveOrder(orderDTO);
 
             DialogResult = DialogResult.OK;
             Close();
+        }
+
+        public string MainMaster
+        {
+            get { return comboBoxMainMaster.Text; }
+        }
+
+        public string Model
+        {
+            get { return textBoxModel.Text; }
+            set { textBoxModel.Text = value; }
+        }
+
+        public string FactoryNumber
+        {
+            get { return textBoxFactoryNumber.Text; }
+            set { textBoxFactoryNumber.Text = value; }
+        }
+
+        public bool PriceAgreed
+        {
+            get { return checkBoxPriceAgreed.Checked; }
+            set { checkBoxPriceAgreed.Checked = value; }
+        }
+
+        public string Equipment
+        {
+            get { return textBoxEquipment.Text; }
+            set { textBoxEquipment.Text = value; }
+        }
+
+        public string Diagnosis
+        {
+            get { return textBoxDiagnosis.Text; }
+            set { textBoxDiagnosis.Text = value; }
+        }
+
+        public string MaxPrice
+        {
+            get { return textBoxMaxPrice.Text; }
+            set { textBoxMaxPrice.Text = value; }
         }
     }
 }

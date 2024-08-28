@@ -382,8 +382,7 @@ namespace WinFormsApp1
             {
                 CompletedOrder completedOrder = new(IdOrder)
                 {
-                    StartPosition = FormStartPosition.CenterParent,
-                    EnabledPrice = !returnUnderGuarantee
+                    StartPosition = FormStartPosition.CenterParent
                 };
                 if (completedOrder.ShowDialog() == DialogResult.OK)
                 {
@@ -465,8 +464,8 @@ namespace WinFormsApp1
                 if (status == StatusOrderEnum.GuaranteeIssue)
                 {
                     var orderDTO = ordersLogic.GetOrder(IdOrder);
-                    orderDTO.DateCreation = DateTime.Now;
-                    orderDTO.DateStartWork = DateTime.Now;
+                    orderDTO.DateCreation = DateTime.Now.ToUniversalTime();
+                    orderDTO.DateStartWork = DateTime.Now.ToUniversalTime();
                     orderDTO.StatusOrder = StatusOrderEnum.InRepair;
                     orderDTO.ReturnUnderGuarantee = true;
                     ordersLogic.SaveOrder(orderDTO);
@@ -603,7 +602,8 @@ namespace WinFormsApp1
             {
                 var color = ColorTranslator.FromHtml(dataGridView1.Rows[i].
                     Cells[nameof(OrderTableDTO.ColorRow)].Value.ToString());
-                var orderDTO = ordersLogic.GetOrder(IdOrder);
+                var orderDTO = ordersLogic.GetOrder(Convert.ToInt32(dataGridView1.Rows[i].
+                    Cells[nameof(OrderTableDTO.Id)].Value));
                 if (color != ColorsRowsHelper.ColorDefinition(orderDTO))
                 {
                     color = ColorsRowsHelper.ColorDefinition(orderDTO);

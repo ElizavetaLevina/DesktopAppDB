@@ -159,6 +159,7 @@ namespace WinFormsApp1
                 }
                 else diagnosisId = null;
             }
+            
 
             var orderDTO = new OrderEditDTO()
             {
@@ -167,8 +168,8 @@ namespace WinFormsApp1
                 ClientId = clientId,
                 MainMasterId = ((MasterDTO)comboBoxMainMaster.SelectedItem).Id,
                 AdditionalMasterId = ((MasterDTO)comboBoxAdditionalMaster.SelectedItem).Id,
-                DateCreation = dateTimePicker1.Value,
-                DateStartWork = MainMasterName != withoutMaster ? dateTimePicker1.Value : null,
+                DateCreation = dateTimePicker1.Value.ToUniversalTime(),
+                DateStartWork = MainMasterName != withoutMaster ? dateTimePicker1.Value.ToUniversalTime() : null,
                 TypeTechnicId = ((TypeTechnicDTO)comboBoxDevice.SelectedItem).Id,
                 BrandTechnicId = ((TypeBrandComboBoxDTO)comboBoxBrand.SelectedItem).IdBrand,
                 ModelTechnic = Model,

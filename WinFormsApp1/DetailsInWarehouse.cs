@@ -74,13 +74,13 @@ namespace WinFormsApp1
 
         private void ButtonAddDetails_Click(object sender, EventArgs e)
         {
-            DetailEdit addDetail = new(false, new WarehouseEditDTO())
+            DetailEdit detailEdit = new(false, new WarehouseEditDTO())
             {
                 StartPosition = FormStartPosition.CenterParent
             };
-            addDetail.ShowDialog();
+            detailEdit.ShowDialog();
             dataGridView1.DataSource = Funcs.ToDataTable(warehousesLogic.GetWarehousesForTable(availability: true, 
-                datePurchase: true));
+                datePurchase: true, name: textBoxDevice.Text));
             UpdateTable();
         }
 
@@ -118,7 +118,7 @@ namespace WinFormsApp1
         private void TextBoxDevice_TextChanged(object sender, EventArgs e)
         {
             dataGridView1.DataSource = Funcs.ToDataTable(warehousesLogic.GetWarehousesForTable(availability: true,
-                datePurchase: true, name: brandDevice));
+                datePurchase: true, name: textBoxDevice.Text));
             UpdateTable();
             if (dataGridView1.RowCount > 0)
             {

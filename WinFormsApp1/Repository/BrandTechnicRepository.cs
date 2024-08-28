@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
-using WinFormsApp1.DTO;
+﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
 
 namespace WinFormsApp1.Repository
@@ -13,7 +12,7 @@ namespace WinFormsApp1.Repository
         public List<BrandTechnicDTO> GetBrandsTechnic()
         {
             Context context = new();
-            return context.BrandTechnices.Select(a => new BrandTechnicDTO(a)).ToList();
+            return context.BrandTechnices.OrderBy(i => i.NameBrandTechnic).Select(a => new BrandTechnicDTO(a)).ToList();
         }
 
         /// <summary>

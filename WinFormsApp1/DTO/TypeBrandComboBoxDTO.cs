@@ -10,7 +10,7 @@ namespace WinFormsApp1.DTO
         public TypeBrandComboBoxDTO(TypeBrand typeBrand)
         {
             IdBrand = typeBrand.BrandTechnicsId;
-            NameBrandTechnic = typeBrand.BrandTechnic.NameBrandTechnic;
+            NameBrandTechnic = typeBrand.BrandTechnic?.NameBrandTechnic;
         }
     }
 }

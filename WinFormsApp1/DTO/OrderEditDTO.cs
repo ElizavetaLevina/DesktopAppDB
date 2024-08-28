@@ -1,10 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WinFormsApp1.Enum;
+﻿using WinFormsApp1.Enum;
 using WinFormsApp1.Model;
 
 namespace WinFormsApp1.DTO
@@ -84,7 +78,6 @@ namespace WinFormsApp1.DTO
             Diagnosis = order.Diagnosis != null ? new DiagnosisEditDTO(order.Diagnosis) : null;
             Note = order.Note;
             StatusOrder = order.StatusOrder;
-            //InProgress = order.InProgress;
             Guarantee = order.Guarantee;
             DateEndGuarantee = order.DateEndGuarantee;
             Deleted = order.Deleted;
@@ -92,7 +85,6 @@ namespace WinFormsApp1.DTO
             DateReturn = order.DateReturn;
             DateCompletedReturn = order.DateCompletedReturn;
             DateIssueReturn = order.DateIssueReturn;
-            //Issue = order.Issue;
             MalfunctionOrders = order.MalfunctionOrders;
             Details = order.Details;
             ColorRow = order.ColorRow;

@@ -12,7 +12,7 @@ namespace WinFormsApp1.Repository
         public List<TypeTechnicDTO> GetTypesTechnic()
         {
             Context context = new();
-            return context.TypeTechnices.Select(a => new TypeTechnicDTO(a)).ToList();
+            return context.TypeTechnices.OrderBy(i => i.NameTypeTechnic).Select(a => new TypeTechnicDTO(a)).ToList();
         }
 
         /// <summary>

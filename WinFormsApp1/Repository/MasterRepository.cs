@@ -12,7 +12,7 @@ namespace WinFormsApp1.Repository
         public List<MasterEditDTO> GetMasters()
         {
             Context context = new();
-            return context.Masters.Select(c => new MasterEditDTO(c)).ToList();
+            return context.Masters.OrderBy(i => i.Id).Select(c => new MasterEditDTO(c)).ToList();
         }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace WinFormsApp1.Repository
         public List<MasterDTO> GetMastersForOutput()
         {
             Context context = new();
-            return context.Masters.Select(c => new MasterDTO(c)).ToList();
+            return context.Masters.OrderBy(i => i.Id).Select(c => new MasterDTO(c)).ToList();
         }
 
         /// <summary>

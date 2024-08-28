@@ -13,7 +13,10 @@ namespace WinFormsApp1.Repository
         public List<NoteSalaryMasterEditDTO> GetNoteSalaryMasters(DateTime date)
         {
             Context context = new();
-            return context.NoteSalaryMasters.Where(i => i.Date == date).Select(a => new NoteSalaryMasterEditDTO(a)).ToList();
+            return context.NoteSalaryMasters.
+                Where(i => i.Date == date.ToUniversalTime()).
+                Select(a => new NoteSalaryMasterEditDTO(a)).
+                ToList();
         } 
 
         public async Task SaveNoteSalaryMasterAsync(NoteSalaryMasterEditDTO noteSalaryMasterDTO, CancellationToken token = default)

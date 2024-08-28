@@ -45,10 +45,6 @@ namespace WinFormsApp1.Repository
                 .Include(i => i.Client)
                 .Include(i => i.Diagnosis).ToList();
 
-            /*return set
-                .Select(a => new OrderTableDTO(a))
-                .ToList();*/
-
             return list.Select(a => new OrderTableDTO(a)).ToList();
         }
 
@@ -72,7 +68,7 @@ namespace WinFormsApp1.Repository
             
             var set = context.Orders.Where(c => true);
 
-            if(!string.IsNullOrEmpty(numberOrder))
+            if (!string.IsNullOrEmpty(numberOrder))
                 set = set.Where(i => i.NumberOrder.ToString().Contains(numberOrder));
             if (!string.IsNullOrEmpty(dateCreation))
                 set = set.Where(i => i.DateCreation.ToString().StartsWith(dateCreation));
@@ -80,25 +76,33 @@ namespace WinFormsApp1.Repository
                 set = set.Where(i => i.DateStartWork != null && i.DateStartWork.ToString().StartsWith(dateStartWork));
             if (!string.IsNullOrEmpty(idClient))
                 set = set.Where(i => i.Client.IdClient.Contains(idClient));
+            if (!string.IsNullOrEmpty(masterName))
+                set = set.Where(i => i.MainMaster.NameMaster.ToLower().Contains(masterName.ToLower()) ||
+                i.AdditionalMaster.NameMaster.ToLower().Contains(masterName.ToLower()));
+            if (!string.IsNullOrEmpty(device))
+                set = set.Where(i => i.TypeTechnic.NameTypeTechnic.ToLower().Contains(device.ToLower()) ||
+                i.BrandTechnic.NameBrandTechnic.ToLower().Contains(device.ToLower()) ||
+                i.ModelTechnic.ToLower().Contains(device.ToLower()));
+
             if (statusOrder != null)
                 set = set.Where(i => i.StatusOrder == statusOrder);
 
-            var result = set.ToList();
+            var list = set.Include(i => i.MainMaster)
+                .Include(i => i.AdditionalMaster)
+                .Include(i => i.Client)
+                .Include(i => i.TypeTechnic)
+                .Include(i => i.BrandTechnic).ToList();
+
+            /*var result = set.ToList();
             if (!string.IsNullOrEmpty(masterName))
                 result = result.Where(i => (i.MainMaster?.NameMaster?.ToLower()?.Contains(masterName.ToLower()) ?? false) || 
                 (i.AdditionalMaster?.NameMaster?.ToLower()?.Contains(masterName.ToLower()) ?? false)).ToList();
             if (!string.IsNullOrEmpty(device))
                 result = result.Where(i => (i.TypeTechnic?.NameTypeTechnic?.ToLower()?.Contains(device.ToLower()) ?? false) ||
                 (i.BrandTechnic?.NameBrandTechnic?.ToLower()?.Contains(device.ToLower()) ?? false) ||
-                (i.ModelTechnic?.ToLower()?.Contains(device.ToLower()) ?? false)).ToList();
-            /*if (!string.IsNullOrEmpty(typeTechnic))
-                result = result.Where(i => i.TypeTechnic?.NameTypeTechnic?.ToLower()?.StartsWith(typeTechnic.ToLower()) ?? false).ToList();
-            if (!string.IsNullOrEmpty(brandTechnic))
-                result = result.Where(i => i.BrandTechnic?.NameBrandTechnic?.ToLower()?.StartsWith(brandTechnic.ToLower()) ?? false).ToList();
-            if (!string.IsNullOrEmpty(modelTechnic))
-                result = result.Where(i => i.ModelTechnic?.ToLower()?.StartsWith(modelTechnic.ToLower()) ?? false).ToList();*/
+                (i.ModelTechnic?.ToLower()?.Contains(device.ToLower()) ?? false)).ToList();*/
 
-            return result
+            return list
                 .OrderByDescending(i => i.NumberOrder)
                 .Select(a => new OrderTableDTO(a))
                 .ToList();
@@ -132,7 +136,9 @@ namespace WinFormsApp1.Repository
         public List<OrderEditDTO> GetOrders()
         {
             Context context = new();
-            return context.Orders.Select(a => new OrderEditDTO(a)).ToList();
+            var some = context.Orders.Where(i => true);
+            var list = some.Include(i => i.Client).ToList();
+            return list.Select(a => new OrderEditDTO(a)).ToList();
         }
 
         /// <summary>
@@ -174,7 +180,9 @@ namespace WinFormsApp1.Repository
             if (master)
                 set = set.Where(i => i.MainMasterId == masterId || i.AdditionalMasterId == masterId);
 
-            return set.Select(a => new OrderEditDTO(a)).ToList();
+            var list = set.Include(i => i.Client).ToList();
+
+            return list.Select(a => new OrderEditDTO(a)).ToList();
         }
 
         /// <summary>
@@ -198,7 +206,10 @@ namespace WinFormsApp1.Repository
                 set = set.Where(i => i.DateIssue.Value.Month == dateIssue.Value.Month 
                 && i.DateIssue.Value.Year == dateIssue.Value.Year);
 
-            return set.Select(a => new OrderEditDTO(a)).ToList();
+            var list = set.Include(i => i.Client).ToList();
+                /*.Include(i => i.)*/
+
+            return list.Select(a => new OrderEditDTO(a)).ToList();
         }
 
 

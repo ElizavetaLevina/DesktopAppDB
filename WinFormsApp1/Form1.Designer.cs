@@ -278,7 +278,7 @@ namespace WinFormsApp1
             contextMenuRightMouse.ImageScalingSize = new Size(24, 24);
             contextMenuRightMouse.Items.AddRange(new ToolStripItem[] { itemPropertiesMenuRightMouse, toolStripSeparator4, itemDetailsMenuRightMouse, toolStripSeparator1, itemRemoveMenuRightMouse, itemRecoveryMenuRightMouse, toolStripSeparator2, itemActionDeviceMenuRightMouse, itemActionClientMenuRightMouse, toolStripSeparator19, itemNewOrderAsCurrentMenuRightMouse });
             contextMenuRightMouse.Name = "contextMenu";
-            contextMenuRightMouse.Size = new Size(407, 285);
+            contextMenuRightMouse.Size = new Size(407, 252);
             // 
             // itemPropertiesMenuRightMouse
             // 
@@ -701,6 +701,8 @@ namespace WinFormsApp1
             // 
             // itemMalfunction
             // 
+            itemMalfunction.Image = Properties.Resources.b2_17;
+            itemMalfunction.ImageScaling = ToolStripItemImageScaling.None;
             itemMalfunction.Name = "itemMalfunction";
             itemMalfunction.Size = new Size(363, 32);
             itemMalfunction.Text = "Неисправности";
@@ -708,6 +710,8 @@ namespace WinFormsApp1
             // 
             // itemDiagnosis
             // 
+            itemDiagnosis.Image = Properties.Resources.b2_16;
+            itemDiagnosis.ImageScaling = ToolStripItemImageScaling.None;
             itemDiagnosis.Name = "itemDiagnosis";
             itemDiagnosis.Size = new Size(363, 32);
             itemDiagnosis.Text = "Диагнозы";
@@ -715,6 +719,8 @@ namespace WinFormsApp1
             // 
             // itemEquipment
             // 
+            itemEquipment.Image = Properties.Resources.b2_15;
+            itemEquipment.ImageScaling = ToolStripItemImageScaling.None;
             itemEquipment.Name = "itemEquipment";
             itemEquipment.Size = new Size(363, 32);
             itemEquipment.Text = "Комплектация";
@@ -1224,12 +1230,14 @@ namespace WinFormsApp1
             contextMenuView.ImageScalingSize = new Size(24, 24);
             contextMenuView.Items.AddRange(new ToolStripItem[] { itemColor });
             contextMenuView.Name = "contextButton5";
-            contextMenuView.Size = new Size(133, 36);
+            contextMenuView.Size = new Size(241, 69);
             // 
             // itemColor
             // 
+            itemColor.Image = Properties.Resources.b2_20;
+            itemColor.ImageScaling = ToolStripItemImageScaling.None;
             itemColor.Name = "itemColor";
-            itemColor.Size = new Size(132, 32);
+            itemColor.Size = new Size(240, 32);
             itemColor.Text = "Цвета";
             itemColor.Click += ItemColor_Click;
             // 
@@ -1270,6 +1278,8 @@ namespace WinFormsApp1
             // 
             // itemChangeData
             // 
+            itemChangeData.Image = Properties.Resources.b2_19;
+            itemChangeData.ImageScaling = ToolStripItemImageScaling.None;
             itemChangeData.Name = "itemChangeData";
             itemChangeData.Size = new Size(281, 32);
             itemChangeData.Text = "Изменить логин/пароль";
@@ -1277,6 +1287,8 @@ namespace WinFormsApp1
             // 
             // itemLogOut
             // 
+            itemLogOut.Image = Properties.Resources.b2_18;
+            itemLogOut.ImageScaling = ToolStripItemImageScaling.None;
             itemLogOut.Name = "itemLogOut";
             itemLogOut.Size = new Size(281, 32);
             itemLogOut.Text = "Выйти из системы";
@@ -1286,7 +1298,7 @@ namespace WinFormsApp1
             // 
             labelClientId.AutoSize = true;
             labelClientId.Font = new Font("Segoe UI", 13F);
-            labelClientId.Location = new Point(1216, 90);
+            labelClientId.Location = new Point(1216, 89);
             labelClientId.Name = "labelClientId";
             labelClientId.Size = new Size(29, 36);
             labelClientId.TabIndex = 44;

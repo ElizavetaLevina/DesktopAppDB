@@ -80,9 +80,9 @@ namespace WinFormsApp1
                 if (orderDTO.ReturnUnderGuarantee)
                     orderDTO.DateIssueReturn = orderDTO.DateIssue;
 
-                orderDTO.DateIssue = DateIssue;
+                orderDTO.DateIssue = DateIssue.ToUniversalTime();
                 orderDTO.Guarantee = GuaranteePeriod;
-                orderDTO.DateEndGuarantee = DateEndGuarantee;
+                orderDTO.DateEndGuarantee = DateEndGuarantee.ToUniversalTime();
                 if (orderDTO.Guarantee > 0 && orderDTO.DateEndGuarantee > DateTime.Now)
                     orderDTO.StatusOrder = StatusOrderEnum.GuaranteeIssue;
                 else

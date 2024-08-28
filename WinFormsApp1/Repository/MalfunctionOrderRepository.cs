@@ -1,4 +1,5 @@
-﻿using WinFormsApp1.DTO;
+﻿using Microsoft.EntityFrameworkCore;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
 
 namespace WinFormsApp1.Repository
@@ -13,7 +14,12 @@ namespace WinFormsApp1.Repository
         public List<MalfunctionOrderEditDTO> GetMalfunctionOrdersByIdOrder(int idOrder)
         {
             Context context = new();
-            return context.MalfunctionOrders.Where(i => i.OrderId == idOrder).Select(a => new MalfunctionOrderEditDTO(a)).ToList();
+            var some = context.MalfunctionOrders
+                .Where(i => i.OrderId == idOrder);
+            var list = some.Include(i => i.Malfunction).ToList();
+            return list
+                .Select(a => new MalfunctionOrderEditDTO(a))
+                .ToList();
         }
 
         /// <summary>
@@ -24,34 +30,38 @@ namespace WinFormsApp1.Repository
         public List<MalfunctionOrderEditDTO> GetMalfunctionOrdersByIdMalfunction(int idMalfunction)
         {
             Context context = new();
-            return context.MalfunctionOrders.Where(i => i.MalfunctionId == idMalfunction).Select(a => new MalfunctionOrderEditDTO(a)).ToList();
-        }
-
-        /// <summary>
-        /// Получение списка заказ-неисправность
-        /// </summary>
-        /// <returns>Список заказ-неисправность</returns>
-        public List<MalfunctionOrderEditDTO> GetMalfunctionOrders()
-        {
-            Context context = new();
-            return context.MalfunctionOrders.Select(a => new MalfunctionOrderEditDTO(a)).ToList();
+            return context.MalfunctionOrders
+                .Where(i => i.MalfunctionId == idMalfunction)
+                .Select(a => new MalfunctionOrderEditDTO(a))
+                .ToList();
         }
 
         public async Task SaveMalfunctionOrderAsync(MalfunctionOrderEditDTO malfunctionOrderDTO, CancellationToken token = default)
         {
-            Context db = new();
-            MalfunctionOrder malfunctionOrder = new()
-            {
-                MalfunctionId = malfunctionOrderDTO.MalfunctionId,
-                OrderId = malfunctionOrderDTO.OrderId,
-                Price = malfunctionOrderDTO.Price
-            };
             try
             {
-                db.MalfunctionOrders.Add(malfunctionOrder);
+                Context db = new();
+                MalfunctionOrder? malfunctionOrder = await db.MalfunctionOrders.FirstOrDefaultAsync(c => c.OrderId == malfunctionOrderDTO.OrderId &&
+                c.MalfunctionId == malfunctionOrderDTO.MalfunctionId, token);
+                if (malfunctionOrder == null)
+                {
+                    malfunctionOrder = new()
+                    {
+                        MalfunctionId = malfunctionOrderDTO.MalfunctionId,
+                        OrderId = malfunctionOrderDTO.OrderId,
+                        Price = malfunctionOrderDTO.Price
+                    };
+                    await db.MalfunctionOrders.AddAsync(malfunctionOrder, token);
+                }
+                else 
+                { 
+                    malfunctionOrder.Price = malfunctionOrderDTO.Price;
+                    db.MalfunctionOrders.Update(malfunctionOrder);
+                }
                 await db.SaveChangesAsync(token);
             }
-            catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
+            catch (Exception ex) { 
+                MessageBox.Show(ex.Message); throw; }
         }
 
         public void RemoveMalfunctionOrder(MalfunctionOrderEditDTO malfunctionOrderDTO)

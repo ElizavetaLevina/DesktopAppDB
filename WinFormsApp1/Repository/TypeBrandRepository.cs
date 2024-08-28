@@ -1,4 +1,5 @@
-﻿using WinFormsApp1.DTO;
+﻿using System.Data.Entity;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
 
 namespace WinFormsApp1.Repository
@@ -24,13 +25,17 @@ namespace WinFormsApp1.Repository
             else if (idBrand != 0 && idType == 0)
                 set = set.Where(i => i.BrandTechnicsId == idBrand);
 
-            return set.Select(a => new TypeBrandDTO(a)).ToList();
+            var list = set.Include(i => i.BrandTechnic).ToList();
+
+            return list.Select(a => new TypeBrandDTO(a)).ToList();
         }
 
         public List<TypeBrandComboBoxDTO> GetTypeBrandByNameType(string nameType)
         {
             Context context = new();
-            return context.TypeBrands.Where(i => i.TypeTechnic.NameTypeTechnic == nameType).Select(a => new TypeBrandComboBoxDTO(a)).ToList();
+            var some = context.TypeBrands.Where(i => i.TypeTechnic.NameTypeTechnic == nameType);
+            var list = some.Include(i => i.BrandTechnic).ToList();
+            return list.Select(a => new TypeBrandComboBoxDTO(a)).ToList();
         }
 
         public async Task SaveTypeBrandAsync(TypeBrandDTO typeBrandDTO, CancellationToken token = default)

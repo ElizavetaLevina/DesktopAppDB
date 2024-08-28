@@ -96,7 +96,7 @@ namespace WinFormsApp1
             var date = (DateTime)(dateCompleted != null ? dateCompleted : dateIssue);
             var mastersDTO = mastersLogic.GetMasters();
             var noteMastersDTO = notesSalaryMastersLogic.GetNoteSalaryMasters(date);
-            List <NoteSalaryMasterEditDTO>  dataSource = new();
+            List <NoteSalaryMasterEditDTO>  dataSource = [];
 
             ordersDTO = ordersLogic.GetOrdersForSalaries(dateCompleted: dateCompleted, dateIssue: dateIssue);
 
@@ -196,6 +196,7 @@ namespace WinFormsApp1
             var noteSalaryMasters = dataGridView1.DataSource as List<NoteSalaryMasterEditDTO>;
             foreach (var item in noteSalaryMasters)
             {
+                item.Date = item.Date.ToUniversalTime();
                 notesSalaryMastersLogic.SaveNoteSalaryMasterAsync(item);
             }            
         }

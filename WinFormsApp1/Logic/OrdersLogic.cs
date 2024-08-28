@@ -28,7 +28,7 @@ namespace WinFormsApp1.Logic
         /// <summary>
         /// Удаление заказа
         /// </summary>
-        /// <param name="idOrder">Идентификатор заказа</param>
+        /// <param name="orderDTO">DTO заказа</param>
         public void RemoveOrder(OrderEditDTO orderDTO)
         {
             orderRepository.RemoveOrder(orderDTO);

@@ -569,7 +569,7 @@ namespace WinFormsApp1
 
             var dateStartWork = orderDTO.DateStartWork;
             if (MainMaster != withoutMaster && orderDTO.DateStartWork == null)
-                dateStartWork = DateTime.Now;
+                dateStartWork = DateTime.Now.ToUniversalTime();
 
             var equipmentDTO = equipmentsLogic.GetEquipmentByName(Equipment);
             int? idEquipment = equipmentDTO.Id;
@@ -591,7 +591,7 @@ namespace WinFormsApp1
 
             orderDTO.MainMasterId = ((MasterDTO)comboBoxMainMaster.SelectedItem).Id;
             orderDTO.AdditionalMasterId = ((MasterDTO)comboBoxAdditionalMaster.SelectedItem).Id;
-            orderDTO.DateCreation = dateCreation.Value;
+            orderDTO.DateCreation = dateCreation.Value.ToUniversalTime();
             orderDTO.DateStartWork = dateStartWork;
             orderDTO.DateIssue = dateTimePickerIssue.Enabled ? dateTimePickerIssue.Value : orderDTO.DateIssue;
             orderDTO.TypeTechnicId = ((TypeTechnicDTO)comboBoxDevice.SelectedItem).Id;

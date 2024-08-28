@@ -1,4 +1,5 @@
-﻿using WinFormsApp1.DTO;
+﻿using System.Data.Entity;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
 
 namespace WinFormsApp1.Repository
@@ -13,8 +14,9 @@ namespace WinFormsApp1.Repository
         public List<RateMasterDTO> GetRateMasterByIdMaster(int id)
         {
             Context context = new();
-            return context.RateMaster
-                .Where(i => i.MasterId == id).OrderBy(i => i.DateStart)
+            var some = context.RateMaster.Where(i => i.MasterId == id).OrderBy(i => i.DateStart);
+            var list = some.Include(i => i.Master).ToList();
+            return list
                 .Select(a => new RateMasterDTO(a))
                 .ToList();
         }
@@ -28,7 +30,7 @@ namespace WinFormsApp1.Repository
         public RateMasterEditDTO GetRateMasterByDate(int masterId, DateTime date)
         {
             Context context = new();
-            var rateMaster = context.RateMaster.FirstOrDefault(i => i.MasterId == masterId && i.DateStart == date);
+            var rateMaster = context.RateMaster.FirstOrDefault(i => i.MasterId == masterId && i.DateStart == date.ToUniversalTime());
             if (rateMaster != null)
                 return new RateMasterEditDTO(rateMaster);
             else

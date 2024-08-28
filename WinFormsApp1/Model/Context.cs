@@ -18,7 +18,10 @@ namespace WinFormsApp1.Model
         public DbSet<Equipment> Equipment => Set<Equipment>();
         public DbSet<RateMaster> RateMaster => Set<RateMaster>();
         public DbSet<NoteSalaryMaster> NoteSalaryMasters => Set<NoteSalaryMaster>();
-        public Context() => Database.EnsureCreatedAsync();
+        public Context()
+        {
+            var created = Database.EnsureCreated();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,10 +32,10 @@ namespace WinFormsApp1.Model
             modelBuilder.Entity<Equipment>().HasIndex(n => n.Name).IsUnique();
             modelBuilder.Entity<Client>().HasIndex(n => n.IdClient).IsUnique();
 
-            modelBuilder.Entity<Master>(e =>
-            {
-                e.Property(o => o.NameMaster).HasColumnType("TEXT COLLATE NOCASE");
-            });
+            //modelBuilder.Entity<Master>(e =>
+            //{
+            //    e.Property(o => o.NameMaster).HasColumnType("TEXT COLLATE NOCASE");
+            //});
 
             modelBuilder.Entity<Order>()
                 .HasOne(b => b.MainMaster)
@@ -133,11 +136,13 @@ namespace WinFormsApp1.Model
             try
             {
                 optionsBuilder.UseLazyLoadingProxies();
-                optionsBuilder.UseSqlite(String.Format("Data Source={0};Pooling=false", path));
+                optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=123;SearchPath=public");
+                //optionsBuilder.UseSqlite(String.Format("Data Source={0};Pooling=false", path));
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
+                throw;
             }
 
         }

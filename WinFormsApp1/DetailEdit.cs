@@ -71,7 +71,7 @@ namespace WinFormsApp1
                 warehouseDTO.NameDetail = NameDetail;
                 warehouseDTO.PricePurchase = PricePurchase;
                 warehouseDTO.PriceSale = PriceSale;
-                warehouseDTO.DatePurchase = DatePurchase;
+                warehouseDTO.DatePurchase = DatePurchase.ToUniversalTime();
                 warehouseDTO.Availability = true;
                 warehouseDTO.IdOrder = null;
 

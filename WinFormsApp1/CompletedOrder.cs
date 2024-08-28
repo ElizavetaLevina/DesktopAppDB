@@ -209,18 +209,18 @@ namespace WinFormsApp1
             }
 
             orderDTO.StatusOrder = StatusOrderEnum.Completed;
-            orderDTO.DateCompleted = dateTimePicker1.Value;
+            orderDTO.DateCompleted = dateTimePicker1.Value.ToUniversalTime();
             if (orderDTO.AdditionalMasterId != null)
             {
                 orderDTO.PercentWorkMainMaster = Convert.ToInt32(textBoxMain.Text);
                 orderDTO.PercentWorkAdditionalMaster = Convert.ToInt32(textBoxAdditional.Text);
             }
             else orderDTO.PercentWorkMainMaster = 100;
-            if (orderDTO.ReturnUnderGuarantee)
+            /*if (orderDTO.ReturnUnderGuarantee)
             {
                 int countDayInRepair = (orderDTO.DateCompletedReturn.Value - orderDTO.DateReturn.Value).Days;
                 orderDTO.DateEndGuarantee = orderDTO.DateEndGuarantee.Value.AddDays(countDayInRepair);
-            }
+            }*/
             ordersLogic.SaveOrder(orderDTO);
             DialogResult = DialogResult.OK;
             Close();
@@ -464,12 +464,6 @@ namespace WinFormsApp1
             /*if (loading)
                 loading = false;*/
             textBoxFoundProblem1.Focus();
-        }
-
-        public bool EnabledPrice
-        {
-            get { return textBoxPrice1.Enabled; }
-            set { textBoxPrice1.Enabled = value; }
         }
 
         public string FoundProblem1

@@ -1,4 +1,5 @@
-﻿using WinFormsApp1.DTO;
+﻿using DocumentFormat.OpenXml.InkML;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Logic;
 
@@ -77,8 +78,8 @@ namespace WinFormsApp1
 
             rateMasterDTO.MasterId = masterId;
             rateMasterDTO.PercentProfit = Convert.ToInt32(textBoxPercent.Text);
-            rateMasterDTO.DateStart = date;
-            rateMasterDTO.DateEnd = date;
+            rateMasterDTO.DateStart = date.ToUniversalTime();
+            rateMasterDTO.DateEnd = date.ToUniversalTime();
 
             rateMastersLogic.SaveRateMaster(rateMasterDTO);
 

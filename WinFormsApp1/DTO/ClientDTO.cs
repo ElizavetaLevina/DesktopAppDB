@@ -13,16 +13,6 @@ namespace WinFormsApp1.DTO
         [DisplayName("Дополнительный телефон")]
         public string? NumberSecondPhone { get; set; }
 
-        public ClientDTO(Client client)
-        {
-            Id = client.Id;
-            IdClient = client.IdClient;
-            NameAndAddressClient = client.NameAndAddressClient;
-            NumberSecondPhone = client.NumberSecondPhone;
-        }
-
-        public ClientDTO()
-        {
-        }
+        public ClientDTO() { }
     }
 }

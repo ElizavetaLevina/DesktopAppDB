@@ -4,8 +4,8 @@ using System.Data;
 using WinFormsApp1.Helpers;
 using System.Diagnostics;
 using WinFormsApp1.Logic;
-using FluentFTP;
-using System.Net;
+using WinFormsApp1.Logic.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace WinFormsApp1
 {
@@ -17,15 +17,20 @@ namespace WinFormsApp1
             Cells[nameof(OrderTableDTO.IdClient)].Value.ToString(); } }
         StatusOrderEnum status;
         public bool logInSystem = false;
-        WarehousesLogic warehousesLogic = new();
-        OrdersLogic ordersLogic = new();
-        ClientsLogic clientsLogic = new();
-        MalfunctionsOrdersLogic malfunctionsOrdersLogic = new();
+        IWarehousesLogic warehousesLogic;
+        IOrdersLogic ordersLogic;
+        IClientsLogic clientsLogic;
+        IMalfunctionsOrdersLogic malfunctionsOrdersLogic;
         List<OrderTableDTO> orders;
         List<(long elapsedTime, string name)> some = new();
         Stopwatch stopwatch = Stopwatch.StartNew();
-        public Form1()
+        public Form1(IWarehousesLogic _warehousesLogic, IOrdersLogic _ordersLogic, IClientsLogic _clientLogic,
+            IMalfunctionsOrdersLogic _malfunctionsOrdersLogic)
         {
+            warehousesLogic = _warehousesLogic;
+            ordersLogic = _ordersLogic;
+            clientsLogic = _clientLogic;
+            malfunctionsOrdersLogic = _malfunctionsOrdersLogic;
             InitializeComponent();
             InitializeElementsForm();
         }
@@ -136,15 +141,11 @@ namespace WinFormsApp1
             status = StatusOrderEnum.InRepair;
             try
             {
-                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "InProgress1"));
                 orders = ordersLogic.GetOrdersForTable(statusOrder: status, deleted: false, dateCreation: true);
-                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "InProgress2"));
                 dataGridView1.DataSource = Funcs.ToDataTable(orders);
                 UpdateVisibilityColumns();
                 UpdateWidthColumns();
-                //some.Add(stopwatch.ElapsedMilliseconds - some.Sum());
                 ChangeColorRows();
-                //some.Add(stopwatch.ElapsedMilliseconds - some.Sum());
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
             Enabled = true;
@@ -241,15 +242,11 @@ namespace WinFormsApp1
 
         private void AddDeviceIntoRepair()
         {
-            AddDeviceIntoRepair addDeviceIntoRepair = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            AddDeviceIntoRepair addDeviceIntoRepair = Program.ServiceProvider.GetRequiredService<AddDeviceIntoRepair>();
 
             if (addDeviceIntoRepair.ShowDialog() == DialogResult.OK)
             {
                 status = StatusOrderEnum.InRepair;
-                /*UpdateDB();*/
                 UpdateTableData();
                 ToolStripEnabled();
             }
@@ -260,30 +257,25 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            PropertiesOrder propertiesOrder = new(IdOrder, status, logInSystem)
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            PropertiesOrder propertiesOrder = Program.ServiceProvider.GetRequiredService<PropertiesOrder>();
+            propertiesOrder.InitializeElementsForm(IdOrder, status, logInSystem);
             propertiesOrder.ShowDialog();
             if (propertiesOrder.logIn)
             {
                 logInSystem = true;
-                labelLogIn.Text = Properties.Settings.Default.Login;
+                labelLogIn.Text = Properties.Settings.Default.LoginInSystem;
             }
             FocusButton(status);
             UpdateTableData();
-            /*if (featuresOrder.pressBtnSave)
-                UpdateDB();*/
         }
 
         private void DetailsInOrder()
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            DetailsInOrder detailsInOrder = new(IdOrder)
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            DetailsInOrder detailsInOrder = Program.ServiceProvider.GetRequiredService<DetailsInOrder>();
+            detailsInOrder.idOrder = IdOrder;
+            detailsInOrder.UpdateTable();
             detailsInOrder.ShowDialog();
         }
 
@@ -293,7 +285,6 @@ namespace WinFormsApp1
                 return;
             Warning warning = new()
             {
-                StartPosition = FormStartPosition.CenterParent,
                 LabelText = status == StatusOrderEnum.Trash ? "Вы действительно хотите удалить аппарат из корзины?" :
                 "Вы действительно хотите переместить аппарат в корзину?",
                 ButtonNoText = "Нет",
@@ -323,7 +314,6 @@ namespace WinFormsApp1
             orderDTO.Deleted = false;
             ordersLogic.SaveOrder(orderDTO);
             Trash();
-            /*UpdateDB();*/
         }
 
         private void CompletedTag()
@@ -332,11 +322,9 @@ namespace WinFormsApp1
                 return;
             int numberRow = dataGridView1.CurrentCell.RowIndex;
             var nameMaster = dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.MasterName)].Value.ToString();
-            var returnUnderGuarantee = Convert.ToBoolean(dataGridView1.Rows[numberRow].Cells[nameof(OrderTableDTO.ReturnUnderGuarantee)].Value);
-            Warning warning = new() 
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            //var returnUnderGuarantee = Convert.ToBoolean(dataGridView1.Rows[numberRow].
+            //Cells[nameof(OrderTableDTO.ReturnUnderGuarantee)].Value);
+            Warning warning = new();
             if (string.IsNullOrEmpty(nameMaster))
             {
                 warning.LabelText = "Мастер в заказе не указан!";
@@ -363,7 +351,6 @@ namespace WinFormsApp1
             {
                 warning = new()
                 {
-                    StartPosition = FormStartPosition.CenterParent,
                     LabelText = "Вы не использовали ни одной детали для ремонта данного устройства. " +
                         "\nХотите ли вы редактировать список деталей?",
                     ButtonNoText = "Нет",
@@ -371,24 +358,16 @@ namespace WinFormsApp1
                 };
                 if (warning.ShowDialog() == DialogResult.OK)
                 {
-                    DetailsInOrder detailsInOrder = new(IdOrder)
-                    {
-                        StartPosition = FormStartPosition.CenterParent
-                    };
+                    DetailsInOrder detailsInOrder = Program.ServiceProvider.GetRequiredService<DetailsInOrder>();
+                    detailsInOrder.idOrder = IdOrder;
                     detailsInOrder.ShowDialog();
                 }
             }
             if (status == StatusOrderEnum.InRepair)
             {
-                CompletedOrder completedOrder = new(IdOrder)
-                {
-                    StartPosition = FormStartPosition.CenterParent
-                };
+                CompletedOrder completedOrder = Program.ServiceProvider.GetRequiredService<CompletedOrder>();
                 if (completedOrder.ShowDialog() == DialogResult.OK)
-                {
                     InProgress();
-                    /*UpdateDB(); */
-                }
                 FocusButton(status);
             }
         }
@@ -399,14 +378,10 @@ namespace WinFormsApp1
                 return;
             if (status == StatusOrderEnum.Completed)
             {
-                IssuingClient issuingClient = new(IdOrder)
-                {
-                    StartPosition = FormStartPosition.CenterParent
-                };
+                IssuingClient issuingClient = Program.ServiceProvider.GetRequiredService<IssuingClient>();
+                issuingClient.idOrder = IdOrder;
                 if (issuingClient.ShowDialog() == DialogResult.OK)
-                {
                     OrderСompleted();
-                }
                 FocusButton(status);
             }
         }
@@ -417,7 +392,6 @@ namespace WinFormsApp1
                 return;
             Warning warning = new()
             {
-                StartPosition = FormStartPosition.CenterParent,
                 LabelText = "Вы действительно хотите отправить аппарат в доработку?",
                 ButtonNoText = "Нет",
                 ButtonVisible = true
@@ -442,7 +416,6 @@ namespace WinFormsApp1
                     }
                     OrderСompleted();
                 }
-                /*UpdateDB();*/
                 FocusButton(status);
             }
         }
@@ -453,7 +426,6 @@ namespace WinFormsApp1
                 return;
             Warning warning = new()
             {
-                StartPosition = FormStartPosition.CenterParent,
                 LabelText = "Вы действительно хотите вернуть аппарат по гарантии?",
                 ButtonNoText = "Нет",
                 ButtonVisible = true
@@ -471,7 +443,6 @@ namespace WinFormsApp1
                     ordersLogic.SaveOrder(orderDTO);
                     OrderGuarantee();
                 }
-                /*UpdateDB();*/
                 FocusButton(status);
             }
         }
@@ -480,10 +451,9 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            MessageToClient message = new(IdClient)
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+
+            MessageToClient message = Program.ServiceProvider.GetRequiredService<MessageToClient>();
+            message.InitializeClient(IdClient);
             message.ShowDialog();
         }
 
@@ -491,11 +461,9 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            PropertiesClient propertiesClient = new(IdClient)
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
-
+            PropertiesClient propertiesClient = Program.ServiceProvider.GetRequiredService<PropertiesClient>();
+            propertiesClient.idClient = IdClient;
+            propertiesClient.InitializeElementsForms();
             if (propertiesClient.ShowDialog() == DialogResult.OK)
                 UpdateTableData();
             FocusButton(status);
@@ -528,32 +496,14 @@ namespace WinFormsApp1
             clientsLogic.SaveClient(clientDTO);
         }
 
-        private void NewOrder()
+        private void RepeatOrder()
         {
-            var orderDTO = ordersLogic.GetOrder(IdOrder);
+            AddDeviceIntoRepair addDeviceIntoRepair = Program.ServiceProvider.GetRequiredService<AddDeviceIntoRepair>();
+            addDeviceIntoRepair.FillOrder(IdOrder);
 
-            AddDeviceIntoRepair newOrder = new()
-            {
-                StartPosition = FormStartPosition.CenterParent,
-                MainMasterName = orderDTO.MainMasterId == null ? "-" : orderDTO.MainMaster?.NameMaster,
-                AdditionalMasterName = orderDTO.AdditionalMasterId == null ? "-" : orderDTO.AdditionalMaster?.NameMaster,
-                TypeDevice = orderDTO.TypeTechnic.Name,
-                BrandDevice = orderDTO.BrandTechnic.Name,
-                FactoryNumber = orderDTO.FactoryNumber,
-                Model = orderDTO.ModelTechnic,
-                ClientName = orderDTO.Client.IdClient,
-                ClientNameAddress = orderDTO.Client?.NameAndAddressClient,
-                ClientSecondPhone = orderDTO.Client.NumberSecondPhone,
-                TypeClient = "Старый клиент",
-                Equipment = orderDTO.Equipment?.Name,
-                Diagnosis = orderDTO.Diagnosis?.Name,
-                Note = orderDTO.Note
-            };
-
-            if (newOrder.ShowDialog() == DialogResult.OK)
+            if (addDeviceIntoRepair.ShowDialog() == DialogResult.OK)
             {
                 status = StatusOrderEnum.InRepair;
-                /*UpdateDB();*/
                 UpdateTableData();
             }
             FocusButton(status);
@@ -563,7 +513,8 @@ namespace WinFormsApp1
         {
             if (saveFileDialog1.ShowDialog() == DialogResult.Cancel)
                 return;
-            ReportsLogic.ExportMainTable(saveFileDialog1.FileName, orders);
+            var ordersForExcel = ordersLogic.GetOrdersForExcel(orders);
+            ReportsLogic.ExportMainTable(saveFileDialog1.FileName, ordersForExcel);
         }
 
         private void ButtonInProgress_Click(object sender, EventArgs e)
@@ -927,7 +878,7 @@ namespace WinFormsApp1
 
         private void ItemNewOrderAsCurrentMenuRightMouse_Click(object sender, EventArgs e)
         {
-            NewOrder();
+            RepeatOrder();
         }
 
         private void ButtonAddDeviceIntoRepair_Click(object sender, EventArgs e)
@@ -937,20 +888,14 @@ namespace WinFormsApp1
 
         private void ButtonMasters_Click(object sender, EventArgs e)
         {
-            Masters addMaster = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            Masters addMaster = Program.ServiceProvider.GetRequiredService<Masters>();
             addMaster.ShowDialog();
             FocusButton(status);
         }
 
         private void ButtonTypesDevices_Click(object sender, EventArgs e)
         {
-            TypesTechnic addDevice = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            TypesTechnic addDevice = Program.ServiceProvider.GetRequiredService<TypesTechnic>();
             addDevice.ShowDialog();
             FocusButton(status);
         }
@@ -959,7 +904,6 @@ namespace WinFormsApp1
         {
             Warning warning = new()
             {
-                StartPosition = FormStartPosition.CenterParent,
                 LabelText = "Вы действительно хотите выйти из программы?",
                 ButtonNoText = "Нет",
                 ButtonVisible = true
@@ -1006,18 +950,8 @@ namespace WinFormsApp1
         }
 
         private void ButtonPropertiesOrder_Click(object sender, EventArgs e)
-        {  
-            if (dataGridView1.Rows.Count == 0)
-                return;
-            PropertiesOrder propertiesOrder = new(IdOrder, status, logInSystem)
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
-            propertiesOrder.ShowDialog();
-            FocusButton(status);
-            UpdateTableData();
-            /*if (propertiesOrder.pressBtnSave)
-                UpdateDB();*/
+        {
+            PropertiesOrder();
         }
 
         private void ButtonPropertiesClient_Click(object sender, EventArgs e)
@@ -1131,72 +1065,57 @@ namespace WinFormsApp1
 
         private void ItemMasters_Click(object sender, EventArgs e)
         {
-            Masters addMaster = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            Masters addMaster = Program.ServiceProvider.GetRequiredService<Masters>();
             addMaster.ShowDialog();
             FocusButton(status);
         }
 
         private void ItemBrands_Click(object sender, EventArgs e)
         {
-            BrandsTechnic addBrand = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            BrandsTechnic addBrand = Program.ServiceProvider.GetRequiredService<BrandsTechnic>();
             addBrand.ShowDialog();
             FocusButton(status);
         }
 
         private void ItemTypesDevices_Click(object sender, EventArgs e)
         {
-            TypesTechnic addDevice = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            TypesTechnic addDevice = Program.ServiceProvider.GetRequiredService<TypesTechnic>();
             addDevice.ShowDialog();
             FocusButton(status);
         }
 
         private void ItemClientsDirectory_Click(object sender, EventArgs e)
         {
-            GuideClients guideClients = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            GuideClients guideClients = Program.ServiceProvider.GetRequiredService<GuideClients>();
             guideClients.ShowDialog();
             FocusButton(status);
         }
 
         private void ItemWarehouse_Click(object sender, EventArgs e)
         {
-            DetailsInWarehouse details = new(true)
-            {
-                StartPosition = FormStartPosition.CenterParent,
-                VisibleBtnAdd = false
-            };
+            DetailsInWarehouse details = Program.ServiceProvider.GetRequiredService<DetailsInWarehouse>();
+            details.VisibleBtnAdd = false;
             details.ShowDialog();
             FocusButton(status);
         }
 
         private void ItemMalfunction_Click(object sender, EventArgs e)
         {
-            MalfunctionEquipmentDiagnosis malfunctionEquipmentDiagnosis = new(NameTableToEditEnum.Malfunction)
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            MalfunctionEquipmentDiagnosis malfunctionEquipmentDiagnosis = Program.ServiceProvider
+                .GetRequiredService<MalfunctionEquipmentDiagnosis>();
+            malfunctionEquipmentDiagnosis.status = NameTableToEditEnum.Malfunction;
+            malfunctionEquipmentDiagnosis.UpdateTable();
             malfunctionEquipmentDiagnosis.ShowDialog();
             FocusButton(status);
         }
 
         private void ItemDiagnosis_Click(object sender, EventArgs e)
         {
-            MalfunctionEquipmentDiagnosis malfunctionEquipmentDiagnosis = new(NameTableToEditEnum.Diagnosis)
-            {
-                StartPosition = FormStartPosition.CenterParent,
-                Text = "Диагнозы"
-            };
+            MalfunctionEquipmentDiagnosis malfunctionEquipmentDiagnosis = Program.ServiceProvider
+                .GetRequiredService<MalfunctionEquipmentDiagnosis>();
+            malfunctionEquipmentDiagnosis.Text = "Диагнозы";
+            malfunctionEquipmentDiagnosis.status = NameTableToEditEnum.Diagnosis;
+            malfunctionEquipmentDiagnosis.UpdateTable();
             malfunctionEquipmentDiagnosis.ShowDialog();
             UpdateTableData();
             FocusButton(status);
@@ -1204,11 +1123,11 @@ namespace WinFormsApp1
 
         private void ItemEquipment_Click(object sender, EventArgs e)
         {
-            MalfunctionEquipmentDiagnosis malfunctionEquipmentDiagnosis = new(NameTableToEditEnum.Equipment)
-            {
-                StartPosition = FormStartPosition.CenterParent,
-                Text = "Комплектация"
-            };
+            MalfunctionEquipmentDiagnosis malfunctionEquipmentDiagnosis = Program.ServiceProvider
+                .GetRequiredService<MalfunctionEquipmentDiagnosis>();
+            malfunctionEquipmentDiagnosis.Text = "Комплектация";
+            malfunctionEquipmentDiagnosis.status = NameTableToEditEnum.Equipment;
+            malfunctionEquipmentDiagnosis.UpdateTable();
             malfunctionEquipmentDiagnosis.ShowDialog();
             FocusButton(status);
         }
@@ -1224,24 +1143,6 @@ namespace WinFormsApp1
 
         private void ItemCopyBD_Click(object sender, EventArgs e)
         {
-            try
-            {
-                var pickDatabaseFrom = Environment.CurrentDirectory;
-                var srcFile = Path.Combine(pickDatabaseFrom, "computerservice.db");
-                var destFile = Path.Combine(pickDatabaseFrom, "./Res/computerservice.db");
-                if (File.Exists(destFile))
-                    File.Delete(destFile);
-                File.Copy(srcFile, destFile);
-            }
-            catch
-            {
-                Warning warning = new()
-                {
-                    LabelText = "Ошибка при создании резервной копии базы данных!",
-                    StartPosition = FormStartPosition.CenterParent
-                };
-                warning.ShowDialog();
-            }
         }
 
         private void ItemUpdateService_Click(object sender, EventArgs e)
@@ -1251,21 +1152,14 @@ namespace WinFormsApp1
 
         private void ItemPathDB_Click(object sender, EventArgs e)
         {
-            PathDB pathDB = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            PathDB pathDB = new();
             pathDB.ShowDialog();
-            /*UpdateDB();*/
             UpdateTableData();
         }
 
         private void ItemOrganization_Click(object sender, EventArgs e)
         {
-            Organization organization = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            Organization organization = new();
             organization.ShowDialog();
         }
 
@@ -1278,7 +1172,6 @@ namespace WinFormsApp1
         {
             Warning warning = new()
             {
-                StartPosition = FormStartPosition.CenterParent,
                 LabelText = "Вы действительно хотите выйти из программы?",
                 ButtonNoText = "Нет",
                 ButtonVisible = true
@@ -1361,35 +1254,27 @@ namespace WinFormsApp1
 
         private void ItemNewOrderAsCurrentMenuWorkingWithData_Click(object sender, EventArgs e)
         {
-            NewOrder();
+            RepeatOrder();
         }
 
         private void ItemReportOrganization_Click(object sender, EventArgs e)
         {
-            ReportsOrganization reportsOrganization = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            ReportsOrganization reportsOrganization = Program.ServiceProvider.GetRequiredService<ReportsOrganization>();
             reportsOrganization.ShowDialog();
             FocusButton(status);
         }
 
         private void ItemSalary_Click(object sender, EventArgs e)
         {
-            CalculatingEmployeeSalaries salary = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+
+            CalculatingEmployeeSalaries salary = Program.ServiceProvider.GetRequiredService<CalculatingEmployeeSalaries>();
             salary.ShowDialog();
             FocusButton(status);
         }
 
         private void ItemColor_Click(object sender, EventArgs e)
         {
-            View view = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            View view = Program.ServiceProvider.GetRequiredService<View>();
             view.ShowDialog();
             UpdateTableData();
         }
@@ -1443,29 +1328,6 @@ namespace WinFormsApp1
 
         private static void UpdateDB()
         {
-            try
-            {
-                var pickDatabaseFrom = Environment.CurrentDirectory;
-                var srcFile = Path.Combine(pickDatabaseFrom, "computerservice.db");
-                var destFile = Path.Combine(pickDatabaseFrom, "./Service/computerservice.db");
-                if (File.Exists(destFile))
-                    File.Delete(destFile);
-                File.Copy(srcFile, destFile);
-
-                var path = Path.Combine(Environment.CurrentDirectory, "./Service/computerservice.db");
-                FtpClient client = new()
-                {
-                    Host = "198.37.116.30",
-                    Credentials = new NetworkCredential("lizaveta", "wYwu6@L?2mhUT2?")
-                };
-                client.Connect();
-                client.UploadFile(path, "www.webappdb.somee.com//computerservice.db");
-
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show(exp.Message);
-            }
         }
 
         private void DataGridView1_Click(object sender, EventArgs e)
@@ -1575,7 +1437,7 @@ namespace WinFormsApp1
             buttonGuarantee.Location = new Point(buttonMenuX, buttonCompleted.Location.Y + heightButtonMenu + marginHeightMenuX);
             buttonArchive.Location = new Point(buttonMenuX, buttonGuarantee.Location.Y + heightButtonMenu + marginHeightMenuX);
             buttonTrash.Location = new Point(buttonMenuX, bottomTable - buttonTrash.Height);
-            buttonReset.Location = new Point(buttonMenuX, bottomTable + 20);
+            buttonReset.Location = new Point(buttonMenuX, bottomTable + 15);
 
             int endTable = dataGridView1.Width + dataGridView1.Location.X;
             int widthTextBox = textBoxIdOrder.Width;
@@ -1593,7 +1455,7 @@ namespace WinFormsApp1
             labelDevice.Location = new Point(thirdColumn, buttonReset.Location.Y);
             textBoxDevice.Location = new Point(thirdColumn + labelDevice.Width + widthLT, buttonReset.Location.Y);
 
-            checkBoxSearch.Location = new Point(textBoxDevice.Location.X + textBoxDevice.Width + marginWidthFilter, bottomTable + 20);
+            checkBoxSearch.Location = new Point(textBoxDevice.Location.X + textBoxDevice.Width + marginWidthFilter, bottomTable + 15);
 
             int bottomMargin = buttonReset.Location.Y + buttonReset.Height - labelDateCreation.Height;
             labelDateCreation.Location = new Point(labelDateCreation.Location.X, bottomMargin);
@@ -1662,14 +1524,11 @@ namespace WinFormsApp1
 
         public void LogInToTheSystem()
         {
-            LogInSystem logIn = new(true)
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            LogInSystem logIn = new(true);
             if (logIn.ShowDialog() == DialogResult.OK)
             {
                 logInSystem = true;
-                labelLogIn.Text = Properties.Settings.Default.Login;
+                labelLogIn.Text = Properties.Settings.Default.LoginInSystem;
             }
         }
 
@@ -1687,10 +1546,7 @@ namespace WinFormsApp1
 
         private void ItemChangeData_Click(object sender, EventArgs e)
         {
-            LogInSystem logInSystem = new(false)
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            LogInSystem logInSystem = new(false);
             logInSystem.ShowDialog();
         }
 

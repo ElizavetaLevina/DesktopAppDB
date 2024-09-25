@@ -226,6 +226,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "View";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Цвета строчек";
             Load += View_Load;
             ResumeLayout(false);

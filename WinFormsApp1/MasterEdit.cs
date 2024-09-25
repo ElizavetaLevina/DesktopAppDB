@@ -1,25 +1,21 @@
-﻿using System.Net;
+﻿using Microsoft.Extensions.DependencyInjection;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Helpers;
-using WinFormsApp1.Logic;
-using WinFormsApp1.Model;
-using WinFormsApp1.Repository;
+using WinFormsApp1.Logic.Interfaces;
 
 namespace WinFormsApp1
 {
     public partial class MasterEdit : Form
     {
-        public bool newMaster;
-        public int idMaster;
-        MastersLogic mastersLogic = new();
+        public bool newMaster = true;
+        public int idMaster = 0;
+        IMastersLogic mastersLogic;
         MasterEditDTO masterDTO = new();
-        MasterRepository masterRepository = new();
-        public MasterEdit(bool addMaster = false, int _idMaster = 0)
+        public MasterEdit(IMastersLogic _mastersLogic)
         {
+            mastersLogic = _mastersLogic;
             InitializeComponent();
-            newMaster = addMaster;
-            idMaster = _idMaster;
         }
 
         private void TrackBarPercent_Scroll(object sender, EventArgs e)
@@ -112,10 +108,7 @@ namespace WinFormsApp1
         {
             if (radioButtonRate.Checked && textBoxRate.TextLength == 0)
             {
-                Warning warning = new()
-                {
-                    StartPosition = FormStartPosition.CenterParent
-                };
+                Warning warning = new();
                 warning.ShowDialog();
             }
             else
@@ -156,10 +149,9 @@ namespace WinFormsApp1
 
         private void LinkLabelRateEdit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            RateMasterEdit rateMasterEdit = new(idMaster) 
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            RateMasterEdit rateMasterEdit = Program.ServiceProvider.GetRequiredService<RateMasterEdit>();
+            rateMasterEdit.masterId = idMaster;
+            rateMasterEdit.InitializeElementsForm();
             rateMasterEdit.ShowDialog();
         }
     }

@@ -1,23 +1,23 @@
-﻿using DocumentFormat.OpenXml.InkML;
-using WinFormsApp1.DTO;
+﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
-using WinFormsApp1.Logic;
+using WinFormsApp1.Logic.Interfaces;
 
 
 namespace WinFormsApp1
 {
     public partial class RateMasterEdit : Form
     {
-        RateMastersLogic rateMastersLogic = new();
-        int masterId;
-        public RateMasterEdit(int id)
+        IRateMastersLogic rateMastersLogic;
+        public int masterId;
+        RateMasterEditDTO rateMasterDTO;
+        DateTime date;
+        public RateMasterEdit(IRateMastersLogic _rateMastersLogic)
         {
-            masterId = id;
+            rateMastersLogic = _rateMastersLogic;
             InitializeComponent();
-            InitializeElementsForm();
         }
 
-        private void InitializeElementsForm()
+        public void InitializeElementsForm()
         {
             UpdateTable();
             comboBoxMonth.DataSource = System.Enum.GetValues(typeof(MonthEnum));
@@ -45,8 +45,8 @@ namespace WinFormsApp1
 
         private void UpdatePercent()
         {
-            var date = DateTime.Parse(string.Format("{0}.{1}.{2}", 1, comboBoxMonth.SelectedIndex + 1, comboBoxYear.SelectedValue));
-            var rateMasterDTO = rateMastersLogic.GetRateMasterByDate(masterId, date);
+            date = DateTime.Parse(string.Format("{0}.{1}.{2}", 1, comboBoxMonth.SelectedIndex + 1, comboBoxYear.SelectedValue));
+            rateMasterDTO = rateMastersLogic.GetRateMasterByDate(masterId, date);
             if (rateMasterDTO.Id != 0)
                 textBoxPercent.Text = rateMasterDTO.PercentProfit.ToString();
             else
@@ -65,16 +65,15 @@ namespace WinFormsApp1
                 labelPercent.ForeColor = Color.Red;
                 Warning warning = new()
                 {
-                    LabelText = "Некорректно введены данные",
-                    StartPosition = FormStartPosition.CenterParent
+                    LabelText = "Некорректно введены данные"
                 };
                 warning.ShowDialog();
                 return;
             }
             labelPercent.ForeColor = Color.Black;
 
-            var date = DateTime.Parse(string.Format("{0}.{1}.{2}", 1, comboBoxMonth.SelectedIndex + 1, comboBoxYear.SelectedValue));
-            var rateMasterDTO = rateMastersLogic.GetRateMasterByDate(masterId, date);
+            //var date = DateTime.Parse(string.Format("{0}.{1}.{2}", 1, comboBoxMonth.SelectedIndex + 1, comboBoxYear.SelectedValue));
+            //var rateMasterDTO = rateMastersLogic.GetRateMasterByDate(masterId, date);
 
             rateMasterDTO.MasterId = masterId;
             rateMasterDTO.PercentProfit = Convert.ToInt32(textBoxPercent.Text);

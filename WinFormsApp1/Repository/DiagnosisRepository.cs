@@ -1,62 +1,49 @@
-﻿using WinFormsApp1.DTO;
+﻿using AutoMapper;
+using MoreLinq.Extensions;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Repository
 {
-    public class DiagnosisRepository
+    public class DiagnosisRepository : IDiagnosisRepository
     {
-        /// <summary>
-        /// Получение списка неисправностей со слов клиента
-        /// </summary>
-        /// <returns>Список неипсравностей</returns>
+        IMapper _mapper;
+        public DiagnosisRepository(IMapper mapper) 
+        { 
+            _mapper = mapper;
+        }
+
+        /// <inheritdoc/>
         public List<DiagnosisEditDTO> GetDiagnoses()
         {
             Context context = new();
-            return context.Diagnosis.Select(a => new DiagnosisEditDTO(a)).ToList();
+            return _mapper.ProjectTo<DiagnosisEditDTO>(context.Set<Diagnosis>().OrderBy(i => i.Name)).ToList();
         }
 
-        /// <summary>
-        /// Получение диагноза по идентификатору
-        /// </summary>
-        /// <param name="id">Идентификатор</param>
-        /// <returns>Диагноз</returns>
+        /// <inheritdoc/>
         public DiagnosisEditDTO GetDiagnosis(int? id)
         {
             Context context = new();
-            var diagnosis = context.Diagnosis.FirstOrDefault(i => i.Id == id);
-            if (diagnosis == null)
-                return new DiagnosisEditDTO();
-            else
-                return new DiagnosisEditDTO(diagnosis);
+            return _mapper.ProjectTo<DiagnosisEditDTO>(context.Set<Diagnosis>().Where(i => i.Id == id)).FirstOrDefault();
         }
 
-        /// <summary>
-        /// Получение списка неисправностей по подстроке названия
-        /// </summary>
-        /// <param name="name">Название</param>
-        /// <returns>Список неисправностей</returns>
+        /// <inheritdoc/>
         public List<DiagnosisEditDTO> GetDiagnosesByName(string name)
         {
             Context context = new();
-            return context.Diagnosis.Where(i => i.Name.ToLower().Contains(name.ToLower())).Select(a => new DiagnosisEditDTO(a)).ToList();
+            return _mapper.ProjectTo<DiagnosisEditDTO>(context.Set<Diagnosis>()
+                .Where(i => i.Name.ToLower().Contains(name.ToLower()))).ToList();
         }
 
-        /// <summary>
-        /// Получение записи по названию
-        /// </summary>
-        /// <param name="name">Название</param>
-        /// <returns>Запись</returns>
+        /// <inheritdoc/>
         public DiagnosisEditDTO GetDiagnosisByName(string name)
         {
             Context context = new();
-            var diagnosis = context.Diagnosis.FirstOrDefault(i => i.Name == name);
-            if (diagnosis != null)
-                return new DiagnosisEditDTO(diagnosis);
-            else
-                return new DiagnosisEditDTO(name);
+            return _mapper.ProjectTo<DiagnosisEditDTO>(context.Set<Diagnosis>().Where(i => i.Name == name)).FirstOrDefault();
         }
 
-
+        /// <inheritdoc/>
         public async Task<int> SaveDiagnosisAsync(DiagnosisEditDTO diagnosisDTO, CancellationToken token = default)
         {
             Context db = new();
@@ -77,6 +64,7 @@ namespace WinFormsApp1.Repository
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
 
+        /// <inheritdoc/>
         public void RemoveDiagnosis(DiagnosisEditDTO diagnosisDTO)
         {
             try

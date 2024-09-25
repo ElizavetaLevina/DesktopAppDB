@@ -1,42 +1,36 @@
-﻿using System.Data.Entity;
+﻿using AutoMapper;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Repository
 {
-    public class RateMasterRepository
+    public class RateMasterRepository : IRateMasterRepository
     {
-        /// <summary>
-        /// Получение списка ставок мастера по идентификатору мастера
-        /// </summary>
-        /// <param name="id">Идентификатор мастера</param>
-        /// <returns>Список ставок</returns>
+        IMapper _mapper;
+
+        public RateMasterRepository(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
+
+        /// <inheritdoc/>
         public List<RateMasterDTO> GetRateMasterByIdMaster(int id)
         {
             Context context = new();
-            var some = context.RateMaster.Where(i => i.MasterId == id).OrderBy(i => i.DateStart);
-            var list = some.Include(i => i.Master).ToList();
-            return list
-                .Select(a => new RateMasterDTO(a))
-                .ToList();
+            return _mapper.ProjectTo<RateMasterDTO>(context.Set<RateMaster>()
+                .Where(i => i.MasterId == id).OrderBy(i => i.DateStart)).ToList();
         }
 
-        /// <summary>
-        /// Получение ставки мастера по идентификатору мастера и по дате
-        /// </summary>
-        /// <param name="masterId">Идентификатор мастера</param>
-        /// <param name="date">Дата</param>
-        /// <returns>Ставка мастера</returns>
+        /// <inheritdoc/>
         public RateMasterEditDTO GetRateMasterByDate(int masterId, DateTime date)
         {
             Context context = new();
-            var rateMaster = context.RateMaster.FirstOrDefault(i => i.MasterId == masterId && i.DateStart == date.ToUniversalTime());
-            if (rateMaster != null)
-                return new RateMasterEditDTO(rateMaster);
-            else
-                return new RateMasterEditDTO();
+            return _mapper.ProjectTo<RateMasterEditDTO>(context.Set<RateMaster>().Where(i => i.MasterId == masterId && 
+            i.DateStart == date.ToUniversalTime())).FirstOrDefault();
         }
 
+        /// <inheritdoc/>
         public async Task SaveRateMasterAsync(RateMasterEditDTO rateMasterDTO, CancellationToken token = default)
         {
             Context db = new Context();

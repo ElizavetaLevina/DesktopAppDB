@@ -9,15 +9,6 @@ namespace WinFormsApp1.DTO
         public virtual BrandTechnicEditDTO? BrandTechnic { get; set; }
         public virtual TypeTechnicEditDTO? TypeTechnic { get; set; }
 
-
-        public TypeBrandDTO(TypeBrand typeBrand)
-        {
-            BrandTechnicsId = typeBrand.BrandTechnicsId;
-            TypeTechnicsId = typeBrand.TypeTechnicsId;
-            BrandTechnic = new BrandTechnicEditDTO(typeBrand.BrandTechnic);
-            TypeTechnic = new TypeTechnicEditDTO(typeBrand.TypeTechnic);
-        }
-
         public TypeBrandDTO()
         {
         }

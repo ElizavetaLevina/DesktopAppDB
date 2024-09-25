@@ -1,60 +1,42 @@
-﻿using WinFormsApp1.DTO;
+﻿using AutoMapper;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Repository
 {
-    public class TypeTechnicRepository
+    public class TypeTechnicRepository : ITypeTechnicRepository
     {
-        /// <summary>
-        /// Получение списка типов
-        /// </summary>
-        /// <returns>Список типов</returns>
+        IMapper _mapper;
+
+        public TypeTechnicRepository (IMapper mapper)
+        {
+            _mapper = mapper;
+        }
+
+        /// <inheritdoc/>
         public List<TypeTechnicDTO> GetTypesTechnic()
         {
             Context context = new();
-            return context.TypeTechnices.OrderBy(i => i.NameTypeTechnic).Select(a => new TypeTechnicDTO(a)).ToList();
+            return _mapper.ProjectTo<TypeTechnicDTO>(context.Set<TypeTechnic>().OrderBy(i => i.NameTypeTechnic)).ToList();
         }
 
-        /// <summary>
-        /// Получение записи по названию
-        /// </summary>
-        /// <param name="name">Название</param>
-        /// <returns>Запись</returns>
+        /// <inheritdoc/>
         public TypeTechnicDTO GetTypeTechnicByName(string name)
         {
             Context context = new();
-            return new TypeTechnicDTO(context.TypeTechnices.First(i => i.NameTypeTechnic == name));
+            return _mapper.ProjectTo<TypeTechnicDTO>(context.Set<TypeTechnic>().Where(i => i.NameTypeTechnic == name)).FirstOrDefault();
         }
 
 
-        /// <summary>
-        /// Получение типа устройства по идентификатору
-        /// </summary>
-        /// <param name="id">Идентификатор</param>
-        /// <returns>Тип устройства</returns>
-        public TypeTechnicEditDTO GetTypeTechnic(int id, string name)
+        /// <inheritdoc/>
+        public TypeTechnicEditDTO GetTypeTechnic(int id)
         {
             Context context = new();
-            var typeTechnic = context.TypeTechnices.FirstOrDefault(i => i.Id == id);
-            if (typeTechnic == null)
-                return new TypeTechnicEditDTO(name);
-            else return new TypeTechnicEditDTO(typeTechnic) { Name = name };
+            return _mapper.ProjectTo<TypeTechnicEditDTO>(context.Set<TypeTechnic>().Where(i => i.Id == id)).FirstOrDefault();
         }
 
-        /// <summary>
-        /// Получение названия типа устройства по идентификатору
-        /// </summary>
-        /// <param name="id">Идентификатор</param>
-        /// <returns>Тип устройства</returns>
-        public string GetTypeTechnicName(int id)
-        {
-            Context context = new();
-            var typeTechnic = context.TypeTechnices.FirstOrDefault(i => i.Id == id);
-            if (typeTechnic == null)
-                return string.Empty;
-            else return typeTechnic.NameTypeTechnic;
-        }
-
+        /// <inheritdoc/>
         public async Task<int> SaveTypeTechnicAsync(TypeTechnicEditDTO typeTechnicDTO, CancellationToken token = default)
         {
             using Context db = new();
@@ -75,6 +57,7 @@ namespace WinFormsApp1.Repository
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
 
+        /// <inheritdoc/>
         public void RemoveTypeTechnic(TypeTechnicEditDTO typeTechnicDTO)
         {
             try

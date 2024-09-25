@@ -1,6 +1,7 @@
-﻿using WinFormsApp1.DTO;
+﻿using Microsoft.Extensions.DependencyInjection;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Helpers;
-using WinFormsApp1.Logic;
+using WinFormsApp1.Logic.Interfaces;
 
 namespace WinFormsApp1
 {
@@ -10,39 +11,16 @@ namespace WinFormsApp1
         public int IdDetail { get { return Convert.ToInt32(dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].
             Cells[nameof(WarehouseTableDTO.Id)].Value); } }
         List<WarehouseTableDTO> list;
-        WarehousesLogic warehousesLogic = new();
-        OrdersLogic ordersLogic = new();
-        public DetailsInOrder(int id)
+        IWarehousesLogic warehousesLogic;
+        IOrdersLogic ordersLogic;
+        public DetailsInOrder(IWarehousesLogic _warehousesLogic, IOrdersLogic _ordersLogic)
         {
+            warehousesLogic = _warehousesLogic;
+            ordersLogic = _ordersLogic;
             InitializeComponent();
-            idOrder = id;
-            UpdateTable();
         }
 
-        private void ButtonExit_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void ButtonAddDetail_Click(object sender, EventArgs e)
-        {
-            DetailsInWarehouse details = new(false, ordersLogic.GetOrder(idOrder).BrandTechnic?.Name)
-            {
-                StartPosition = FormStartPosition.CenterParent,
-                VisibleBtnAdd = true
-            };
-
-            if (details.ShowDialog() == DialogResult.OK)
-            {
-                var warehouseDTO = warehousesLogic.GetWarehouse(id: details.IdDetail);
-                warehouseDTO.Availability = false;
-                warehouseDTO.IdOrder = idOrder;
-                warehousesLogic.SaveDetail(warehouseDTO);
-                UpdateTable();
-            }
-        }
-
-        private void UpdateTable()
+        public void UpdateTable()
         {
             int[] percent = [0, 70, 0, 30, 0, 0, 0];
 
@@ -68,26 +46,38 @@ namespace WinFormsApp1
             }
         }
 
+        private void ButtonExit_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void ButtonAddDetail_Click(object sender, EventArgs e)
+        {
+            DetailsInWarehouse details = Program.ServiceProvider.GetRequiredService<DetailsInWarehouse>();
+            details.newDetail = false;
+            details.brandDevice = ordersLogic.GetOrder(idOrder).BrandTechnic?.Name;
+            details.InitializeDataTable();
+
+            if (details.ShowDialog() == DialogResult.OK)
+            {
+                var warehouseDTO = warehousesLogic.GetWarehouse(id: details.IdDetail);
+                warehouseDTO.Availability = false;
+                warehouseDTO.IdOrder = idOrder;
+                warehousesLogic.SaveDetail(warehouseDTO);
+                UpdateTable();
+            }
+        }
+
         private void ButtonChangeDetail_Click(object sender, EventArgs e)
         {
             if (dataGridView1.Rows.Count > 0)
             {
-                var warehouseDTO = warehousesLogic.GetWarehouse(id: IdDetail);
-
-                DetailEdit changeDetail = new(true, warehouseDTO)
-                {
-                    StartPosition = FormStartPosition.CenterParent
-                };
-     
-                if (changeDetail.ShowDialog() == DialogResult.OK)
-                {
-                    warehouseDTO.NameDetail = changeDetail.NameDetail;
-                    warehouseDTO.PricePurchase = changeDetail.PricePurchase;
-                    warehouseDTO.PriceSale = changeDetail.PriceSale;
-                    warehouseDTO.DatePurchase = changeDetail.DatePurchase;
-                    warehousesLogic.SaveDetail(warehouseDTO);
+                DetailEdit detailEdit = Program.ServiceProvider.GetRequiredService<DetailEdit>();
+                detailEdit.changeDetail = true;
+                detailEdit.idDetail = IdDetail;
+                detailEdit.InitializeElementsForm();
+                if (detailEdit.ShowDialog() == DialogResult.OK)
                     UpdateTable();
-                }
             }
         }
 
@@ -97,7 +87,6 @@ namespace WinFormsApp1
             {
                 Warning warning = new()
                 {
-                    StartPosition = FormStartPosition.CenterParent,
                     LabelText = "Вы действительно хотите удалить деталь из заказа?",
                     ButtonNoText = "Нет",
                     ButtonVisible = true

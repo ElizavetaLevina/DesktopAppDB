@@ -11,16 +11,6 @@ namespace WinFormsApp1.DTO
         public DateTime DateEnd { get; set; }
         public string? Note { get; set; }
 
-        public RateMasterEditDTO(RateMaster rateMaster)
-        {
-            Id = rateMaster.Id;
-            MasterId = rateMaster.MasterId;
-            PercentProfit = rateMaster.PercentProfit;
-            DateStart = rateMaster.DateStart;
-            DateEnd = rateMaster.DateEnd;
-            Note = rateMaster.Note;
-        }
-
         public RateMasterEditDTO()
         {
         }

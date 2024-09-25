@@ -23,17 +23,6 @@ namespace WinFormsApp1.DTO
         [DisplayName("Диагноз")]
         public string? Diagnosis { get; set; }
 
-        public OrderTableExcelDTO(OrderTableDTO order)
-        {
-            NumberOrder = order.NumberOrder;
-            DateCreation = order.DateCreation;
-            DateStartWork = order.DateStartWork;
-            DateCompleted = order.DateCompleted;
-            DateIssue = order.DateIssue;
-            MasterName = order.MasterName;
-            NameDevice = order.NameDevice;
-            IdClient = order.IdClient;
-            Diagnosis = order.Diagnosis;
-        }
+        public OrderTableExcelDTO() { }
     }
 }

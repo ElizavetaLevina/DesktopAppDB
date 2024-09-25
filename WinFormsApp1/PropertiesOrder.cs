@@ -1,7 +1,9 @@
-﻿using WinFormsApp1.DTO;
+﻿using Microsoft.Extensions.DependencyInjection;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Helpers;
 using WinFormsApp1.Logic;
+using WinFormsApp1.Logic.Interfaces;
 using Color = System.Drawing.Color;
 
 namespace WinFormsApp1
@@ -14,30 +16,40 @@ namespace WinFormsApp1
         public bool logIn;
         StatusOrderEnum statusOrder;
         OrderEditDTO orderDTO;
-        OrdersLogic ordersLogic = new();
-        MastersLogic mastersLogic = new();
-        TypesTechnicsLogic typesTechnicsLogic = new();
-        TypesBrandsLogic typesBrandsLogic = new();
-        WarehousesLogic warehousesLogic = new();
-        MalfunctionsOrdersLogic malfunctionsOrdersLogic = new();
-        ClientsLogic clientsLogic = new();
-        EquipmentsLogic equipmentsLogic = new();
-        DiagnosesLogic diagnosesLogic = new();
+        IOrdersLogic ordersLogic;
+        IMastersLogic mastersLogic;
+        ITypesTechnicsLogic typesTechnicsLogic;
+        ITypesBrandsLogic typesBrandsLogic;
+        IWarehousesLogic warehousesLogic;
+        IMalfunctionsOrdersLogic malfunctionsOrdersLogic;
+        IClientsLogic clientsLogic;
+        IEquipmentsLogic equipmentsLogic;
+        IDiagnosesLogic diagnosesLogic;
         List<DiagnosisEditDTO> diagnosesDTO;
         List<EquipmentEditDTO> equipmentsDTO;
         List<MasterDTO> mastersDTO;
-        public PropertiesOrder(int id, StatusOrderEnum status, bool _logIn)
+        public PropertiesOrder(IOrdersLogic _ordersLogic, IMastersLogic _mastersLogic, ITypesTechnicsLogic _typesTechnicsLogic,
+            ITypesBrandsLogic _typesBrandsLogic, IWarehousesLogic _warehousesLogic, IMalfunctionsOrdersLogic _malfunctionsOrdersLogic,
+            IClientsLogic _clientsLogic, IEquipmentsLogic _equipmentsLogic, IDiagnosesLogic _diagnosesLogic)
         {
-            InitializeComponent();
+            ordersLogic = _ordersLogic;
+            mastersLogic = _mastersLogic;
+            typesTechnicsLogic = _typesTechnicsLogic;
+            typesBrandsLogic = _typesBrandsLogic;
+            warehousesLogic = _warehousesLogic;
+            malfunctionsOrdersLogic = _malfunctionsOrdersLogic;
+            clientsLogic = _clientsLogic;
+            equipmentsLogic = _equipmentsLogic;
+            diagnosesLogic = _diagnosesLogic;
+            InitializeComponent();            
+        }
+
+        public void InitializeElementsForm(int id, StatusOrderEnum status, bool _logIn)
+        {
             logIn = _logIn;
             idOrder = id;
             statusOrder = status;
             orderDTO = ordersLogic.GetOrder(idOrder);
-            InitializeElementsForm();
-        }
-
-        private void InitializeElementsForm()
-        {
             UpdateComboBox(ElementOfRepairEnum.MainMasterElement);
             UpdateComboBox(ElementOfRepairEnum.AdditionalMasterElement);
             UpdateComboBox(ElementOfRepairEnum.TypeDeviceElement);
@@ -217,9 +229,8 @@ namespace WinFormsApp1
         {
             if (logIn)
             {
-                Warning warning = new Warning()
+                Warning warning = new()
                 {
-                    StartPosition = FormStartPosition.CenterParent,
                     LabelText = "Выйти из системы?",
                     ButtonNoText = "Нет",
                     ButtonVisible = true
@@ -229,10 +240,7 @@ namespace WinFormsApp1
             }
             else
             {
-                LogInSystem logInSystem = new(true)
-                {
-                    StartPosition = FormStartPosition.CenterParent
-                };
+                LogInSystem logInSystem = new(true);
                 if (logInSystem.ShowDialog() == DialogResult.OK)
                     logIn = true;
             }
@@ -246,7 +254,7 @@ namespace WinFormsApp1
                 dateCreation.Enabled = true;
                 if (statusOrder == StatusOrderEnum.GuaranteeIssue || statusOrder == StatusOrderEnum.Archive)
                     dateTimePickerIssue.Enabled = true;
-                linkLabelLogIn.Text = Properties.Settings.Default.Login;
+                linkLabelLogIn.Text = Properties.Settings.Default.LoginInSystem;
                 if (PriceAgreed)
                     textBoxMaxPrice.Enabled = true;
                 checkBoxPriceAgreed.Enabled = true;
@@ -348,10 +356,7 @@ namespace WinFormsApp1
 
         private void LinkLabelMaster_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Masters addMaster = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            Masters addMaster = Program.ServiceProvider.GetRequiredService<Masters>();
             addMaster.ShowDialog();
             UpdateComboBox(ElementOfRepairEnum.MainMasterElement);
             UpdateComboBox(ElementOfRepairEnum.AdditionalMasterElement);
@@ -359,20 +364,14 @@ namespace WinFormsApp1
 
         private void LinkLabelDevice_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            TypesTechnic addDevice = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            TypesTechnic addDevice = Program.ServiceProvider.GetRequiredService<TypesTechnic>();
             addDevice.ShowDialog();
             UpdateComboBox(ElementOfRepairEnum.TypeDeviceElement);
         }
 
         private void LinkLabelBrand_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            BrandsTechnic addBrand = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            BrandsTechnic addBrand = Program.ServiceProvider.GetRequiredService<BrandsTechnic>();
             addBrand.ShowDialog();
             UpdateComboBox(ElementOfRepairEnum.BrandDeviceElement);
         }
@@ -407,7 +406,6 @@ namespace WinFormsApp1
                     showFormForTimer = false;
                     Warning warning = new()
                     {
-                        StartPosition = FormStartPosition.CenterParent,
                         LabelText = "Цена не согласована!"
                     };
                     warning.ShowDialog();
@@ -560,7 +558,6 @@ namespace WinFormsApp1
             {
                 Warning warning = new()
                 {
-                    StartPosition = FormStartPosition.CenterParent,
                     LabelText = "Не заполнена максимальная цена!"
                 };
                 warning.ShowDialog();

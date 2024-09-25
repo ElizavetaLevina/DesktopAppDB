@@ -1,18 +1,21 @@
 ﻿using System.IO.Ports;
 using WinFormsApp1.DTO;
-using WinFormsApp1.Logic;
+using WinFormsApp1.Logic.Interfaces;
 
 namespace WinFormsApp1
 {
     public partial class MessageToClient : Form
     {
-        public string idClient;
-        ClientsLogic clientsLogic = new();
+        IClientsLogic clientsLogic;
         ClientEditDTO clientDTO;
-        public MessageToClient(string _idClient)
+        public MessageToClient(IClientsLogic _clientsLogic)
         {
+            clientsLogic = _clientsLogic;
             InitializeComponent();
-            idClient = _idClient;
+        }
+
+        public void InitializeClient(string idClient)
+        {
             clientDTO = clientsLogic.GetClient(idClient);
             textBoxPhone.Text = clientDTO.IdClient;
         }
@@ -35,10 +38,7 @@ namespace WinFormsApp1
 
         private void ButtonSend_Click(object sender, EventArgs e)
         {
-            Warning warning = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            Warning warning = new();
             try
             {
                 SerialPort serialPort = new()

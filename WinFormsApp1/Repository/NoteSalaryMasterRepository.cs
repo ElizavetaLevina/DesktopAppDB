@@ -1,24 +1,28 @@
-﻿using WinFormsApp1.DTO;
+﻿using AutoMapper;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Repository
 {
-    public class NoteSalaryMasterRepository
+    public class NoteSalaryMasterRepository : INoteSalaryMasterRepository
     {
-        /// <summary>
-        /// Получение списка примечаний по зарплате мастера по дате
-        /// </summary>
-        /// <param name="date">Дата</param>
-        /// <returns>Список примечаний</returns>
+        IMapper _mapper;
+
+        public NoteSalaryMasterRepository(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
+
+        /// <inheritdoc/>
         public List<NoteSalaryMasterEditDTO> GetNoteSalaryMasters(DateTime date)
         {
             Context context = new();
-            return context.NoteSalaryMasters.
-                Where(i => i.Date == date.ToUniversalTime()).
-                Select(a => new NoteSalaryMasterEditDTO(a)).
-                ToList();
-        } 
+            return _mapper.ProjectTo<NoteSalaryMasterEditDTO>(context.Set<NoteSalaryMaster>()
+                .Where(i => i.Date == date.ToUniversalTime())).ToList();
+        }
 
+        /// <inheritdoc/>
         public async Task SaveNoteSalaryMasterAsync(NoteSalaryMasterEditDTO noteSalaryMasterDTO, CancellationToken token = default)
         {
             Context context = new();

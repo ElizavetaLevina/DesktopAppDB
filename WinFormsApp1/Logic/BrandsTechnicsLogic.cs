@@ -1,74 +1,65 @@
 ﻿using WinFormsApp1.DTO;
-using WinFormsApp1.Repository;
+using WinFormsApp1.Logic.Interfaces;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Logic
 {
-    public class BrandsTechnicsLogic
+    public class BrandsTechnicsLogic : IBrandsTechnicsLogic
     {
-        BrandTechnicRepository brandTechnicRepository = new();
+        IBrandTechnicRepository _brandTechnicRepository;
 
-        /// <summary>
-        /// Получение идентификатора бренда устройства по названию
-        /// </summary>
-        /// <param name="name">Название</param>
-        /// <returns>Идентификатор</returns>
+        public BrandsTechnicsLogic(IBrandTechnicRepository brandTechnicRepository)
+        {
+            _brandTechnicRepository = brandTechnicRepository;
+        }
+
+        /// <inheritdoc/>
         public int GetIdBrandTechnic(string name)
         {
-            return brandTechnicRepository.GetBrandTechnicByName(name).Id;
+            return _brandTechnicRepository.GetBrandTechnicByName(name).Id;
         }
 
-        /// <summary>
-        /// Получение бренда устройства по идентификатору
-        /// </summary>
-        /// <param name="id">Идентификатор</param>
-        /// <param name="name">Название</param>
-        /// <returns>Бренд устройства</returns>
-        public BrandTechnicEditDTO GetBrandTechnic(int id, string name)
+        /// <inheritdoc/>
+        public BrandTechnicEditDTO GetBrandTechnic(int id)
         {
-            return brandTechnicRepository.GetBrandTechnic(id, name);
+            var brandTechnicDTO = _brandTechnicRepository.GetBrandTechnic(id);
+            if (brandTechnicDTO == null)
+                return new BrandTechnicEditDTO();
+            else
+                return brandTechnicDTO;
         }
 
-        /// <summary>
-        /// Получение списка брендов
-        /// </summary>
-        /// <returns>Список брендов</returns>
+        /// <inheritdoc/>
         public List<BrandTechnicDTO> GetBrandsTechnic()
         {
-            return brandTechnicRepository.GetBrandsTechnic();
+            return _brandTechnicRepository.GetBrandsTechnic();
         }
 
-        /// <summary>
-        /// Получение названия бренда по идентификатору
-        /// </summary>
-        /// <param name="id">Идентификатор</param>
-        /// <returns>Бренд</returns>
+        /// <inheritdoc/>
         public string GetBrandTechnicName(int id) 
         {
-            return brandTechnicRepository.GetBrandTechnicName(id);
+            var brandTechnicDTO = _brandTechnicRepository.GetBrandTechnicName(id);
+            if (brandTechnicDTO == null)
+                return string.Empty;
+            else return brandTechnicDTO.NameBrandTechnic;
         }
 
-        /// <summary>
-        /// Сохранение бренда устройтсва
-        /// </summary>
-        /// <param name="brandTechnicDTO">DTO бренда</param>
+        /// <inheritdoc/>
         public int SaveBrandTechnic(BrandTechnicEditDTO brandTechnicDTO)
         {
             var idBrandTechnic = 0;
             var task = Task.Run(async () =>
             {
-                idBrandTechnic = await brandTechnicRepository.SaveBrandTechnicAsync(brandTechnicDTO);
+                idBrandTechnic = await _brandTechnicRepository.SaveBrandTechnicAsync(brandTechnicDTO);
             });
             task.Wait();
             return idBrandTechnic;
         }
 
-        /// <summary>
-        /// Удаление бренда устройства
-        /// </summary>
-        /// <param name="brandTechnicDTO">DTO бренда</param>
+        /// <inheritdoc/>
         public void RemoveBrandTechnic(BrandTechnicEditDTO brandTechnicDTO)
         {
-            brandTechnicRepository.RemoveBrandTechnic(brandTechnicDTO);
+            _brandTechnicRepository.RemoveBrandTechnic(brandTechnicDTO);
         }
     }
 }

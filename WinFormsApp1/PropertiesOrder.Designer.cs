@@ -1097,6 +1097,7 @@
             KeyPreview = true;
             MaximizeBox = false;
             Name = "PropertiesOrder";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Свойства устройства";
             Load += FeaturesOrder_Load;
             KeyDown += FeaturesOrder_KeyDown;

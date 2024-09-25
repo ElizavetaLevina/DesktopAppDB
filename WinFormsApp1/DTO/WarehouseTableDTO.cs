@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using WinFormsApp1.Model;
 
 namespace WinFormsApp1.DTO
 {
@@ -18,15 +17,6 @@ namespace WinFormsApp1.DTO
         public bool Availability { get; set; }
         public int? IdOrder { get; set; }
 
-        public WarehouseTableDTO(Warehouse warehouse) 
-        {
-            Id = warehouse.Id;
-            NameDetail = warehouse.NameDetail;
-            PricePurchase = warehouse.PricePurchase;
-            PriceSale = warehouse.PriceSale;
-            DatePurchase = warehouse.DatePurchase.ToShortDateString();
-            Availability = warehouse.Availability;
-            IdOrder = warehouse.IdOrder;
-        }
+        public WarehouseTableDTO() { }
     }
 }

@@ -1,56 +1,47 @@
-﻿using WinFormsApp1.DTO;
+﻿using AutoMapper;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Repository
 {
-    public class MasterRepository
+    public class MasterRepository : IMasterRepository
     {
-        /// <summary>
-        /// Получение списка мастеров
-        /// </summary>
-        /// <returns>Список мастеров</returns>
+        IMapper _mapper;
+
+        public MasterRepository(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
+        /// <inheritdoc/>
         public List<MasterEditDTO> GetMasters()
         {
             Context context = new();
-            return context.Masters.OrderBy(i => i.Id).Select(c => new MasterEditDTO(c)).ToList();
+            return _mapper.ProjectTo<MasterEditDTO>(context.Set<Master>().OrderBy(i => i.Id)).ToList();
         }
 
-        /// <summary>
-        /// Получение списка мастеров для отображения в теблице/comboBox
-        /// </summary>
-        /// <returns>Список мастеров</returns>
+        /// <inheritdoc/>
         public List<MasterDTO> GetMastersForOutput()
         {
             Context context = new();
-            return context.Masters.OrderBy(i => i.Id).Select(c => new MasterDTO(c)).ToList();
+            return _mapper.ProjectTo<MasterDTO>(context.Set<Master>().OrderBy(i => i.Id)).ToList();
         }
 
-        /// <summary>
-        /// Получение мастера по идентификатору
-        /// </summary>
-        /// <param name="id">Идентификатор</param>
-        /// <returns>Мастер</returns>
+        /// <inheritdoc/>
         public MasterEditDTO GetMaster(int? id)
         {
             Context context = new();
-            if (id == null)
-                return new MasterEditDTO();
-            else
-            {
-                var master = context.Masters.FirstOrDefault(i => i.Id == id);
-                if (master == null)
-                    return new MasterEditDTO();
-                else return new MasterEditDTO(master);
-            }
+            return _mapper.ProjectTo<MasterEditDTO>(context.Set<Master>().Where(i => i.Id == id)).FirstOrDefault();
         }
 
+        /// <inheritdoc/>
         public MasterEditDTO GetMasterByName(string name)
         {
             Context context = new();
-            var master = context.Masters.FirstOrDefault(i => i.NameMaster == name);
-            return new MasterEditDTO(master);
+            return _mapper.ProjectTo<MasterEditDTO>(context.Set<Master>().Where(i => i.NameMaster == name)).FirstOrDefault();
         }
 
+        /// <inheritdoc/>
         public async Task SaveMasterAsync(MasterEditDTO masterDTO, CancellationToken token = default)
         {
             using Context db = new();
@@ -77,6 +68,7 @@ namespace WinFormsApp1.Repository
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
 
+        /// <inheritdoc/>
         public async Task RemoveMasterAsync(MasterEditDTO masterDTO, CancellationToken token = default)
         {
             using Context db = new();

@@ -18,15 +18,6 @@ namespace WinFormsApp1.DTO
         public bool Availability { get; set; }
         public int? IdOrder { get; set; }
 
-        public WarehouseDTO(Warehouse warehouse) 
-        {
-            Id = warehouse.Id;
-            NameDetail = warehouse.NameDetail;
-            PricePurchase = warehouse.PricePurchase;
-            PriceSale = warehouse.PriceSale;
-            DatePurchase = warehouse.DatePurchase;
-            Availability = warehouse.Availability;
-            IdOrder = warehouse.IdOrder;
-        }
+        public WarehouseDTO() { }
     }
 }

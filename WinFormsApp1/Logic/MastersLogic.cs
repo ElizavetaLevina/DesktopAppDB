@@ -1,61 +1,55 @@
 ﻿using WinFormsApp1.DTO;
-using WinFormsApp1.Repository;
+using WinFormsApp1.Logic.Interfaces;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Logic
 {
-    public class MastersLogic
+    public class MastersLogic : IMastersLogic
     {
-        MasterRepository masterRepository = new();
-        /// <summary>
-        /// Получение списка мастеров для отображения в теблице/comboBox
-        /// </summary>
-        /// <returns>Список мастеров</returns>
+        IMasterRepository _masterRepository;
+        public MastersLogic(IMasterRepository masterRepository)
+        {
+            _masterRepository = masterRepository;
+        }
+
+        /// <inheritdoc/>
         public List<MasterDTO> GetMastersForOutput()
         {
-            return masterRepository.GetMastersForOutput();
+            return _masterRepository.GetMastersForOutput();
         }
 
-        /// <summary>
-        /// Получение списка мастеров
-        /// </summary>
-        /// <returns>Список мастеров</returns>
+        /// <inheritdoc/>
         public List<MasterEditDTO> GetMasters()
         {
-            return masterRepository.GetMasters();
+            return _masterRepository.GetMasters();
         }
 
-        /// <summary>
-        /// Получение записи по идентификатору
-        /// </summary>
-        /// <param name="id">Идентификатор</param>
-        /// <returns>Запись</returns>
+        /// <inheritdoc/>
         public MasterEditDTO GetMaster(int? id)
         {
-            return masterRepository.GetMaster(id);
+            var masterDTO = _masterRepository.GetMaster(id);
+            if (masterDTO == null)
+                return new MasterEditDTO();
+            else 
+                return masterDTO;
         }
 
-        /// <summary>
-        /// Сохранение мастера
-        /// </summary>
-        /// <param name="masterDTO">DTO мастера</param>
+        /// <inheritdoc/>
         public void SaveMaster(MasterEditDTO masterDTO)
         {
             var task = Task.Run(async () =>
             {
-                await masterRepository.SaveMasterAsync(masterDTO);
+                await _masterRepository.SaveMasterAsync(masterDTO);
             });
             task.Wait();
         }
 
-        /// <summary>
-        /// Удаление мастера
-        /// </summary>
-        /// <param name="masterDTO">DTO мастера</param>
+        /// <inheritdoc/>
         public void RemoveMaster(MasterEditDTO masterDTO)
         {
             var task = Task.Run(async () =>
             {
-                await masterRepository.RemoveMasterAsync(masterDTO);
+                await _masterRepository.RemoveMasterAsync(masterDTO);
             });
             task.Wait();
         }

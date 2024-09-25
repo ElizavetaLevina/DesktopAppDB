@@ -182,6 +182,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "MessageToClient";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Отправка сообщения";
             contextMenu.ResumeLayout(false);
             ResumeLayout(false);

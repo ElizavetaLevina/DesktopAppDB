@@ -380,6 +380,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "CalculatingEmployeeSalaries";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Расчет зарплаты сотрудников организации";
             panel1.ResumeLayout(false);
             panel1.PerformLayout();

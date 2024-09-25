@@ -1,73 +1,68 @@
 ﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Logic.Interfaces;
 using WinFormsApp1.Repository;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Logic
 {
-    public class EquipmentsLogic
+    public class EquipmentsLogic : IEquipmentsLogic
     {
-        EquipmentRepository equipmentRepository = new();
-        /// <summary>
-        /// Сохранение комплектации
-        /// </summary>
-        /// <param name="name">Название</param>
-        /// <returns>Идентификатор комплектации</returns>
+        IEquipmentRepository _equipmentRepository;
+
+        public EquipmentsLogic(IEquipmentRepository equipmentRepository)
+        {
+            _equipmentRepository = equipmentRepository;
+        }
+
+
+        /// <inheritdoc/>
         public int SaveEquipment(EquipmentEditDTO equipmentDTO)
         {
             int equipmentId = 0;
             var task = Task.Run(async () =>
             {
-                equipmentId = await equipmentRepository.SaveEquipmentAsync(equipmentDTO);
+                equipmentId = await _equipmentRepository.SaveEquipmentAsync(equipmentDTO);
             });
             task.Wait();
             return equipmentId;
         }
 
-        /// <summary>
-        /// Получение списка комплектаций
-        /// </summary>
-        /// <returns>Список комплектаций</returns>
+        /// <inheritdoc/>
         public List<EquipmentEditDTO> GetEquipments()
         {
-            return equipmentRepository.GetEquipments();
+            return _equipmentRepository.GetEquipments();
         }
 
-        /// <summary>
-        /// Получение списка комплектаций по названию
-        /// </summary>
-        /// <param name="name">Название</param>
-        /// <returns>Список комплектаций</returns>
+        /// <inheritdoc/>
         public List<EquipmentEditDTO> GetEquipmentsByName(string name)
         {
-            return equipmentRepository.GetEquipmentsByName(name);
+            return _equipmentRepository.GetEquipmentsByName(name);
         }
 
-        /// <summary>
-        /// Получение комплектации по названию
-        /// </summary>
-        /// <param name="name">Название</param>
-        /// <returns>Комплектация</returns>
+        /// <inheritdoc/>
         public EquipmentEditDTO GetEquipmentByName(string name)
         {
-            return equipmentRepository.GetEquipmentByName(name);
+            var equipmentDTO = _equipmentRepository.GetEquipmentByName(name);
+            if (equipmentDTO == null)
+                return new EquipmentEditDTO();
+            else
+                return equipmentDTO;
         }
 
-        /// <summary>
-        /// Получение комплектации по идентификатору
-        /// </summary>
-        /// <param name="id">Идентификатор</param>
-        /// <returns>Комплектация</returns>
+        /// <inheritdoc/>
         public EquipmentEditDTO GetEquipment(int? id)
         {
-            return equipmentRepository.GetEquipment(id);
+            var equipmentDTO = _equipmentRepository.GetEquipment(id);
+            if (equipmentDTO == null)
+                return new EquipmentEditDTO();
+            else
+                return equipmentDTO;
         }
 
-        /// <summary>
-        /// Удаление комплектации
-        /// </summary>
-        /// <param name="equipmentDTO">DTO комплектации</param>
+        /// <inheritdoc/>
         public void RemoveEquipment(EquipmentEditDTO equipmentDTO)
         {
-            equipmentRepository.RemoveEquipment(equipmentDTO);
+            _equipmentRepository.RemoveEquipment(equipmentDTO);
         }
     }
 }

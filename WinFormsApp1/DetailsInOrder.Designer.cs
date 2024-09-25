@@ -165,7 +165,7 @@
             labelPrice.Text = "0 руб.";
             labelPrice.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // AddDetails
+            // DetailsInOrder
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -184,7 +184,8 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
-            Name = "AddDetails";
+            Name = "DetailsInOrder";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Детали на ремонт аппарата";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);

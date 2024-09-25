@@ -50,49 +50,6 @@ namespace WinFormsApp1.DTO
         public bool PriceAgreed { get; set; } = false;
         public int? MaxPrice { get; set; }
 
-        public OrderEditDTO(Order order)
-        {
-            Id = order.Id;
-            NumberOrder = order.NumberOrder;
-            ClientId = order.ClientId;
-            Client = new ClientEditDTO(order.Client);
-            MainMasterId = order.MainMasterId;
-            PercentWorkMainMaster = order.PercentWorkMainMaster;
-            MainMaster = order.MainMaster != null ? new MasterEditDTO(order.MainMaster) : null;
-            AdditionalMasterId = order.AdditionalMasterId;
-            PercentWorkAdditionalMaster = order.PercentWorkAdditionalMaster;
-            AdditionalMaster = order.AdditionalMaster != null ? new MasterEditDTO(order.AdditionalMaster) : null;
-            DateCreation = order.DateCreation;
-            DateStartWork = order.DateStartWork;
-            DateCompleted = order.DateCompleted;
-            DateIssue = order.DateIssue;
-            TypeTechnicId = order.TypeTechnicId;
-            TypeTechnic = new TypeTechnicEditDTO(order.TypeTechnic);
-            BrandTechnicId = order.BrandTechnicId;
-            BrandTechnic = new BrandTechnicEditDTO(order.BrandTechnic);
-            ModelTechnic = order.ModelTechnic;
-            FactoryNumber = order.FactoryNumber;
-            EquipmentId = order.EquipmentId;
-            Equipment = order.Equipment != null ? new EquipmentEditDTO(order.Equipment) : null;
-            DiagnosisId = order.DiagnosisId;
-            Diagnosis = order.Diagnosis != null ? new DiagnosisEditDTO(order.Diagnosis) : null;
-            Note = order.Note;
-            StatusOrder = order.StatusOrder;
-            Guarantee = order.Guarantee;
-            DateEndGuarantee = order.DateEndGuarantee;
-            Deleted = order.Deleted;
-            ReturnUnderGuarantee = order.ReturnUnderGuarantee;
-            DateReturn = order.DateReturn;
-            DateCompletedReturn = order.DateCompletedReturn;
-            DateIssueReturn = order.DateIssueReturn;
-            MalfunctionOrders = order.MalfunctionOrders;
-            Details = order.Details;
-            ColorRow = order.ColorRow;
-            DateLastCall = order.DateLastCall;
-            PriceAgreed = order.PriceAgreed;
-            MaxPrice = order.MaxPrice;
-        }
-
         public OrderEditDTO()
         {
         }

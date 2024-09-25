@@ -10,17 +10,6 @@ namespace WinFormsApp1.DTO
         public int Id { get; set; }
         public string? Name { get; set; }
 
-        public TypeTechnicEditDTO(TypeTechnic typeTechnic)
-        {
-            Id = typeTechnic.Id;
-            Name = typeTechnic.NameTypeTechnic;
-        }
-
-        public TypeTechnicEditDTO(string name)
-        {
-            Name = name;
-        }
-
         public TypeTechnicEditDTO()
         {
         }

@@ -1,41 +1,36 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Repository
 {
-    public class MalfunctionOrderRepository
+    public class MalfunctionOrderRepository : IMalfunctionOrderRepository
     {
-        /// <summary>
-        /// Получение списка неисправностей в заказе
-        /// </summary>
-        /// <param name="idOrder">Номер заказа</param>
-        /// <returns>Список неисправностей</returns>
+        IMapper _mapper;
+
+        public MalfunctionOrderRepository(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
+
+        /// <inheritdoc/>
         public List<MalfunctionOrderEditDTO> GetMalfunctionOrdersByIdOrder(int idOrder)
         {
             Context context = new();
-            var some = context.MalfunctionOrders
-                .Where(i => i.OrderId == idOrder);
-            var list = some.Include(i => i.Malfunction).ToList();
-            return list
-                .Select(a => new MalfunctionOrderEditDTO(a))
-                .ToList();
+            return _mapper.ProjectTo<MalfunctionOrderEditDTO>(context.Set<MalfunctionOrder>().Where(i => i.OrderId == idOrder)).ToList();
         }
 
-        /// <summary>
-        /// Получение списка заказов с неисправностью
-        /// </summary>
-        /// <param name="idMalfunction">Номер неисправности</param>
-        /// <returns>Список заказов</returns>
+        /// <inheritdoc/>
         public List<MalfunctionOrderEditDTO> GetMalfunctionOrdersByIdMalfunction(int idMalfunction)
         {
             Context context = new();
-            return context.MalfunctionOrders
-                .Where(i => i.MalfunctionId == idMalfunction)
-                .Select(a => new MalfunctionOrderEditDTO(a))
-                .ToList();
+            return _mapper.ProjectTo<MalfunctionOrderEditDTO>(context.Set<MalfunctionOrder>()
+                .Where(i => i.MalfunctionId == idMalfunction)).ToList();
         }
 
+        /// <inheritdoc/>
         public async Task SaveMalfunctionOrderAsync(MalfunctionOrderEditDTO malfunctionOrderDTO, CancellationToken token = default)
         {
             try
@@ -64,6 +59,7 @@ namespace WinFormsApp1.Repository
                 MessageBox.Show(ex.Message); throw; }
         }
 
+        /// <inheritdoc/>
         public void RemoveMalfunctionOrder(MalfunctionOrderEditDTO malfunctionOrderDTO)
         {
             try

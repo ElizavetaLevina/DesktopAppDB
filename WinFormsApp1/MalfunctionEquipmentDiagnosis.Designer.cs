@@ -123,6 +123,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "MalfunctionEquipmentDiagnosis";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Неисправности";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);

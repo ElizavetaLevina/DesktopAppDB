@@ -1,21 +1,26 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Helpers;
-using WinFormsApp1.Logic;
+using WinFormsApp1.Logic.Interfaces;
 
 namespace WinFormsApp1
 {
     public partial class CalculatingEmployeeSalaries : Form
     {
         List<OrderEditDTO> ordersDTO;
-        MastersLogic mastersLogic = new();
-        NotesSalaryMastersLogic notesSalaryMastersLogic = new();
-        RateMastersLogic rateMastersLogic = new();
-        OrdersLogic ordersLogic = new();
+        IMastersLogic mastersLogic;
+        INotesSalaryMastersLogic notesSalaryMastersLogic;
+        IRateMastersLogic rateMastersLogic;
+        IOrdersLogic ordersLogic;
         bool loading = true;
 
-        public CalculatingEmployeeSalaries()
+        public CalculatingEmployeeSalaries(IMastersLogic _mastersLogic, INotesSalaryMastersLogic _notesSalaryMastersLogic, 
+            IRateMastersLogic _rateMastersLogic, IOrdersLogic _ordersLogic)
         {
+            mastersLogic = _mastersLogic;
+            notesSalaryMastersLogic = _notesSalaryMastersLogic;
+            rateMastersLogic = _rateMastersLogic;
+            ordersLogic = _ordersLogic;
             InitializeComponent();
             InitializeComboBoxes();
             InitializeTable();

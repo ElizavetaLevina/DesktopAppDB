@@ -6,11 +6,5 @@ namespace WinFormsApp1.DTO
     {
         public int IdBrand {  get; set; }
         public string? NameBrandTechnic {  get; set; }
-
-        public TypeBrandComboBoxDTO(TypeBrand typeBrand)
-        {
-            IdBrand = typeBrand.BrandTechnicsId;
-            NameBrandTechnic = typeBrand.BrandTechnic?.NameBrandTechnic;
-        }
     }
 }

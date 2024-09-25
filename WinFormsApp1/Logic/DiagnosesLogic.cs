@@ -1,73 +1,66 @@
 ﻿using WinFormsApp1.DTO;
-using WinFormsApp1.Repository;
+using WinFormsApp1.Logic.Interfaces;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Logic
 {
-    public class DiagnosesLogic
+    public class DiagnosesLogic : IDiagnosesLogic
     {
-        DiagnosisRepository diagnosisRepository = new();
-        /// <summary>
-        /// Сохранение диагноза
-        /// </summary>
-        /// <param name="name">Название</param>
-        /// <returns>Идентификатор диагноза</returns>
+        IDiagnosisRepository _diagnosisRepository;
+
+        public DiagnosesLogic(IDiagnosisRepository diagnosisRepository)
+        {
+            _diagnosisRepository = diagnosisRepository;
+        }
+
+        /// <inheritdoc/>
         public int SaveDiagnosis(DiagnosisEditDTO diagnosisDTO)
         {
             int diagnosisId = 0;
             var task = Task.Run(async () =>
             {
-                diagnosisId = await diagnosisRepository.SaveDiagnosisAsync(diagnosisDTO);
+                diagnosisId = await _diagnosisRepository.SaveDiagnosisAsync(diagnosisDTO);
             });
             task.Wait();
             return diagnosisId;
         }
 
-        /// <summary>
-        /// Получение списка диагнозов
-        /// </summary>
-        /// <returns>Список диагнозов</returns>
+        /// <inheritdoc/>
         public List<DiagnosisEditDTO> GetDiagnoses()
         {
-            return diagnosisRepository.GetDiagnoses();
+            return _diagnosisRepository.GetDiagnoses();
         }
 
-        /// <summary>
-        /// Получение диагноза по названию
-        /// </summary>
-        /// <param name="name">Название</param>
-        /// <returns>Диагноз</returns>
-        public DiagnosisEditDTO GetDiagnosisByName (string name)
+        /// <inheritdoc/>
+        public DiagnosisEditDTO GetDiagnosisByName(string name)
         {
-            return diagnosisRepository.GetDiagnosisByName(name);
+            var diagnosisDTO = _diagnosisRepository.GetDiagnosisByName(name);
+            if (diagnosisDTO == null)
+                return new DiagnosisEditDTO();
+            else 
+                return diagnosisDTO;
         }
 
-        /// <summary>
-        /// Получение диагноза по идентификатору
-        /// </summary>
-        /// <param name="id">Идентификатор</param>
-        /// <returns>Диагноз</returns>
+        /// <inheritdoc/>
         public DiagnosisEditDTO GetDiagnosis(int? id)
         {
-            return diagnosisRepository.GetDiagnosis(id);
+            var diagnosisDTO = _diagnosisRepository.GetDiagnosis(id);
+            if (diagnosisDTO == null)
+                return new DiagnosisEditDTO();
+            else 
+                return diagnosisDTO;
         }
 
-        /// <summary>
-        /// Удаление диагноза
-        /// </summary>
-        /// <param name="diagnosisDTO">DTO диагноза</param>
+        /// <inheritdoc/>
         public void RemoveDiagnosis(DiagnosisEditDTO diagnosisDTO)
         {
-            diagnosisRepository.RemoveDiagnosis(diagnosisDTO);
+            _diagnosisRepository.RemoveDiagnosis(diagnosisDTO);
         }
 
-        /// <summary>
-        /// Получение списка неисправностей по подстроке названия
-        /// </summary>
-        /// <param name="name">Название</param>
-        /// <returns>Список неисправностей</returns>
+        /// <inheritdoc/>
         public List<DiagnosisEditDTO> GetDiagnosesByName(string name)
         {
-            return diagnosisRepository.GetDiagnosesByName(name);
+            return _diagnosisRepository.GetDiagnosesByName(name);
         }
     }
 

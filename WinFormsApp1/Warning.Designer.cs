@@ -134,6 +134,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             Name = "Warning";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Внимание";
             Activated += Warning_Activated;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();

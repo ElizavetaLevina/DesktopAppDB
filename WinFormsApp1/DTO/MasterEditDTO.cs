@@ -14,16 +14,6 @@ namespace WinFormsApp1.DTO
         public TypeSalaryEnum TypeSalary { get; set; }
         public int Rate { get; set; }
 
-        public MasterEditDTO(Master master)
-        {
-            Id = master.Id;
-            NameMaster = master.NameMaster;
-            Address = master.Address;
-            NumberPhone = master.NumberPhone;
-            TypeSalary = master.TypeSalary;
-            Rate = master.Rate;
-        }
-
         public MasterEditDTO()
         {
         }

@@ -1,42 +1,40 @@
 ﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Logic.Interfaces;
 using WinFormsApp1.Repository;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Logic
 {
-    public class RateMastersLogic
+    public class RateMastersLogic : IRateMastersLogic
     {
-        RateMasterRepository rateMasterRepository = new();
+        IRateMasterRepository _rateMasterRepository;
 
-        /// <summary>
-        /// Получение ставки мастера по идентификатору мастера и по дате
-        /// </summary>
-        /// <param name="masterId">Идентификатор мастера</param>
-        /// <param name="date">Дата</param>
-        /// <returns>Ставка мастера</returns>
+        public RateMastersLogic(IRateMasterRepository rateMasterRepository)
+        {
+            _rateMasterRepository = rateMasterRepository;
+        }
+
+        /// <inheritdoc/>
         public RateMasterEditDTO GetRateMasterByDate(int masterId, DateTime date)
         {
-            return rateMasterRepository.GetRateMasterByDate(masterId, date);
+            var rateMasterDTO = _rateMasterRepository.GetRateMasterByDate(masterId, date);
+            if (rateMasterDTO == null)
+                return new RateMasterEditDTO();
+            else return rateMasterDTO;
         }
 
-        /// <summary>
-        /// Получение списка ставок мастера по идентификатору мастера
-        /// </summary>
-        /// <param name="id">Идентификатор мастера</param>
-        /// <returns>Список ставок</returns>
+        /// <inheritdoc/>
         public List<RateMasterDTO> GetRateMasterByIdMaster(int id)
         {
-            return rateMasterRepository.GetRateMasterByIdMaster(id);
+            return _rateMasterRepository.GetRateMasterByIdMaster(id);
         }
 
-        /// <summary>
-        /// Сохранение ставки мастера
-        /// </summary>
-        /// <param name="rateMasterDTO">DTO ставки</param>
+        /// <inheritdoc/>
         public void SaveRateMaster(RateMasterEditDTO rateMasterDTO)
         {
             var task = Task.Run(async () =>
             {
-                await rateMasterRepository.SaveRateMasterAsync(rateMasterDTO);
+                await _rateMasterRepository.SaveRateMasterAsync(rateMasterDTO);
             });
             task.Wait();
         }

@@ -620,6 +620,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             Name = "CompletedOrder";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Пометка аппарата как отремонтированного";
             Activated += CompletedOrder_Activated;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();

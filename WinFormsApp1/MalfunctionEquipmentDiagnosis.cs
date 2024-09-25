@@ -1,25 +1,37 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
-using WinFormsApp1.Logic;
+using WinFormsApp1.Logic.Interfaces;
 
 namespace WinFormsApp1
 {
     public partial class MalfunctionEquipmentDiagnosis : Form
     {
-        NameTableToEditEnum status;
-        MalfunctionsLogic malfunctionsLogic = new();
-        DiagnosesLogic diagnosesLogic = new();
-        EquipmentsLogic equipmentsLogic = new();
-        MalfunctionsOrdersLogic malfunctionsOrdersLogic = new();
-        OrdersLogic ordersLogic = new();
-        public MalfunctionEquipmentDiagnosis(NameTableToEditEnum _status)
+        public int Id
         {
+            get
+            {
+                return Convert.ToInt32(dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].
+                Cells[nameof(MalfunctionEditDTO.Id)].Value);
+            }
+        }
+        public NameTableToEditEnum status;
+        IMalfunctionsLogic malfunctionsLogic;
+        IDiagnosesLogic diagnosesLogic;
+        IEquipmentsLogic equipmentsLogic;
+        IMalfunctionsOrdersLogic malfunctionsOrdersLogic;
+        IOrdersLogic ordersLogic;
+        public MalfunctionEquipmentDiagnosis(IMalfunctionsLogic _malfunctionsLogic, IDiagnosesLogic _diagnosesLogic,
+            IEquipmentsLogic _equipmentsLogic, IMalfunctionsOrdersLogic _malfunctionsOrdersLogic, IOrdersLogic _ordersLogic)
+        {
+            malfunctionsLogic = _malfunctionsLogic;
+            diagnosesLogic = _diagnosesLogic;
+            equipmentsLogic = _equipmentsLogic;
+            malfunctionsOrdersLogic = _malfunctionsOrdersLogic;
+            ordersLogic = _ordersLogic;
             InitializeComponent();
-            status = _status;
-            UpdateTable();
         }
 
-        private void UpdateTable()
+        public void UpdateTable()
         {
             switch (status) 
             {
@@ -53,10 +65,7 @@ namespace WinFormsApp1
 
         private void ButtonAdd_Click(object sender, EventArgs e)
         {
-            MalfunctionEquipmentDiagnosisEdit malfunctionEquipmentDiagnosisEdit = new(status)
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            MalfunctionEquipmentDiagnosisEdit malfunctionEquipmentDiagnosisEdit = new(status);
             switch (status)
             {
                 case NameTableToEditEnum.Malfunction:
@@ -115,10 +124,7 @@ namespace WinFormsApp1
                 DiagnosisEditDTO diagnosisDTO = new();
                 EquipmentEditDTO equipmentDTO = new();
 
-                MalfunctionEquipmentDiagnosisEdit malfunctionEquipmentDiagnosisEdit = new(status)
-                {
-                    StartPosition = FormStartPosition.CenterParent
-                };
+                MalfunctionEquipmentDiagnosisEdit malfunctionEquipmentDiagnosisEdit = new(status);
                 switch (status)
                 {
                     case NameTableToEditEnum.Malfunction:
@@ -211,12 +217,6 @@ namespace WinFormsApp1
         private void ButtonExit_Click(object sender, EventArgs e)
         {
             Close();
-        }
-
-        public int Id
-        {
-            get { return Convert.ToInt32(dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].
-                Cells[nameof(MalfunctionEditDTO.Id)].Value); }
         }
     }
 }

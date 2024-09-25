@@ -1,40 +1,33 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
+using WinFormsApp1.Logic.Interfaces;
 using WinFormsApp1.Repository;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Logic
 {
-    public class TypesBrandsLogic
+    public class TypesBrandsLogic : ITypesBrandsLogic
     {
-        TypeBrandRepository typeBrandRepository = new();
+        ITypeBrandRepository _typeBrandRepository;
 
-        /// <summary>
-        /// Получение списка брендов устройств для comboBox по типу устройства
-        /// </summary>
-        /// <param name="name">Название типа устройства</param>
-        /// <returns></returns>
+        public TypesBrandsLogic(ITypeBrandRepository typeBrandRepository)
+        {
+            _typeBrandRepository = typeBrandRepository;
+        }
+
+        /// <inheritdoc/>
         public List<TypeBrandComboBoxDTO> GetTypeBrandByNameType(string name)
         {
-            return typeBrandRepository.GetTypeBrandByNameType(name);
+            return _typeBrandRepository.GetTypeBrandByNameType(name);
         }
 
-        /// <summary>
-        /// Получение списка тип-бренд устройства по идентификатору бренда или типа устройства
-        /// </summary>
-        /// <param name="idBrand">Идентификатор бренда</param>
-        /// <param name="idType">Идентификатор типа устройства</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public List<TypeBrandDTO> GetTypeBrand(int idBrand = 0, int idType = 0)
         {
-            return typeBrandRepository.GetTypeBrand(idBrand: idBrand, idType: idType);
+            return _typeBrandRepository.GetTypeBrand(idBrand: idBrand, idType: idType);
         }
 
-        /// <summary>
-        /// Сохранение списка тип-бренд по списку типов/брендов
-        /// </summary>
-        /// <param name="list">Список типов/брендов</param>
-        /// <param name="id">Идентификатор типа/бренда</param>
-        /// <param name="name">Название таблицы</param>
+        /// <inheritdoc/>
         public void SaveTypeBrand(List<int>? list, int id, NameTableToEditEnum name)
         {
             if (list != null)
@@ -44,7 +37,7 @@ namespace WinFormsApp1.Logic
                     var idBrand = name == NameTableToEditEnum.TypeTechnic ? list[i] : id;
                     var idType = name == NameTableToEditEnum.TypeTechnic ? id: list[i];
 
-                    if (!typeBrandRepository.GetTypeBrand(idBrand, idType).Any())
+                    if (!_typeBrandRepository.GetTypeBrand(idBrand, idType).Any())
                     {
                         var task = Task.Run(async () =>
                         {
@@ -53,7 +46,7 @@ namespace WinFormsApp1.Logic
                                 BrandTechnicsId = idBrand,
                                 TypeTechnicsId = idType
                             };
-                            await typeBrandRepository.SaveTypeBrandAsync(typeBrandDTO);
+                            await _typeBrandRepository.SaveTypeBrandAsync(typeBrandDTO);
                         });
                         task.Wait();
                     }
@@ -61,12 +54,7 @@ namespace WinFormsApp1.Logic
             }
         }
 
-        /// <summary>
-        /// Удаление списка тип-бренд по списку типов/брендов
-        /// </summary>
-        /// <param name="list">Список типов/брендов</param>
-        /// <param name="id">Идентификатор типа/бренда</param>
-        /// <param name="name">Название таблицы</param>
+        /// <inheritdoc/>
         public void RemoveTypeBrandByList(List<int>? list, int id, NameTableToEditEnum name)
         {
             if (list != null)
@@ -85,13 +73,10 @@ namespace WinFormsApp1.Logic
             }
         }
 
-        /// <summary>
-        /// Удаление типа-бренда устройства
-        /// </summary>
-        /// <param name="typeBrandDTO">DTO типа-бренда устройства</param>
+        /// <inheritdoc/>
         public void RemoveTypeBrand(TypeBrandDTO typeBrandDTO)
         {
-            typeBrandRepository.RemoveTypesBrands(typeBrandDTO);
+            _typeBrandRepository.RemoveTypesBrands(typeBrandDTO);
         }
     }
 }

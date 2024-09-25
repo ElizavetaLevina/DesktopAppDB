@@ -1,87 +1,64 @@
-﻿using WinFormsApp1.DTO;
+﻿using AutoMapper;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Model;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Repository
 {
-    public class ClientRepository
+    public class ClientRepository : IClientRepository
     {
-        /// <summary>
-        /// Получение клиента по идентификатору
-        /// </summary>
-        /// <param name="id">Идентификатор</param>
-        /// <returns>Клиент</returns>
+        IMapper _mapper;
+
+        public ClientRepository(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
+
+        /// <inheritdoc/>
         public ClientEditDTO GetClient(string idClient)
         {
             Context context = new();
-            return new ClientEditDTO(context.Clients.First(i => i.IdClient == idClient));
+            return _mapper.ProjectTo<ClientEditDTO>(context.Set<Client>().Where(i => i.IdClient == idClient)).FirstOrDefault();
         }
 
-        /// <summary>
-        /// Получение списка клиентов
-        /// </summary>
-        /// <returns>Список клиентов</returns>
+        /// <inheritdoc/>
         public List<ClientEditDTO> GetClients()
         {
             Context context = new();
-            return context.Clients.Select(a => new ClientEditDTO(a)).ToList();
+            return _mapper.ProjectTo<ClientEditDTO>(context.Set<Client>()).ToList();
+            //context.Clients.Select(a => new ClientEditDTO(a)).ToList();
         }
 
-        /// <summary>
-        /// Получение списка клиентов для справочника
-        /// </summary>
-        /// <returns>Список клиентов</returns>
+        /// <inheritdoc/>
         public List<ClientDTO> GetClientsForTable()
         {
             Context context = new();
-            return context.Clients
-                .Select(a => new ClientDTO(a))
-                .ToList();
+            return _mapper.ProjectTo<ClientDTO>(context.Set<Client>()).ToList();
         }
 
-        /// <summary>
-        /// Получение списка клиентов по типу
-        /// </summary>
-        /// <param name="typeClient">Тип клиента</param>
-        /// <returns>Спиок клиентов</returns>
+        /// <inheritdoc/>
         public List<ClientDTO> GetClientsByType(TypeClientEnum typeClient) 
         {
             Context context = new();
-            return context.Clients
-                .Where(i => i.TypeClient == typeClient)
-                .Select(a => new ClientDTO(a))
-                .ToList();
+            return _mapper.ProjectTo<ClientDTO>(context.Set<Client>().Where(i => i.TypeClient == typeClient)).ToList();
         }
 
-        /// <summary>
-        /// Получение списка клиентов по подстроке id клиента
-        /// </summary>
-        /// <param name="idClient">Id клиента</param>
-        /// <returns>Список клиентов</returns>
+        /// <inheritdoc/>
         public List<ClientDTO> GetClientsByIdClient(string idClient)
         {
             Context context = new();
-            return context.Clients
-                .Where(i => i.IdClient.Contains(idClient))
-                .Select(a => new ClientDTO(a))
-                .ToList();
+            return _mapper.ProjectTo<ClientDTO>(context.Set<Client>().Where(i => i.IdClient.Contains(idClient))).ToList();
         }
 
-        /// <summary>
-        /// Получение клиента по idClient
-        /// </summary>
-        /// <param name="idClient">idClient</param>
-        /// <returns>Клиент</returns>
+        /// <inheritdoc/>
         public ClientEditDTO GetClientByIdClient(string idClient)
         {
             Context context = new();
-            var client = context.Clients.FirstOrDefault(i => i.IdClient == idClient);
-            if (client == null)
-                return new ClientEditDTO();
-            else
-                return new ClientEditDTO(client);
+            return _mapper.ProjectTo<ClientEditDTO>(context.Set<Client>().Where(i => i.IdClient == idClient)).FirstOrDefault();
         }
 
+        /// <inheritdoc/>
         public async Task<int> SaveClientAsync(ClientEditDTO clientDTO, CancellationToken token = default)
         {
             Context db = new();

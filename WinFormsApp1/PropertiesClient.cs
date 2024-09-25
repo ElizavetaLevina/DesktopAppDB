@@ -1,24 +1,21 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
-using WinFormsApp1.Logic;
-using WinFormsApp1.Repository;
+using WinFormsApp1.Logic.Interfaces;
 
 namespace WinFormsApp1
 {
     public partial class PropertiesClient : Form
     {
-        ClientsLogic clientsLogic = new();
-        ClientRepository clientRepository = new();
+        IClientsLogic clientsLogic;
         ClientEditDTO clientDTO;
         public string idClient;
-        public PropertiesClient(string _idClient)
+        public PropertiesClient(IClientsLogic _clientsLogic)
         {
+            clientsLogic = _clientsLogic;
             InitializeComponent();
-            idClient = _idClient;
-            InitializeElementsForms();
         }
 
-        private void InitializeElementsForms()
+        public void InitializeElementsForms()
         {
             clientDTO = clientsLogic.GetClient(idClient);
             textBoxID.Text = clientDTO.IdClient;

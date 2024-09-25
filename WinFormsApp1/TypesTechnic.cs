@@ -1,6 +1,7 @@
-﻿using WinFormsApp1.DTO;
+﻿using Microsoft.Extensions.DependencyInjection;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
-using WinFormsApp1.Logic;
+using WinFormsApp1.Logic.Interfaces;
 
 namespace WinFormsApp1
 {
@@ -8,11 +9,13 @@ namespace WinFormsApp1
     {
         public int IdType { get { return Convert.ToInt32(dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].
             Cells[nameof(TypeTechnicDTO.Id)].Value); } }
-        TypesTechnicsLogic typesTechnicsLogic = new();
-        TypesBrandsLogic typesBrandsLogic = new();
+        ITypesTechnicsLogic typesTechnicsLogic;
+        ITypesBrandsLogic typesBrandsLogic;
 
-        public TypesTechnic()
+        public TypesTechnic(ITypesTechnicsLogic _typesTechnicsLogic, ITypesBrandsLogic _typesBrandsLogic)
         {
+            typesTechnicsLogic = _typesTechnicsLogic;
+            typesBrandsLogic = _typesBrandsLogic;
             InitializeComponent();
             UpdateTable();
         }
@@ -27,11 +30,9 @@ namespace WinFormsApp1
 
         private void ButtonAdd_Click(object sender, EventArgs e)
         {
-            BrandAndTypeEdit brandAndTypeEdit = new(NameTableToEditEnum.TypeTechnic)
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
-
+            BrandAndTypeEdit brandAndTypeEdit = Program.ServiceProvider.GetRequiredService<BrandAndTypeEdit>();
+            brandAndTypeEdit.nameTable = NameTableToEditEnum.TypeTechnic;
+            brandAndTypeEdit.InitializeElementsForm();
             if (brandAndTypeEdit.ShowDialog() == DialogResult.OK)
                 UpdateTable();
         }
@@ -40,11 +41,10 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count > 0)
             {
-                BrandAndTypeEdit brandAndTypeEdit = new(NameTableToEditEnum.TypeTechnic, IdType)
-                {
-                    StartPosition = FormStartPosition.CenterParent
-                };
-
+                BrandAndTypeEdit brandAndTypeEdit = Program.ServiceProvider.GetRequiredService<BrandAndTypeEdit>();
+                brandAndTypeEdit.nameTable = NameTableToEditEnum.TypeTechnic;
+                brandAndTypeEdit.id = IdType;
+                brandAndTypeEdit.InitializeElementsForm();
                 if (brandAndTypeEdit.ShowDialog() == DialogResult.OK)
                     UpdateTable();
             }

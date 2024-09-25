@@ -1,9 +1,35 @@
-﻿using WinFormsApp1.Enum;
+﻿using Microsoft.Extensions.DependencyInjection;
+using WinFormsApp1.Enum;
 
 namespace WinFormsApp1
 {
     public partial class Warning : Form
     {
+        public string LabelText
+        {
+            get { return label1.Text; }
+            set { label1.Text = value; }
+        }
+        public string ButtonNoText
+        {
+            get { return buttonExit.Text; }
+            set { buttonExit.Text = value; }
+        }
+        public string ButtonYesText
+        {
+            get { return buttonYes.Text; }
+            set { buttonYes.Text = value; }
+        }
+        public bool ButtonVisible
+        {
+            get { return buttonYes.Visible; }
+            set { buttonYes.Visible = value; }
+        }
+        public bool VisibleChangePrice
+        {
+            get { return linkLabelChangeMaxPrice.Visible; }
+            set { linkLabelChangeMaxPrice.Visible = value; }
+        }
         public int id;
         public Warning()
         {
@@ -30,43 +56,11 @@ namespace WinFormsApp1
 
         private void LinkLabelChangeMaxPrice_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            PropertiesOrder propertiesOrder = new(id, StatusOrderEnum.InRepair, true)
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            PropertiesOrder propertiesOrder = Program.ServiceProvider.GetRequiredService<PropertiesOrder>();
+            propertiesOrder.InitializeElementsForm(id, StatusOrderEnum.InRepair, true);
             propertiesOrder.ShowDialog();
             DialogResult = DialogResult.OK;
             Close();
-        }
-
-        public string LabelText
-        {
-            get { return label1.Text; }
-            set { label1.Text = value; }
-        }
-
-        public string ButtonNoText
-        {
-            get { return buttonExit.Text; }
-            set { buttonExit.Text = value; }
-        }
-
-        public string ButtonYesText
-        {
-            get { return buttonYes.Text; }
-            set { buttonYes.Text = value; }
-        }
-
-        public bool ButtonVisible
-        {
-            get { return buttonYes.Visible; }
-            set { buttonYes.Visible = value; }
-        }
-
-        public bool VisibleChangePrice
-        {
-            get { return linkLabelChangeMaxPrice.Visible; }
-            set { linkLabelChangeMaxPrice.Visible = value; }
         }
     }
 }

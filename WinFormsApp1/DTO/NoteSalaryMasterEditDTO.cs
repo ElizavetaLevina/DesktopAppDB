@@ -18,14 +18,6 @@ namespace WinFormsApp1.DTO
         [Browsable(false)]
         public DateTime Date { get; set; }
 
-        public NoteSalaryMasterEditDTO(NoteSalaryMaster noteSalaryMaster) 
-        {
-            Id = noteSalaryMaster.Id;
-            MasterId = noteSalaryMaster.MasterId;
-            Note = noteSalaryMaster.Note;
-            Date = noteSalaryMaster.Date;
-        }
-
         public NoteSalaryMasterEditDTO()
         {
         }

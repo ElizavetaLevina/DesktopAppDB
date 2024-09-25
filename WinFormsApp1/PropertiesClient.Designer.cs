@@ -171,7 +171,7 @@
             radioButtonBlack.Text = "В черном списке";
             radioButtonBlack.UseVisualStyleBackColor = true;
             // 
-            // FeaturesClient
+            // PropertiesClient
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -193,7 +193,8 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
-            Name = "FeaturesClient";
+            Name = "PropertiesClient";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Изменение данных клиента";
             ResumeLayout(false);
             PerformLayout();

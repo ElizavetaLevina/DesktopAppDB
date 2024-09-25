@@ -1,60 +1,50 @@
-﻿using WinFormsApp1.DTO;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Repository
 {
-    public class BrandTechnicRepository
+    public class BrandTechnicRepository : IBrandTechnicRepository
     {
-        /// <summary>
-        /// Получение списка брендов
-        /// </summary>
-        /// <returns>Список брендов</returns>
+        IMapper _mapper;
+
+        public BrandTechnicRepository(IMapper mapper) 
+        {
+            _mapper = mapper;
+        }
+
+        /// <inheritdoc/>
         public List<BrandTechnicDTO> GetBrandsTechnic()
         {
             Context context = new();
-            return context.BrandTechnices.OrderBy(i => i.NameBrandTechnic).Select(a => new BrandTechnicDTO(a)).ToList();
+            return _mapper.ProjectTo<BrandTechnicDTO>(context.Set<BrandTechnic>().OrderBy(i => i.NameBrandTechnic)).ToList();
         }
 
-        /// <summary>
-        /// Получение записи по названию
-        /// </summary>
-        /// <param name="name">Название бренда</param>
-        /// <returns>Запись</returns>
+        /// <inheritdoc/>
         public BrandTechnicDTO GetBrandTechnicByName(string name)
         {
             Context context = new();
-            return new BrandTechnicDTO(context.BrandTechnices.First(i => i.NameBrandTechnic == name));
+            return _mapper.ProjectTo<BrandTechnicDTO>(context.Set<BrandTechnic>()
+                .Where(i => EF.Functions.ILike(i.NameBrandTechnic, name))).FirstOrDefault();
         }
 
-        /// <summary>
-        /// Получение бренда устройства по идентификатору
-        /// </summary>
-        /// <param name="id">Идентификатор</param>
-        /// <param name="name">Имя</param>
-        /// <returns>Бренда устройства</returns>
-        public BrandTechnicEditDTO GetBrandTechnic(int id, string name)
+        /// <inheritdoc/>
+        public BrandTechnicEditDTO GetBrandTechnic(int id)
         {
             Context context = new();
-            var brandTechnic = context.BrandTechnices.FirstOrDefault(i => i.Id == id);
-            if (brandTechnic == null)
-                return new BrandTechnicEditDTO(name);
-            else return new BrandTechnicEditDTO(brandTechnic) { Name = name };
+            return _mapper.ProjectTo<BrandTechnicEditDTO>(context.Set<BrandTechnic>().Where(i => i.Id == id)).FirstOrDefault();
         }
 
-        /// <summary>
-        /// Получение названия бренда по идентификатору
-        /// </summary>
-        /// <param name="id">Идентификатор</param>
-        /// <returns>Бренд</returns>
-        public string GetBrandTechnicName(int id)
+        /// <inheritdoc/>
+        public BrandTechnicDTO GetBrandTechnicName(int id)
         {
             Context context = new();
-            var brandTechnic = context.BrandTechnices.FirstOrDefault(i => i.Id == id);
-            if (brandTechnic == null)
-                return string.Empty;
-            else return brandTechnic.NameBrandTechnic;
+            return _mapper.ProjectTo<BrandTechnicDTO>(context.Set<BrandTechnic>().Where(i => i.Id == id)).FirstOrDefault();
         }
 
+        /// <inheritdoc/>
         public async Task<int> SaveBrandTechnicAsync(BrandTechnicEditDTO brandTechnicDTO, CancellationToken token = default)
         {
             using Context db = new();
@@ -76,6 +66,7 @@ namespace WinFormsApp1.Repository
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
 
+        /// <inheritdoc/>
         public void RemoveBrandTechnic(BrandTechnicEditDTO brandTechnicDTO)
         {
             try

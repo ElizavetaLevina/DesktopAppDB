@@ -1,17 +1,20 @@
-﻿using System.Data.Entity;
+﻿using AutoMapper;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Repository
 {
-    public class TypeBrandRepository
+    public class TypeBrandRepository : ITypeBrandRepository
     {
-        /// <summary>
-        /// Получение списка тип-бренд устройства по идентификатору бренда или типа устройства
-        /// </summary>
-        /// <param name="idBrand">Идентификатор бренда</param>
-        /// <param name="idType">Идентификатор типа устройства</param>
-        /// <returns>Список бренд-тип</returns>
+        IMapper _mapper;
+
+        public TypeBrandRepository(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
+
+        /// <inheritdoc/>
         public List<TypeBrandDTO> GetTypeBrand(int idBrand = 0, int idType = 0)
         {
             Context context = new();
@@ -25,19 +28,18 @@ namespace WinFormsApp1.Repository
             else if (idBrand != 0 && idType == 0)
                 set = set.Where(i => i.BrandTechnicsId == idBrand);
 
-            var list = set.Include(i => i.BrandTechnic).ToList();
-
-            return list.Select(a => new TypeBrandDTO(a)).ToList();
+            return _mapper.ProjectTo<TypeBrandDTO>(set).ToList();
         }
 
+        /// <inheritdoc/>
         public List<TypeBrandComboBoxDTO> GetTypeBrandByNameType(string nameType)
         {
             Context context = new();
-            var some = context.TypeBrands.Where(i => i.TypeTechnic.NameTypeTechnic == nameType);
-            var list = some.Include(i => i.BrandTechnic).ToList();
-            return list.Select(a => new TypeBrandComboBoxDTO(a)).ToList();
+            return _mapper.ProjectTo<TypeBrandComboBoxDTO>(context.Set<TypeBrand>()
+                .Where(i => i.TypeTechnic.NameTypeTechnic == nameType)).ToList();
         }
 
+        /// <inheritdoc/>
         public async Task SaveTypeBrandAsync(TypeBrandDTO typeBrandDTO, CancellationToken token = default)
         {
             using Context db = new();
@@ -54,6 +56,7 @@ namespace WinFormsApp1.Repository
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
 
+        /// <inheritdoc/>
         public void RemoveTypesBrands(TypeBrandDTO typeBrandDTO)
         {
             try
@@ -67,13 +70,5 @@ namespace WinFormsApp1.Repository
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
 
-        /*public void RemoveTypeBrand(TypeBrandEditDTO typeBrandEditDTO)
-        {
-            try
-            {
-                Context db = new();
-                var typeBrand = db.TypeBrands.FirstOrDefault(i => i.)
-            }
-        }*/
     }
 }

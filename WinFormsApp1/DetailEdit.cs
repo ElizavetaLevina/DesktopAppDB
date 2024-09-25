@@ -1,26 +1,47 @@
-﻿using WinFormsApp1.DTO;
+﻿using System.Windows.Forms;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Helpers;
-using WinFormsApp1.Logic;
+using WinFormsApp1.Logic.Interfaces;
+using static System.Runtime.CompilerServices.RuntimeHelpers;
 
 namespace WinFormsApp1
 {
     public partial class DetailEdit : Form
     {
+        public string NameDetail
+        {
+            get { return textBoxNameDetail.Text; }
+            set { textBoxNameDetail.Text = value; }
+        }
+        public int PricePurchase
+        {
+            get { return Convert.ToInt32(textBoxPricePurchase.Text); }
+            set { textBoxPricePurchase.Text = value.ToString(); }
+        }
+        public int PriceSale
+        {
+            get { return Convert.ToInt32(textBoxPriceSale.Text); }
+            set { textBoxPriceSale.Text = value.ToString(); }
+        }
+        public DateTime DatePurchase
+        {
+            get { return dateTimePicker1.Value; }
+            set { dateTimePicker1.Value = value; }
+        }
         readonly List<string> nameDetails = [];
         public bool changeDetail = false;
-        WarehouseEditDTO warehouseDTO;
-        WarehousesLogic warehousesLogic = new();
-        public DetailEdit(bool _changeDetail, WarehouseEditDTO _warehouseDTO)
+        public int idDetail = 0;
+        WarehouseEditDTO warehouseDTO = new();
+        IWarehousesLogic warehousesLogic;
+        public DetailEdit(IWarehousesLogic _warehousesLogic)
         {
+            warehousesLogic = _warehousesLogic;
             InitializeComponent();
-            changeDetail = _changeDetail;
-            warehouseDTO = _warehouseDTO;
-            InitializeElementsForm();
         }
 
-        private void InitializeElementsForm()
+        public void InitializeElementsForm()
         {
-            var list = warehousesLogic.GetWarehouses();            
+            var list = warehousesLogic.GetWarehouses();
             if (list.Count > 0)
             {
                 foreach (var item in list)
@@ -31,6 +52,7 @@ namespace WinFormsApp1
             }
             if (changeDetail)
             {
+                warehouseDTO = warehousesLogic.GetWarehouse(id: idDetail);
                 Text = "Изменение данных";
                 NameDetail = warehouseDTO.NameDetail;
                 PricePurchase = warehouseDTO.PricePurchase;
@@ -45,10 +67,7 @@ namespace WinFormsApp1
             if (string.IsNullOrEmpty(textBoxNameDetail.Text) || string.IsNullOrEmpty(textBoxPricePurchase.Text) ||
                 string.IsNullOrEmpty(textBoxPriceSale.Text))
             {
-                Warning warning = new()
-                {
-                    StartPosition = FormStartPosition.CenterParent
-                };
+                Warning warning = new();
                 warning.ShowDialog();
 
                 if (string.IsNullOrEmpty(textBoxNameDetail.Text))
@@ -97,9 +116,9 @@ namespace WinFormsApp1
             listBoxDetails.Items.Clear();
             listBoxDetails.Visible = false;
 
-            foreach(var name in nameDetails)
+            foreach (var name in nameDetails)
             {
-                if (name.StartsWith(NameDetail) && NameDetail.Length > 0)
+                if (name.ToLower().StartsWith(NameDetail.ToLower()) && NameDetail.Length > 0)
                 {
                     listBoxDetails.Visible = true;
                     listBoxDetails.Items.Add(name);
@@ -117,48 +136,50 @@ namespace WinFormsApp1
             e.Handled = !KeyPressHelper.CheckKeyPress(true, textBoxPriceSale.Text, e.KeyChar);
         }
 
-        private void ListBoxDetails_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (listBoxDetails.SelectedIndex >= 0)
-            {
-                textBoxNameDetail.Text = listBoxDetails.Items[listBoxDetails.SelectedIndex].ToString();
-
-                listBoxDetails.Items.Clear();
-                listBoxDetails.Visible = false;
-
-                textBoxNameDetail.Focus();
-                textBoxNameDetail.SelectionStart = textBoxNameDetail.TextLength;
-            }
-        }
-
         private void TextBoxNameDetail_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == 13 && listBoxDetails.Visible)
                 listBoxDetails.Visible = false;
         }
 
-        public string NameDetail
+        private void TextBoxNameDetail_KeyDown(object sender, KeyEventArgs e)
         {
-            get { return textBoxNameDetail.Text; }
-            set { textBoxNameDetail.Text = value; }
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (listBoxDetails.Visible)
+                    listBoxDetails.Visible = false;
+                textBoxNameDetail.Focus();
+            }
+            else if (e.KeyCode == Keys.Down)
+            {
+                listBoxDetails.Focus();
+                try
+                {
+                    if (listBoxDetails.SelectedIndex < listBoxDetails.Items.Count)
+                        listBoxDetails.SelectedIndex += 1;
+                }
+                catch { }
+            }
+            else if (e.KeyCode == Keys.Up)
+            {
+                listBoxDetails.Focus();
+                try
+                {
+                    if (listBoxDetails.SelectedIndex > 1)
+                        listBoxDetails.SelectedIndex -= 1;
+                }
+                catch { }
+            }
         }
 
-        public int PricePurchase
+        private void ListBoxDetails_KeyDown(object sender, KeyEventArgs e)
         {
-            get { return Convert.ToInt32(textBoxPricePurchase.Text); }
-            set { textBoxPricePurchase.Text = value.ToString(); }
-        }
-
-        public int PriceSale
-        {
-            get { return Convert.ToInt32(textBoxPriceSale.Text); }
-            set { textBoxPriceSale.Text = value.ToString(); }
-        }
-
-        public DateTime DatePurchase
-        {
-            get { return dateTimePicker1.Value; }
-            set { dateTimePicker1.Value = value; }
+            if (e.KeyCode == Keys.Enter && listBoxDetails.SelectedIndex >= 0)
+            {
+                textBoxNameDetail.Text = listBoxDetails.Items[listBoxDetails.SelectedIndex].ToString();
+                listBoxDetails.Visible = false;
+                textBoxNameDetail.SelectionStart = textBoxNameDetail.Text.Length;
+            }
         }
     }
 }

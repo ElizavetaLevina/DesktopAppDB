@@ -11,7 +11,7 @@ namespace WinFormsApp1.Logic
         /// <summary>
         /// Создание квитанции принятие устройства в ремонт в Excel 
         /// </summary>
-        /// <param name="idOrder">Идентификтор заказа</param>
+        /// <param name="orderDTO">DTO заказа</param>
         public static void GettingDeviceReport(OrderEditDTO orderDTO)
         {
             try
@@ -47,7 +47,6 @@ namespace WinFormsApp1.Logic
                 {
                     Warning warning = new()
                     {
-                        StartPosition = FormStartPosition.CenterParent,
                         LabelText = "Закройте файл reportGetting.xlsx и повторите попытку!"
                     };
                     warning.ShowDialog();
@@ -169,7 +168,6 @@ namespace WinFormsApp1.Logic
                 {
                     Warning warning = new()
                     {
-                        StartPosition = FormStartPosition.CenterParent,
                         LabelText = "Закройте файл reportIssuing.xlsx и повторите попытку!"
                     };
                     warning.ShowDialog();
@@ -187,10 +185,10 @@ namespace WinFormsApp1.Logic
         /// </summary>
         /// <param name="folderPath">Путь для сохранения</param>
         /// <param name="orders">DTO заказов</param>
-        public static void ExportMainTable(string folderPath, List<OrderTableDTO> orders)
+        public static void ExportMainTable(string folderPath, List<OrderTableExcelDTO> orders)
         {
             using XLWorkbook workbook = new();
-            var table = Funcs.ToDataTable(orders.Select(a => new OrderTableExcelDTO(a)).ToList());
+            var table = Funcs.ToDataTable(orders);
 
             var wsDetailedData = workbook.Worksheets.Add(table, "Orders");
             wsDetailedData.Columns().AdjustToContents();

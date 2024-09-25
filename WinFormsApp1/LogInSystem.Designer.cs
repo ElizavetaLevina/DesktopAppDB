@@ -129,6 +129,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "LogInSystem";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Вход в систему";
             Activated += LogInSystem_Activated;
             ResumeLayout(false);

@@ -36,26 +36,9 @@ namespace WinFormsApp1.DTO
         [DisplayName("")]
         public string ColorRow { get; set; } = Color.Black.Name;
 
-        public OrderTableDTO(Order order)
+        public OrderTableDTO()
         {
-            Id = order.Id;
-            NumberOrder = order.NumberOrder;
-            DateCreation = order.DateCreation?.ToShortDateString();
-            DateStartWork = order.DateStartWork?.ToShortDateString();
-            DateCompleted = order.DateCompleted?.ToShortDateString();
-            DateIssue = order.DateIssue?.ToShortDateString();
-            MasterName = order.AdditionalMasterId != null ? 
-                String.Format("{0} | {1}", order.MainMaster?.NameMaster, order.AdditionalMaster?.NameMaster) : 
-                order.MainMaster?.NameMaster;
-            NameDevice = String.Format("{0} {1} {2}", order.TypeTechnic?.NameTypeTechnic,
-                order.BrandTechnic?.NameBrandTechnic, order.ModelTechnic);
-            IdClient = order.Client?.IdClient;
-            Diagnosis = order.Diagnosis?.Name;
-            Deleted = order.Deleted;
-            ReturnUnderGuarantee = order.ReturnUnderGuarantee;
-            Guarantee = order.Guarantee;
-            DateEndGuarantee = order.DateEndGuarantee;
-            ColorRow = order.ColorRow;
+
         }
     }
 }

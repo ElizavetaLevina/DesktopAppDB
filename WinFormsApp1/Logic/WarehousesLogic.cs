@@ -1,95 +1,69 @@
 ﻿using WinFormsApp1.DTO;
-using WinFormsApp1.Repository;
+using WinFormsApp1.Logic.Interfaces;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Logic
 {
-    public class WarehousesLogic
+    public class WarehousesLogic : IWarehousesLogic
     {
-        WarehouseRepository warehouseRepository = new();
+        IWarehouseRepository _warehouseRepository;
 
-        /// <summary>
-        /// Получение списка деталей в заказе
-        /// </summary>
-        /// <param name="idOrder">Идентификатор заказа</param>
-        /// <returns>Список деталей</returns>
-        public List<WarehouseEditDTO> GetDetailsInOrder(int idOrder)
+        public WarehousesLogic(IWarehouseRepository warehouseRepository)
         {
-            return warehouseRepository.GetDetailsInOrder(idOrder);
+            _warehouseRepository = warehouseRepository;
         }
 
-        /// <summary>
-        /// Получение количества деталей в заказе
-        /// </summary>
-        /// <param name="idOrder">Идентификатор заказа</param>
-        /// <returns>Количество деталей</returns>
+        /// <inheritdoc/>
+        public List<WarehouseEditDTO> GetDetailsInOrder(int idOrder)
+        {
+            return _warehouseRepository.GetDetailsInOrder(idOrder);
+        }
+
+        /// <inheritdoc/>
         public int GetCountDetailsInOrder(int idOrder)
         {
             return GetDetailsInOrder(idOrder).Count;
         }
 
-        /// <summary>
-        /// Получение суммы деталей в заказе
-        /// </summary>
-        /// <param name="idOrder">Идентификатор заказа</param>
-        /// <returns>Сумма деталей</returns>
+        /// <inheritdoc/>
         public int GetPriceDetailsInOrder(int idOrder)
         {
             return GetDetailsInOrder(idOrder).Sum(i => i.PriceSale);
         }
 
-        /// <summary>
-        /// Получение списка деталей на складе
-        /// </summary>
-        /// <returns>Список деталей на складе</returns>
+        /// <inheritdoc/>
         public List<WarehouseDTO> GetWarehouses()
         {
-            return warehouseRepository.GetWarehouses();
+            return _warehouseRepository.GetWarehouses();
         }
 
-        /// <summary>
-        /// Сохранение детали
-        /// </summary>
-        /// <param name="warehouseDTO">DTO детали</param>
+        /// <inheritdoc/>
         public void SaveDetail(WarehouseEditDTO warehouseDTO) 
         {
             var task = Task.Run(async () =>
             {
-                await warehouseRepository.SaveWarehouseAsync(warehouseDTO);
+                await _warehouseRepository.SaveWarehouseAsync(warehouseDTO);
             });
             task.Wait();
         }
 
-        /// <summary>
-        /// Получение детали по идентификатору
-        /// </summary>
-        /// <param name="id">Идентификатор</param>
-        /// <returns>Деталь</returns>
+        /// <inheritdoc/>
         public WarehouseEditDTO GetWarehouse(int id)
         {
-            return warehouseRepository.GetWarehouse(id);
+            return _warehouseRepository.GetWarehouse(id);
         }
 
-        /// <summary>
-        /// Получение списка деталей на складе для таблицы
-        /// </summary>
-        /// <param name="availability">Доступность для добавления в заказ</param>
-        /// <param name="datePurchase">Дата покупки</param>
-        /// <param name="name">Название</param>
-        /// <param name="idOrder">Идентификатор заказа</param>
-        /// <returns>Список деталей на складе</returns>
+        /// <inheritdoc/>
         public List<WarehouseTableDTO> GetWarehousesForTable(bool? availability = null, bool datePurchase = false, 
             string? name = null, int? idOrder = null)
         {
-            return warehouseRepository.GetWarehousesForTable(availability, datePurchase, name, idOrder);
+            return _warehouseRepository.GetWarehousesForTable(availability, datePurchase, name, idOrder);
         }
 
-        /// <summary>
-        /// Удаление детали
-        /// </summary>
-        /// <param name="warehouseDTO">DTO детали</param>
+        /// <inheritdoc/>
         public void RemoveWarehouse(WarehouseEditDTO warehouseDTO)
         {
-            warehouseRepository.RemoveWarehouse(warehouseDTO);
+            _warehouseRepository.RemoveWarehouse(warehouseDTO);
         }
     }
 }

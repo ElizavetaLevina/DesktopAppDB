@@ -14,10 +14,7 @@ namespace WinFormsApp1
 
         private void Save()
         {
-            Warning warning = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            Warning warning = new();
             switch (status)
             {
                 case NameTableToEditEnum.Malfunction:

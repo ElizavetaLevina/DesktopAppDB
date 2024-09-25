@@ -173,6 +173,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Organization";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Сведения об организации";
             ResumeLayout(false);
             PerformLayout();

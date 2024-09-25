@@ -1,15 +1,16 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
-using WinFormsApp1.Logic;
+using WinFormsApp1.Logic.Interfaces;
 
 namespace WinFormsApp1
 {
     public partial class GuideClients : Form
     {
-        ClientsLogic clientsLogic = new();
+        IClientsLogic clientsLogic;
         List<ClientDTO> clients;
-        public GuideClients()
+        public GuideClients(IClientsLogic _clientsLogic)
         {
+            clientsLogic = _clientsLogic;
             InitializeComponent();
             InitializeElementsForm();
         }

@@ -2,20 +2,22 @@
 using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Helpers;
-using WinFormsApp1.Logic;
+using WinFormsApp1.Logic.Interfaces;
 
 namespace WinFormsApp1
 {
     public partial class ReportsOrganization : Form
     {
-        MastersLogic mastersLogic = new();
-        OrdersLogic ordersLogic = new();
+        IMastersLogic mastersLogic;
+        IOrdersLogic ordersLogic;
         List<OrderEditDTO> ordersDTO;
         int[] pointsArray;
         bool loadingForm = true;
         MonthEnum[] valuesAsArray = (MonthEnum[])System.Enum.GetValues(typeof(MonthEnum));
-        public ReportsOrganization()
+        public ReportsOrganization(IMastersLogic _mastersLogic, IOrdersLogic _ordersLogic)
         {
+            mastersLogic = _mastersLogic;
+            ordersLogic = _ordersLogic;
             InitializeComponent();
             InitializeComboBox();
             InitializeChart();

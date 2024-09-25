@@ -1,32 +1,69 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Helpers;
 using WinFormsApp1.Enum;
-using WinFormsApp1.Logic;
+using Microsoft.Extensions.DependencyInjection;
+using WinFormsApp1.Logic.Interfaces;
 
 namespace WinFormsApp1
 {
     public partial class CompletedOrder : Form
     {
+        public string FoundProblem1
+        {
+            get { return textBoxFoundProblem1.Text; }
+            set { textBoxFoundProblem1.Text = value; }
+        }
+        public string FoundProblem2
+        {
+            get { return textBoxFoundProblem2.Text; }
+            set { textBoxFoundProblem2.Text = value; }
+        }
+        public string FoundProblem3
+        {
+            get { return textBoxFoundProblem3.Text; }
+            set { textBoxFoundProblem3.Text = value; }
+        }
+        public string PriceProblem1
+        {
+            get { return textBoxPrice1.Text; }
+            set { textBoxPrice1.Text = value; }
+        }
+        public string PriceProblem2
+        {
+            get { return textBoxPrice2.Text; }
+            set { textBoxPrice2.Text = value; }
+        }
+        public string PriceProblem3
+        {
+            get { return textBoxPrice3.Text; }
+            set { textBoxPrice3.Text = value; }
+        }
         DateTime dateCreate;
-        readonly int idOrder;
+        public int idOrder;
         private int numberProblem = 1;
         public int countProblem = 0;
-        MalfunctionsLogic malfunctionsLogic = new();
-        OrdersLogic ordersLogic = new();
-        WarehousesLogic warehousesLogic = new();
-        MalfunctionsOrdersLogic malfunctionsOrdersLogic = new();
+        IMalfunctionsLogic malfunctionsLogic;
+        IOrdersLogic ordersLogic;
+        IWarehousesLogic warehousesLogic;
+        IMalfunctionsOrdersLogic malfunctionsOrdersLogic;
         //bool loading = true;
         OrderEditDTO orderDTO;
-        public CompletedOrder(int id)
+        List<MalfunctionEditDTO> malfunctionsDTO;
+        public CompletedOrder(IMalfunctionsLogic _malfunctionsLogic, IOrdersLogic _ordersLogic, IWarehousesLogic _warehousesLogic,
+            IMalfunctionsOrdersLogic _malfunctionsOrdersLogic)
         {
+            malfunctionsLogic = _malfunctionsLogic;
+            ordersLogic = _ordersLogic;
+            warehousesLogic = _warehousesLogic;
+            malfunctionsOrdersLogic = _malfunctionsOrdersLogic;
             InitializeComponent();
-            idOrder = id;
             InitializeElementsForm();
         }
 
         private void InitializeElementsForm()
         {
             orderDTO = ordersLogic.GetOrder(idOrder);
+            malfunctionsDTO = malfunctionsLogic.GetMalfunctions();
             labelPriceDetails.Text = String.Format("{0} руб.", warehousesLogic.GetPriceDetailsInOrder(idOrder));
             labelCountDetails.Text = String.Format("{0} шт.", warehousesLogic.GetCountDetailsInOrder(idOrder));
             dateCreate = orderDTO.DateCreation.Value;
@@ -107,7 +144,7 @@ namespace WinFormsApp1
                 listBox1.Visible = false; return;
             }
             numberProblem = number;
-            listBox1.DataSource = FoundProblemTextChangeHelper.GetItemsListBox(textBox.Text);
+            listBox1.DataSource = FoundProblemTextChangeHelper.GetItemsListBox(textBox.Text, malfunctionsDTO);
             listBox1.Location = new Point(listBox1.Location.X, textBox.Location.Y + textBox.Height);
             listBox1.Visible = true;
         }
@@ -128,10 +165,7 @@ namespace WinFormsApp1
             List<string> foundProblem = [];
             List<int> priceProblem = [];
 
-            Warning warning = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            Warning warning = new();
 
             if (orderDTO.AdditionalMasterId != null && 
                 (string.IsNullOrEmpty(textBoxMain.Text) || string.IsNullOrEmpty(textBoxAdditional.Text)))
@@ -216,11 +250,6 @@ namespace WinFormsApp1
                 orderDTO.PercentWorkAdditionalMaster = Convert.ToInt32(textBoxAdditional.Text);
             }
             else orderDTO.PercentWorkMainMaster = 100;
-            /*if (orderDTO.ReturnUnderGuarantee)
-            {
-                int countDayInRepair = (orderDTO.DateCompletedReturn.Value - orderDTO.DateReturn.Value).Days;
-                orderDTO.DateEndGuarantee = orderDTO.DateEndGuarantee.Value.AddDays(countDayInRepair);
-            }*/
             ordersLogic.SaveOrder(orderDTO);
             DialogResult = DialogResult.OK;
             Close();
@@ -239,12 +268,10 @@ namespace WinFormsApp1
 
         private void TextBoxFoundProblem1_TextChanged(object sender, EventArgs e)
         {
-            /*if (loading)
-                return;*/
             numberProblem = 1;
             listBox1.Location = new Point(listBox1.Location.X, textBoxFoundProblem1.Location.Y +
                 textBoxFoundProblem1.Height);
-            listBox1.DataSource = FoundProblemTextChangeHelper.GetItemsListBox(FoundProblem1);
+            listBox1.DataSource = FoundProblemTextChangeHelper.GetItemsListBox(FoundProblem1, malfunctionsDTO);
 
             if (listBox1.Items.Count > 0)
                 listBox1.Visible = true;
@@ -275,12 +302,10 @@ namespace WinFormsApp1
 
         private void TextBoxFoundProblem2_TextChanged(object sender, EventArgs e)
         {
-            /*if (loading)
-                return;*/
             numberProblem = 2;
             listBox1.Location = new Point(listBox1.Location.X, textBoxFoundProblem2.Location.Y +
                 textBoxFoundProblem2.Height);
-            listBox1.DataSource = FoundProblemTextChangeHelper.GetItemsListBox(FoundProblem2);
+            listBox1.DataSource = FoundProblemTextChangeHelper.GetItemsListBox(FoundProblem2, malfunctionsDTO);
 
             if (listBox1.Items.Count > 0)
                 listBox1.Visible = true;
@@ -305,12 +330,10 @@ namespace WinFormsApp1
 
         private void TextBoxFoundProblem3_TextChanged(object sender, EventArgs e)
         {
-            /*if (loading)
-                return;*/
             numberProblem = 3;
             listBox1.Location = new Point(listBox1.Location.X, textBoxFoundProblem3.Location.Y +
                 textBoxFoundProblem3.Height);
-            listBox1.DataSource = FoundProblemTextChangeHelper.GetItemsListBox(FoundProblem3);
+            listBox1.DataSource = FoundProblemTextChangeHelper.GetItemsListBox(FoundProblem3, malfunctionsDTO);
 
             if (listBox1.Items.Count > 0)
                 listBox1.Visible = true;
@@ -442,10 +465,8 @@ namespace WinFormsApp1
 
         private void LinkLabelPropertiesOrder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            PropertiesOrder propertiesOrder = new(idOrder, StatusOrderEnum.InRepair, true)
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            PropertiesOrder propertiesOrder = Program.ServiceProvider.GetRequiredService<PropertiesOrder>();
+            propertiesOrder.InitializeElementsForm(idOrder, StatusOrderEnum.InRepair, true);\
             if (propertiesOrder.ShowDialog() == DialogResult.OK)
             {
                 orderDTO = ordersLogic.GetOrder(idOrder);
@@ -461,45 +482,7 @@ namespace WinFormsApp1
 
         private void CompletedOrder_Activated(object sender, EventArgs e)
         {
-            /*if (loading)
-                loading = false;*/
             textBoxFoundProblem1.Focus();
-        }
-
-        public string FoundProblem1
-        {
-            get { return textBoxFoundProblem1.Text; }
-            set { textBoxFoundProblem1.Text = value; }
-        }
-
-        public string FoundProblem2
-        {
-            get { return textBoxFoundProblem2.Text; }
-            set { textBoxFoundProblem2.Text = value; }
-        }
-
-        public string FoundProblem3
-        {
-            get { return textBoxFoundProblem3.Text; }
-            set { textBoxFoundProblem3.Text = value; }
-        }
-
-        public string PriceProblem1
-        {
-            get { return textBoxPrice1.Text; }
-            set { textBoxPrice1.Text = value; }
-        }
-
-        public string PriceProblem2
-        {
-            get { return textBoxPrice2.Text; }
-            set { textBoxPrice2.Text = value; }
-        }
-
-        public string PriceProblem3
-        {
-            get { return textBoxPrice3.Text; }
-            set { textBoxPrice3.Text = value; }
         }
     }
 }

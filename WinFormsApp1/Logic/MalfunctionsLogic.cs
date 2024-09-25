@@ -1,65 +1,56 @@
 ﻿using WinFormsApp1.DTO;
-using WinFormsApp1.Model;
-using WinFormsApp1.Repository;
+using WinFormsApp1.Logic.Interfaces;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Logic
 {
-    public class MalfunctionsLogic
+    public class MalfunctionsLogic : IMalfunctionsLogic
     {
-        MalfunctionRepository malfunctionRepository = new();
+        IMalfunctionRepository _malfunctionRepository;
 
-        /// <summary>
-        /// Получение списка неисправностей
-        /// </summary>
-        /// <returns>Список неисправностей</returns>
+        public MalfunctionsLogic(IMalfunctionRepository malfunctionRepository)
+        {
+            _malfunctionRepository = malfunctionRepository;
+        }
+
+        /// <inheritdoc/>
         public List<MalfunctionEditDTO> GetMalfunctions()
         {
-            return malfunctionRepository.GetMalfunctions();
+            return _malfunctionRepository.GetMalfunctions();
         }
 
-        /// <summary>
-        /// Получение неисправности по названию
-        /// </summary>
-        /// <param name="name">Название неисправности</param>
-        /// <returns>Неисправность</returns>
+        /// <inheritdoc/>
         public MalfunctionEditDTO GetMalfunctionByName(string name)
         {
-            return malfunctionRepository.GetMalfunctionByName(name);
+            var malfunctionDTO = _malfunctionRepository.GetMalfunctionByName(name);
+            if (malfunctionDTO == null)
+                return new MalfunctionEditDTO();
+            else
+                return malfunctionDTO;
         }
 
-        /// <summary>
-        /// Сохранение неисправности
-        /// </summary>
-        /// <param name="malfunctionDTO">DTO неисправности</param>
-        /// <returns>Идентификатор неисправности</returns>
+        /// <inheritdoc/>
         public int SaveMalfunction(MalfunctionEditDTO malfunctionDTO)
         {
             int idMalfunction = 0;
             var task = Task.Run(async () =>
             {
-                idMalfunction = await malfunctionRepository.SaveMalfunctionAsync(malfunctionDTO);
+                idMalfunction = await _malfunctionRepository.SaveMalfunctionAsync(malfunctionDTO);
             });
             task.Wait();
             return idMalfunction;
         }
 
-        /// <summary>
-        /// Получение неисправности по идентификатору
-        /// </summary>
-        /// <param name="id">Идентификатор</param>
-        /// <returns>Неисправность</returns>
+        /// <inheritdoc/>
         public MalfunctionEditDTO GetMalfunction(int id)
         {
-            return malfunctionRepository.GetMalfunction(id);
+            return _malfunctionRepository.GetMalfunction(id);
         }
 
-        /// <summary>
-        /// Удаление неисправности
-        /// </summary>
-        /// <param name="malfunctionDTO"></param>
+        /// <inheritdoc/>
         public void RemoveMalfunction(MalfunctionEditDTO malfunctionDTO)
         {
-            malfunctionRepository.RemoveMalfunction(malfunctionDTO);
+            _malfunctionRepository.RemoveMalfunction(malfunctionDTO);
         }
     }
 }

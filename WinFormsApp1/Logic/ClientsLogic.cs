@@ -1,87 +1,69 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
-using WinFormsApp1.Repository;
+using WinFormsApp1.Logic.Interfaces;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Logic
 {
-    public class ClientsLogic
+    public class ClientsLogic : IClientsLogic
     {
-        ClientRepository clientRepository = new();
+        IClientRepository _clientRepository;
+        public ClientsLogic(IClientRepository clientRepository) {
 
-        /// <summary>
-        /// Получение клиента по idClient
-        /// </summary>
-        /// <param name="idClient">idClient</param>
-        /// <returns>Клиент</returns>
-        public ClientEditDTO GetClientByIdClient(string idClient)
-        {
-            return clientRepository.GetClientByIdClient(idClient);
+            _clientRepository = clientRepository;
         }
 
-        /// <summary>
-        /// Сохранение клиента
-        /// </summary>
-        /// <param name="idClient"></param>
-        /// <param name="nameAdress"></param>
-        /// <param name="secondPhone"></param>
-        /// <returns></returns>
+
+        /// <inheritdoc/>
+        public ClientEditDTO GetClientByIdClient(string idClient)
+        {
+            var clientDTO = _clientRepository.GetClientByIdClient(idClient);
+            if (clientDTO == null)
+                return new ClientEditDTO();
+            else
+                return clientDTO;
+        }
+
+        /// <inheritdoc/>
         public int SaveClient(ClientEditDTO clientDTO)
         {
             int id = 0;
             var task = Task.Run(async () =>
             {
-                id = await clientRepository.SaveClientAsync(clientDTO);
+                id = await _clientRepository.SaveClientAsync(clientDTO);
             });
             task.Wait();
             return id;
         }
 
-        /// <summary>
-        /// Получение списка клиентов
-        /// </summary>
-        /// <returns>Список клиентов</returns>
+        /// <inheritdoc/>
         public List<ClientEditDTO> GetClients()
         {
-            return clientRepository.GetClients();
+            return _clientRepository.GetClients();
         }
 
-        /// <summary>
-        /// Получение списка клиентов для справочника
-        /// </summary>
-        /// <returns>Список клиентов</returns>
+        /// <inheritdoc/>
         public List<ClientDTO> GetClientsForTable()
         {
-            return clientRepository.GetClientsForTable();
+            return _clientRepository.GetClientsForTable();
         }
 
-        /// <summary>
-        /// Получение списка клиентов по типу
-        /// </summary>
-        /// <param name="typeClient">Тип клиента</param>
-        /// <returns>Спиок клиентов</returns>
+        /// <inheritdoc/>
         public List<ClientDTO> GetClientsByType(TypeClientEnum typeClient)
         {
-            return clientRepository.GetClientsByType(typeClient);
+            return _clientRepository.GetClientsByType(typeClient);
         }
 
-        /// <summary>
-        /// Получение списка клиентов по подстроке id клиента
-        /// </summary>
-        /// <param name="idClient">Id клиента</param>
-        /// <returns>Список клиентов</returns>
+        /// <inheritdoc/>
         public List<ClientDTO> GetClientsByIdClient(string idClient)
         {
-            return clientRepository.GetClientsByIdClient(idClient);
+            return _clientRepository.GetClientsByIdClient(idClient);
         }
 
-        // <summary>
-        /// Получение клиента по идентификатору
-        /// </summary>
-        /// <param name="id">Идентификатор</param>
-        /// <returns>Клиент</returns>
+        /// <inheritdoc/>
         public ClientEditDTO GetClient(string idClient)
         {
-            return clientRepository.GetClient(idClient);
+            return _clientRepository.GetClient(idClient);
         }
     }
 }

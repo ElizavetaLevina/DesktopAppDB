@@ -1,31 +1,32 @@
 ﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Logic.Interfaces;
 using WinFormsApp1.Repository;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Logic
 {
-    public class NotesSalaryMastersLogic
+    public class NotesSalaryMastersLogic : INotesSalaryMastersLogic
     {
-        NoteSalaryMasterRepository noteSalaryMasterRepository = new();
+        INoteSalaryMasterRepository _noteSalaryMasterRepository;
 
-        /// <summary>
-        /// Получение списка примечаний по зарплате мастера по дате
-        /// </summary>
-        /// <param name="date">Дата</param>
-        /// <returns>Список примечаний</returns>
-        public List<NoteSalaryMasterEditDTO> GetNoteSalaryMasters(DateTime date)
+
+        public NotesSalaryMastersLogic(INoteSalaryMasterRepository noteSalaryMasterRepository)
         {
-            return noteSalaryMasterRepository.GetNoteSalaryMasters(date);
+            _noteSalaryMasterRepository = noteSalaryMasterRepository;
         }
 
-        /// <summary>
-        /// Сохранение примечаний по зарплате мастера
-        /// </summary>
-        /// <param name="noteSalaryMasterDTO">Примечания по зарплате мастера</param>
+        /// <inheritdoc/>
+        public List<NoteSalaryMasterEditDTO> GetNoteSalaryMasters(DateTime date)
+        {
+            return _noteSalaryMasterRepository.GetNoteSalaryMasters(date);
+        }
+
+        /// <inheritdoc/>
         public void SaveNoteSalaryMasterAsync(NoteSalaryMasterEditDTO noteSalaryMasterDTO)
         {
             Task.Run(async () =>
             {
-                await noteSalaryMasterRepository.SaveNoteSalaryMasterAsync(noteSalaryMasterDTO);
+                await _noteSalaryMasterRepository.SaveNoteSalaryMasterAsync(noteSalaryMasterDTO);
             });
         }
     }

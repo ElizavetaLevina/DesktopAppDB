@@ -15,12 +15,6 @@ namespace WinFormsApp1.DTO
         [DisplayName("Процет прибыли")]
         public int PercentProfit {  get; set; }
 
-        public RateMasterDTO(RateMaster rateMaster)
-        {
-            Id = rateMaster.Id;
-            MasterName = rateMaster.Master?.NameMaster;
-            MonthYear = string.Format("{0}  {1}", (MonthEnum)rateMaster.DateStart.Month, rateMaster.DateStart.Year);
-            PercentProfit = rateMaster.PercentProfit;
-        }
+        public RateMasterDTO() { }
     }
 }

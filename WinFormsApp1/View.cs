@@ -1,13 +1,14 @@
 ﻿using WinFormsApp1.Helpers;
-using WinFormsApp1.Logic;
+using WinFormsApp1.Logic.Interfaces;
 
 namespace WinFormsApp1
 {
     public partial class View : Form
     {
-        OrdersLogic ordersLogic = new();
-        public View()
+        IOrdersLogic ordersLogic;
+        public View(IOrdersLogic _ordersLogic)
         {
+            ordersLogic = _ordersLogic;
             InitializeComponent();
             InitializeElementsForm();
         }
@@ -46,10 +47,7 @@ namespace WinFormsApp1
 
         private void ButtonSave_Click(object sender, EventArgs e)
         {
-            Warning warning = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            Warning warning = new();
             if (string.IsNullOrEmpty(textBoxFirstLevel.Text) || string.IsNullOrEmpty(textBoxSecondLevelFrom.Text) &&
                 string.IsNullOrEmpty(textBoxSecondLevelBefore.Text) || string.IsNullOrEmpty(textBoxThirdLevel.Text))
             {

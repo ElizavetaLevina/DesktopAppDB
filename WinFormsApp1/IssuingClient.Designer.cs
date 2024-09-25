@@ -408,6 +408,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             MinimizeBox = false;
             Name = "IssuingClient";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Выдача отремонтированного аппарата клиенту";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);

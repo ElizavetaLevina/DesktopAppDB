@@ -778,6 +778,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             Name = "AddDeviceIntoRepair";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Добавление аппарата в ремонт";
             Activated += AddDeviceForRepair_Activated;
             panel1.ResumeLayout(false);

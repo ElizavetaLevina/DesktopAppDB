@@ -1,75 +1,58 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using WinFormsApp1.DTO;
-using WinFormsApp1.Repository;
+﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Logic.Interfaces;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Logic
 {
-    public class TypesTechnicsLogic
+    public class TypesTechnicsLogic : ITypesTechnicsLogic
     {
-        TypeTechnicRepository typeTechnicRepository = new(); 
+        ITypeTechnicRepository _typeTechnicRepository; 
 
-        /// <summary>
-        /// Получение списка типов устройств
-        /// </summary>
-        /// <returns>Список типов устройств</returns>
+        public TypesTechnicsLogic(ITypeTechnicRepository typeTechnicRepository)
+        {
+            _typeTechnicRepository = typeTechnicRepository;
+        }
+
+        /// <inheritdoc/>
         public List<TypeTechnicDTO> GetTypesTechnic()
         {
-            return typeTechnicRepository.GetTypesTechnic();
+            return _typeTechnicRepository.GetTypesTechnic();
         }
-    
-        /// <summary>
-        /// Получение идентификатора типа устройства по названию 
-        /// </summary>
-        /// <param name="name">Название</param>
-        /// <returns>Идентификатор</returns>
+
+        /// <inheritdoc/>
         public int GetIdTypeTechnic(string name)
         {
-            return typeTechnicRepository.GetTypeTechnicByName(name).Id;
+            return _typeTechnicRepository.GetTypeTechnicByName(name).Id;
         }
 
-        /// <summary>
-        /// Получение названия типа устройства по идентификатору
-        /// </summary>
-        /// <param name="id">Идентификатор</param>
-        /// <returns>Тип устройства</returns>
+        /// <inheritdoc/>
         public string GetTypeTechnicName(int id)
         {
-            return typeTechnicRepository.GetTypeTechnicName(id);
+            return _typeTechnicRepository.GetTypeTechnic(id).Name;
         }
 
-        /// <summary>
-        /// Получение типа устройства по идентификатору
-        /// </summary>
-        /// <param name="id">Идентификатор</param>
-        /// <param name="name">Название</param>
-        /// <returns>Тип устройства</returns>
-        public TypeTechnicEditDTO GetTypeTechnic(int id, string name)
+        /// <inheritdoc/>
+        public TypeTechnicEditDTO GetTypeTechnic(int id)
         {
-            return typeTechnicRepository.GetTypeTechnic(id, name);
+            return _typeTechnicRepository.GetTypeTechnic(id);
         }
 
-        /// <summary>
-        /// Сохранение типа устройства
-        /// </summary>
-        /// <param name="typeTechnicDTO">DTO типа устройства</param>
+        /// <inheritdoc/>
         public int SaveTypeTechnic(TypeTechnicEditDTO typeTechnicDTO)
         {
             var idTypeTechnic = 0;
             var task = Task.Run(async () =>
             {
-                idTypeTechnic = await typeTechnicRepository.SaveTypeTechnicAsync(typeTechnicDTO);
+                idTypeTechnic = await _typeTechnicRepository.SaveTypeTechnicAsync(typeTechnicDTO);
             });
             task.Wait();
             return idTypeTechnic;
         }
 
-        /// <summary>
-        /// Удаление типа устройства
-        /// </summary>
-        /// <param name="typeTechnicDTO">DTO типа устройства</param>
+        /// <inheritdoc/>
         public void RemoveTypeTechnic(TypeTechnicEditDTO typeTechnicDTO)
         {
-            typeTechnicRepository.RemoveTypeTechnic(typeTechnicDTO);
+            _typeTechnicRepository.RemoveTypeTechnic(typeTechnicDTO);
         }
     }
 }

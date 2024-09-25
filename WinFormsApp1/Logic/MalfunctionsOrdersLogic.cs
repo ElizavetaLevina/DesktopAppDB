@@ -1,52 +1,44 @@
 ﻿using WinFormsApp1.DTO;
-using WinFormsApp1.Repository;
+using WinFormsApp1.Logic.Interfaces;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Logic
 {
-    public class MalfunctionsOrdersLogic
+    public class MalfunctionsOrdersLogic : IMalfunctionsOrdersLogic
     {
-        MalfunctionOrderRepository malfunctionOrderRepository = new();
+        IMalfunctionOrderRepository _malfunctionOrderRepository;
 
-        /// <summary>
-        /// Сохранение неисправности-заказа
-        /// </summary>
-        /// <param name="malfunctionOrderDTO">DTO неисправности-заказа</param>
+        public MalfunctionsOrdersLogic(IMalfunctionOrderRepository malfunctionOrderRepository)
+        {
+            _malfunctionOrderRepository = malfunctionOrderRepository;
+        }
+
+        /// <inheritdoc/>
         public void SaveMalfunctionOrder(MalfunctionOrderEditDTO malfunctionOrderDTO)
         {
             var task = Task.Run(async () =>
             {
-                await malfunctionOrderRepository.SaveMalfunctionOrderAsync(malfunctionOrderDTO);
+                await _malfunctionOrderRepository.SaveMalfunctionOrderAsync(malfunctionOrderDTO);
             });
             task.Wait();
         }
 
-        /// <summary>
-        /// Получение списка неисправностей в заказе
-        /// </summary>
-        /// <param name="idOrder">Номер заказа</param>
-        /// <returns>Список неисправностей</returns>
+        /// <inheritdoc/>
         public List<MalfunctionOrderEditDTO> GetMalfunctionOrdersByIdOrder(int idOrder)
         {
-            return malfunctionOrderRepository.GetMalfunctionOrdersByIdOrder(idOrder);
+            return _malfunctionOrderRepository.GetMalfunctionOrdersByIdOrder(idOrder);
         }
 
-        /// <summary>
-        /// Получение списка заказов с неисправностью
-        /// </summary>
-        /// <param name="idMalfunction">Номер неисправности</param>
-        /// <returns>Список заказов</returns>
+        /// <inheritdoc/>
         public List<MalfunctionOrderEditDTO> GetMalfunctionOrdersByIdMalfunction(int idMalfunction)
         {
-            return malfunctionOrderRepository.GetMalfunctionOrdersByIdMalfunction(idMalfunction);
+            return _malfunctionOrderRepository.GetMalfunctionOrdersByIdMalfunction(idMalfunction);
         }
 
-        /// <summary>
-        /// Удаление неиспрасности-заказа
-        /// </summary>
-        /// <param name="malfunctionOrderDTO">DTO неисправности-заказа</param>
+        /// <inheritdoc/>
         public void RemoveMalfunctionOrder(MalfunctionOrderEditDTO malfunctionOrderDTO)
         {
-            malfunctionOrderRepository.RemoveMalfunctionOrder(malfunctionOrderDTO);
+            _malfunctionOrderRepository.RemoveMalfunctionOrder(malfunctionOrderDTO);
         }
     }
 }

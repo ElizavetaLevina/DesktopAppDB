@@ -127,6 +127,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "MalfunctionEquipmentDiagnosisEdit";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Добавить неисправность";
             ResumeLayout(false);
             PerformLayout();

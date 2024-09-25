@@ -100,7 +100,7 @@
             btnExit.UseVisualStyleBackColor = true;
             btnExit.Click += BtnExit_Click;
             // 
-            // AddMaster
+            // Masters
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -113,7 +113,8 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
-            Name = "AddMaster";
+            Name = "Masters";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Мастера";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);

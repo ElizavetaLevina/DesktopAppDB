@@ -2,20 +2,39 @@
 using WinFormsApp1.Enum;
 using WinFormsApp1.Helpers;
 using WinFormsApp1.Logic;
+using WinFormsApp1.Logic.Interfaces;
 
 namespace WinFormsApp1
 {
     public partial class IssuingClient : Form
     {
-        public int idOrder;
-        OrdersLogic ordersLogic = new();
-        MalfunctionsOrdersLogic malfunctionsOrdersLogic = new();
-        WarehousesLogic warehousesLogic = new();
-        OrderEditDTO orderDTO;
-        public IssuingClient(int id)
+        public DateTime DateIssue
         {
+            get { return dateTimePicker1.Value; }
+            set { dateTimePicker1.Value = value; }
+        }
+        public int GuaranteePeriod
+        {
+            get { return Convert.ToInt32(textBoxGuarantee.Text); }
+            set { textBoxGuarantee.Text = value.ToString(); }
+        }
+        public DateTime DateEndGuarantee
+        {
+            get { return DateTime.Parse(labelGuaranteePeriod.Text); }
+            set { labelGuaranteePeriod.Text = value.ToString(); }
+        }
+        public int idOrder;
+        IOrdersLogic ordersLogic;
+        IMalfunctionsOrdersLogic malfunctionsOrdersLogic;
+        IWarehousesLogic warehousesLogic;
+        OrderEditDTO orderDTO;
+        public IssuingClient(IOrdersLogic _ordersLogic, IMalfunctionsOrdersLogic _malfunctionsOrdersLogic, 
+            IWarehousesLogic _warehousesLogic)
+        {
+            ordersLogic = _ordersLogic;
+            malfunctionsOrdersLogic = _malfunctionsOrdersLogic;
+            warehousesLogic = _warehousesLogic;
             InitializeComponent();
-            idOrder = id;
             InitializeElementsForm();
         }
 
@@ -92,7 +111,6 @@ namespace WinFormsApp1
 
                 Warning warning = new()
                 {
-                    StartPosition = FormStartPosition.CenterParent,
                     LabelText = "Распечатать квитанцию?",
                     ButtonNoText = "Нет",
                     ButtonVisible = true
@@ -112,29 +130,10 @@ namespace WinFormsApp1
             {
                 Warning warning = new()
                 {
-                    StartPosition = FormStartPosition.CenterParent,
                     LabelText = "Не введена гарантия!"
                 };
                 warning.ShowDialog();
             }
-        }
-
-        public DateTime DateIssue
-        {
-            get { return dateTimePicker1.Value; }
-            set { dateTimePicker1.Value = value; }
-        }
-
-        public int GuaranteePeriod
-        {
-            get { return Convert.ToInt32(textBoxGuarantee.Text); }
-            set { textBoxGuarantee.Text = value.ToString(); }
-        }
-
-        public DateTime DateEndGuarantee
-        {
-            get { return DateTime.Parse(labelGuaranteePeriod.Text); }
-            set { labelGuaranteePeriod.Text = value.ToString(); }
         }
     }
 }

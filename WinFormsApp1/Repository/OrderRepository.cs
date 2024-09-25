@@ -1,22 +1,22 @@
-﻿using System.Data.Entity;
+﻿using AutoMapper;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Model;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Repository
 {
-    public class OrderRepository
+    public class OrderRepository : IOrderRepository
     {
-        /// <summary>
-        /// Получение списка заказов для главной таблицы
-        /// </summary>
-        /// <param name="statusOrder">Статус заказа</param>
-        /// <param name="deleted">Удален</param>
-        /// <param name="dateCreation">Дата создания заказа</param>
-        /// <param name="dateCompleted">Дата выполнения заказа</param>
-        /// <param name="dateIssue">Дата выдачи</param>
-        /// <param name="id">Идентификатор заказа</param>
-        /// <returns>Список заказов для главной таблицы</returns>
+        IMapper _mapper;
+
+        public OrderRepository (IMapper mapper)
+        {
+            _mapper = mapper;
+        }
+
+
+        /// <inheritdoc/>
         public List<OrderTableDTO> GetOrdersForTable(StatusOrderEnum? statusOrder = null, bool? deleted = null, bool dateCreation = false, 
             bool dateCompleted = false, bool dateIssue = false, bool id = false)
         {
@@ -38,34 +38,15 @@ namespace WinFormsApp1.Repository
             if(id == true)
                 set = set.OrderByDescending(i => i.Id);
 
-            var list = set.Include(i => i.MainMaster)
-                .Include(i => i.AdditionalMaster)
-                .Include(i => i.TypeTechnic)
-                .Include(i => i.BrandTechnic)
-                .Include(i => i.Client)
-                .Include(i => i.Diagnosis).ToList();
-
-            return list.Select(a => new OrderTableDTO(a)).ToList();
+            return _mapper.ProjectTo<OrderTableDTO>(set).ToList();
         }
 
 
-        /// <summary>
-        /// Получение списка заказов для поиска
-        /// </summary>
-        /// <param name="numberOrder">Номер заказа</param>
-        /// <param name="dateCreation">Дата создания</param>
-        /// <param name="dateStartWork">Дата начала работы</param>
-        /// <param name="masterName">Имя мастера</param>
-        /// <param name="typeTechnic">Тип устройства</param>
-        /// <param name="brandTechnic">Бренд устройства</param>
-        /// <param name="modelTechnic">Модель устройства</param>
-        /// <param name="idClient"></param>
-        /// <returns>Список заказов</returns>
+        /// <inheritdoc/>
         public List<OrderTableDTO> GetOrdersBySearch(string numberOrder, string dateCreation, string dateStartWork, string masterName,
             string device, string idClient, StatusOrderEnum? statusOrder)
         {
-            Context context = new();
-            
+            Context context = new();            
             var set = context.Orders.Where(c => true);
 
             if (!string.IsNullOrEmpty(numberOrder))
@@ -83,93 +64,54 @@ namespace WinFormsApp1.Repository
                 set = set.Where(i => i.TypeTechnic.NameTypeTechnic.ToLower().Contains(device.ToLower()) ||
                 i.BrandTechnic.NameBrandTechnic.ToLower().Contains(device.ToLower()) ||
                 i.ModelTechnic.ToLower().Contains(device.ToLower()));
-
             if (statusOrder != null)
                 set = set.Where(i => i.StatusOrder == statusOrder);
 
-            var list = set.Include(i => i.MainMaster)
-                .Include(i => i.AdditionalMaster)
-                .Include(i => i.Client)
-                .Include(i => i.TypeTechnic)
-                .Include(i => i.BrandTechnic).ToList();
-
-            /*var result = set.ToList();
-            if (!string.IsNullOrEmpty(masterName))
-                result = result.Where(i => (i.MainMaster?.NameMaster?.ToLower()?.Contains(masterName.ToLower()) ?? false) || 
-                (i.AdditionalMaster?.NameMaster?.ToLower()?.Contains(masterName.ToLower()) ?? false)).ToList();
-            if (!string.IsNullOrEmpty(device))
-                result = result.Where(i => (i.TypeTechnic?.NameTypeTechnic?.ToLower()?.Contains(device.ToLower()) ?? false) ||
-                (i.BrandTechnic?.NameBrandTechnic?.ToLower()?.Contains(device.ToLower()) ?? false) ||
-                (i.ModelTechnic?.ToLower()?.Contains(device.ToLower()) ?? false)).ToList();*/
-
-            return list
-                .OrderByDescending(i => i.NumberOrder)
-                .Select(a => new OrderTableDTO(a))
-                .ToList();
+            return _mapper.ProjectTo<OrderTableDTO>(set.OrderByDescending(i => i.NumberOrder)).ToList();
         }
 
-        /// <summary>
-        /// Получение записи по идентификатору
-        /// </summary>
-        /// <param name="id">Идентификатор</param>
-        /// <returns>Запись</returns>
+        /// <inheritdoc/>
+        public List<OrderTableExcelDTO> GetOrdersForExcel(List<OrderTableDTO> orders)
+        {
+            return _mapper.ProjectTo<OrderTableExcelDTO>(orders.AsQueryable()).ToList();
+        }
+
+        /// <inheritdoc/>
         public OrderEditDTO GetOrder(int id)
         {
             Context context = new();
-            return new OrderEditDTO(context.Orders.First(i => i.Id == id));
+            return _mapper.ProjectTo<OrderEditDTO>(context.Set<Order>().Where(i => i.Id == id)).FirstOrDefault();
         }
 
-        /// <summary>
-        /// Получение последнего идентификатора в таблице
-        /// </summary>
-        /// <returns>Иднтификатор</returns>
-        public int GetLastNumberOrder()
+        /// <inheritdoc/>
+        public OrderEditDTO GetLastNumberOrder()
         {
             Context context = new();
-            return (context.Orders?.OrderBy(i => i.Id).LastOrDefault()?.NumberOrder ?? 0) + 1;
+            return _mapper.ProjectTo<OrderEditDTO>(context.Set<Order>().OrderBy(i => i.Id)).LastOrDefault();
         }
 
-        /// <summary>
-        /// Получение списка заказов
-        /// </summary>
-        /// <returns>Список заказов</returns>
+        /// <inheritdoc/>
         public List<OrderEditDTO> GetOrders()
         {
             Context context = new();
-            var some = context.Orders.Where(i => true);
-            var list = some.Include(i => i.Client).ToList();
-            return list.Select(a => new OrderEditDTO(a)).ToList();
+            return _mapper.ProjectTo<OrderEditDTO>(context.Set<Order>()).ToList();
         }
 
-        /// <summary>
-        /// Получение списка заказов по диагнозу
-        /// </summary>
-        /// <param name="idDiagnosis">Идентификатор диагноза</param>
-        /// <returns>Список заказов</returns>
+        /// <inheritdoc/>
         public List<OrderEditDTO> GetOrdersByIdDiagnosis(int idDiagnosis)
         {
             Context context = new();
-            return context.Orders.Where(i => i.DiagnosisId == idDiagnosis).Select(a => new OrderEditDTO(a)).ToList();
+            return _mapper.ProjectTo<OrderEditDTO>(context.Set<Order>().Where(i => i.DiagnosisId == idDiagnosis)).ToList();
         }
 
-        /// <summary>
-        /// Получение списка заказов по комплектации
-        /// </summary>
-        /// <param name="idEquipment">Идентификатор комплектации</param>
-        /// <returns>Список заказов</returns>
+        /// <inheritdoc/>
         public List<OrderEditDTO> GetOrdersByIdEquipment(int idEquipment)
         {
             Context context = new();
-            return context.Orders.Where(i => i.EquipmentId == idEquipment).Select(a => new OrderEditDTO(a)).ToList();
+            return _mapper.ProjectTo<OrderEditDTO>(context.Set<Order>().Where(i => i.EquipmentId == idEquipment)).ToList();
         }
 
-        /// <summary>
-        /// Получения списка заказов для диаграммы
-        /// </summary>
-        /// <param name="year">Год</param>
-        /// <param name="master">Указан ли мастер</param>
-        /// <param name="masterId">Идентификатор мастера</param>
-        /// <returns>Список заказов</returns>
+        /// <inheritdoc/>
         public List<OrderEditDTO> GetOrdersForChart(int year, bool master = false, int? masterId = null)
         {
             Context context = new();
@@ -180,17 +122,10 @@ namespace WinFormsApp1.Repository
             if (master)
                 set = set.Where(i => i.MainMasterId == masterId || i.AdditionalMasterId == masterId);
 
-            var list = set.Include(i => i.Client).ToList();
-
-            return list.Select(a => new OrderEditDTO(a)).ToList();
+            return _mapper.ProjectTo<OrderEditDTO>(set).ToList();
         }
 
-        /// <summary>
-        /// Получение списка заказов для расчета зарплаты
-        /// </summary>
-        /// <param name="dateCompleted">Дата завершения заказа</param>
-        /// <param name="dateIssue">Дата выдачи заказа</param>
-        /// <returns>Список заказов</returns>
+        /// <inheritdoc/>
         public List<OrderEditDTO> GetOrdersForSalaries(DateTime? dateCompleted = null, DateTime? dateIssue = null)
         {
             Context context = new();
@@ -206,13 +141,10 @@ namespace WinFormsApp1.Repository
                 set = set.Where(i => i.DateIssue.Value.Month == dateIssue.Value.Month 
                 && i.DateIssue.Value.Year == dateIssue.Value.Year);
 
-            var list = set.Include(i => i.Client).ToList();
-                /*.Include(i => i.)*/
-
-            return list.Select(a => new OrderEditDTO(a)).ToList();
+            return _mapper.ProjectTo<OrderEditDTO>(set).ToList();
         }
 
-
+        /// <inheritdoc/>
         public async Task<int> SaveOrderAsync(OrderEditDTO orderDTO, CancellationToken token = default)
         {
             using Context db = new();
@@ -263,6 +195,7 @@ namespace WinFormsApp1.Repository
                 MessageBox.Show(ex.Message); throw; }
         }
 
+        /// <inheritdoc/>
         public void RemoveOrder(OrderEditDTO orderDTO)
         {
             try

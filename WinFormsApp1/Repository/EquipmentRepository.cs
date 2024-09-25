@@ -1,63 +1,49 @@
-﻿using WinFormsApp1.DTO;
+﻿using AutoMapper;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
+using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Repository
 {
-    public class EquipmentRepository
+    public class EquipmentRepository : IEquipmentRepository
     {
-        /// <summary>
-        /// Получение списка комплектации
-        /// </summary>
-        /// <returns>Список комплектации</returns>
+        IMapper _mapper;
+
+        public EquipmentRepository(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
+
+        /// <inheritdoc/>
         public List<EquipmentEditDTO> GetEquipments()
         {
             Context context = new();
-            return context.Equipment.Select(a => new EquipmentEditDTO(a)).ToList();
+            return _mapper.ProjectTo<EquipmentEditDTO>(context.Set<Equipment>().OrderBy(i => i.Name)).ToList();
         }
 
-        /// <summary>
-        /// Получение комплектации по идентификатору
-        /// </summary>
-        /// <param name="id">Идентификатор</param>
-        /// <returns>Комплектация</returns>
+        /// <inheritdoc/>
         public EquipmentEditDTO GetEquipment(int? id)
         {
             Context context = new();
-            var equipment = context.Equipment.FirstOrDefault(i => i.Id == id);
-            if(equipment == null)
-                return new EquipmentEditDTO();
-            else 
-                return new EquipmentEditDTO(equipment);
+            return _mapper.ProjectTo<EquipmentEditDTO>(context.Set<Equipment>().Where(i => i.Id == id)).FirstOrDefault();
         }
 
-        /// <summary>
-        /// Получение списка комплектаций по названию
-        /// </summary>
-        /// <param name="name">Название</param>
-        /// <returns>Список комплектаций</returns>
+        /// <inheritdoc/>
         public List<EquipmentEditDTO> GetEquipmentsByName(string name)
         {
             Context context = new();
-            return context.Equipment.Where(i => i.Name.ToLower().Contains(name.ToLower())).Select(a => new EquipmentEditDTO(a)).ToList();
+            return _mapper.ProjectTo<EquipmentEditDTO>(context.Set<Equipment>()
+                .Where(i => i.Name.ToLower().Contains(name.ToLower()))).ToList();
         }
 
-        /// <summary>
-        /// Получение записи по названию
-        /// </summary>
-        /// <param name="name">Названию</param>
-        /// <returns>Запись</returns>
+        /// <inheritdoc/>
         public EquipmentEditDTO GetEquipmentByName(string name)
         {
             Context context = new();
-            var equipment = context.Equipment.FirstOrDefault(i => i.Name == name);
-            if (equipment != null)
-            {
-                return new EquipmentEditDTO(equipment);
-            }
-            else
-                return  new EquipmentEditDTO(name);
+            return _mapper.ProjectTo<EquipmentEditDTO>(context.Set<Equipment>().Where(i => i.Name == name)).FirstOrDefault();
         }
 
+        /// <inheritdoc/>
         public async Task<int> SaveEquipmentAsync(EquipmentEditDTO equipmentDTO, CancellationToken token = default)
         {
             Context db = new();
@@ -79,6 +65,7 @@ namespace WinFormsApp1.Repository
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
 
+        /// <inheritdoc/>
         public void RemoveEquipment(EquipmentEditDTO equipmentDTO)
         {
             try

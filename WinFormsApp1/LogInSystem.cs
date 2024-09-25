@@ -12,11 +12,11 @@
 
         private void InitializeElementsForm()
         {
-            textBoxLogin.Text = Properties.Settings.Default.Login;
+            textBoxLogin.Text = Properties.Settings.Default.LoginInSystem;
             if (!logIn)
             {
                 Text = "Изменение логина/пароля";
-                Password = Properties.Settings.Default.Password;
+                Password = Properties.Settings.Default.PasswordInSystem;
                 buttonLogIn.Text = "Сохранить";
                 checkBoxShowPassword.Checked = true;
             }
@@ -26,8 +26,8 @@
         {
             if (logIn)
             {
-                if (Login == Properties.Settings.Default.Login &&
-                    Password == Properties.Settings.Default.Password)
+                if (Login == Properties.Settings.Default.LoginInSystem &&
+                    Password == Properties.Settings.Default.PasswordInSystem)
                 {
                     DialogResult = DialogResult.OK;
                     Close();
@@ -36,7 +36,6 @@
                 {
                     Warning warning = new()
                     {
-                        StartPosition = FormStartPosition.CenterParent,
                         LabelText = "Неправильный логин или пароль!"
                     };
                     warning.ShowDialog();
@@ -46,17 +45,14 @@
             {
                 if (!string.IsNullOrEmpty(Login) && !string.IsNullOrEmpty(Password))
                 {
-                    Properties.Settings.Default.Login = textBoxLogin.Text;
-                    Properties.Settings.Default.Password = textBoxPassword.Text;
+                    Properties.Settings.Default.LoginInSystem = textBoxLogin.Text;
+                    Properties.Settings.Default.PasswordInSystem = textBoxPassword.Text;
                     Properties.Settings.Default.Save();
                     Close();
                 }
                 else
                 {
-                    Warning warning = new()
-                    {
-                        StartPosition = FormStartPosition.CenterParent
-                    };
+                    Warning warning = new();
                     warning.ShowDialog();
                 }
             }
@@ -74,8 +70,8 @@
             {
                 if (logIn)
                 {
-                    if (Login == Properties.Settings.Default.Login && 
-                        Password == Properties.Settings.Default.Password)
+                    if (Login == Properties.Settings.Default.LoginInSystem && 
+                        Password == Properties.Settings.Default.PasswordInSystem)
                     {
                         DialogResult = DialogResult.OK;
                         Close();
@@ -84,7 +80,6 @@
                     {
                         Warning warning = new()
                         {
-                            StartPosition = FormStartPosition.CenterParent,
                             LabelText = "Неправильный логин или пароль!"
                         };
                         warning.ShowDialog();
@@ -94,17 +89,14 @@
                 {
                     if (!string.IsNullOrEmpty(Login) && !string.IsNullOrEmpty(Password))
                     {
-                        Properties.Settings.Default.Login = textBoxLogin.Text;
-                        Properties.Settings.Default.Password = textBoxPassword.Text;
+                        Properties.Settings.Default.LoginInSystem = textBoxLogin.Text;
+                        Properties.Settings.Default.PasswordInSystem = textBoxPassword.Text;
                         Properties.Settings.Default.Save();
                         Close();
                     }
                     else
                     {
-                        Warning warning = new()
-                        {
-                            StartPosition = FormStartPosition.CenterParent
-                        };
+                        Warning warning = new();
                         warning.ShowDialog();
                     }
                 }

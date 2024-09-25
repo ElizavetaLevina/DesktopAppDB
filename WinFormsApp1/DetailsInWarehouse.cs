@@ -1,23 +1,35 @@
-﻿using WinFormsApp1.DTO;
+﻿using Microsoft.Extensions.DependencyInjection;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Helpers;
-using WinFormsApp1.Logic;
+using WinFormsApp1.Logic.Interfaces;
 
 namespace WinFormsApp1
 {
     public partial class DetailsInWarehouse : Form
     {
-        public string? brandDevice;
-        public bool newDetail;
-        WarehousesLogic warehousesLogic = new();
-        public DetailsInWarehouse(bool _newDetail, string? _brandDevice = null)
+        public bool VisibleBtnAdd
         {
+            get { return buttonAdd.Visible; }
+            set { buttonAdd.Visible = value; }
+        }
+        public int IdDetail
+        {
+            get
+            {
+                return Convert.ToInt32(dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].
+            Cells[nameof(WarehouseTableDTO.Id)].Value);
+            }
+        }
+        public string? brandDevice = null;
+        public bool newDetail = true;
+        IWarehousesLogic warehousesLogic;
+        public DetailsInWarehouse(IWarehousesLogic _warehousesLogic)
+        {
+            warehousesLogic = _warehousesLogic;
             InitializeComponent();
-            brandDevice = _brandDevice;
-            newDetail = _newDetail;
-            InitializeDataTable();
         }
 
-        private void InitializeDataTable()
+        public void InitializeDataTable()
         {
             if (newDetail)
                 dataGridView1.DataSource = Funcs.ToDataTable(warehousesLogic.GetWarehousesForTable(availability: true, 
@@ -74,10 +86,8 @@ namespace WinFormsApp1
 
         private void ButtonAddDetails_Click(object sender, EventArgs e)
         {
-            DetailEdit detailEdit = new(false, new WarehouseEditDTO())
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            DetailEdit detailEdit = Program.ServiceProvider.GetRequiredService<DetailEdit>();
+            detailEdit.InitializeElementsForm();
             detailEdit.ShowDialog();
             dataGridView1.DataSource = Funcs.ToDataTable(warehousesLogic.GetWarehousesForTable(availability: true, 
                 datePurchase: true, name: textBoxDevice.Text));
@@ -88,7 +98,6 @@ namespace WinFormsApp1
         {
             Warning warning = new()
             {
-                StartPosition = FormStartPosition.CenterParent,
                 LabelText = "Вы действительно хотите удалить деталь со склада?",
                 ButtonNoText = "Нет",
                 ButtonVisible = true
@@ -136,28 +145,14 @@ namespace WinFormsApp1
 
         private void ButtonChangeDetail_Click(object sender, EventArgs e)
         {
-            var warehouse = warehousesLogic.GetWarehouse(id: IdDetail);
-
-            DetailEdit addDetail = new(true, warehouse)
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            DetailEdit addDetail = Program.ServiceProvider.GetRequiredService<DetailEdit>();
+            addDetail.changeDetail = true;
+            addDetail.idDetail = IdDetail;
+            addDetail.InitializeElementsForm();
             addDetail.ShowDialog();
             dataGridView1.DataSource = Funcs.ToDataTable(warehousesLogic.GetWarehousesForTable(availability: true,
                 datePurchase: true));
             UpdateTable();
-        }
-
-        public bool VisibleBtnAdd
-        {
-            get { return buttonAdd.Visible; }
-            set { buttonAdd.Visible = value; }
-        }
-
-        public int IdDetail
-        {
-            get {  return Convert.ToInt32(dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].
-            Cells[nameof(WarehouseTableDTO.Id)].Value); }
         }
     }
 }

@@ -1,7 +1,9 @@
-﻿using WinFormsApp1.DTO;
+﻿using Microsoft.Extensions.DependencyInjection;
+using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Helpers;
 using WinFormsApp1.Logic;
+using WinFormsApp1.Logic.Interfaces;
 using Color = System.Drawing.Color;
 
 namespace WinFormsApp1
@@ -18,15 +20,95 @@ namespace WinFormsApp1
         List<DiagnosisEditDTO> diagnosesDTO;
         List<EquipmentEditDTO> equipmentsDTO;
         NameTableToEditEnum nameTextBox;
-        OrdersLogic ordersLogic = new();
-        ClientsLogic clientsLogic = new();
-        EquipmentsLogic equipmentsLogic = new();
-        DiagnosesLogic diagnosesLogic = new();
-        MastersLogic mastersLogic = new();
-        TypesTechnicsLogic typesTechnicsLogic = new();
-        TypesBrandsLogic typesBrandsLogic = new();
-        public AddDeviceIntoRepair()
+        IOrdersLogic ordersLogic;
+        IClientsLogic clientsLogic;
+        IEquipmentsLogic equipmentsLogic;
+        IDiagnosesLogic diagnosesLogic;
+        IMastersLogic mastersLogic;
+        ITypesTechnicsLogic typesTechnicsLogic;
+        ITypesBrandsLogic typesBrandsLogic;
+        public int NumberOrder
         {
+            get { return Convert.ToInt32(textBoxNumberOrder.Text); }
+            set { textBoxNumberOrder.Text = value.ToString(); }
+        }
+        public string MainMasterName
+        {
+            get { return comboBoxMainMaster.Text; }
+            set { comboBoxMainMaster.Text = value; }
+        }
+        public string AdditionalMasterName
+        {
+            get { return comboBoxAdditionalMaster.Text; }
+            set { comboBoxAdditionalMaster.Text = value; }
+        }
+        public string TypeDevice
+        {
+            get { return comboBoxDevice.Text; }
+            set { comboBoxDevice.Text = value; }
+        }
+        public string BrandDevice
+        {
+            get { return comboBoxBrand.Text; }
+            set { comboBoxBrand.Text = value; }
+        }
+        public string Model
+        {
+            get { return textBoxModel.Text; }
+            set { textBoxModel.Text = value; }
+        }
+        public string FactoryNumber
+        {
+            get { return textBoxFactoryNumber.Text; }
+            set { textBoxFactoryNumber.Text = value; }
+        }
+        public string ClientName
+        {
+            get { return textBoxNameClient.Text; }
+            set { textBoxNameClient.Text = value; }
+        }
+        public string ClientNameAddress
+        {
+            get { return textBoxNameAddress.Text; }
+            set { textBoxNameAddress.Text = value; }
+        }
+        public string ClientSecondPhone
+        {
+            get { return textBoxSecondPhone.Text; }
+            set { textBoxSecondPhone.Text = value; }
+        }
+        public string TypeClient
+        {
+            get { return labelTypeClient.Text; }
+            set { labelTypeClient.Text = value; }
+        }
+        public string Equipment
+        {
+            get { return textBoxEquipment.Text; }
+            set { textBoxEquipment.Text = value; }
+        }
+        public string Diagnosis
+        {
+            get { return textBoxDiagnosis.Text; }
+            set { textBoxDiagnosis.Text = value; }
+        }
+        public string Note
+        {
+            get { return textBoxNote.Text; }
+            set { textBoxNote.Text = value; }
+        }
+
+        public AddDeviceIntoRepair(IOrdersLogic _ordersLogic, IClientsLogic _clientLogic, IEquipmentsLogic _equipmentsLogic,
+            IDiagnosesLogic _diagnosesLogic, IMastersLogic _mastersLogic, ITypesTechnicsLogic _typesTechnicsLogic,
+            ITypesBrandsLogic _typesBrandsLogic)
+        {
+            ordersLogic = _ordersLogic;
+            clientsLogic = _clientLogic;
+            equipmentsLogic = _equipmentsLogic;
+            diagnosesLogic = _diagnosesLogic;
+            mastersLogic = _mastersLogic;
+            typesTechnicsLogic = _typesTechnicsLogic;
+            typesBrandsLogic = _typesBrandsLogic;
             InitializeComponent();
             InitializeElementsForm();
         }
@@ -59,6 +141,24 @@ namespace WinFormsApp1
                 equipmentList.Add(equipment.Name);
             }
             listBoxClient.Visible = false;
+        }
+
+        public void FillOrder(int IdOrder)
+        {
+            var orderDTO = ordersLogic.GetOrder(IdOrder);
+            MainMasterName = orderDTO.MainMasterId == null ? "-" : orderDTO.MainMaster?.NameMaster;
+            AdditionalMasterName = orderDTO.AdditionalMasterId == null ? "-" : orderDTO.AdditionalMaster?.NameMaster;
+            TypeDevice = orderDTO.TypeTechnic.Name;
+            BrandDevice = orderDTO.BrandTechnic.Name;
+            FactoryNumber = orderDTO.FactoryNumber;
+            Model = orderDTO.ModelTechnic;
+            ClientName = orderDTO.Client.IdClient;
+            ClientNameAddress = orderDTO.Client?.NameAndAddressClient;
+            ClientSecondPhone = orderDTO.Client.NumberSecondPhone;
+            TypeClient = "Старый клиент";
+            Equipment = orderDTO.Equipment?.Name;
+            Diagnosis = orderDTO.Diagnosis?.Name;
+            Note = orderDTO.Note;
         }
 
         private void ButtonBack_Click(object sender, EventArgs e)
@@ -187,7 +287,6 @@ namespace WinFormsApp1
 
             Warning warning = new()
             {
-                StartPosition = FormStartPosition.CenterParent,
                 LabelText = "Распечатать квитанцию?",
                 ButtonNoText = "Нет",
                 ButtonVisible = true
@@ -238,7 +337,6 @@ namespace WinFormsApp1
         {
             Warning warning = new()
             {
-                StartPosition = FormStartPosition.CenterParent,
                 LabelText = text
             };
             warning.ShowDialog();
@@ -288,28 +386,12 @@ namespace WinFormsApp1
             if (listBox.SelectedIndex >= 0)
             {
                 textBoxCurrent.Text = listBox.Items[listBox.SelectedIndex].ToString();
-
                 listBox.Items.Clear();
                 listBox.Visible = false;
-
-
                 if (!label)
                     labelTypeClient.Text = "Старый клиент";
-
                 textBoxNext.Focus();
             }
-
-            /*if (listBoxClient.SelectedIndex >= 0)
-            {
-                textBoxNameClient.Text = listBoxClient.Items[listBoxClient.SelectedIndex].ToString();
-
-                listBoxClient.Items.Clear();
-                listBoxClient.Visible = false;
-
-                labelTypeClient.Text = "Старый клиент";
-
-                textBoxNameAddress.Focus();
-            }*/
         }
 
         private void UpdateListBox(ListBox listBox, TextBox textBox, bool equipment = false, bool diagnosis = false, bool click = false)
@@ -347,6 +429,7 @@ namespace WinFormsApp1
 
             if (listBox.Items.Count > 0)
                 listBox.Visible = true;
+            else listBox.Visible = false;
         }
 
         private void UpdateComboBox(ElementOfRepairEnum elementOfRepair)
@@ -448,10 +531,7 @@ namespace WinFormsApp1
 
         private void LinkLabelListMaster_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Masters addMaster = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            Masters addMaster = Program.ServiceProvider.GetRequiredService<Masters>();
             addMaster.ShowDialog();
             UpdateComboBox(ElementOfRepairEnum.MainMasterElement);
             UpdateComboBox(ElementOfRepairEnum.AdditionalMasterElement);
@@ -543,20 +623,14 @@ namespace WinFormsApp1
 
         private void LinkLabelDevice_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            TypesTechnic typeTechnic = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            TypesTechnic typeTechnic = Program.ServiceProvider.GetRequiredService<TypesTechnic>();
             typeTechnic.ShowDialog();
             UpdateComboBox(ElementOfRepairEnum.TypeDeviceElement);
         }
 
         private void LinkLabelBrand_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            BrandsTechnic brandTechnic = new()
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            BrandsTechnic brandTechnic = Program.ServiceProvider.GetRequiredService<BrandsTechnic>();
             brandTechnic.ShowDialog();
             UpdateComboBox(ElementOfRepairEnum.BrandDeviceElement);
         }
@@ -675,90 +749,6 @@ namespace WinFormsApp1
         {
             DialogResult = DialogResult.Cancel;
             Close();
-        }
-
-        public int NumberOrder
-        {
-            get { return Convert.ToInt32(textBoxNumberOrder.Text); }
-            set { textBoxNumberOrder.Text = value.ToString(); }
-        }
-
-        public string MainMasterName
-        {
-            get { return comboBoxMainMaster.Text; }
-            set { comboBoxMainMaster.Text = value; }
-        }
-
-        public string AdditionalMasterName
-        {
-            get { return comboBoxAdditionalMaster.Text; }
-            set { comboBoxAdditionalMaster.Text = value; }
-        }
-
-        public string TypeDevice
-        {
-            get { return comboBoxDevice.Text; }
-            set { comboBoxDevice.Text = value; }
-        }
-
-        public string BrandDevice
-        {
-            get { return comboBoxBrand.Text; }
-            set { comboBoxBrand.Text = value; }
-        }
-
-        public string Model
-        {
-            get { return textBoxModel.Text; }
-            set { textBoxModel.Text = value; }
-        }
-
-        public string FactoryNumber
-        {
-            get { return textBoxFactoryNumber.Text; }
-            set { textBoxFactoryNumber.Text = value; }
-        }
-
-        public string ClientName
-        {
-            get { return textBoxNameClient.Text; }
-            set { textBoxNameClient.Text = value; }
-        }
-
-        public string ClientNameAddress
-        {
-            get { return textBoxNameAddress.Text; }
-            set { textBoxNameAddress.Text = value; }
-        }
-
-        public string ClientSecondPhone
-        {
-            get { return textBoxSecondPhone.Text; }
-            set { textBoxSecondPhone.Text = value; }
-        }
-
-        public string TypeClient
-        {
-            get { return labelTypeClient.Text; }
-            set { labelTypeClient.Text = value; }
-        }
-
-        public string Equipment
-        {
-            get { return textBoxEquipment.Text; }
-            set { textBoxEquipment.Text = value; }
-        }
-
-        public string Diagnosis
-        {
-            get { return textBoxDiagnosis.Text; }
-            set { textBoxDiagnosis.Text = value; }
-        }
-
-        public string Note
-        {
-            get { return textBoxNote.Text; }
-            set { textBoxNote.Text = value; }
         }
     }
 }

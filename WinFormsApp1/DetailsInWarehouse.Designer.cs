@@ -148,6 +148,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DetailsInWarehouse";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Склад";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);

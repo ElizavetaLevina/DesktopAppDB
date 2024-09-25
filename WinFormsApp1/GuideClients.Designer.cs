@@ -140,6 +140,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "GuideClients";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Клиенты";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);

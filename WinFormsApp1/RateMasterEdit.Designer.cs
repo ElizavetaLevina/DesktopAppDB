@@ -148,6 +148,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "RateMasterEdit";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Процент прибыли мастера";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);

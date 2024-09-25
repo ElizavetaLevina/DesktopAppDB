@@ -4,7 +4,13 @@ namespace WinFormsApp1.Model
 {
     public class Context : DbContext
     {
-        public string path = Properties.Settings.Default.PathDB;
+        public string host = string.IsNullOrEmpty(Properties.Settings.Default.Host) ? "localhost" : Properties.Settings.Default.Host;
+        public string port = string.IsNullOrEmpty(Properties.Settings.Default.Port) ? "5432" : Properties.Settings.Default.Port;
+        public string database = string.IsNullOrEmpty(Properties.Settings.Default.Database) ? "postgres" : Properties.Settings.Default.Database;
+        public string username = string.IsNullOrEmpty(Properties.Settings.Default.Username) ? "postgres" : Properties.Settings.Default.Username;
+        public string password = string.IsNullOrEmpty(Properties.Settings.Default.Password) ? "123" : Properties.Settings.Default.Password;
+        public string searchPath = string.IsNullOrEmpty(Properties.Settings.Default.SearchPath) ? "public" : Properties.Settings.Default.SearchPath;
+
         public DbSet<Client> Clients => Set<Client>();
         public DbSet<Master> Masters => Set<Master>();
         public DbSet<TypeTechnic> TypeTechnices => Set<TypeTechnic>();
@@ -136,7 +142,9 @@ namespace WinFormsApp1.Model
             try
             {
                 optionsBuilder.UseLazyLoadingProxies();
-                optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=123;SearchPath=public");
+                optionsBuilder.UseNpgsql(string.Format("Host={0};Port={1};Database={2};Username={3};Password={4};SearchPath={5}", 
+                    host, port, database, username, password, searchPath));
+                //optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=123;SearchPath=public");
                 //optionsBuilder.UseSqlite(String.Format("Data Source={0};Pooling=false", path));
             }
             catch (Exception e)

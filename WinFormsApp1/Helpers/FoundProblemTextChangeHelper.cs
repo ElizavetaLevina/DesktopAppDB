@@ -1,4 +1,5 @@
-﻿using WinFormsApp1.Logic;
+﻿using WinFormsApp1.DTO;
+using WinFormsApp1.Logic;
 
 namespace WinFormsApp1.Helpers
 {
@@ -9,13 +10,11 @@ namespace WinFormsApp1.Helpers
         /// </summary>
         /// <param name="text">Подстрока несправностей</param>
         /// <returns>Список неисправностей для ListBox</returns>
-        public static List<string> GetItemsListBox(string text)
+        public static List<string> GetItemsListBox(string text, List<MalfunctionEditDTO> malfunctionList)
         {
-            MalfunctionsLogic malfunctionsLogic = new();
+            //MalfunctionsLogic malfunctionsLogic = new();
             List<string> finalListProblem = [];
-            var malfunctionList = malfunctionsLogic.GetMalfunctions();
-
-
+            //var malfunctionList = malfunctionsLogic.GetMalfunctions();
             foreach (var problem in malfunctionList)
             {
                 if (problem.Name.ToLower().StartsWith(text.ToLower()))

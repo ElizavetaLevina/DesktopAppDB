@@ -10,10 +10,7 @@ namespace WinFormsApp1.DTO
         [DisplayName("Название")]
         public string? NameBrandTechnic { get; set; }
 
-        public BrandTechnicDTO(Model.BrandTechnic brandTechnic)
-        {
-            Id = brandTechnic.Id;
-            NameBrandTechnic = brandTechnic.NameBrandTechnic;
-        }
+        public BrandTechnicDTO()
+        { }
     }
 }

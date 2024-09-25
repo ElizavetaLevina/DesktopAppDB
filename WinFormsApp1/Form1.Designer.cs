@@ -32,7 +32,7 @@ namespace WinFormsApp1
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             dataGridView1 = new DataGridView();
             buttonInProgress = new Button();
@@ -180,15 +180,15 @@ namespace WinFormsApp1
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.BackgroundColor = Color.FromArgb(224, 224, 224);
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Window;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.GradientInactiveCaption;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
-            dataGridView1.Location = new Point(11, 85);
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Window;
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.GradientInactiveCaption;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
+            dataGridView1.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridView1.Location = new Point(11, 90);
             dataGridView1.MultiSelect = false;
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
@@ -464,7 +464,7 @@ namespace WinFormsApp1
             toolStrip1.Dock = DockStyle.None;
             toolStrip1.ImageScalingSize = new Size(24, 24);
             toolStrip1.Items.AddRange(new ToolStripItem[] { buttonAddDeviceIntoRepair, buttonMasters, buttonTypesDevices, toolStripSeparator5, buttonExit, toolStripSeparator6, buttonDetails, buttonRemove, buttonRecovery, buttonCompletedTag, buttonIssue, buttonReturnIntoRepair, buttonReturnGuarantee, toolStripSeparator7, buttonPropertiesOrder, buttonPropertiesClient, toolStripSeparator8 });
-            toolStrip1.Location = new Point(20, 43);
+            toolStrip1.Location = new Point(20, 45);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Padding = new Padding(0, 0, 3, 0);
             toolStrip1.Size = new Size(485, 25);
@@ -742,6 +742,7 @@ namespace WinFormsApp1
             // 
             // itemCopyBD
             // 
+            itemCopyBD.Enabled = false;
             itemCopyBD.Image = Properties.Resources.main3_1;
             itemCopyBD.ImageScaling = ToolStripItemImageScaling.None;
             itemCopyBD.Name = "itemCopyBD";
@@ -751,6 +752,7 @@ namespace WinFormsApp1
             // 
             // itemUpdateService
             // 
+            itemUpdateService.Enabled = false;
             itemUpdateService.Image = Properties.Resources.main3_2;
             itemUpdateService.ImageScaling = ToolStripItemImageScaling.None;
             itemUpdateService.Name = "itemUpdateService";
@@ -1230,14 +1232,14 @@ namespace WinFormsApp1
             contextMenuView.ImageScalingSize = new Size(24, 24);
             contextMenuView.Items.AddRange(new ToolStripItem[] { itemColor });
             contextMenuView.Name = "contextButton5";
-            contextMenuView.Size = new Size(241, 69);
+            contextMenuView.Size = new Size(133, 36);
             // 
             // itemColor
             // 
             itemColor.Image = Properties.Resources.b2_20;
             itemColor.ImageScaling = ToolStripItemImageScaling.None;
             itemColor.Name = "itemColor";
-            itemColor.Size = new Size(240, 32);
+            itemColor.Size = new Size(132, 32);
             itemColor.Text = "Цвета";
             itemColor.Click += ItemColor_Click;
             // 

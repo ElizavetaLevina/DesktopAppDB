@@ -1,27 +1,48 @@
-﻿using WinFormsApp1.Enum;
-using WinFormsApp1.Logic;
+﻿using Microsoft.Extensions.DependencyInjection;
+using WinFormsApp1.Enum;
+using WinFormsApp1.Logic.Interfaces;
 
 namespace WinFormsApp1
 {
     public partial class BrandAndTypeEdit : Form
     {
-        NameTableToEditEnum nameTable;
-        public int id;
+        public string BtnText
+        {
+            get { return buttonSave.Text; }
+            set { buttonSave.Text = value; }
+        }
+        public string NameTextBox
+        {
+            get { return nameTextBox.Text; }
+            set { nameTextBox.Text = value; }
+        }
+        public string LabelSecondName
+        {
+            get { return labelSecondName.Text; }
+            set { labelSecondName.Text = value; }
+        }
+        public string LabelNameInList
+        {
+            get { return labelNameInList.Text; }
+            set { labelNameInList.Text = value; }
+        }
+        public NameTableToEditEnum nameTable;
+        public int id = 0;
         public List<int>? idList = [];
         public List<int>? idRemoveList = [];
-        BrandsTechnicsLogic brandsTechnicsLogic = new();
-        TypesTechnicsLogic typesTechnicsLogic = new();
-        TypesBrandsLogic typesBrandsLogic = new();
-        public BrandAndTypeEdit(NameTableToEditEnum _nameTable, int _id = 0)
+        IBrandsTechnicsLogic brandsTechnicsLogic;
+        ITypesTechnicsLogic typesTechnicsLogic;
+        ITypesBrandsLogic typesBrandsLogic;
+        public BrandAndTypeEdit(IBrandsTechnicsLogic _brandsTechnicsLogic, ITypesTechnicsLogic _typesTechnicsLogic,
+            ITypesBrandsLogic _typesBrandsLogic)
         {
+            brandsTechnicsLogic = _brandsTechnicsLogic;
+            typesTechnicsLogic = _typesTechnicsLogic;
+            typesBrandsLogic = _typesBrandsLogic;
             InitializeComponent();
-            nameTable = _nameTable;
-            id = _id;
-            InitializeElementsForm();
-            UpdateComboBox();
         }
 
-        private void InitializeElementsForm()
+        public void InitializeElementsForm()
         {
             switch (nameTable)
             {
@@ -42,6 +63,7 @@ namespace WinFormsApp1
                     LabelNameInList = String.Format("Типы устройств для {0}", name);
                     break;
             }
+            UpdateComboBox();
         }
 
         private void ButtonSave_Click(object sender, EventArgs e)
@@ -49,10 +71,7 @@ namespace WinFormsApp1
             if (string.IsNullOrEmpty(NameTextBox))
             {
                 label1.ForeColor = Color.Red;
-                Warning warning = new()
-                {
-                    StartPosition = FormStartPosition.CenterParent
-                };
+                Warning warning = new();
                 warning.ShowDialog();
             }
             else
@@ -60,13 +79,15 @@ namespace WinFormsApp1
                 switch (nameTable)
                 {
                     case NameTableToEditEnum.TypeTechnic:
-                        var typeTechnicDTO = typesTechnicsLogic.GetTypeTechnic(id, NameTextBox);
+                        var typeTechnicDTO = typesTechnicsLogic.GetTypeTechnic(id);
+                        typeTechnicDTO.Name = NameTextBox;
                         var idTypeTechnic = typesTechnicsLogic.SaveTypeTechnic(typeTechnicDTO);
                         typesBrandsLogic.SaveTypeBrand(idList, idTypeTechnic, nameTable);
                         typesBrandsLogic.RemoveTypeBrandByList(idRemoveList, idTypeTechnic, nameTable);
                         break;
                     case NameTableToEditEnum.BrandTechnic:
-                        var brandTechnicDTO = brandsTechnicsLogic.GetBrandTechnic(id, NameTextBox);
+                        var brandTechnicDTO = brandsTechnicsLogic.GetBrandTechnic(id);
+                        brandTechnicDTO.Name = NameTextBox;
                         var idBrandTechnic = brandsTechnicsLogic.SaveBrandTechnic(brandTechnicDTO);
                         typesBrandsLogic.SaveTypeBrand(idList, idBrandTechnic, nameTable);
                         typesBrandsLogic.RemoveTypeBrandByList(idRemoveList, idBrandTechnic, nameTable);
@@ -156,12 +177,9 @@ namespace WinFormsApp1
         {
             if (Application.OpenForms.OfType<BrandAndTypeEdit>().Count() <= 2)
             {
-                BrandAndTypeEdit brandAndTypeEdit = new(nameTable == NameTableToEditEnum.TypeTechnic ? 
-                    NameTableToEditEnum.BrandTechnic : NameTableToEditEnum.TypeTechnic)
-                {
-                    StartPosition = FormStartPosition.CenterParent
-                };
-
+                BrandAndTypeEdit brandAndTypeEdit = Program.ServiceProvider.GetRequiredService<BrandAndTypeEdit>();
+                brandAndTypeEdit.nameTable = nameTable == NameTableToEditEnum.TypeTechnic ?
+                    NameTableToEditEnum.BrandTechnic : NameTableToEditEnum.TypeTechnic;
                 if (brandAndTypeEdit.ShowDialog() == DialogResult.OK)
                     UpdateComboBox();
             }
@@ -208,30 +226,6 @@ namespace WinFormsApp1
                     }
                     break;
             }
-        }
-
-        public string BtnText
-        {
-            get { return buttonSave.Text; }
-            set { buttonSave.Text = value; }
-        }
-
-        public string NameTextBox
-        {
-            get { return nameTextBox.Text; }
-            set { nameTextBox.Text = value; }
-        }
-
-        public string LabelSecondName
-        {
-            get { return labelSecondName.Text; }
-            set { labelSecondName.Text = value; }
-        }
-
-        public string LabelNameInList
-        {
-            get { return labelNameInList.Text; }
-            set { labelNameInList.Text = value; }
         }
     }
 }

@@ -252,6 +252,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "ReportsOrganization";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Отчет по работе за год";
             panel1.ResumeLayout(false);
             panel1.PerformLayout();

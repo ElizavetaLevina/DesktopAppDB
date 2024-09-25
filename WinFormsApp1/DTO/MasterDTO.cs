@@ -11,13 +11,6 @@ namespace WinFormsApp1.DTO
         [DisplayName("Телефон")]
         public string? NumberPhone { get; set; }
 
-        public MasterDTO(Master master)
-        {
-            Id = master.Id;
-            NameMaster = master.NameMaster;
-            NumberPhone = master.NumberPhone;
-        }
-
         public MasterDTO()
         {
         }

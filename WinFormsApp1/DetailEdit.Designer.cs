@@ -80,6 +80,7 @@
             textBoxNameDetail.Size = new Size(466, 31);
             textBoxNameDetail.TabIndex = 3;
             textBoxNameDetail.TextChanged += TextBoxNameDetail_TextChanged;
+            textBoxNameDetail.KeyDown += TextBoxNameDetail_KeyDown;
             textBoxNameDetail.KeyPress += TextBoxNameDetail_KeyPress;
             // 
             // textBoxPricePurchase
@@ -183,7 +184,7 @@
             listBoxDetails.Name = "listBoxDetails";
             listBoxDetails.Size = new Size(466, 129);
             listBoxDetails.TabIndex = 15;
-            listBoxDetails.SelectedIndexChanged += ListBoxDetails_SelectedIndexChanged;
+            listBoxDetails.KeyDown += ListBoxDetails_KeyDown;
             // 
             // DetailEdit
             // 
@@ -208,6 +209,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DetailEdit";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Добавление детали на склад";
             ResumeLayout(false);
             PerformLayout();

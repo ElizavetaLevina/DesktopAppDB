@@ -1,23 +1,30 @@
-﻿using WinFormsApp1.DTO;
-using WinFormsApp1.Logic;
+﻿using Microsoft.Extensions.DependencyInjection;
+using WinFormsApp1.DTO;
+using WinFormsApp1.Logic.Interfaces;
 
 namespace WinFormsApp1
 {
     public partial class Masters : Form
     {
-        MastersLogic mastersLogic = new();
-        public Masters()
+        public int IdMaster
         {
+            get
+            {
+                return Convert.ToInt32(dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].
+                Cells[nameof(MasterDTO.Id)].Value);
+            }
+        }
+        IMastersLogic mastersLogic;
+        public Masters(IMastersLogic _mastersLogic)
+        {
+            mastersLogic = _mastersLogic;
             InitializeComponent();
             UpdateTable();
         }
 
         private void BtnAddMaster_Click(object sender, EventArgs e)
         {
-            MasterEdit addMasterForm = new(true)
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            MasterEdit addMasterForm = Program.ServiceProvider.GetRequiredService<MasterEdit>();
             addMasterForm.ShowDialog();
             UpdateTable();
         }
@@ -26,11 +33,10 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count > 0)
             {
-                MasterEdit addMasterForm = new(false, IdMaster)
-                {
-                    StartPosition = FormStartPosition.CenterParent,
-                    Text = "Изменение информации о мастере"
-                };
+                MasterEdit addMasterForm = Program.ServiceProvider.GetRequiredService<MasterEdit>();
+                addMasterForm.newMaster = false;
+                addMasterForm.idMaster = IdMaster;
+                addMasterForm.Text = "Изменение информации о мастере";
                 addMasterForm.ShowDialog();
                 UpdateTable();
             }
@@ -64,12 +70,6 @@ namespace WinFormsApp1
                 double width = Convert.ToDouble(dataGridView1.Width) / 100.0 * percent[i];
                 dataGridView1.Columns[i].Width = Convert.ToInt32(width);
             }
-        }
-
-        public int IdMaster
-        {
-            get { return Convert.ToInt32(dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].
-                Cells[nameof(MasterDTO.Id)].Value); }
         }
     }
 }

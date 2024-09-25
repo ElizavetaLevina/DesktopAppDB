@@ -269,6 +269,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "MasterEdit";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Добавление нового мастера";
             Activated += AddMasterForm_Activated;
             ((System.ComponentModel.ISupportInitialize)trackBarPercent).EndInit();

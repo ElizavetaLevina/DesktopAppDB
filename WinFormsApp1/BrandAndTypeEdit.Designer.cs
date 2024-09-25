@@ -185,6 +185,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             Name = "BrandAndTypeEdit";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Добавление новой фирмы";
             Activated += BrandAndTypeEdit_Activated;
             ResumeLayout(false);

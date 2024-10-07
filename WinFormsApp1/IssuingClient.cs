@@ -35,10 +35,9 @@ namespace WinFormsApp1
             malfunctionsOrdersLogic = _malfunctionsOrdersLogic;
             warehousesLogic = _warehousesLogic;
             InitializeComponent();
-            InitializeElementsForm();
         }
 
-        private void InitializeElementsForm()
+        public void InitializeElementsForm()
         {
             orderDTO = ordersLogic.GetOrder(idOrder);
             var malfunctionOrderDTO = malfunctionsOrdersLogic.GetMalfunctionOrdersByIdOrder(idOrder);
@@ -92,7 +91,7 @@ namespace WinFormsApp1
             }
         }
 
-        private void ButtonIssueDevice_Click(object sender, EventArgs e)
+        private async void ButtonIssueDevice_ClickAsync(object sender, EventArgs e)
         {
             if (textBoxGuarantee.Text.Length > 0)
             {
@@ -107,7 +106,7 @@ namespace WinFormsApp1
                 else
                     orderDTO.StatusOrder = StatusOrderEnum.Archive;
 
-                ordersLogic.SaveOrder(orderDTO);
+                await ordersLogic.SaveOrderAsync(orderDTO);
 
                 Warning warning = new()
                 {

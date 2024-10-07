@@ -42,12 +42,12 @@ namespace WinFormsApp1
             }
         }
 
-        private void BtnDeleteMaster_Click(object sender, EventArgs e)
+        private async void BtnDeleteMaster_ClickAsync(object sender, EventArgs e)
         {
             if (dataGridView1.Rows.Count > 0)
             {
                 var masterDTO = mastersLogic.GetMaster(IdMaster);
-                mastersLogic.RemoveMaster(masterDTO);
+                await mastersLogic.RemoveMasterAsync(masterDTO);
                 UpdateTable();
             }
         }

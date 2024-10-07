@@ -147,48 +147,16 @@ namespace WinFormsApp1.Repository
         /// <inheritdoc/>
         public async Task<int> SaveOrderAsync(OrderEditDTO orderDTO, CancellationToken token = default)
         {
-            using Context db = new();
-            Order order = new()
-            {
-                Id = orderDTO.Id,
-                NumberOrder = orderDTO.NumberOrder,
-                ClientId = orderDTO.ClientId,
-                MainMasterId = orderDTO.MainMasterId,
-                PercentWorkMainMaster = orderDTO.PercentWorkMainMaster,
-                AdditionalMasterId = orderDTO.AdditionalMasterId,
-                PercentWorkAdditionalMaster = orderDTO.PercentWorkAdditionalMaster,
-                DateCreation = orderDTO.DateCreation,
-                DateStartWork = orderDTO.DateStartWork,
-                DateCompleted = orderDTO.DateCompleted,
-                DateIssue = orderDTO.DateIssue,
-                TypeTechnicId = orderDTO.TypeTechnicId,
-                BrandTechnicId = orderDTO.BrandTechnicId,
-                ModelTechnic = orderDTO.ModelTechnic,
-                FactoryNumber = orderDTO.FactoryNumber,
-                EquipmentId = orderDTO.EquipmentId,
-                DiagnosisId = orderDTO.DiagnosisId,
-                Note = orderDTO.Note,
-                StatusOrder = orderDTO.StatusOrder,
-                Guarantee = orderDTO.Guarantee,
-                DateEndGuarantee = orderDTO.DateEndGuarantee,
-                Deleted = orderDTO.Deleted,
-                ReturnUnderGuarantee = orderDTO.ReturnUnderGuarantee,
-                DateReturn = orderDTO.DateReturn,
-                DateCompletedReturn = orderDTO.DateCompletedReturn,
-                DateIssueReturn = orderDTO.DateIssueReturn,
-                ColorRow = orderDTO.ColorRow,
-                DateLastCall = orderDTO.DateLastCall,
-                PriceAgreed = orderDTO.PriceAgreed,
-                MaxPrice = orderDTO.MaxPrice
-            };
             try
             {
+                Context context = new();
+                var order = _mapper.Map<OrderEditDTO, Order>(orderDTO);
+            
                 if (order.Id == 0)
-                    db.Orders.Add(order);
+                    context.Orders.Add(order);
                 else
-                    db.Orders.Update(order);
-
-                await db.SaveChangesAsync(token);
+                    context.Orders.Update(order);
+                await context.SaveChangesAsync(token);
                 return order.Id;
             }
             catch (Exception ex) { 
@@ -196,14 +164,14 @@ namespace WinFormsApp1.Repository
         }
 
         /// <inheritdoc/>
-        public void RemoveOrder(OrderEditDTO orderDTO)
+        public async Task RemoveOrder(OrderEditDTO orderDTO, CancellationToken token = default)
         {
             try
             {
-                using Context db = new();
-                var order = db.Orders.FirstOrDefault(c => c.Id == orderDTO.Id);
-                db.Orders.Remove(order);
-                db.SaveChanges();
+                Context context = new();
+                var order = _mapper.Map<OrderEditDTO, Order>(orderDTO);
+                context.Orders.Remove(order);
+                await context.SaveChangesAsync(token);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }

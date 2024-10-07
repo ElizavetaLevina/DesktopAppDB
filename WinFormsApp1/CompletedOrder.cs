@@ -57,10 +57,9 @@ namespace WinFormsApp1
             warehousesLogic = _warehousesLogic;
             malfunctionsOrdersLogic = _malfunctionsOrdersLogic;
             InitializeComponent();
-            InitializeElementsForm();
         }
 
-        private void InitializeElementsForm()
+        public void InitializeElementsForm()
         {
             orderDTO = ordersLogic.GetOrder(idOrder);
             malfunctionsDTO = malfunctionsLogic.GetMalfunctions();
@@ -160,7 +159,7 @@ namespace WinFormsApp1
             Close();
         }
 
-        private void ButtonSave_Click(object sender, EventArgs e)
+        private async void ButtonSave_ClickAsync(object sender, EventArgs e)
         {
             List<string> foundProblem = [];
             List<int> priceProblem = [];
@@ -231,6 +230,7 @@ namespace WinFormsApp1
             for (int i = 0; i < countProblem; i++)
             {
                 var malfunctionDTO = malfunctionsLogic.GetMalfunctionByName(foundProblem[i]);
+                malfunctionDTO.Name = foundProblem[i];
                 malfunctionDTO.Price = priceProblem[i];
                 var idMalfunction = malfunctionsLogic.SaveMalfunction(malfunctionDTO);
                 var malfunctionOrderDTO = new MalfunctionOrderEditDTO()
@@ -250,7 +250,7 @@ namespace WinFormsApp1
                 orderDTO.PercentWorkAdditionalMaster = Convert.ToInt32(textBoxAdditional.Text);
             }
             else orderDTO.PercentWorkMainMaster = 100;
-            ordersLogic.SaveOrder(orderDTO);
+            await ordersLogic.SaveOrderAsync(orderDTO);
             DialogResult = DialogResult.OK;
             Close();
         }
@@ -466,7 +466,7 @@ namespace WinFormsApp1
         private void LinkLabelPropertiesOrder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             PropertiesOrder propertiesOrder = Program.ServiceProvider.GetRequiredService<PropertiesOrder>();
-            propertiesOrder.InitializeElementsForm(idOrder, StatusOrderEnum.InRepair, true);\
+            propertiesOrder.InitializeElementsForm(idOrder, StatusOrderEnum.InRepair, true);
             if (propertiesOrder.ShowDialog() == DialogResult.OK)
             {
                 orderDTO = ordersLogic.GetOrder(idOrder);

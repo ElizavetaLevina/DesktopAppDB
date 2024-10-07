@@ -199,7 +199,7 @@
             buttonAdd.TabIndex = 17;
             buttonAdd.Text = "Добавить мастера";
             buttonAdd.UseVisualStyleBackColor = true;
-            buttonAdd.Click += ButtonAdd_Click;
+            buttonAdd.Click += ButtonAdd_ClickAsync;
             // 
             // buttonExit
             // 

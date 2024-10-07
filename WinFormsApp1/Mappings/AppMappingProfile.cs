@@ -9,21 +9,22 @@ namespace WinFormsApp1.Mappings
     {
         public AppMappingProfile() 
         {
-            CreateMap<Client, ClientEditDTO>();
+            CreateMap<Client, ClientEditDTO>().ReverseMap();
             CreateMap<Client, ClientDTO>();
             CreateMap<BrandTechnic, BrandTechnicDTO>();
             CreateMap<BrandTechnic, BrandTechnicEditDTO>()
-                .ForMember(d => d.Name, opt => opt.MapFrom(s => s.NameBrandTechnic));
-            CreateMap<Diagnosis, DiagnosisEditDTO>();
-            CreateMap<Equipment, EquipmentEditDTO>();
-            CreateMap<Malfunction, MalfunctionEditDTO>();
-            CreateMap<MalfunctionOrder, MalfunctionOrderEditDTO>();
+                .ForMember(d => d.Name, opt => opt.MapFrom(s => s.NameBrandTechnic))
+                .ReverseMap();
+            CreateMap<Diagnosis, DiagnosisEditDTO>().ReverseMap();
+            CreateMap<Equipment, EquipmentEditDTO>().ReverseMap();
+            CreateMap<Malfunction, MalfunctionEditDTO>().ReverseMap();
+            CreateMap<MalfunctionOrder, MalfunctionOrderEditDTO>().ReverseMap();
             CreateMap<Master, MasterDTO>();
-            CreateMap<Master, MasterEditDTO>();
+            CreateMap<Master, MasterEditDTO>().ReverseMap();
             CreateMap<NoteSalaryMaster, NoteSalaryMasterEditDTO>()
                 .ForMember(d => d.NameMaster, opt => opt.MapFrom(s => s.Master.NameMaster))
                 .ForMember(d => d.Salary, opt => opt.Ignore());
-            CreateMap<Order, OrderEditDTO>();
+            CreateMap<Order, OrderEditDTO>().ReverseMap();
             CreateMap<Order, OrderTableDTO>()
                 .ForMember(d => d.DateCreation, opt => opt.MapFrom(s => s.DateCreation.Value.ToShortDateString()))
                 .ForMember(d => d.DateStartWork, opt => opt.MapFrom(s => s.DateStartWork.Value.ToShortDateString()))
@@ -40,12 +41,13 @@ namespace WinFormsApp1.Mappings
                 .ForMember(d => d.MasterName, opt => opt.MapFrom(s => s.Master.NameMaster))
                 .ForMember(d => d.MonthYear, opt => opt.MapFrom(s => string.Format("{0}  {1}", (MonthEnum)s.DateStart.Month, s.DateStart.Year)));
             CreateMap<RateMaster, RateMasterEditDTO>();
-            CreateMap<TypeBrand, TypeBrandDTO>();
+            CreateMap<TypeBrand, TypeBrandDTO>().ReverseMap();
             CreateMap<TypeTechnic, TypeTechnicDTO>();
             CreateMap<TypeTechnic, TypeTechnicEditDTO>()
-                .ForMember(d => d.Name, opt => opt.MapFrom(s => s.NameTypeTechnic));
+                .ForMember(d => d.Name, opt => opt.MapFrom(s => s.NameTypeTechnic))
+                .ReverseMap();
             CreateMap<Warehouse, WarehouseDTO>();
-            CreateMap<Warehouse, WarehouseEditDTO>();
+            CreateMap<Warehouse, WarehouseEditDTO>().ReverseMap();
             CreateMap<Warehouse, WarehouseTableDTO>()
                 .ForMember(d => d.DatePurchase, opt => opt.MapFrom(s => s.DatePurchase.ToShortDateString()));
             CreateMap<TypeBrand, TypeBrandComboBoxDTO>()

@@ -38,7 +38,11 @@ namespace WinFormsApp1.Logic
         /// <inheritdoc/>
         public void RemoveMalfunctionOrder(MalfunctionOrderEditDTO malfunctionOrderDTO)
         {
-            _malfunctionOrderRepository.RemoveMalfunctionOrder(malfunctionOrderDTO);
+            var task = Task.Run(async () =>
+            {
+                await _malfunctionOrderRepository.RemoveMalfunctionOrderAsync(malfunctionOrderDTO);
+            });
+            task.Wait();
         }
     }
 }

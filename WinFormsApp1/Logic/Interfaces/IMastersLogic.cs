@@ -27,12 +27,12 @@ namespace WinFormsApp1.Logic.Interfaces
         /// Сохранение мастера
         /// </summary>
         /// <param name="masterDTO">DTO мастера</param>
-        public void SaveMaster(MasterEditDTO masterDTO);
+        public Task SaveMasterAsync(MasterEditDTO masterDTO);
 
         /// <summary>
         /// Удаление мастера
         /// </summary>
         /// <param name="masterDTO">DTO мастера</param>
-        public void RemoveMaster(MasterEditDTO masterDTO);
+        public Task RemoveMasterAsync(MasterEditDTO masterDTO);
     }
 }

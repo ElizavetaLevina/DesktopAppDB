@@ -56,15 +56,9 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public int SaveOrder(OrderEditDTO orderDTO)
+        public async Task<int> SaveOrderAsync(OrderEditDTO orderDTO)
         {
-            int idOrder = 0;
-            var task = Task.Run(async () =>
-            {
-                idOrder = await _orderRepository.SaveOrderAsync(orderDTO);
-            });
-            task.Wait();
-            return idOrder;
+            return await _orderRepository.SaveOrderAsync(orderDTO);
         }
 
         /// <inheritdoc/>

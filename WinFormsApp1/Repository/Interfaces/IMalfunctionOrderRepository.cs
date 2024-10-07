@@ -20,6 +20,6 @@ namespace WinFormsApp1.Repository.Interfaces
 
         public Task SaveMalfunctionOrderAsync(MalfunctionOrderEditDTO malfunctionOrderDTO, CancellationToken token = default);
 
-        public void RemoveMalfunctionOrder(MalfunctionOrderEditDTO malfunctionOrderDTO);
+        public Task RemoveMalfunctionOrderAsync(MalfunctionOrderEditDTO malfunctionOrderDTO, CancellationToken token = default);
     }
 }

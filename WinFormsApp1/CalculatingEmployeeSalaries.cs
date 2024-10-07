@@ -196,13 +196,13 @@ namespace WinFormsApp1
                 SalaryCalculation();
         }
 
-        private void ButtonSave_Click(object sender, EventArgs e)
+        private async void ButtonSave_ClickAsync(object sender, EventArgs e)
         {
             var noteSalaryMasters = dataGridView1.DataSource as List<NoteSalaryMasterEditDTO>;
             foreach (var item in noteSalaryMasters)
             {
                 item.Date = item.Date.ToUniversalTime();
-                notesSalaryMastersLogic.SaveNoteSalaryMasterAsync(item);
+                await notesSalaryMastersLogic.SaveNoteSalaryMasterAsync(item);
             }            
         }
 

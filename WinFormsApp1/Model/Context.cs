@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace WinFormsApp1.Model
 {
@@ -26,7 +27,15 @@ namespace WinFormsApp1.Model
         public DbSet<NoteSalaryMaster> NoteSalaryMasters => Set<NoteSalaryMaster>();
         public Context()
         {
-            var created = Database.EnsureCreated();
+            try
+            {
+                var created = Database.EnsureCreated();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                throw;
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

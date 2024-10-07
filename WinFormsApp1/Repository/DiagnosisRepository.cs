@@ -46,33 +46,36 @@ namespace WinFormsApp1.Repository
         /// <inheritdoc/>
         public async Task<int> SaveDiagnosisAsync(DiagnosisEditDTO diagnosisDTO, CancellationToken token = default)
         {
-            Context db = new();
-            Diagnosis diagnosis = new()
+            Context context = new();
+            var diagnosis = _mapper.Map<DiagnosisEditDTO, Diagnosis>(diagnosisDTO);
+            /*Diagnosis diagnosis = new()
             {
                 Id = diagnosisDTO.Id,
                 Name = diagnosisDTO.Name
-            };
+            };*/
             try
             {
                 if (diagnosis.Id == 0)
-                    db.Diagnosis.Add(diagnosis);
+                    context.Diagnosis.Add(diagnosis);
                 else
-                    db.Diagnosis.Update(diagnosis);
-                await db.SaveChangesAsync(token);
+                    context.Diagnosis.Update(diagnosis);
+                await context.SaveChangesAsync(token);
                 return diagnosis.Id;
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
 
         /// <inheritdoc/>
-        public void RemoveDiagnosis(DiagnosisEditDTO diagnosisDTO)
+        public async Task RemoveDiagnosisAsync(DiagnosisEditDTO diagnosisDTO, CancellationToken token = default)
         {
             try
             {
-                Context db = new();
-                var diagnosis = db.Diagnosis.FirstOrDefault(c => c.Id == diagnosisDTO.Id);
-                db.Diagnosis.Remove(diagnosis);
-                db.SaveChanges();
+                Context context = new();
+                var diagnosis = _mapper.Map<DiagnosisEditDTO, Diagnosis>(diagnosisDTO);
+                //var diagnosis = context.Diagnosis.FirstOrDefault(c => c.Id == diagnosisDTO.Id);
+                context.Diagnosis.Remove(diagnosis);
+                await context.SaveChangesAsync(token);
+
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
 

@@ -64,7 +64,7 @@ namespace WinFormsApp1.Logic.Interfaces
         /// </summary>
         /// <param name="orderDTO">DTO заказа</param>
         /// <returns>Идентификатор заказа</returns>
-        public int SaveOrder(OrderEditDTO orderDTO);
+        public Task<int> SaveOrderAsync(OrderEditDTO orderDTO);
 
         /// <summary>
         /// Получение списка заказов для расчета зарплаты

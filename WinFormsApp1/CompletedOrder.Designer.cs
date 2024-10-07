@@ -274,7 +274,7 @@
             buttonSave.TabIndex = 27;
             buttonSave.Text = "Пометить";
             buttonSave.UseVisualStyleBackColor = true;
-            buttonSave.Click += ButtonSave_Click;
+            buttonSave.Click += ButtonSave_ClickAsync;
             // 
             // buttonExit
             // 

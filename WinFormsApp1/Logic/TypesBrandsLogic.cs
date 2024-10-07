@@ -76,7 +76,11 @@ namespace WinFormsApp1.Logic
         /// <inheritdoc/>
         public void RemoveTypeBrand(TypeBrandDTO typeBrandDTO)
         {
-            _typeBrandRepository.RemoveTypesBrands(typeBrandDTO);
+            var task = Task.Run(async () =>
+            {
+                await _typeBrandRepository.RemoveTypesBrandsAsync(typeBrandDTO);
+            });
+            task.Wait();
         }
     }
 }

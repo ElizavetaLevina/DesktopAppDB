@@ -94,6 +94,6 @@ namespace WinFormsApp1.Repository.Interfaces
 
         public Task<int> SaveOrderAsync(OrderEditDTO orderDTO, CancellationToken token = default);
 
-        public void RemoveOrder(OrderEditDTO orderDTO);
+        public Task RemoveOrder(OrderEditDTO orderDTO, CancellationToken token = default);
     }
 }

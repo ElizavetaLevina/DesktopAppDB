@@ -57,35 +57,26 @@ namespace WinFormsApp1.Repository
         {
             try
             {
-                Context db = new();
-                Warehouse warehouse = new()
-                {
-                    Id = warehouseDTO.Id,
-                    NameDetail = warehouseDTO.NameDetail,
-                    PricePurchase = warehouseDTO.PricePurchase,
-                    PriceSale = warehouseDTO.PriceSale,
-                    DatePurchase = warehouseDTO.DatePurchase,
-                    Availability = warehouseDTO.Availability,
-                    IdOrder = warehouseDTO.IdOrder
-                };
+                Context context = new();
+                var warehouse = _mapper.Map<WarehouseEditDTO, Warehouse>(warehouseDTO);
                 if(warehouse.Id == 0)
-                    db.Warehouse.Add(warehouse);
+                    context.Warehouse.Add(warehouse);
                 else
-                    db.Warehouse.Update(warehouse);
-                await db.SaveChangesAsync(token);
+                    context.Warehouse.Update(warehouse);
+                await context.SaveChangesAsync(token);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
 
         /// <inheritdoc/>
-        public void RemoveWarehouse(WarehouseEditDTO warehouseDTO)
+        public async Task RemoveWarehouseAsync(WarehouseEditDTO warehouseDTO, CancellationToken token = default)
         {
             try
             {
-                Context db = new();
-                var warehouse = db.Warehouse.FirstOrDefault(c => c.Id == warehouseDTO.Id);
-                db.Warehouse.Remove(warehouse);
-                db.SaveChanges();
+                Context context = new();
+                var warehouse = _mapper.Map<WarehouseEditDTO, Warehouse>(warehouseDTO);
+                context.Warehouse.Remove(warehouse);
+                await context.SaveChangesAsync(token);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }

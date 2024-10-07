@@ -39,33 +39,29 @@ namespace WinFormsApp1.Repository
         /// <inheritdoc/>
         public async Task<int> SaveTypeTechnicAsync(TypeTechnicEditDTO typeTechnicDTO, CancellationToken token = default)
         {
-            using Context db = new();
-            TypeTechnic typeTechnic = new()
-            {
-                Id = typeTechnicDTO.Id,
-                NameTypeTechnic = typeTechnicDTO.Name
-            };
+            using Context context = new();
+            var typeTechnic = _mapper.Map<TypeTechnicEditDTO, TypeTechnic>(typeTechnicDTO);
             try
             {
                 if (typeTechnic.Id == 0)
-                    db.TypeTechnices.Add(typeTechnic);
+                    context.TypeTechnices.Add(typeTechnic);
                 else
-                    db.TypeTechnices.Update(typeTechnic);
-                await db.SaveChangesAsync(token);
+                    context.TypeTechnices.Update(typeTechnic);
+                await context.SaveChangesAsync(token);
                 return typeTechnic.Id;
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
 
         /// <inheritdoc/>
-        public void RemoveTypeTechnic(TypeTechnicEditDTO typeTechnicDTO)
+        public async Task RemoveTypeTechnicAsync(TypeTechnicEditDTO typeTechnicDTO, CancellationToken token = default)
         {
             try
             {
-                using Context db = new();
-                var typeTechnic = db.TypeTechnices.FirstOrDefault(c => c.Id == typeTechnicDTO.Id);
-                db.TypeTechnices.Remove(typeTechnic);
-                db.SaveChanges();
+                using Context context = new();
+                var typeTechnic = _mapper.Map<TypeTechnicEditDTO, TypeTechnic>(typeTechnicDTO);
+                context.TypeTechnices.Remove(typeTechnic);
+                await context.SaveChangesAsync(token);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }

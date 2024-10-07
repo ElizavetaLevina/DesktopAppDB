@@ -25,15 +25,8 @@ namespace WinFormsApp1.Repository.Interfaces
         /// <returns>Бренда устройства</returns>
         public BrandTechnicEditDTO GetBrandTechnic(int id);
 
-        /// <summary>
-        /// Получение названия бренда по идентификатору
-        /// </summary>
-        /// <param name="id">Идентификатор</param>
-        /// <returns>Бренд</returns>
-        public BrandTechnicDTO GetBrandTechnicName(int id);
-
         public Task<int> SaveBrandTechnicAsync(BrandTechnicEditDTO brandTechnicDTO, CancellationToken token = default);
 
-        public void RemoveBrandTechnic(BrandTechnicEditDTO brandTechnicDTO);
+        public Task RemoveBrandTechnicAsync(BrandTechnicEditDTO brandTechnicDTO, CancellationToken token = default);
     }
 }

@@ -42,30 +42,25 @@ namespace WinFormsApp1.Repository
         /// <inheritdoc/>
         public async Task SaveTypeBrandAsync(TypeBrandDTO typeBrandDTO, CancellationToken token = default)
         {
-            using Context db = new();
-            TypeBrand typeBrand = new()
-            {
-                BrandTechnicsId = typeBrandDTO.BrandTechnicsId,
-                TypeTechnicsId = typeBrandDTO.TypeTechnicsId
-            };
+            using Context context = new();
+            var typeBrand = _mapper.Map<TypeBrandDTO, TypeBrand>(typeBrandDTO);
             try
             {
-                db.TypeBrands.Add(typeBrand);
-                await db.SaveChangesAsync(token);
+                context.TypeBrands.Add(typeBrand);
+                await context.SaveChangesAsync(token);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
 
         /// <inheritdoc/>
-        public void RemoveTypesBrands(TypeBrandDTO typeBrandDTO)
+        public async Task RemoveTypesBrandsAsync(TypeBrandDTO typeBrandDTO, CancellationToken token = default)
         {
             try
             {
-                using Context db = new();
-                var typeBrand = db.TypeBrands.FirstOrDefault(c => c.BrandTechnicsId == typeBrandDTO.BrandTechnicsId &&
-                    c.TypeTechnicsId == typeBrandDTO.TypeTechnicsId);
-                db.TypeBrands.Remove(typeBrand);
-                db.SaveChanges();
+                using Context context = new();
+                var typeBrand = _mapper.Map<TypeBrandDTO, TypeBrand>(typeBrandDTO);
+                context.TypeBrands.Remove(typeBrand);
+                await context.SaveChangesAsync(token);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }

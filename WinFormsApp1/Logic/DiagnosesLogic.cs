@@ -54,7 +54,11 @@ namespace WinFormsApp1.Logic
         /// <inheritdoc/>
         public void RemoveDiagnosis(DiagnosisEditDTO diagnosisDTO)
         {
-            _diagnosisRepository.RemoveDiagnosis(diagnosisDTO);
+            var task = Task.Run(async () =>
+            {
+                await _diagnosisRepository.RemoveDiagnosisAsync(diagnosisDTO);
+            });
+            task.Wait();
         }
 
         /// <inheritdoc/>

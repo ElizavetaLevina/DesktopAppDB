@@ -46,34 +46,36 @@ namespace WinFormsApp1.Repository
         /// <inheritdoc/>
         public async Task<int> SaveEquipmentAsync(EquipmentEditDTO equipmentDTO, CancellationToken token = default)
         {
-            Context db = new();
-            Equipment equipment = new()
+            Context context = new();
+            var equipment = _mapper.Map<EquipmentEditDTO, Equipment>(equipmentDTO);
+            /*Equipment equipment = new()
             {
                 Id = equipmentDTO.Id,
                 Name = equipmentDTO.Name
-            };
+            };*/
             try
             {
                 if (equipment.Id == 0)
-                    db.Equipment.Add(equipment);
+                    context.Equipment.Add(equipment);
                 else
-                    db.Equipment.Update(equipment);
+                    context.Equipment.Update(equipment);
 
-                await db.SaveChangesAsync(token);
+                await context.SaveChangesAsync(token);
                 return equipment.Id;
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
 
         /// <inheritdoc/>
-        public void RemoveEquipment(EquipmentEditDTO equipmentDTO)
+        public async Task RemoveEquipmentAsync(EquipmentEditDTO equipmentDTO, CancellationToken token = default)
         {
             try
             {
-                Context db = new();
-                var equipment = db.Equipment.FirstOrDefault(c => c.Id == equipmentDTO.Id);
-                db.Equipment.Remove(equipment);
-                db.SaveChanges();
+                Context context = new();
+                //var equipment = context.Equipment.FirstOrDefault(c => c.Id == equipmentDTO.Id);
+                var equipment = _mapper.Map<EquipmentEditDTO, Equipment>(equipmentDTO);
+                context.Equipment.Remove(equipment);
+                await context.SaveChangesAsync(token);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
 

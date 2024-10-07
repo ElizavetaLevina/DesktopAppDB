@@ -31,21 +31,21 @@ namespace WinFormsApp1.Logic.Interfaces
         /// Получение списка клиентов для справочника
         /// </summary>
         /// <returns>Список клиентов</returns>
-        public List<ClientDTO> GetClientsForTable();
+        public Task<List<ClientDTO>> GetClientsForTableAsync();
 
         /// <summary>
         /// Получение списка клиентов по типу
         /// </summary>
         /// <param name="typeClient">Тип клиента</param>
         /// <returns>Спиок клиентов</returns>
-        public List<ClientDTO> GetClientsByType(TypeClientEnum typeClient);
+        public Task<List<ClientDTO>> GetClientsByTypeAsync(TypeClientEnum typeClient);
 
         /// <summary>
         /// Получение списка клиентов по подстроке id клиента
         /// </summary>
         /// <param name="idClient">Id клиента</param>
         /// <returns>Список клиентов</returns>
-        public List<ClientDTO> GetClientsByIdClient(string idClient);
+        public Task<List<ClientDTO>> GetClientsByIdClientAsync(string idClient);
 
         // <summary>
         /// Получение клиента по идентификатору

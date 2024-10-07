@@ -104,7 +104,7 @@ namespace WinFormsApp1
             labelRate.Enabled = false;
         }
 
-        private void ButtonAdd_Click(object sender, EventArgs e)
+        private async void ButtonAdd_ClickAsync(object sender, EventArgs e)
         {
             if (radioButtonRate.Checked && textBoxRate.TextLength == 0)
             {
@@ -132,7 +132,7 @@ namespace WinFormsApp1
                     masterDTO.TypeSalary = TypeSalaryEnum.percentOrganization;
                     masterDTO.Rate = Convert.ToInt32(labelPercent.Text);
                 }
-                mastersLogic.SaveMaster(masterDTO);
+                await mastersLogic.SaveMasterAsync(masterDTO);
             }
             Close();
         }

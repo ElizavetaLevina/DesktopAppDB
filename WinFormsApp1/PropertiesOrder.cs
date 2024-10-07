@@ -552,7 +552,7 @@ namespace WinFormsApp1
             Close();
         }
 
-        private void ButtonSave_Click(object sender, EventArgs e)
+        private async void ButtonSave_ClickAsync(object sender, EventArgs e)
         {
             if (PriceAgreed && string.IsNullOrEmpty(MaxPrice))
             {
@@ -603,7 +603,7 @@ namespace WinFormsApp1
             orderDTO.DateLastCall = textBoxDateLastCall.Text;
             orderDTO.PriceAgreed = PriceAgreed;
             orderDTO.MaxPrice = PriceAgreed ? Convert.ToInt32(MaxPrice) : null;
-            ordersLogic.SaveOrder(orderDTO);
+            await ordersLogic.SaveOrderAsync(orderDTO);
 
             DialogResult = DialogResult.OK;
             Close();

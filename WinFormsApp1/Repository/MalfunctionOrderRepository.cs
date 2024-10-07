@@ -35,40 +35,48 @@ namespace WinFormsApp1.Repository
         {
             try
             {
-                Context db = new();
-                MalfunctionOrder? malfunctionOrder = await db.MalfunctionOrders.FirstOrDefaultAsync(c => c.OrderId == malfunctionOrderDTO.OrderId &&
+                Context context = new();
+                //var malfunctionOrder = _mapper.Map<MalfunctionOrderEditDTO, MalfunctionOrder>(malfunctionOrderDTO);
+                MalfunctionOrder? malfunctionOrder = await context.MalfunctionOrders.FirstOrDefaultAsync(c => c.OrderId == malfunctionOrderDTO.OrderId &&
                 c.MalfunctionId == malfunctionOrderDTO.MalfunctionId, token);
+                //if (malfunctionOrder == null)
+                //{
+                //    malfunctionOrder = new()
+                //    {
+                //        MalfunctionId = malfunctionOrderDTO.MalfunctionId,
+                //        OrderId = malfunctionOrderDTO.OrderId,
+                //        Price = malfunctionOrderDTO.Price
+                //    };
+                //    await context.MalfunctionOrders.AddAsync(malfunctionOrder, token);
+                //}
+                //else 
+                //{ 
+                //    malfunctionOrder.Price = malfunctionOrderDTO.Price;
+                //    context.MalfunctionOrders.Update(malfunctionOrder);
+                //}
+
                 if (malfunctionOrder == null)
-                {
-                    malfunctionOrder = new()
-                    {
-                        MalfunctionId = malfunctionOrderDTO.MalfunctionId,
-                        OrderId = malfunctionOrderDTO.OrderId,
-                        Price = malfunctionOrderDTO.Price
-                    };
-                    await db.MalfunctionOrders.AddAsync(malfunctionOrder, token);
-                }
-                else 
-                { 
-                    malfunctionOrder.Price = malfunctionOrderDTO.Price;
-                    db.MalfunctionOrders.Update(malfunctionOrder);
-                }
-                await db.SaveChangesAsync(token);
+                    context.MalfunctionOrders.Add(_mapper.Map<MalfunctionOrderEditDTO, MalfunctionOrder>(malfunctionOrderDTO));
+                else
+                    context.MalfunctionOrders.Update(malfunctionOrder);
+
+                await context.SaveChangesAsync(token);
             }
             catch (Exception ex) { 
                 MessageBox.Show(ex.Message); throw; }
         }
 
         /// <inheritdoc/>
-        public void RemoveMalfunctionOrder(MalfunctionOrderEditDTO malfunctionOrderDTO)
+        public async Task RemoveMalfunctionOrderAsync(MalfunctionOrderEditDTO malfunctionOrderDTO, CancellationToken token = default)
         {
             try
             {
-                Context db = new();
-                var malfunctionOrder = db.MalfunctionOrders.FirstOrDefault(c => c.MalfunctionId == malfunctionOrderDTO.MalfunctionId &&
-                    c.OrderId == malfunctionOrderDTO.OrderId);
-                db.MalfunctionOrders.Remove(malfunctionOrder);
-                db.SaveChanges();
+                Context context = new();
+                /*var malfunctionOrder = context.MalfunctionOrders.FirstOrDefault(c => c.MalfunctionId == malfunctionOrderDTO.MalfunctionId &&
+                    c.OrderId == malfunctionOrderDTO.OrderId);*/
+                var malfunctionOrder = _mapper.Map<MalfunctionOrderEditDTO, MalfunctionOrder>(malfunctionOrderDTO);
+                context.MalfunctionOrders.Remove(malfunctionOrder);
+                await context.SaveChangesAsync(token);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
 

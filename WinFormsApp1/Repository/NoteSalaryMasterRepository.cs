@@ -25,17 +25,11 @@ namespace WinFormsApp1.Repository
         /// <inheritdoc/>
         public async Task SaveNoteSalaryMasterAsync(NoteSalaryMasterEditDTO noteSalaryMasterDTO, CancellationToken token = default)
         {
-            Context context = new();
-            NoteSalaryMaster noteSalaryMaster = new()
-            {
-                Id = noteSalaryMasterDTO.Id,
-                MasterId = noteSalaryMasterDTO.MasterId,
-                Note = noteSalaryMasterDTO.Note,
-                Date = noteSalaryMasterDTO.Date
-            };
-
             try
             {
+                Context context = new();
+                var noteSalaryMaster = _mapper.Map<NoteSalaryMasterEditDTO, NoteSalaryMaster>(noteSalaryMasterDTO);
+
                 if (noteSalaryMaster.Id == 0)
                     context.NoteSalaryMasters.Add(noteSalaryMaster);
                 else

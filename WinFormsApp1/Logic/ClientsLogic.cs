@@ -43,21 +43,21 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public List<ClientDTO> GetClientsForTable()
+        public async Task<List<ClientDTO>> GetClientsForTableAsync()
         {
-            return _clientRepository.GetClientsForTable();
+            return await _clientRepository.GetClientsForTableAsync();
         }
 
         /// <inheritdoc/>
-        public List<ClientDTO> GetClientsByType(TypeClientEnum typeClient)
+        public async Task<List<ClientDTO>> GetClientsByTypeAsync(TypeClientEnum typeClient)
         {
-            return _clientRepository.GetClientsByType(typeClient);
+            return await _clientRepository.GetClientsByTypeAsync(typeClient);
         }
 
         /// <inheritdoc/>
-        public List<ClientDTO> GetClientsByIdClient(string idClient)
+        public async Task<List<ClientDTO>> GetClientsByIdClientAsync(string idClient)
         {
-            return _clientRepository.GetClientsByIdClient(idClient);
+            return await _clientRepository.GetClientsByIdClientAsync(idClient);
         }
 
         /// <inheritdoc/>

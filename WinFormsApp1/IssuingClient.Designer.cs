@@ -333,7 +333,7 @@
             buttonIssueDevice.TabIndex = 30;
             buttonIssueDevice.Text = "Выдать аппарат";
             buttonIssueDevice.UseVisualStyleBackColor = true;
-            buttonIssueDevice.Click += ButtonIssueDevice_Click;
+            buttonIssueDevice.Click += ButtonIssueDevice_ClickAsync;
             // 
             // buttonExit
             // 

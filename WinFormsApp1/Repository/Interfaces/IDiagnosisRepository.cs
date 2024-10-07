@@ -35,6 +35,6 @@ namespace WinFormsApp1.Repository.Interfaces
 
         public Task<int> SaveDiagnosisAsync(DiagnosisEditDTO diagnosisDTO, CancellationToken token = default);
 
-        public void RemoveDiagnosis(DiagnosisEditDTO diagnosisDTO);
+        public Task RemoveDiagnosisAsync(DiagnosisEditDTO diagnosisDTO, CancellationToken token = default);
     }
 }

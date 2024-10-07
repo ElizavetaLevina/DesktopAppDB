@@ -174,7 +174,7 @@ namespace WinFormsApp1
             }
         }
 
-        private void ButtonDelete_Click(object sender, EventArgs e)
+        private async void ButtonDelete_ClickAsync(object sender, EventArgs e)
         {
             if(dataGridView1.Rows.Count > 0)
             {
@@ -195,7 +195,7 @@ namespace WinFormsApp1
                         foreach(var order in ordersDTO)
                         {
                             order.DiagnosisId = null;
-                            ordersLogic.SaveOrder(order);
+                            await ordersLogic.SaveOrderAsync(order);
                         }
                         diagnosesLogic.RemoveDiagnosis(diagnosisDTO);
                         break;
@@ -205,7 +205,7 @@ namespace WinFormsApp1
                         foreach (var order in ordersDTO)
                         {
                             order.EquipmentId = null;
-                            ordersLogic.SaveOrder(order);
+                            await ordersLogic.SaveOrderAsync(order);
                         }
                         equipmentsLogic.RemoveEquipment(equipmentDTO);
                         break;

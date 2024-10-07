@@ -43,8 +43,8 @@ namespace WinFormsApp1.DTO
         public DateTime? DateCompletedReturn { get; set; }
         public DateTime? DateIssueReturn { get; set; }
         //public bool Issue { get; set; } = false;
-        public virtual List<MalfunctionOrder>? MalfunctionOrders { get; set; }
-        public virtual List<Warehouse>? Details { get; set; }
+        public virtual List<MalfunctionOrderEditDTO>? MalfunctionOrders { get; set; }
+        public virtual List<WarehouseEditDTO>? Details { get; set; }
         public string ColorRow { get; set; } = Color.Black.Name;
         public string? DateLastCall { get; set; }
         public bool PriceAgreed { get; set; } = false;

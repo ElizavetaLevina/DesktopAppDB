@@ -33,6 +33,6 @@ namespace WinFormsApp1.Repository.Interfaces
 
         public Task<int> SaveEquipmentAsync(EquipmentEditDTO equipmentDTO, CancellationToken token = default);
 
-        public void RemoveEquipment(EquipmentEditDTO equipmentDTO);
+        public Task RemoveEquipmentAsync(EquipmentEditDTO equipmentDTO, CancellationToken token = default);
     }
 }

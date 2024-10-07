@@ -27,6 +27,6 @@ namespace WinFormsApp1.Repository.Interfaces
 
         public Task<int> SaveTypeTechnicAsync(TypeTechnicEditDTO typeTechnicDTO, CancellationToken token = default);
 
-        public void RemoveTypeTechnic(TypeTechnicEditDTO typeTechnicDTO);
+        public Task RemoveTypeTechnicAsync(TypeTechnicEditDTO typeTechnicDTO, CancellationToken token = default);
     }
 }

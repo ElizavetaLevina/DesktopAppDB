@@ -1,8 +1,6 @@
 using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
-using System.Data;
 using WinFormsApp1.Helpers;
-using System.Diagnostics;
 using WinFormsApp1.Logic;
 using WinFormsApp1.Logic.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,8 +20,6 @@ namespace WinFormsApp1
         IClientsLogic clientsLogic;
         IMalfunctionsOrdersLogic malfunctionsOrdersLogic;
         List<OrderTableDTO> orders;
-        List<(long elapsedTime, string name)> some = new();
-        Stopwatch stopwatch = Stopwatch.StartNew();
         public Form1(IWarehousesLogic _warehousesLogic, IOrdersLogic _ordersLogic, IClientsLogic _clientLogic,
             IMalfunctionsOrdersLogic _malfunctionsOrdersLogic)
         {
@@ -145,7 +141,7 @@ namespace WinFormsApp1
                 dataGridView1.DataSource = Funcs.ToDataTable(orders);
                 UpdateVisibilityColumns();
                 UpdateWidthColumns();
-                ChangeColorRows();
+                ChangeColorRowsAsync();
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
             Enabled = true;
@@ -157,16 +153,11 @@ namespace WinFormsApp1
             status = StatusOrderEnum.Completed;
             try
             {
-                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "complet1"));
                 orders = ordersLogic.GetOrdersForTable(statusOrder: status, deleted: false, dateCompleted: true);
-                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "complet2"));
                 dataGridView1.DataSource = Funcs.ToDataTable(orders);
-                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "complet3"));
                 UpdateVisibilityColumns();
                 UpdateWidthColumns();
-                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "complet4"));
-                ChangeColorRows();
-                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "complet5"));
+                ChangeColorRowsAsync();
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
             Enabled = true;
@@ -178,16 +169,13 @@ namespace WinFormsApp1
             status = StatusOrderEnum.GuaranteeIssue;
             try
             {
-                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Guarantee1"));
                 orders = ordersLogic.GetOrdersForTable(statusOrder: status, deleted: false, dateIssue: true);
-                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Guarantee2"));
 
                 for (int i = 0; i < orders.Count; i++)
                 {
                     if (orders[i].DateEndGuarantee.Value.Date < DateTime.Now.Date)
                         orders.Remove(orders[i]);
                 }
-                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Guarantee3"));
                 dataGridView1.DataSource = Funcs.ToDataTable(orders);
                 UpdateVisibilityColumns();
                 UpdateWidthColumns();
@@ -202,17 +190,14 @@ namespace WinFormsApp1
             status = StatusOrderEnum.Archive;
             try
             {
-                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Archive1"));
                 orders = ordersLogic.GetOrdersForTable(statusOrder: status, deleted: false, dateIssue: true);
-                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Archive2"));
 
-                for (int i = 0; i < orders.Count; i++)
+                foreach(var order in orders)
                 {
-                    if (orders[i].DateEndGuarantee.Value.Date >= DateTime.Now.Date)
-                        orders.Remove(orders[i]);
+                    if (order.DateEndGuarantee.Value.Date >= DateTime.Now.Date)
+                        orders.Remove(order);
                 }
 
-                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Archive3"));
                 dataGridView1.DataSource = Funcs.ToDataTable(orders);
                 UpdateVisibilityColumns();
                 UpdateWidthColumns();
@@ -227,14 +212,11 @@ namespace WinFormsApp1
             status = StatusOrderEnum.Trash;
             try
             {
-                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Trash1"));
                 orders = ordersLogic.GetOrdersForTable(deleted: true, dateCompleted: true);
-                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Trash2"));
                 dataGridView1.DataSource = Funcs.ToDataTable(orders);
-                some.Add((stopwatch.ElapsedMilliseconds - some.Select(i => i.elapsedTime).Sum(), "Trash3"));
                 UpdateVisibilityColumns();
                 UpdateWidthColumns();
-                ChangeColorRows();
+                ChangeColorRowsAsync();
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
             Enabled = true;
@@ -279,7 +261,7 @@ namespace WinFormsApp1
             detailsInOrder.ShowDialog();
         }
 
-        private void RemoveOrder()
+        private async void RemoveOrderAsync()
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
@@ -299,20 +281,20 @@ namespace WinFormsApp1
                 else
                 {
                     orderDTO.Deleted = true;
-                    ordersLogic.SaveOrder(orderDTO);
+                    await ordersLogic.SaveOrderAsync(orderDTO);
                 }
                 UpdateTableData();
             }
             FocusButton(status);
         }
 
-        private void RecoveryOrder()
+        private async void RecoveryOrderAsync()
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
             var orderDTO = ordersLogic.GetOrder(IdOrder);
             orderDTO.Deleted = false;
-            ordersLogic.SaveOrder(orderDTO);
+            await ordersLogic.SaveOrderAsync(orderDTO);
             Trash();
         }
 
@@ -366,6 +348,8 @@ namespace WinFormsApp1
             if (status == StatusOrderEnum.InRepair)
             {
                 CompletedOrder completedOrder = Program.ServiceProvider.GetRequiredService<CompletedOrder>();
+                completedOrder.idOrder = IdOrder;
+                completedOrder.InitializeElementsForm();
                 if (completedOrder.ShowDialog() == DialogResult.OK)
                     InProgress();
                 FocusButton(status);
@@ -380,13 +364,14 @@ namespace WinFormsApp1
             {
                 IssuingClient issuingClient = Program.ServiceProvider.GetRequiredService<IssuingClient>();
                 issuingClient.idOrder = IdOrder;
+                issuingClient.InitializeElementsForm();
                 if (issuingClient.ShowDialog() == DialogResult.OK)
                     Order—ompleted();
                 FocusButton(status);
             }
         }
 
-        private void ReturnIntoRepair()
+        private async void ReturnIntoRepairAsync()
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
@@ -407,7 +392,7 @@ namespace WinFormsApp1
                         orderDTO.DateCompletedReturn = null;
                     else
                         orderDTO.DateCompleted = null;
-                    ordersLogic.SaveOrder(orderDTO);
+                    await ordersLogic.SaveOrderAsync(orderDTO);
 
                     var malfunctionsOrderDTO = malfunctionsOrdersLogic.GetMalfunctionOrdersByIdOrder(IdOrder);
                     foreach(var item in  malfunctionsOrderDTO)
@@ -420,7 +405,7 @@ namespace WinFormsApp1
             }
         }
 
-        private void ReturnGuarantee()
+        private async void ReturnGuaranteeAsync()
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
@@ -440,7 +425,7 @@ namespace WinFormsApp1
                     orderDTO.DateStartWork = DateTime.Now.ToUniversalTime();
                     orderDTO.StatusOrder = StatusOrderEnum.InRepair;
                     orderDTO.ReturnUnderGuarantee = true;
-                    ordersLogic.SaveOrder(orderDTO);
+                    await ordersLogic.SaveOrderAsync(orderDTO);
                     OrderGuarantee();
                 }
                 FocusButton(status);
@@ -517,7 +502,7 @@ namespace WinFormsApp1
             ReportsLogic.ExportMainTable(saveFileDialog1.FileName, ordersForExcel);
         }
 
-        private void ButtonInProgress_Click(object sender, EventArgs e)
+        private async void ButtonInProgress_Click(object sender, EventArgs e)
         {
             InProgress();
             ToolStripEnabled();
@@ -547,7 +532,7 @@ namespace WinFormsApp1
             ToolStripEnabled();
         }
 
-        private void ChangeColorRows()
+        private async void ChangeColorRowsAsync()
         {
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
@@ -559,7 +544,7 @@ namespace WinFormsApp1
                 {
                     color = ColorsRowsHelper.ColorDefinition(orderDTO);
                     orderDTO.ColorRow = ColorTranslator.ToHtml(color);
-                    ordersLogic.SaveOrder(orderDTO);
+                    await ordersLogic.SaveOrderAsync(orderDTO);
                 }
                 dataGridView1.Rows[i].DefaultCellStyle.ForeColor = color;
                 dataGridView1.Rows[i].DefaultCellStyle.SelectionForeColor = color;
@@ -734,7 +719,7 @@ namespace WinFormsApp1
 
         private void DataGridView1_VisibleChanged(object sender, EventArgs e)
         {
-            ChangeColorRows();
+            ChangeColorRowsAsync();
         }
 
         private void DataGridView1_MouseClick(object sender, MouseEventArgs e)
@@ -823,12 +808,12 @@ namespace WinFormsApp1
 
         private void ItemRemoveMenuRightMouse_Click(object sender, EventArgs e)
         {
-            RemoveOrder();
+            RemoveOrderAsync();
         }
 
         private void ItemRecoveryMenuRightMouse_Click(object sender, EventArgs e)
         {
-            RecoveryOrder();
+            RecoveryOrderAsync();
         }
 
         private void ItemCompletedTagMenuRightMouse_Click(object sender, EventArgs e)
@@ -843,12 +828,12 @@ namespace WinFormsApp1
 
         private void ItemReturnIntoRepairMenuRightMouse_Click(object sender, EventArgs e)
         {
-            ReturnIntoRepair();
+            ReturnIntoRepairAsync();
         }
 
         private void ItemReturnGuaranteeMenuRightMouse_Click(object sender, EventArgs e)
         {
-            ReturnGuarantee();
+            ReturnGuaranteeAsync();
         }
 
         private void ItemPropertiesClientMenuRightMouse_Click(object sender, EventArgs e)
@@ -921,12 +906,12 @@ namespace WinFormsApp1
 
         private void ButtonRemove_Click(object sender, EventArgs e)
         {
-            RemoveOrder();
+            RemoveOrderAsync();
         }
 
         private void ButtonRecovery_Click(object sender, EventArgs e)
         {
-            RecoveryOrder();
+            RecoveryOrderAsync();
         }
 
         private void ButtonCompletedTag_Click(object sender, EventArgs e)
@@ -941,12 +926,12 @@ namespace WinFormsApp1
 
         private void ButtonReturnIntoRepair_Click(object sender, EventArgs e)
         {
-            ReturnIntoRepair();
+            ReturnIntoRepairAsync();
         }
 
         private void ButtonReturnGuarantee_Click(object sender, EventArgs e)
         {
-            ReturnGuarantee();
+            ReturnGuaranteeAsync();
         }
 
         private void ButtonPropertiesOrder_Click(object sender, EventArgs e)
@@ -1199,12 +1184,12 @@ namespace WinFormsApp1
 
         private void ItemRemoveMenuWorkingWithData_Click(object sender, EventArgs e)
         {
-            RemoveOrder();
+            RemoveOrderAsync();
         }
 
         private void ItemRecoveryMenuWorkingWithData_Click(object sender, EventArgs e)
         {
-            RecoveryOrder();
+            RecoveryOrderAsync();
         }
 
         private void ItemCompletedTagMenuWorkingWithData_Click(object sender, EventArgs e)
@@ -1219,12 +1204,12 @@ namespace WinFormsApp1
 
         private void ItemReturnMenuWorkingWithData_Click(object sender, EventArgs e)
         {
-            ReturnIntoRepair();
+            ReturnIntoRepairAsync();
         }
 
         private void ItemReturnGuaranteeMenuWorkingWithData_Click(object sender, EventArgs e)
         {
-            ReturnGuarantee();
+            ReturnGuaranteeAsync();
         }
 
         private void ItemPropertiesClientMenuWorkingWithData_Click(object sender, EventArgs e)
@@ -1301,7 +1286,7 @@ namespace WinFormsApp1
 
         private void DataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            ChangeColorRows();
+            ChangeColorRowsAsync();
         }
 
         public void FocusButton(StatusOrderEnum status)

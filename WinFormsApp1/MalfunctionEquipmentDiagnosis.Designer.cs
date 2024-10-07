@@ -89,7 +89,7 @@
             buttonDelete.TabIndex = 3;
             buttonDelete.Text = "Удалить";
             buttonDelete.UseVisualStyleBackColor = true;
-            buttonDelete.Click += ButtonDelete_Click;
+            buttonDelete.Click += ButtonDelete_ClickAsync;
             // 
             // buttonExit
             // 

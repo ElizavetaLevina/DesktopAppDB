@@ -45,7 +45,7 @@ namespace WinFormsApp1
             buttonThirdColor.BackColor = colorDialog1.Color;
         }
 
-        private void ButtonSave_Click(object sender, EventArgs e)
+        private async void ButtonSave_ClickAsync(object sender, EventArgs e)
         {
             Warning warning = new();
             if (string.IsNullOrEmpty(textBoxFirstLevel.Text) || string.IsNullOrEmpty(textBoxSecondLevelFrom.Text) &&
@@ -73,7 +73,7 @@ namespace WinFormsApp1
             foreach (var order in ordersDTO)
             {
                 order.ColorRow = ColorTranslator.ToHtml(ColorsRowsHelper.ColorDefinition(order));
-                ordersLogic.SaveOrder(order);
+                await ordersLogic.SaveOrderAsync(order);
             }
             Close();
         }

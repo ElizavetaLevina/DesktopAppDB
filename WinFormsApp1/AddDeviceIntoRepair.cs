@@ -212,13 +212,13 @@ namespace WinFormsApp1
                     buttonFurther.Text = "Готово";
                     break;
                 case 4:
-                    SaveOrder();
+                    SaveOrderAsync();
                     break;
             }
             Steps();
         }
 
-        private void SaveOrder()
+        private async void SaveOrderAsync()
         {
             if (!CheckComboBox())
                 return;
@@ -259,7 +259,6 @@ namespace WinFormsApp1
                 }
                 else diagnosisId = null;
             }
-            
 
             var orderDTO = new OrderEditDTO()
             {
@@ -283,7 +282,7 @@ namespace WinFormsApp1
                 MaxPrice = checkBox1.Checked ? Convert.ToInt32(textBoxMaxPrice.Text) : null
             };
 
-            ordersLogic.SaveOrder(orderDTO);
+            var idNewOrder = await ordersLogic.SaveOrderAsync(orderDTO);
 
             Warning warning = new()
             {
@@ -292,7 +291,10 @@ namespace WinFormsApp1
                 ButtonVisible = true
             };
             if (warning.ShowDialog() == DialogResult.OK)
+            {
+                orderDTO = ordersLogic.GetOrder(idNewOrder);
                 ReportsLogic.GettingDeviceReport(orderDTO);
+            }
             DialogResult = DialogResult.OK;
             Close();
         }

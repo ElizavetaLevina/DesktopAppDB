@@ -12,12 +12,12 @@ namespace WinFormsApp1
         {
             clientsLogic = _clientsLogic;
             InitializeComponent();
-            InitializeElementsForm();
+            InitializeElementsFormAsync();
         }
 
-        private void InitializeElementsForm() 
+        private async void InitializeElementsFormAsync() 
         {
-            clients = clientsLogic.GetClientsForTable();
+            clients = await clientsLogic.GetClientsForTableAsync();
             UpdateTable();
         }
 
@@ -35,36 +35,35 @@ namespace WinFormsApp1
                 double width = Convert.ToDouble(dataGridView1.Width) / 100.0 * percent[i];
                 dataGridView1.Columns[i].Width = Convert.ToInt32(width);
             }
-
         }
 
-        private void TextBoxEnterName_TextChanged(object sender, EventArgs e)
+        private async void TextBoxEnterName_TextChangedAsync(object sender, EventArgs e)
         {
-            clients = clientsLogic.GetClientsByIdClient(textBoxEnterName.Text);
+            clients = await clientsLogic.GetClientsByIdClientAsync(textBoxEnterName.Text);
             UpdateTable();
         }
 
-        private void ButtonAll_Click(object sender, EventArgs e)
+        private async void ButtonAll_ClickAsync(object sender, EventArgs e)
         {
-            clients = clientsLogic.GetClientsForTable();
+            clients = await clientsLogic.GetClientsForTableAsync();
             UpdateTable();
         }
 
-        private void ButtonWhite_Click(object sender, EventArgs e)
+        private async void ButtonWhite_ClickAsync(object sender, EventArgs e)
         {
-            clients = clientsLogic.GetClientsByType(TypeClientEnum.white);
+            clients = await clientsLogic.GetClientsByTypeAsync(TypeClientEnum.white);
             UpdateTable();
         }
 
-        private void ButtonNormal_Click(object sender, EventArgs e)
+        private async void ButtonNormal_ClickAsync(object sender, EventArgs e)
         {
-            clients = clientsLogic.GetClientsByType(TypeClientEnum.normal);
+            clients = await clientsLogic.GetClientsByTypeAsync(TypeClientEnum.normal);
             UpdateTable();
         }
 
-        private void ButtonBlack_Click(object sender, EventArgs e)
+        private async void ButtonBlack_ClickAsync(object sender, EventArgs e)
         {
-            clients = clientsLogic.GetClientsByType(TypeClientEnum.black);
+            clients = await clientsLogic.GetClientsByTypeAsync(TypeClientEnum.black);
             UpdateTable();
         }
 

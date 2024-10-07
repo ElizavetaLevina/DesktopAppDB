@@ -88,7 +88,7 @@
             btnDeleteMaster.TabIndex = 3;
             btnDeleteMaster.Text = "Удалить мастера";
             btnDeleteMaster.UseVisualStyleBackColor = true;
-            btnDeleteMaster.Click += BtnDeleteMaster_Click;
+            btnDeleteMaster.Click += BtnDeleteMaster_ClickAsync;
             // 
             // btnExit
             // 

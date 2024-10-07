@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Model;
@@ -31,24 +32,24 @@ namespace WinFormsApp1.Repository
         }
 
         /// <inheritdoc/>
-        public List<ClientDTO> GetClientsForTable()
+        public async Task<List<ClientDTO>> GetClientsForTableAsync(CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<ClientDTO>(context.Set<Client>()).ToList();
+            return await _mapper.ProjectTo<ClientDTO>(context.Set<Client>()).ToListAsync(token);
         }
 
         /// <inheritdoc/>
-        public List<ClientDTO> GetClientsByType(TypeClientEnum typeClient) 
+        public async Task<List<ClientDTO>> GetClientsByTypeAsync(TypeClientEnum typeClient, CancellationToken token = default) 
         {
             Context context = new();
-            return _mapper.ProjectTo<ClientDTO>(context.Set<Client>().Where(i => i.TypeClient == typeClient)).ToList();
+            return await _mapper.ProjectTo<ClientDTO>(context.Set<Client>().Where(i => i.TypeClient == typeClient)).ToListAsync(token);
         }
 
         /// <inheritdoc/>
-        public List<ClientDTO> GetClientsByIdClient(string idClient)
+        public async Task<List<ClientDTO>> GetClientsByIdClientAsync(string idClient, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<ClientDTO>(context.Set<Client>().Where(i => i.IdClient.Contains(idClient))).ToList();
+            return await _mapper.ProjectTo<ClientDTO>(context.Set<Client>().Where(i => i.IdClient.Contains(idClient))).ToListAsync(token);
         }
 
         /// <inheritdoc/>
@@ -61,23 +62,24 @@ namespace WinFormsApp1.Repository
         /// <inheritdoc/>
         public async Task<int> SaveClientAsync(ClientEditDTO clientDTO, CancellationToken token = default)
         {
-            Context db = new();
-            Client client = new()
+            Context context = new();
+            var client = _mapper.Map<ClientEditDTO, Client>(clientDTO);
+            /*Client client = new()
             {
                 Id = clientDTO.Id,
                 IdClient = clientDTO.IdClient,
                 NameAndAddressClient = clientDTO.NameAndAddressClient,
                 NumberSecondPhone = clientDTO.NumberSecondPhone,
                 TypeClient = clientDTO.TypeClient
-            };
+            };*/
             try
             {
                 if (client.Id == 0)
-                    db.Clients.Add(client);
+                    context.Clients.Add(client);
                 else
-                    db.Clients.Update(client);
+                    context.Clients.Update(client);
 
-                await db.SaveChangesAsync(token);
+                await context.SaveChangesAsync(token);
                 return client.Id;
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }

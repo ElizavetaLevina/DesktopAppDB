@@ -35,23 +35,15 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public void SaveMaster(MasterEditDTO masterDTO)
+        public async Task SaveMasterAsync(MasterEditDTO masterDTO)
         {
-            var task = Task.Run(async () =>
-            {
-                await _masterRepository.SaveMasterAsync(masterDTO);
-            });
-            task.Wait();
+            await _masterRepository.SaveMasterAsync(masterDTO);
         }
 
         /// <inheritdoc/>
-        public void RemoveMaster(MasterEditDTO masterDTO)
+        public async Task RemoveMasterAsync(MasterEditDTO masterDTO)
         {
-            var task = Task.Run(async () =>
-            {
-                await _masterRepository.RemoveMasterAsync(masterDTO);
-            });
-            task.Wait();
+            await _masterRepository.RemoveMasterAsync(masterDTO);
         }
 
     }

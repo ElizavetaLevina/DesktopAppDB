@@ -15,7 +15,6 @@ namespace WinFormsApp1.Logic.Interfaces
         /// Получение бренда устройства по идентификатору
         /// </summary>
         /// <param name="id">Идентификатор</param>
-        /// <param name="name">Название</param>
         /// <returns>Бренд устройства</returns>
         public BrandTechnicEditDTO GetBrandTechnic(int id);
 

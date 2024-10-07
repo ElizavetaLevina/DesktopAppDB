@@ -15,6 +15,6 @@ namespace WinFormsApp1.Logic.Interfaces
         /// Сохранение примечаний по зарплате мастера
         /// </summary>
         /// <param name="noteSalaryMasterDTO">Примечания по зарплате мастера</param>
-        public void SaveNoteSalaryMasterAsync(NoteSalaryMasterEditDTO noteSalaryMasterDTO);
+        public Task SaveNoteSalaryMasterAsync(NoteSalaryMasterEditDTO noteSalaryMasterDTO);
     }
 }

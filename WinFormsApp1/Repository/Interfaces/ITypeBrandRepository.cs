@@ -16,6 +16,6 @@ namespace WinFormsApp1.Repository.Interfaces
 
         public Task SaveTypeBrandAsync(TypeBrandDTO typeBrandDTO, CancellationToken token = default);
 
-        public void RemoveTypesBrands(TypeBrandDTO typeBrandDTO);
+        public Task RemoveTypesBrandsAsync(TypeBrandDTO typeBrandDTO, CancellationToken token = default);
     }
 }

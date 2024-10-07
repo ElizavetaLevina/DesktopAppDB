@@ -38,43 +38,38 @@ namespace WinFormsApp1.Repository
         }
 
         /// <inheritdoc/>
-        public BrandTechnicDTO GetBrandTechnicName(int id)
-        {
-            Context context = new();
-            return _mapper.ProjectTo<BrandTechnicDTO>(context.Set<BrandTechnic>().Where(i => i.Id == id)).FirstOrDefault();
-        }
-
-        /// <inheritdoc/>
         public async Task<int> SaveBrandTechnicAsync(BrandTechnicEditDTO brandTechnicDTO, CancellationToken token = default)
         {
-            using Context db = new();
-            BrandTechnic brandTechnic = new()
+            using Context context = new();
+            /*BrandTechnic brandTechnic = new()
             {
                 Id = brandTechnicDTO.Id,
                 NameBrandTechnic = brandTechnicDTO.Name
-            };
+            };*/
+            var brandTechnic = _mapper.Map<BrandTechnicEditDTO, BrandTechnic>(brandTechnicDTO);
             try
             {
                 if (brandTechnic.Id == 0)
-                    db.BrandTechnices.Add(brandTechnic);
+                    context.BrandTechnices.Add(brandTechnic);
                 else
-                    db.BrandTechnices.Update(brandTechnic);
+                    context.BrandTechnices.Update(brandTechnic);
 
-                await db.SaveChangesAsync(token);
+                await context.SaveChangesAsync(token);
                 return brandTechnic.Id;
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
 
         /// <inheritdoc/>
-        public void RemoveBrandTechnic(BrandTechnicEditDTO brandTechnicDTO)
+        public async Task RemoveBrandTechnicAsync(BrandTechnicEditDTO brandTechnicDTO, CancellationToken token = default)
         {
             try
             {
-                using Context db = new();
-                var brandTechnic = db.BrandTechnices.FirstOrDefault(c => c.Id == brandTechnicDTO.Id);
-                db.BrandTechnices.Remove(brandTechnic);
-                db.SaveChanges();
+                using Context context = new();
+                var brandTechnic = _mapper.Map<BrandTechnicEditDTO, BrandTechnic>(brandTechnicDTO);
+                //var brandTechnic = context.BrandTechnices.FirstOrDefault(c => c.Id == brandTechnicDTO.Id);
+                context.BrandTechnices.Remove(brandTechnic);
+                await context.SaveChangesAsync(token);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }

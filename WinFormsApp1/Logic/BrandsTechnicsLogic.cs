@@ -1,5 +1,6 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Logic.Interfaces;
+using WinFormsApp1.Repository;
 using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Logic
@@ -38,10 +39,10 @@ namespace WinFormsApp1.Logic
         /// <inheritdoc/>
         public string GetBrandTechnicName(int id) 
         {
-            var brandTechnicDTO = _brandTechnicRepository.GetBrandTechnicName(id);
+            var brandTechnicDTO = _brandTechnicRepository.GetBrandTechnic(id);
             if (brandTechnicDTO == null)
                 return string.Empty;
-            else return brandTechnicDTO.NameBrandTechnic;
+            else return brandTechnicDTO.Name;
         }
 
         /// <inheritdoc/>
@@ -59,7 +60,11 @@ namespace WinFormsApp1.Logic
         /// <inheritdoc/>
         public void RemoveBrandTechnic(BrandTechnicEditDTO brandTechnicDTO)
         {
-            _brandTechnicRepository.RemoveBrandTechnic(brandTechnicDTO);
+            var task = Task.Run(async () =>
+            {
+                await _brandTechnicRepository.RemoveBrandTechnicAsync(brandTechnicDTO);
+            });
+            task.Wait();
         }
     }
 }

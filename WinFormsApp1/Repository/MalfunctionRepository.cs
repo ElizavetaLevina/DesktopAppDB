@@ -37,34 +37,37 @@ namespace WinFormsApp1.Repository
         /// <inheritdoc/>
         public async Task<int> SaveMalfunctionAsync(MalfunctionEditDTO malfunctionDTO, CancellationToken token = default)
         {
-            Context db = new();
-            Malfunction malfunction = new()
-            {
-                Id = malfunctionDTO.Id,
-                Name = malfunctionDTO.Name,
-                Price = malfunctionDTO.Price
-            };
             try
             {
+                Context context = new();
+                //Malfunction malfunction = new()
+                //{
+                //    Id = malfunctionDTO.Id,
+                //    Name = malfunctionDTO.Name,
+                //    Price = malfunctionDTO.Price
+                //};
+                var malfunction = _mapper.Map<MalfunctionEditDTO, Malfunction>(malfunctionDTO);
+            
                 if (malfunction.Id == 0)
-                    db.Malfunctions.Add(malfunction);
+                    context.Malfunctions.Add(malfunction);
                 else
-                    db.Malfunctions.Update(malfunction);
-                await db.SaveChangesAsync(token);
+                    context.Malfunctions.Update(malfunction);
+                await context.SaveChangesAsync(token);
                 return malfunction.Id;
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
 
         /// <inheritdoc/>
-        public void RemoveMalfunction(MalfunctionEditDTO malfunctionDTO)
+        public async Task RemoveMalfunctionAsync(MalfunctionEditDTO malfunctionDTO, CancellationToken token = default)
         {
             try
             {
-                Context db = new();
-                var malfunction = db.Malfunctions.FirstOrDefault(c => c.Id == malfunctionDTO.Id);
-                db.Malfunctions.Remove(malfunction);
-                db.SaveChanges();
+                Context context = new();
+                //var malfunction = context.Malfunctions.FirstOrDefault(c => c.Id == malfunctionDTO.Id);
+                var malfunction = _mapper.Map<MalfunctionEditDTO, Malfunction>(malfunctionDTO);
+                context.Malfunctions.Remove(malfunction);
+                await context.SaveChangesAsync(token);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
 

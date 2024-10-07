@@ -1,5 +1,6 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Logic.Interfaces;
+using WinFormsApp1.Repository;
 using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Logic
@@ -28,13 +29,21 @@ namespace WinFormsApp1.Logic
         /// <inheritdoc/>
         public string GetTypeTechnicName(int id)
         {
-            return _typeTechnicRepository.GetTypeTechnic(id).Name;
+            //return _typeTechnicRepository.GetTypeTechnic(id).Name;
+            var typeTechnicDTO = _typeTechnicRepository.GetTypeTechnic(id);
+            if (typeTechnicDTO == null)
+                return string.Empty;
+            else return typeTechnicDTO.Name;
         }
 
         /// <inheritdoc/>
         public TypeTechnicEditDTO GetTypeTechnic(int id)
         {
-            return _typeTechnicRepository.GetTypeTechnic(id);
+            var typeTechnic = _typeTechnicRepository.GetTypeTechnic(id);
+            if (typeTechnic == null)
+                return new TypeTechnicEditDTO();
+            else
+                return typeTechnic;
         }
 
         /// <inheritdoc/>
@@ -52,7 +61,11 @@ namespace WinFormsApp1.Logic
         /// <inheritdoc/>
         public void RemoveTypeTechnic(TypeTechnicEditDTO typeTechnicDTO)
         {
-            _typeTechnicRepository.RemoveTypeTechnic(typeTechnicDTO);
+            var task = Task.Run(async () =>
+            {
+                await _typeTechnicRepository.RemoveTypeTechnicAsync(typeTechnicDTO);
+            });
+            task.Wait();
         }
     }
 }

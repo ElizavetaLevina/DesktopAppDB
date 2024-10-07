@@ -24,7 +24,7 @@ namespace WinFormsApp1.Repository
         public List<MasterDTO> GetMastersForOutput()
         {
             Context context = new();
-            return _mapper.ProjectTo<MasterDTO>(context.Set<Master>().OrderBy(i => i.Id)).ToList();
+            return _mapper.ProjectTo<MasterDTO>(context.Set<Master>().OrderBy(i => i.NameMaster)).ToList();
         }
 
         /// <inheritdoc/>
@@ -44,26 +44,17 @@ namespace WinFormsApp1.Repository
         /// <inheritdoc/>
         public async Task SaveMasterAsync(MasterEditDTO masterDTO, CancellationToken token = default)
         {
-            using Context db = new();
-            Master master = new()
-            {
-                Id = masterDTO.Id,
-                NameMaster = masterDTO.NameMaster,
-                Address = masterDTO.Address,
-                NumberPhone = masterDTO.NumberPhone,
-                TypeSalary = masterDTO.TypeSalary,
-                Rate = masterDTO.Rate
-            };
             try
             {
+                using Context context = new();
+                var master = _mapper.Map<MasterEditDTO, Master>(masterDTO);
+            
                 if (master.Id == 0)
-                    db.Masters.Add(master);
+                    context.Masters.Add(master);
                 else
-                {
-                    db.Masters.Update(master);
-                }
+                    context.Masters.Update(master);
 
-                await db.SaveChangesAsync(token);
+                await context.SaveChangesAsync(token);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }
@@ -71,12 +62,12 @@ namespace WinFormsApp1.Repository
         /// <inheritdoc/>
         public async Task RemoveMasterAsync(MasterEditDTO masterDTO, CancellationToken token = default)
         {
-            using Context db = new();
+            using Context context = new();
             try
             {
-                var master = db.Masters.FirstOrDefault(c => c.Id == masterDTO.Id);
-                db.Masters.Remove(master);
-                await db.SaveChangesAsync(token);
+                var master = _mapper.Map<MasterEditDTO, Master>(masterDTO);
+                context.Masters.Remove(master);
+                await context.SaveChangesAsync(token);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }

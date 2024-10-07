@@ -22,12 +22,9 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public void SaveNoteSalaryMasterAsync(NoteSalaryMasterEditDTO noteSalaryMasterDTO)
+        public async Task SaveNoteSalaryMasterAsync(NoteSalaryMasterEditDTO noteSalaryMasterDTO)
         {
-            Task.Run(async () =>
-            {
-                await _noteSalaryMasterRepository.SaveNoteSalaryMasterAsync(noteSalaryMasterDTO);
-            });
+            await _noteSalaryMasterRepository.SaveNoteSalaryMasterAsync(noteSalaryMasterDTO);
         }
     }
 }

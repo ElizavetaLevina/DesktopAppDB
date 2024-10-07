@@ -34,6 +34,6 @@ namespace WinFormsApp1.Repository.Interfaces
 
         public Task SaveWarehouseAsync(WarehouseEditDTO warehouseDTO, CancellationToken token = default);
 
-        public void RemoveWarehouse(WarehouseEditDTO warehouseDTO);
+        public Task RemoveWarehouseAsync(WarehouseEditDTO warehouseDTO, CancellationToken token = default);
     }
 }

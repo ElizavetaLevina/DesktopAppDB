@@ -62,7 +62,11 @@ namespace WinFormsApp1.Logic
         /// <inheritdoc/>
         public void RemoveEquipment(EquipmentEditDTO equipmentDTO)
         {
-            _equipmentRepository.RemoveEquipment(equipmentDTO);
+            var task = Task.Run(async () =>
+            {
+                await _equipmentRepository.RemoveEquipmentAsync(equipmentDTO);
+            });
+            task.Wait();
         }
     }
 }

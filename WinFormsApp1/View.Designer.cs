@@ -111,7 +111,7 @@
             buttonSave.TabIndex = 14;
             buttonSave.Text = "Сохранить";
             buttonSave.UseVisualStyleBackColor = true;
-            buttonSave.Click += ButtonSave_Click;
+            buttonSave.Click += ButtonSave_ClickAsync;
             // 
             // buttonExit
             // 

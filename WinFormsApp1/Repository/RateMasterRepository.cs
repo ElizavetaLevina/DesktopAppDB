@@ -33,24 +33,16 @@ namespace WinFormsApp1.Repository
         /// <inheritdoc/>
         public async Task SaveRateMasterAsync(RateMasterEditDTO rateMasterDTO, CancellationToken token = default)
         {
-            Context db = new Context();
-            RateMaster rateMaster = new()
-            {
-                Id = rateMasterDTO.Id,
-                MasterId = rateMasterDTO.MasterId,
-                PercentProfit = rateMasterDTO.PercentProfit,
-                DateStart = rateMasterDTO.DateStart,
-                DateEnd = rateMasterDTO.DateEnd,
-                Note = rateMasterDTO.Note
-            };
             try
             {
+                Context context = new();
+                var rateMaster = _mapper.Map<RateMasterEditDTO, RateMaster>(rateMasterDTO);
+            
                 if (rateMaster.Id == 0)
-                    db.RateMaster.Add(rateMaster);
+                    context.RateMaster.Add(rateMaster);
                 else
-                    db.RateMaster.Update(rateMaster);
-
-                await db.SaveChangesAsync(token);
+                    context.RateMaster.Update(rateMaster);
+                await context.SaveChangesAsync(token);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
         }

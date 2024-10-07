@@ -63,7 +63,11 @@ namespace WinFormsApp1.Logic
         /// <inheritdoc/>
         public void RemoveWarehouse(WarehouseEditDTO warehouseDTO)
         {
-            _warehouseRepository.RemoveWarehouse(warehouseDTO);
+            var task = Task.Run(async () =>
+            {
+                await _warehouseRepository.RemoveWarehouseAsync(warehouseDTO);
+            });
+            task.Wait();
         }
     }
 }

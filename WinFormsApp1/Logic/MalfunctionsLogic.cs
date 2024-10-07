@@ -50,7 +50,11 @@ namespace WinFormsApp1.Logic
         /// <inheritdoc/>
         public void RemoveMalfunction(MalfunctionEditDTO malfunctionDTO)
         {
-            _malfunctionRepository.RemoveMalfunction(malfunctionDTO);
+            var task = Task.Run(async () =>
+            {
+                await _malfunctionRepository.RemoveMalfunctionAsync(malfunctionDTO);
+            });
+            task.Wait();   
         }
     }
 }

@@ -69,7 +69,7 @@
             textBoxEnterName.Name = "textBoxEnterName";
             textBoxEnterName.Size = new Size(220, 31);
             textBoxEnterName.TabIndex = 0;
-            textBoxEnterName.TextChanged += TextBoxEnterName_TextChanged;
+            textBoxEnterName.TextChanged += TextBoxEnterName_TextChangedAsync;
             // 
             // buttonWhite
             // 
@@ -80,7 +80,7 @@
             buttonWhite.Size = new Size(50, 57);
             buttonWhite.TabIndex = 3;
             buttonWhite.UseVisualStyleBackColor = true;
-            buttonWhite.Click += ButtonWhite_Click;
+            buttonWhite.Click += ButtonWhite_ClickAsync;
             // 
             // buttonNormal
             // 
@@ -91,7 +91,7 @@
             buttonNormal.Size = new Size(50, 57);
             buttonNormal.TabIndex = 4;
             buttonNormal.UseVisualStyleBackColor = true;
-            buttonNormal.Click += ButtonNormal_Click;
+            buttonNormal.Click += ButtonNormal_ClickAsync;
             // 
             // buttonBlack
             // 
@@ -102,7 +102,7 @@
             buttonBlack.Size = new Size(50, 57);
             buttonBlack.TabIndex = 5;
             buttonBlack.UseVisualStyleBackColor = true;
-            buttonBlack.Click += ButtonBlack_Click;
+            buttonBlack.Click += ButtonBlack_ClickAsync;
             // 
             // buttonAll
             // 
@@ -113,7 +113,7 @@
             buttonAll.Size = new Size(50, 57);
             buttonAll.TabIndex = 2;
             buttonAll.UseVisualStyleBackColor = true;
-            buttonAll.Click += ButtonAll_Click;
+            buttonAll.Click += ButtonAll_ClickAsync;
             // 
             // buttonExit
             // 

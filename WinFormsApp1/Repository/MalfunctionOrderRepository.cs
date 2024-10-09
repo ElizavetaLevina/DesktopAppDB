@@ -16,18 +16,19 @@ namespace WinFormsApp1.Repository
         }
 
         /// <inheritdoc/>
-        public List<MalfunctionOrderEditDTO> GetMalfunctionOrdersByIdOrder(int idOrder)
+        public async Task<List<MalfunctionOrderEditDTO>> GetMalfunctionOrdersByIdOrderAsync(int idOrder, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<MalfunctionOrderEditDTO>(context.Set<MalfunctionOrder>().Where(i => i.OrderId == idOrder)).ToList();
+            return await _mapper.ProjectTo<MalfunctionOrderEditDTO>(context.Set<MalfunctionOrder>().Where(i => i.OrderId == idOrder))
+                .ToListAsync(token);
         }
 
         /// <inheritdoc/>
-        public List<MalfunctionOrderEditDTO> GetMalfunctionOrdersByIdMalfunction(int idMalfunction)
+        public async Task<List<MalfunctionOrderEditDTO>> GetMalfunctionOrdersByIdMalfunctionAsync(int idMalfunction, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<MalfunctionOrderEditDTO>(context.Set<MalfunctionOrder>()
-                .Where(i => i.MalfunctionId == idMalfunction)).ToList();
+            return await _mapper.ProjectTo<MalfunctionOrderEditDTO>(context.Set<MalfunctionOrder>()
+                .Where(i => i.MalfunctionId == idMalfunction)).ToListAsync(token);
         }
 
         /// <inheritdoc/>
@@ -36,25 +37,8 @@ namespace WinFormsApp1.Repository
             try
             {
                 Context context = new();
-                //var malfunctionOrder = _mapper.Map<MalfunctionOrderEditDTO, MalfunctionOrder>(malfunctionOrderDTO);
                 MalfunctionOrder? malfunctionOrder = await context.MalfunctionOrders.FirstOrDefaultAsync(c => c.OrderId == malfunctionOrderDTO.OrderId &&
                 c.MalfunctionId == malfunctionOrderDTO.MalfunctionId, token);
-                //if (malfunctionOrder == null)
-                //{
-                //    malfunctionOrder = new()
-                //    {
-                //        MalfunctionId = malfunctionOrderDTO.MalfunctionId,
-                //        OrderId = malfunctionOrderDTO.OrderId,
-                //        Price = malfunctionOrderDTO.Price
-                //    };
-                //    await context.MalfunctionOrders.AddAsync(malfunctionOrder, token);
-                //}
-                //else 
-                //{ 
-                //    malfunctionOrder.Price = malfunctionOrderDTO.Price;
-                //    context.MalfunctionOrders.Update(malfunctionOrder);
-                //}
-
                 if (malfunctionOrder == null)
                     context.MalfunctionOrders.Add(_mapper.Map<MalfunctionOrderEditDTO, MalfunctionOrder>(malfunctionOrderDTO));
                 else
@@ -72,14 +56,11 @@ namespace WinFormsApp1.Repository
             try
             {
                 Context context = new();
-                /*var malfunctionOrder = context.MalfunctionOrders.FirstOrDefault(c => c.MalfunctionId == malfunctionOrderDTO.MalfunctionId &&
-                    c.OrderId == malfunctionOrderDTO.OrderId);*/
                 var malfunctionOrder = _mapper.Map<MalfunctionOrderEditDTO, MalfunctionOrder>(malfunctionOrderDTO);
                 context.MalfunctionOrders.Remove(malfunctionOrder);
                 await context.SaveChangesAsync(token);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
-
         }
     }
 }

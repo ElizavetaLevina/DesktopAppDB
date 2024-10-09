@@ -15,44 +15,45 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public List<OrderTableDTO> GetOrdersForTable(StatusOrderEnum? statusOrder = null, bool? deleted = null, bool dateCreation = false,
-           bool dateCompleted = false, bool dateIssue = false, bool id = false)
+        public async Task<List<OrderTableDTO>> GetOrdersForTableAsync(StatusOrderEnum? statusOrder = null, bool? deleted = null, 
+            bool dateCreation = false, bool dateCompleted = false, bool dateIssue = false, bool id = false)
         {
-            return _orderRepository.GetOrdersForTable(statusOrder: statusOrder, deleted: deleted, dateCreation: dateCreation,
+            return await _orderRepository.GetOrdersForTableAsync(statusOrder: statusOrder, deleted: deleted, dateCreation: dateCreation,
                 dateCompleted: dateCompleted, dateIssue: dateIssue, id: id);
         }
 
         /// <inheritdoc/>
-        public void RemoveOrder(OrderEditDTO orderDTO)
+        public async Task RemoveOrderAsync(OrderEditDTO orderDTO)
         {
-            _orderRepository.RemoveOrder(orderDTO);
+            await _orderRepository.RemoveOrderAsync(orderDTO); 
         }
 
 
         /// <inheritdoc/>
-        public OrderEditDTO GetOrder(int idOrder) 
+        public async Task<OrderEditDTO> GetOrderAsync(int idOrder) 
         {
-            return _orderRepository.GetOrder(idOrder);
+            return await _orderRepository.GetOrderAsync(idOrder);
         }
 
         /// <inheritdoc/>
-        public List<OrderTableDTO> GetOrdersBySearch(string numberOrder, string dateCreation, string dateStartWork, string masterName,
+        public async Task<List<OrderTableDTO>> GetOrdersBySearchAsync(string numberOrder, string dateCreation, string dateStartWork, string masterName,
             string device, string idClient, StatusOrderEnum? statusOrder)
         {
-            return _orderRepository.GetOrdersBySearch(numberOrder: numberOrder, dateCreation: dateCreation, dateStartWork: dateStartWork,
-                masterName: masterName, device: device, idClient: idClient, statusOrder: statusOrder);
+            return await _orderRepository.GetOrdersBySearchAsync(numberOrder: numberOrder, dateCreation: dateCreation, 
+                dateStartWork: dateStartWork, masterName: masterName, device: device, idClient: idClient, statusOrder: statusOrder);
         }
 
         /// <inheritdoc/>
-        public List<OrderTableExcelDTO> GetOrdersForExcel(List<OrderTableDTO> orders)
+        public async Task<List<OrderTableExcelDTO>> GetOrdersForExcelAsync(List<OrderTableDTO> orders)
         {
-            return _orderRepository.GetOrdersForExcel(orders);
+            return await _orderRepository.GetOrdersForExcelAsync(orders);
         }
 
         /// <inheritdoc/>
-        public int GetLastIdOrder()
+        public async Task<int> GetLastIdOrderAsync()
         {
-            return (_orderRepository.GetLastNumberOrder()?.NumberOrder ?? 0) + 1;
+            var orderDTO = await _orderRepository.GetLastNumberOrderAsync();
+            return (orderDTO?.NumberOrder ?? 0) + 1;
         }
 
         /// <inheritdoc/>
@@ -62,34 +63,34 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public List<OrderEditDTO> GetOrdersForSalaries(DateTime? dateCompleted = null, 
+        public async Task<List<OrderEditDTO>> GetOrdersForSalariesAsync(DateTime? dateCompleted = null, 
             DateTime? dateIssue = null)
         {
-            return _orderRepository.GetOrdersForSalaries(dateCompleted: dateCompleted, dateIssue: dateIssue);
+            return await _orderRepository.GetOrdersForSalariesAsync(dateCompleted: dateCompleted, dateIssue: dateIssue);
         }
 
         /// <inheritdoc/>
-        public List<OrderEditDTO> GetOrdersByIdDiagnosis(int idDiagnosis)
+        public async Task<List<OrderEditDTO>> GetOrdersByIdDiagnosisAsync(int idDiagnosis)
         {
-            return _orderRepository.GetOrdersByIdDiagnosis(idDiagnosis);
+            return await _orderRepository.GetOrdersByIdDiagnosisAsync(idDiagnosis);
         }
 
         /// <inheritdoc/>
-        public List<OrderEditDTO> GetOrdersByIdEquipment(int idEquipment)
+        public async Task<List<OrderEditDTO>> GetOrdersByIdEquipmentAsync(int idEquipment)
         {
-            return _orderRepository.GetOrdersByIdEquipment(idEquipment);
+            return await _orderRepository.GetOrdersByIdEquipmentAsync(idEquipment);
         }
 
         /// <inheritdoc/>
-        public List<OrderEditDTO> GetOrdersForChart(int year, bool master = false, int? masterId = null)
+        public async Task<List<OrderEditDTO>> GetOrdersForChartAsync(int year, bool master = false, int? masterId = null)
         {
-            return _orderRepository.GetOrdersForChart(year, master, masterId);
+            return await _orderRepository.GetOrdersForChartAsync(year, master, masterId);
         }
 
         /// <inheritdoc/>
-        public List<OrderEditDTO> GetOrders()
+        public async Task<List<OrderEditDTO>> GetOrdersAsync()
         {
-            return _orderRepository.GetOrders();
+            return await _orderRepository.GetOrdersAsync();
         }
     }
 }

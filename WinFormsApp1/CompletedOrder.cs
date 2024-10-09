@@ -59,12 +59,12 @@ namespace WinFormsApp1
             InitializeComponent();
         }
 
-        public void InitializeElementsForm()
+        public async void InitializeElementsFormAsync()
         {
-            orderDTO = ordersLogic.GetOrder(idOrder);
-            malfunctionsDTO = malfunctionsLogic.GetMalfunctions();
-            labelPriceDetails.Text = String.Format("{0} руб.", warehousesLogic.GetPriceDetailsInOrder(idOrder));
-            labelCountDetails.Text = String.Format("{0} шт.", warehousesLogic.GetCountDetailsInOrder(idOrder));
+            orderDTO = await ordersLogic.GetOrderAsync(idOrder);
+            malfunctionsDTO = await malfunctionsLogic.GetMalfunctionsAsync();
+            labelPriceDetails.Text = String.Format("{0} руб.", await warehousesLogic.GetPriceDetailsInOrderAsync(idOrder));
+            labelCountDetails.Text = String.Format("{0} шт.", await warehousesLogic.GetCountDetailsInOrderAsync(idOrder));
             dateCreate = orderDTO.DateCreation.Value;
             labelDurationRepair.Text = String.Format("{0} дн.", (int)(DateTime.Now - dateCreate).TotalDays);
             labelIdOrder.Text = orderDTO.NumberOrder.ToString();
@@ -83,7 +83,7 @@ namespace WinFormsApp1
         {
             if (keyCode == Keys.Enter)
             {
-                SelectingElementsListBox();
+                SelectingElementsListBoxAsync();
                 if (listBox1.Visible)
                     listBox1.Visible = false;
                 nextTextBox.Focus();
@@ -110,7 +110,7 @@ namespace WinFormsApp1
             }
         }
 
-        private void SelectingElementsListBox()
+        private async void SelectingElementsListBoxAsync()
         {
             if (listBox1.SelectedIndex >= 0)
             {
@@ -118,17 +118,17 @@ namespace WinFormsApp1
                 {
                     case 1:
                         FoundProblem1 = listBox1.Items[listBox1.SelectedIndex].ToString();
-                        PriceProblem1 = malfunctionsLogic.GetMalfunctionByName(FoundProblem1).Price.ToString();
+                        PriceProblem1 = await malfunctionsLogic.GetPriceMalfunctionByNameAsync(FoundProblem1);
                         textBoxPrice1.Focus();
                         break;
                     case 2:
                         FoundProblem2 = listBox1.Items[listBox1.SelectedIndex].ToString();
-                        PriceProblem2 = malfunctionsLogic.GetMalfunctionByName(FoundProblem2).Price.ToString();
+                        PriceProblem2 = await malfunctionsLogic.GetPriceMalfunctionByNameAsync(FoundProblem2);
                         textBoxPrice2.Focus();
                         break;
                     case 3:
                         FoundProblem3 = listBox1.Items[listBox1.SelectedIndex].ToString();
-                        PriceProblem3 = malfunctionsLogic.GetMalfunctionByName(FoundProblem3).Price.ToString();
+                        PriceProblem3 = await malfunctionsLogic.GetPriceMalfunctionByNameAsync(FoundProblem3);
                         textBoxPrice3.Focus();
                         break;
                 }
@@ -215,7 +215,7 @@ namespace WinFormsApp1
                     break;
             }
 
-            if (orderDTO.PriceAgreed && (priceProblem.Sum() + warehousesLogic.GetPriceDetailsInOrder(idOrder)) > 
+            if (orderDTO.PriceAgreed && (priceProblem.Sum() + await warehousesLogic.GetPriceDetailsInOrderAsync(idOrder)) > 
                 orderDTO.MaxPrice)
             {
                 warning.LabelText = String.Format("Цена ремонта выше согласованной! \nСогласованная цена: {0} руб.", 
@@ -223,23 +223,23 @@ namespace WinFormsApp1
                 warning.VisibleChangePrice = true;
                 warning.id = idOrder;
                 if (warning.ShowDialog() == DialogResult.OK)
-                    orderDTO = ordersLogic.GetOrder(idOrder);
+                    orderDTO = await ordersLogic.GetOrderAsync(idOrder);
                 return;
             }
 
             for (int i = 0; i < countProblem; i++)
             {
-                var malfunctionDTO = malfunctionsLogic.GetMalfunctionByName(foundProblem[i]);
+                var malfunctionDTO = await malfunctionsLogic.GetMalfunctionByNameAsync(foundProblem[i]);
                 malfunctionDTO.Name = foundProblem[i];
                 malfunctionDTO.Price = priceProblem[i];
-                var idMalfunction = malfunctionsLogic.SaveMalfunction(malfunctionDTO);
+                var idMalfunction = await malfunctionsLogic.SaveMalfunctionAsync(malfunctionDTO);
                 var malfunctionOrderDTO = new MalfunctionOrderEditDTO()
                 {
                     MalfunctionId = idMalfunction,
                     OrderId = idOrder,
                     Price = priceProblem[i]
                 };
-                malfunctionsOrdersLogic.SaveMalfunctionOrder(malfunctionOrderDTO);
+                await malfunctionsOrdersLogic.SaveMalfunctionOrderAsync(malfunctionOrderDTO);
             }
 
             orderDTO.StatusOrder = StatusOrderEnum.Completed;
@@ -413,14 +413,14 @@ namespace WinFormsApp1
 
         private void ListBox1_Click(object sender, EventArgs e)
         {
-            SelectingElementsListBox();
+            SelectingElementsListBoxAsync();
         }
 
         private void ListBox1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                SelectingElementsListBox();
+                SelectingElementsListBoxAsync();
             }
             else if (e.KeyCode == Keys.Up && listBox1.SelectedIndex == 0)
             {
@@ -463,13 +463,13 @@ namespace WinFormsApp1
             else textBoxMain.Text = string.Empty;
         }
 
-        private void LinkLabelPropertiesOrder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private async void LinkLabelPropertiesOrder_LinkClickedAsync(object sender, LinkLabelLinkClickedEventArgs e)
         {
             PropertiesOrder propertiesOrder = Program.ServiceProvider.GetRequiredService<PropertiesOrder>();
-            propertiesOrder.InitializeElementsForm(idOrder, StatusOrderEnum.InRepair, true);
+            propertiesOrder.InitializeElementsFormAsync(idOrder, StatusOrderEnum.InRepair, true);
             if (propertiesOrder.ShowDialog() == DialogResult.OK)
             {
-                orderDTO = ordersLogic.GetOrder(idOrder);
+                orderDTO = await ordersLogic.GetOrderAsync(idOrder);
                 if (orderDTO.AdditionalMasterId != null)
                 {
                     panelMasters.Visible = true;

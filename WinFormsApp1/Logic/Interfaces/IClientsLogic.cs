@@ -10,7 +10,7 @@ namespace WinFormsApp1.Logic.Interfaces
         /// </summary>
         /// <param name="idClient">idClient</param>
         /// <returns>Клиент</returns>
-        public ClientEditDTO GetClientByIdClient(string idClient);
+        public Task<ClientEditDTO> GetClientByIdClientAsync(string idClient);
 
         /// <summary>
         /// Сохранение клиента
@@ -19,13 +19,13 @@ namespace WinFormsApp1.Logic.Interfaces
         /// <param name="nameAdress"></param>
         /// <param name="secondPhone"></param>
         /// <returns></returns>
-        public int SaveClient(ClientEditDTO clientDTO);
+        public Task<int> SaveClientAsync(ClientEditDTO clientDTO);
 
         /// <summary>
         /// Получение списка клиентов
         /// </summary>
         /// <returns>Список клиентов</returns>
-        public List<ClientEditDTO> GetClients();
+        public Task<List<ClientEditDTO>> GetClientsAsync();
 
         /// <summary>
         /// Получение списка клиентов для справочника
@@ -52,6 +52,6 @@ namespace WinFormsApp1.Logic.Interfaces
         /// </summary>
         /// <param name="idClient">Идентификатор</param>
         /// <returns>Клиент</returns>
-        public ClientEditDTO GetClient(string idClient);
+        public Task<ClientEditDTO> GetClientAsync(string idClient);
     }
 }

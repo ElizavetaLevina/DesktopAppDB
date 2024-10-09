@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Enum;
 using WinFormsApp1.Model;
@@ -15,10 +16,10 @@ namespace WinFormsApp1.Repository
             _mapper = mapper;
         }
 
-
         /// <inheritdoc/>
-        public List<OrderTableDTO> GetOrdersForTable(StatusOrderEnum? statusOrder = null, bool? deleted = null, bool dateCreation = false, 
-            bool dateCompleted = false, bool dateIssue = false, bool id = false)
+        public async Task<List<OrderTableDTO>> GetOrdersForTableAsync(StatusOrderEnum? statusOrder = null, bool? deleted = null, 
+            bool dateCreation = false, bool dateCompleted = false, bool dateIssue = false, bool id = false, 
+            CancellationToken token = default)
         {
             Context context = new();
 
@@ -38,13 +39,13 @@ namespace WinFormsApp1.Repository
             if(id == true)
                 set = set.OrderByDescending(i => i.Id);
 
-            return _mapper.ProjectTo<OrderTableDTO>(set).ToList();
+            return await _mapper.ProjectTo<OrderTableDTO>(set).ToListAsync();
         }
 
 
         /// <inheritdoc/>
-        public List<OrderTableDTO> GetOrdersBySearch(string numberOrder, string dateCreation, string dateStartWork, string masterName,
-            string device, string idClient, StatusOrderEnum? statusOrder)
+        public async Task<List<OrderTableDTO>> GetOrdersBySearchAsync(string numberOrder, string dateCreation, string dateStartWork, 
+            string masterName, string device, string idClient, StatusOrderEnum? statusOrder, CancellationToken token = default)
         {
             Context context = new();            
             var set = context.Orders.Where(c => true);
@@ -67,52 +68,55 @@ namespace WinFormsApp1.Repository
             if (statusOrder != null)
                 set = set.Where(i => i.StatusOrder == statusOrder);
 
-            return _mapper.ProjectTo<OrderTableDTO>(set.OrderByDescending(i => i.NumberOrder)).ToList();
+            return await _mapper.ProjectTo<OrderTableDTO>(set.OrderByDescending(i => i.NumberOrder)).ToListAsync(token);
         }
 
         /// <inheritdoc/>
-        public List<OrderTableExcelDTO> GetOrdersForExcel(List<OrderTableDTO> orders)
+        public async Task<List<OrderTableExcelDTO>> GetOrdersForExcelAsync(List<OrderTableDTO> orders, CancellationToken token = default)
         {
-            return _mapper.ProjectTo<OrderTableExcelDTO>(orders.AsQueryable()).ToList();
+            return await _mapper.ProjectTo<OrderTableExcelDTO>(orders.AsQueryable()).ToListAsync(token);
         }
 
         /// <inheritdoc/>
-        public OrderEditDTO GetOrder(int id)
-        {
-            Context context = new();
-            return _mapper.ProjectTo<OrderEditDTO>(context.Set<Order>().Where(i => i.Id == id)).FirstOrDefault();
-        }
-
-        /// <inheritdoc/>
-        public OrderEditDTO GetLastNumberOrder()
+        public async Task<OrderEditDTO> GetOrderAsync(int id, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<OrderEditDTO>(context.Set<Order>().OrderBy(i => i.Id)).LastOrDefault();
+            return await _mapper.ProjectTo<OrderEditDTO>(context.Set<Order>().Where(i => i.Id == id)).FirstOrDefaultAsync(token);
         }
 
         /// <inheritdoc/>
-        public List<OrderEditDTO> GetOrders()
+        public async Task<OrderEditDTO> GetLastNumberOrderAsync(CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<OrderEditDTO>(context.Set<Order>()).ToList();
+            return await _mapper.ProjectTo<OrderEditDTO>(context.Set<Order>().OrderBy(i => i.Id)).LastOrDefaultAsync(token);
         }
 
         /// <inheritdoc/>
-        public List<OrderEditDTO> GetOrdersByIdDiagnosis(int idDiagnosis)
+        public async Task<List<OrderEditDTO>> GetOrdersAsync(CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<OrderEditDTO>(context.Set<Order>().Where(i => i.DiagnosisId == idDiagnosis)).ToList();
+            return await _mapper.ProjectTo<OrderEditDTO>(context.Set<Order>()).ToListAsync(token);
         }
 
         /// <inheritdoc/>
-        public List<OrderEditDTO> GetOrdersByIdEquipment(int idEquipment)
+        public async Task<List<OrderEditDTO>> GetOrdersByIdDiagnosisAsync(int idDiagnosis, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<OrderEditDTO>(context.Set<Order>().Where(i => i.EquipmentId == idEquipment)).ToList();
+            return await _mapper.ProjectTo<OrderEditDTO>(context.Set<Order>().Where(i => i.DiagnosisId == idDiagnosis))
+                .ToListAsync(token);
         }
 
         /// <inheritdoc/>
-        public List<OrderEditDTO> GetOrdersForChart(int year, bool master = false, int? masterId = null)
+        public async Task<List<OrderEditDTO>> GetOrdersByIdEquipmentAsync(int idEquipment, CancellationToken token = default)
+        {
+            Context context = new();
+            return await _mapper.ProjectTo<OrderEditDTO>(context.Set<Order>().Where(i => i.EquipmentId == idEquipment))
+                .ToListAsync(token);
+        }
+
+        /// <inheritdoc/>
+        public async Task<List<OrderEditDTO>> GetOrdersForChartAsync(int year, bool master = false, int? masterId = null,
+            CancellationToken token = default)
         {
             Context context = new();
             var set = context.Orders.Where(i => i.StatusOrder != StatusOrderEnum.InRepair && i.StatusOrder != StatusOrderEnum.Trash);
@@ -122,11 +126,12 @@ namespace WinFormsApp1.Repository
             if (master)
                 set = set.Where(i => i.MainMasterId == masterId || i.AdditionalMasterId == masterId);
 
-            return _mapper.ProjectTo<OrderEditDTO>(set).ToList();
+            return await _mapper.ProjectTo<OrderEditDTO>(set).ToListAsync(token);
         }
 
         /// <inheritdoc/>
-        public List<OrderEditDTO> GetOrdersForSalaries(DateTime? dateCompleted = null, DateTime? dateIssue = null)
+        public async Task<List<OrderEditDTO>> GetOrdersForSalariesAsync(DateTime? dateCompleted = null, DateTime? dateIssue = null,
+            CancellationToken token = default)
         {
             Context context = new();
             var set = context.Orders.Where(c => true);
@@ -141,7 +146,7 @@ namespace WinFormsApp1.Repository
                 set = set.Where(i => i.DateIssue.Value.Month == dateIssue.Value.Month 
                 && i.DateIssue.Value.Year == dateIssue.Value.Year);
 
-            return _mapper.ProjectTo<OrderEditDTO>(set).ToList();
+            return await _mapper.ProjectTo<OrderEditDTO>(set).ToListAsync(token);
         }
 
         /// <inheritdoc/>
@@ -164,7 +169,7 @@ namespace WinFormsApp1.Repository
         }
 
         /// <inheritdoc/>
-        public async Task RemoveOrder(OrderEditDTO orderDTO, CancellationToken token = default)
+        public async Task RemoveOrderAsync(OrderEditDTO orderDTO, CancellationToken token = default)
         {
             try
             {

@@ -19,12 +19,12 @@ namespace WinFormsApp1
             mastersLogic = _mastersLogic;
             ordersLogic = _ordersLogic;
             InitializeComponent();
-            InitializeComboBox();
-            InitializeChart();
+            InitializeComboBoxAsync();
+            InitializeChartAsync();
             loadingForm = false;
         }
 
-        private void InitializeComboBox()
+        private async void InitializeComboBoxAsync()
         {
             List<int> years = [];
             int startYear = 2023;
@@ -37,18 +37,18 @@ namespace WinFormsApp1
 
             comboBoxMaster.ValueMember = nameof(MasterDTO.Id);
             comboBoxMaster.DisplayMember = nameof(MasterDTO.NameMaster);
-            comboBoxMaster.DataSource = mastersLogic.GetMastersForOutput();
+            comboBoxMaster.DataSource = await mastersLogic.GetMastersForOutputAsync();
 
             comboBoxYear.DataSource = years;
             comboBoxYear.SelectedItem = DateTime.Now.Year;
         }
 
-        private void InitializeChart()
+        private async void InitializeChartAsync()
         {
             var interval = 0.1666666667;
             var startPosition = interval * 6;
 
-            ordersDTO = ordersLogic.GetOrdersForChart(year: Convert.ToInt32(comboBoxYear.SelectedValue));
+            ordersDTO = await ordersLogic.GetOrdersForChartAsync(year: Convert.ToInt32(comboBoxYear.SelectedValue));
             pointsArray = ArrayForChartHepler.GetArrayCountOrders(ordersDTO);
 
             chart1.ChartAreas[0].AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dash;
@@ -107,7 +107,7 @@ namespace WinFormsApp1
             Close();
         }
 
-        private void ComboBoxYear_SelectedIndexChanged(object sender, EventArgs e)
+        private async void ComboBoxYear_SelectedIndexChangedAsync(object sender, EventArgs e)
         {
             if (loadingForm)
                 return;
@@ -118,45 +118,45 @@ namespace WinFormsApp1
             int? masterId = null;
 
             if (selectedRadioButtonPanel1 == radioButtonOrganization)
-                ordersDTO = ordersLogic.GetOrdersForChart(year: Convert.ToInt32(comboBoxYear.SelectedValue));
+                ordersDTO = await ordersLogic.GetOrdersForChartAsync(year: Convert.ToInt32(comboBoxYear.SelectedValue));
             else
             {
                 master = true;
                 masterId = ((MasterDTO)comboBoxMaster.SelectedItem).Id;
-                ordersDTO = ordersLogic.GetOrdersForChart(year: Convert.ToInt32(comboBoxYear.SelectedValue), master: true,
-                masterId: masterId);
+                ordersDTO = await ordersLogic.GetOrdersForChartAsync(year: Convert.ToInt32(comboBoxYear.SelectedValue), 
+                    master: true, masterId: masterId);
             }
 
             SelectedRadioButtonPanel2(master: master, masterId: masterId);
         }
 
-        private void RadioButtonOrganization_CheckedChanged(object sender, EventArgs e)
+        private async void RadioButtonOrganization_CheckedChangedAsync(object sender, EventArgs e)
         {
             if (!radioButtonOrganization.Checked)
                 return;
 
             comboBoxMaster.Enabled = false;
-            ordersDTO = ordersLogic.GetOrdersForChart(year: Convert.ToInt32(comboBoxYear.SelectedValue));
+            ordersDTO = await ordersLogic.GetOrdersForChartAsync(year: Convert.ToInt32(comboBoxYear.SelectedValue));
             SelectedRadioButtonPanel2();
         }
 
-        private void RadioButtonMaster_CheckedChanged(object sender, EventArgs e)
+        private async void RadioButtonMaster_CheckedChangedAsync(object sender, EventArgs e)
         {
             if (!radioButtonMaster.Checked)
                 return;
 
             comboBoxMaster.Enabled = true;
-            ordersDTO = ordersLogic.GetOrdersForChart(year: Convert.ToInt32(comboBoxYear.SelectedValue), master: true,
+            ordersDTO = await ordersLogic.GetOrdersForChartAsync(year: Convert.ToInt32(comboBoxYear.SelectedValue), master: true,
                 masterId: ((MasterDTO)comboBoxMaster.SelectedItem).Id);
             SelectedRadioButtonPanel2(master: true, masterId: ((MasterDTO)comboBoxMaster.SelectedItem).Id);
         }
 
-        private void ComboBoxMaster_SelectedIndexChanged(object sender, EventArgs e)
+        private async void ComboBoxMaster_SelectedIndexChangedAsync(object sender, EventArgs e)
         {
             if (loadingForm)
                 return;
 
-            ordersDTO = ordersLogic.GetOrdersForChart(year: Convert.ToInt32(comboBoxYear.SelectedValue), master: true,
+            ordersDTO = await ordersLogic.GetOrdersForChartAsync(year: Convert.ToInt32(comboBoxYear.SelectedValue), master: true,
                 masterId: ((MasterDTO)comboBoxMaster.SelectedItem).Id);
 
             SelectedRadioButtonPanel2(master: true, masterId: ((MasterDTO)comboBoxMaster.SelectedItem).Id);

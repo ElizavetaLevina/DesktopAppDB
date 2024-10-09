@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
 using WinFormsApp1.Repository.Interfaces;
@@ -14,31 +15,32 @@ namespace WinFormsApp1.Repository
             _mapper = mapper;
         }
         /// <inheritdoc/>
-        public List<MasterEditDTO> GetMasters()
+        public async Task<List<MasterEditDTO>> GetMastersAsync(CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<MasterEditDTO>(context.Set<Master>().OrderBy(i => i.Id)).ToList();
+            return await _mapper.ProjectTo<MasterEditDTO>(context.Set<Master>().OrderBy(i => i.Id)).ToListAsync(token);
         }
 
         /// <inheritdoc/>
-        public List<MasterDTO> GetMastersForOutput()
+        public async Task<List<MasterDTO>> GetMastersForOutputAsync(CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<MasterDTO>(context.Set<Master>().OrderBy(i => i.NameMaster)).ToList();
+            return await _mapper.ProjectTo<MasterDTO>(context.Set<Master>().OrderBy(i => i.NameMaster)).ToListAsync(token);
         }
 
         /// <inheritdoc/>
-        public MasterEditDTO GetMaster(int? id)
+        public async Task<MasterEditDTO> GetMasterAsync(int? id, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<MasterEditDTO>(context.Set<Master>().Where(i => i.Id == id)).FirstOrDefault();
+            return await _mapper.ProjectTo<MasterEditDTO>(context.Set<Master>().Where(i => i.Id == id)).FirstOrDefaultAsync(token);
         }
 
         /// <inheritdoc/>
-        public MasterEditDTO GetMasterByName(string name)
+        public async Task<MasterEditDTO> GetMasterByNameAsync(string name, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<MasterEditDTO>(context.Set<Master>().Where(i => i.NameMaster == name)).FirstOrDefault();
+            return await _mapper.ProjectTo<MasterEditDTO>(context.Set<Master>().Where(i => i.NameMaster == name))
+                .FirstOrDefaultAsync(token);
         }
 
         /// <inheritdoc/>
@@ -46,7 +48,7 @@ namespace WinFormsApp1.Repository
         {
             try
             {
-                using Context context = new();
+                Context context = new();
                 var master = _mapper.Map<MasterEditDTO, Master>(masterDTO);
             
                 if (master.Id == 0)
@@ -62,7 +64,7 @@ namespace WinFormsApp1.Repository
         /// <inheritdoc/>
         public async Task RemoveMasterAsync(MasterEditDTO masterDTO, CancellationToken token = default)
         {
-            using Context context = new();
+            Context context = new();
             try
             {
                 var master = _mapper.Map<MasterEditDTO, Master>(masterDTO);

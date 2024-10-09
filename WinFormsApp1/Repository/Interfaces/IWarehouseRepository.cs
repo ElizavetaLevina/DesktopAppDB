@@ -8,32 +8,44 @@ namespace WinFormsApp1.Repository.Interfaces
         /// Получение списка деталей на складе
         /// </summary>
         /// <returns>Список деталей на складе</returns>
-        public List<WarehouseTableDTO> GetWarehousesForTable(bool? availability = null, bool datePurchase = false, string? name = null,
-            int? idOrder = null);
+        public Task<List<WarehouseTableDTO>> GetWarehousesForTableAsync(bool? availability = null, bool datePurchase = false, 
+            string? name = null, int? idOrder = null, CancellationToken token = default);
         
 
         /// <summary>
         /// Получение списка деталей на складе
         /// </summary>
         /// <returns>Список деталей на складе</returns>
-        public List<WarehouseDTO> GetWarehouses();
+        public Task<List<WarehouseDTO>> GetWarehousesAsync(CancellationToken token = default);
 
         /// <summary>
         /// Получение детали по идентификатору
         /// </summary>
         /// <param name="id">Идентификатор</param>
         /// <returns>Деталь</returns>
-        public WarehouseEditDTO GetWarehouse(int id);
+        public Task<WarehouseEditDTO> GetWarehouseAsync(int id, CancellationToken token = default);
 
         /// <summary>
         /// Получение списка деталей заказе по номеру
         /// </summary>
         /// <param name="idOrder">Номер заказа</param>
         /// <returns>Список деталей</returns>
-        public List<WarehouseEditDTO> GetDetailsInOrder(int idOrder);
+        public Task<List<WarehouseEditDTO>> GetDetailsInOrderAsync(int idOrder, CancellationToken token = default);
 
+        /// <summary>
+        /// Сохранение детали
+        /// </summary>
+        /// <param name="warehouseDTO">DTO детали</param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public Task SaveWarehouseAsync(WarehouseEditDTO warehouseDTO, CancellationToken token = default);
 
+        /// <summary>
+        /// Удаление детали
+        /// </summary>
+        /// <param name="warehouseDTO">DTO детали</param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public Task RemoveWarehouseAsync(WarehouseEditDTO warehouseDTO, CancellationToken token = default);
     }
 }

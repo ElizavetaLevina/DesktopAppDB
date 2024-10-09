@@ -8,20 +8,20 @@ namespace WinFormsApp1.Logic.Interfaces
         /// Получение списка мастеров для отображения в теблице/comboBox
         /// </summary>
         /// <returns>Список мастеров</returns>
-        public List<MasterDTO> GetMastersForOutput();
+        public Task<List<MasterDTO>> GetMastersForOutputAsync();
 
         /// <summary>
         /// Получение списка мастеров
         /// </summary>
         /// <returns>Список мастеров</returns>
-        public List<MasterEditDTO> GetMasters();
+        public Task<List<MasterEditDTO>> GetMastersAsync();
 
         /// <summary>
         /// Получение записи по идентификатору
         /// </summary>
         /// <param name="id">Идентификатор</param>
         /// <returns>Запись</returns>
-        public MasterEditDTO GetMaster(int? id);
+        public Task<MasterEditDTO> GetMasterAsync(int? id);
 
         /// <summary>
         /// Сохранение мастера

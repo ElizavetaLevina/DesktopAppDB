@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
 using WinFormsApp1.Repository.Interfaces;
@@ -14,24 +15,26 @@ namespace WinFormsApp1.Repository
             _mapper = mapper;
         } 
         /// <inheritdoc/>
-        public List<MalfunctionEditDTO> GetMalfunctions()
+        public async Task<List<MalfunctionEditDTO>> GetMalfunctionsAsync(CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<MalfunctionEditDTO>(context.Set<Malfunction>().OrderBy(i => i.Name)).ToList();
+            return await _mapper.ProjectTo<MalfunctionEditDTO>(context.Set<Malfunction>().OrderBy(i => i.Name)).ToListAsync(token);
         }
 
         /// <inheritdoc/>
-        public MalfunctionEditDTO GetMalfunction(int id)
+        public async Task<MalfunctionEditDTO> GetMalfunctionAsync(int id, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<MalfunctionEditDTO>(context.Set<Malfunction>().Where(i => i.Id == id)).FirstOrDefault();
+            return await _mapper.ProjectTo<MalfunctionEditDTO>(context.Set<Malfunction>().Where(i => i.Id == id))
+                .FirstOrDefaultAsync(token);
         }
 
         /// <inheritdoc/>
-        public MalfunctionEditDTO GetMalfunctionByName(string name)
+        public async Task<MalfunctionEditDTO> GetMalfunctionByNameAsync(string name, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<MalfunctionEditDTO>(context.Set<Malfunction>().Where(i => i.Name == name)).FirstOrDefault();
+            return await _mapper.ProjectTo<MalfunctionEditDTO>(context.Set<Malfunction>().Where(i => i.Name == name))
+                .FirstOrDefaultAsync(token);
         }
 
         /// <inheritdoc/>
@@ -40,12 +43,6 @@ namespace WinFormsApp1.Repository
             try
             {
                 Context context = new();
-                //Malfunction malfunction = new()
-                //{
-                //    Id = malfunctionDTO.Id,
-                //    Name = malfunctionDTO.Name,
-                //    Price = malfunctionDTO.Price
-                //};
                 var malfunction = _mapper.Map<MalfunctionEditDTO, Malfunction>(malfunctionDTO);
             
                 if (malfunction.Id == 0)
@@ -64,12 +61,11 @@ namespace WinFormsApp1.Repository
             try
             {
                 Context context = new();
-                //var malfunction = context.Malfunctions.FirstOrDefault(c => c.Id == malfunctionDTO.Id);
                 var malfunction = _mapper.Map<MalfunctionEditDTO, Malfunction>(malfunctionDTO);
                 context.Malfunctions.Remove(malfunction);
                 await context.SaveChangesAsync(token);
             }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            catch (Exception ex) { MessageBox.Show(ex.Message); throw; }
 
         }
     }

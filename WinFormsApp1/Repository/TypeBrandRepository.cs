@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
 using WinFormsApp1.Repository.Interfaces;
@@ -15,7 +16,7 @@ namespace WinFormsApp1.Repository
         }
 
         /// <inheritdoc/>
-        public List<TypeBrandDTO> GetTypeBrand(int idBrand = 0, int idType = 0)
+        public async Task<List<TypeBrandDTO>> GetTypeBrandAsync(int idBrand = 0, int idType = 0, CancellationToken token = default)
         {
             Context context = new();
 
@@ -28,21 +29,21 @@ namespace WinFormsApp1.Repository
             else if (idBrand != 0 && idType == 0)
                 set = set.Where(i => i.BrandTechnicsId == idBrand);
 
-            return _mapper.ProjectTo<TypeBrandDTO>(set).ToList();
+            return await _mapper.ProjectTo<TypeBrandDTO>(set).ToListAsync(token);
         }
 
         /// <inheritdoc/>
-        public List<TypeBrandComboBoxDTO> GetTypeBrandByNameType(string nameType)
+        public async Task<List<TypeBrandComboBoxDTO>> GetTypeBrandByNameTypeAsync(string nameType, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<TypeBrandComboBoxDTO>(context.Set<TypeBrand>()
-                .Where(i => i.TypeTechnic.NameTypeTechnic == nameType)).ToList();
+            return await _mapper.ProjectTo<TypeBrandComboBoxDTO>(context.Set<TypeBrand>()
+                .Where(i => i.TypeTechnic.NameTypeTechnic == nameType)).ToListAsync(token);
         }
 
         /// <inheritdoc/>
         public async Task SaveTypeBrandAsync(TypeBrandDTO typeBrandDTO, CancellationToken token = default)
         {
-            using Context context = new();
+            Context context = new();
             var typeBrand = _mapper.Map<TypeBrandDTO, TypeBrand>(typeBrandDTO);
             try
             {
@@ -57,7 +58,7 @@ namespace WinFormsApp1.Repository
         {
             try
             {
-                using Context context = new();
+                Context context = new();
                 var typeBrand = _mapper.Map<TypeBrandDTO, TypeBrand>(typeBrandDTO);
                 context.TypeBrands.Remove(typeBrand);
                 await context.SaveChangesAsync(token);

@@ -9,39 +9,39 @@ namespace WinFormsApp1.Logic.Interfaces
         /// </summary>
         /// <param name="name">Название</param>
         /// <returns>Идентификатор диагноза</returns>
-        public int SaveDiagnosis(DiagnosisEditDTO diagnosisDTO);
+        public Task<int> SaveDiagnosisAsync(DiagnosisEditDTO diagnosisDTO);
 
         /// <summary>
         /// Получение списка диагнозов
         /// </summary>
         /// <returns>Список диагнозов</returns>
-        public List<DiagnosisEditDTO> GetDiagnoses();
+        public Task<List<DiagnosisEditDTO>> GetDiagnosesAsync();
 
         /// <summary>
         /// Получение диагноза по названию
         /// </summary>
         /// <param name="name">Название</param>
         /// <returns>Диагноз</returns>
-        public DiagnosisEditDTO GetDiagnosisByName(string name);
+        public Task<DiagnosisEditDTO> GetDiagnosisByNameAsync(string name);
 
         /// <summary>
         /// Получение диагноза по идентификатору
         /// </summary>
         /// <param name="id">Идентификатор</param>
         /// <returns>Диагноз</returns>
-        public DiagnosisEditDTO GetDiagnosis(int? id);
+        public Task<DiagnosisEditDTO> GetDiagnosisAsync(int? id);
 
         /// <summary>
         /// Удаление диагноза
         /// </summary>
         /// <param name="diagnosisDTO">DTO диагноза</param>
-        public void RemoveDiagnosis(DiagnosisEditDTO diagnosisDTO);
+        public Task RemoveDiagnosisAsync(DiagnosisEditDTO diagnosisDTO);
 
         /// <summary>
         /// Получение списка неисправностей по подстроке названия
         /// </summary>
         /// <param name="name">Название</param>
         /// <returns>Список неисправностей</returns>
-        public List<DiagnosisEditDTO> GetDiagnosesByName(string name);
+        public Task<List<DiagnosisEditDTO>> GetDiagnosesByNameAsync(string name);
     }
 }

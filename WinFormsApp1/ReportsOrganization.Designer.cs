@@ -80,7 +80,7 @@
             comboBoxYear.Name = "comboBoxYear";
             comboBoxYear.Size = new Size(187, 33);
             comboBoxYear.TabIndex = 0;
-            comboBoxYear.SelectedIndexChanged += ComboBoxYear_SelectedIndexChanged;
+            comboBoxYear.SelectedIndexChanged += ComboBoxYear_SelectedIndexChangedAsync;
             // 
             // panel1
             // 
@@ -101,7 +101,7 @@
             comboBoxMaster.Name = "comboBoxMaster";
             comboBoxMaster.Size = new Size(186, 33);
             comboBoxMaster.TabIndex = 3;
-            comboBoxMaster.SelectedIndexChanged += ComboBoxMaster_SelectedIndexChanged;
+            comboBoxMaster.SelectedIndexChanged += ComboBoxMaster_SelectedIndexChangedAsync;
             // 
             // radioButtonMaster
             // 
@@ -112,7 +112,7 @@
             radioButtonMaster.TabIndex = 2;
             radioButtonMaster.Text = "Отдельно по мастеру";
             radioButtonMaster.UseVisualStyleBackColor = true;
-            radioButtonMaster.CheckedChanged += RadioButtonMaster_CheckedChanged;
+            radioButtonMaster.CheckedChanged += RadioButtonMaster_CheckedChangedAsync;
             // 
             // radioButtonOrganization
             // 
@@ -125,7 +125,7 @@
             radioButtonOrganization.TabStop = true;
             radioButtonOrganization.Text = "Организация в целом";
             radioButtonOrganization.UseVisualStyleBackColor = true;
-            radioButtonOrganization.CheckedChanged += RadioButtonOrganization_CheckedChanged;
+            radioButtonOrganization.CheckedChanged += RadioButtonOrganization_CheckedChangedAsync;
             // 
             // panel2
             // 

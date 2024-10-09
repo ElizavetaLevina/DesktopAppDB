@@ -39,9 +39,9 @@ namespace WinFormsApp1
             InitializeComponent();
         }
 
-        public void InitializeElementsForm()
+        public async void InitializeElementsFormAsync()
         {
-            var list = warehousesLogic.GetWarehouses();
+            var list = await warehousesLogic.GetWarehousesAsync();
             if (list.Count > 0)
             {
                 foreach (var item in list)
@@ -52,7 +52,7 @@ namespace WinFormsApp1
             }
             if (changeDetail)
             {
-                warehouseDTO = warehousesLogic.GetWarehouse(id: idDetail);
+                warehouseDTO = await warehousesLogic.GetWarehouseAsync(id: idDetail);
                 Text = "Изменение данных";
                 NameDetail = warehouseDTO.NameDetail;
                 PricePurchase = warehouseDTO.PricePurchase;
@@ -62,7 +62,7 @@ namespace WinFormsApp1
             listBoxDetails.Visible = false;
         }
 
-        private void ButtonSave_Click(object sender, EventArgs e)
+        private async void ButtonSave_ClickAsync(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(textBoxNameDetail.Text) || string.IsNullOrEmpty(textBoxPricePurchase.Text) ||
                 string.IsNullOrEmpty(textBoxPriceSale.Text))
@@ -94,7 +94,7 @@ namespace WinFormsApp1
                 warehouseDTO.Availability = true;
                 warehouseDTO.IdOrder = null;
 
-                warehousesLogic.SaveDetail(warehouseDTO);
+                await warehousesLogic.SaveDetailAsync(warehouseDTO);
                 DialogResult = DialogResult.OK;
                 Close();
             }

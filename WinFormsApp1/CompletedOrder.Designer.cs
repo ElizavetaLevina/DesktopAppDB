@@ -566,7 +566,7 @@
             linkLabelPropertiesOrder.TabIndex = 12;
             linkLabelPropertiesOrder.TabStop = true;
             linkLabelPropertiesOrder.Text = "Свойства заказа";
-            linkLabelPropertiesOrder.LinkClicked += LinkLabelPropertiesOrder_LinkClicked;
+            linkLabelPropertiesOrder.LinkClicked += LinkLabelPropertiesOrder_LinkClickedAsync;
             // 
             // CompletedOrder
             // 

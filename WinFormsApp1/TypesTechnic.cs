@@ -17,12 +17,12 @@ namespace WinFormsApp1
             typesTechnicsLogic = _typesTechnicsLogic;
             typesBrandsLogic = _typesBrandsLogic;
             InitializeComponent();
-            UpdateTable();
+            UpdateTableAsync();
         }
 
-        private void UpdateTable()
+        private async void UpdateTableAsync()
         {
-            dataGridView1.DataSource = typesTechnicsLogic.GetTypesTechnic();
+            dataGridView1.DataSource = await typesTechnicsLogic.GetTypesTechnicAsync();
             dataGridView1.Columns[nameof(TypeTechnicDTO.Id)].Visible = false;
             dataGridView1.Columns[nameof(TypeTechnicDTO.NameTypeTechnic)].HeaderText = "Тип устройства";
             dataGridView1.Columns[nameof(TypeTechnicDTO.NameTypeTechnic)].Width = dataGridView1.Width;
@@ -32,9 +32,9 @@ namespace WinFormsApp1
         {
             BrandAndTypeEdit brandAndTypeEdit = Program.ServiceProvider.GetRequiredService<BrandAndTypeEdit>();
             brandAndTypeEdit.nameTable = NameTableToEditEnum.TypeTechnic;
-            brandAndTypeEdit.InitializeElementsForm();
+            brandAndTypeEdit.InitializeElementsFormAsync();
             if (brandAndTypeEdit.ShowDialog() == DialogResult.OK)
-                UpdateTable();
+                UpdateTableAsync();
         }
 
         private void ButtonEdit_Click(object sender, EventArgs e)
@@ -44,24 +44,24 @@ namespace WinFormsApp1
                 BrandAndTypeEdit brandAndTypeEdit = Program.ServiceProvider.GetRequiredService<BrandAndTypeEdit>();
                 brandAndTypeEdit.nameTable = NameTableToEditEnum.TypeTechnic;
                 brandAndTypeEdit.id = IdType;
-                brandAndTypeEdit.InitializeElementsForm();
+                brandAndTypeEdit.InitializeElementsFormAsync();
                 if (brandAndTypeEdit.ShowDialog() == DialogResult.OK)
-                    UpdateTable();
+                    UpdateTableAsync();
             }
         }
 
-        private void ButtonRemove_Click(object sender, EventArgs e)
+        private async void ButtonRemove_ClickAsync(object sender, EventArgs e)
         {
             if (dataGridView1.Rows.Count > 0)
             {
-                var typesBrandsDTO = typesBrandsLogic.GetTypeBrand(IdType);
+                var typesBrandsDTO = await typesBrandsLogic.GetTypeBrandAsync(IdType);
                 foreach (var typesBrand in typesBrandsDTO)
                 {
-                    typesBrandsLogic.RemoveTypeBrand(typesBrand);
+                    await typesBrandsLogic.RemoveTypeBrandAsync(typesBrand);
                 }
                 var typeTechnicDTO = new TypeTechnicEditDTO() { Id = IdType };
-                typesTechnicsLogic.RemoveTypeTechnic(typeTechnicDTO);
-                UpdateTable();
+                await typesTechnicsLogic.RemoveTypeTechnicAsync(typeTechnicDTO);
+                UpdateTableAsync();
             }
         }
 

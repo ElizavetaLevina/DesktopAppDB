@@ -13,21 +13,21 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public List<MasterDTO> GetMastersForOutput()
+        public async Task<List<MasterDTO>> GetMastersForOutputAsync()
         {
-            return _masterRepository.GetMastersForOutput();
+            return await _masterRepository.GetMastersForOutputAsync();
         }
 
         /// <inheritdoc/>
-        public List<MasterEditDTO> GetMasters()
+        public async Task<List<MasterEditDTO>> GetMastersAsync()
         {
-            return _masterRepository.GetMasters();
+            return await _masterRepository.GetMastersAsync();
         }
 
         /// <inheritdoc/>
-        public MasterEditDTO GetMaster(int? id)
+        public async Task<MasterEditDTO> GetMasterAsync(int? id)
         {
-            var masterDTO = _masterRepository.GetMaster(id);
+            var masterDTO = await _masterRepository.GetMasterAsync(id);
             if (masterDTO == null)
                 return new MasterEditDTO();
             else 

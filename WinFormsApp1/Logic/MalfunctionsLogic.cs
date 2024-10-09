@@ -14,15 +14,15 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public List<MalfunctionEditDTO> GetMalfunctions()
+        public async Task<List<MalfunctionEditDTO>> GetMalfunctionsAsync()
         {
-            return _malfunctionRepository.GetMalfunctions();
+            return await _malfunctionRepository.GetMalfunctionsAsync();
         }
 
         /// <inheritdoc/>
-        public MalfunctionEditDTO GetMalfunctionByName(string name)
+        public async Task<MalfunctionEditDTO> GetMalfunctionByNameAsync(string name)
         {
-            var malfunctionDTO = _malfunctionRepository.GetMalfunctionByName(name);
+            var malfunctionDTO = await _malfunctionRepository.GetMalfunctionByNameAsync(name);
             if (malfunctionDTO == null)
                 return new MalfunctionEditDTO();
             else
@@ -30,31 +30,28 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public int SaveMalfunction(MalfunctionEditDTO malfunctionDTO)
+        public async Task<string> GetPriceMalfunctionByNameAsync(string name)
         {
-            int idMalfunction = 0;
-            var task = Task.Run(async () =>
-            {
-                idMalfunction = await _malfunctionRepository.SaveMalfunctionAsync(malfunctionDTO);
-            });
-            task.Wait();
-            return idMalfunction;
+            var malfunctionDTO = await _malfunctionRepository.GetMalfunctionByNameAsync(name);
+            return malfunctionDTO.Price.ToString();
         }
 
         /// <inheritdoc/>
-        public MalfunctionEditDTO GetMalfunction(int id)
+        public async Task<int> SaveMalfunctionAsync(MalfunctionEditDTO malfunctionDTO)
         {
-            return _malfunctionRepository.GetMalfunction(id);
+            return await _malfunctionRepository.SaveMalfunctionAsync(malfunctionDTO);
         }
 
         /// <inheritdoc/>
-        public void RemoveMalfunction(MalfunctionEditDTO malfunctionDTO)
+        public async Task<MalfunctionEditDTO> GetMalfunctionAsync(int id)
         {
-            var task = Task.Run(async () =>
-            {
-                await _malfunctionRepository.RemoveMalfunctionAsync(malfunctionDTO);
-            });
-            task.Wait();   
+            return await _malfunctionRepository.GetMalfunctionAsync(id);
+        }
+
+        /// <inheritdoc/>
+        public async Task RemoveMalfunctionAsync(MalfunctionEditDTO malfunctionDTO)
+        {
+            await _malfunctionRepository.RemoveMalfunctionAsync(malfunctionDTO);
         }
     }
 }

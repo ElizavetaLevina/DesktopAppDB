@@ -91,7 +91,7 @@ namespace WinFormsApp1
             return (int)selectedMonthEnum;
         }
 
-        private void SalaryCalculation()
+        private async void SalaryCalculationAsync()
         {
             var selectedDate = DateTime.Parse(string.Format("{0}.{1}.{2}", 1, NumberSelectedMonth(),
                     comboBoxYears.SelectedValue));
@@ -99,15 +99,15 @@ namespace WinFormsApp1
             DateTime? dateCompleted = selectedComboBoxItem == SalaryCalculationByEnum.выполнения ? selectedDate : null;
             DateTime? dateIssue = selectedComboBoxItem == SalaryCalculationByEnum.выдачи ? selectedDate : null;
             var date = (DateTime)(dateCompleted != null ? dateCompleted : dateIssue);
-            var mastersDTO = mastersLogic.GetMasters();
-            var noteMastersDTO = notesSalaryMastersLogic.GetNoteSalaryMasters(date);
+            var mastersDTO = await mastersLogic.GetMastersAsync();
+            var noteMastersDTO = await notesSalaryMastersLogic.GetNoteSalaryMastersAsync(date);
             List <NoteSalaryMasterEditDTO>  dataSource = [];
 
-            ordersDTO = ordersLogic.GetOrdersForSalaries(dateCompleted: dateCompleted, dateIssue: dateIssue);
+            ordersDTO = await ordersLogic.GetOrdersForSalariesAsync(dateCompleted: dateCompleted, dateIssue: dateIssue);
 
             foreach (var master in mastersDTO)
             {
-                var rateMastersDTO = rateMastersLogic.GetRateMasterByDate(master.Id, date);
+                var rateMastersDTO = await rateMastersLogic.GetRateMasterByDateAsync(master.Id, date);
                 var noteMaster = noteMastersDTO.FirstOrDefault(i => i.MasterId == master.Id) ?? 
                     new NoteSalaryMasterEditDTO() { MasterId = master.Id, Date = date};
                 noteMaster.NameMaster = master.NameMaster;
@@ -121,79 +121,79 @@ namespace WinFormsApp1
         private void RadioButton1_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton1.Checked)
-                SalaryCalculation();
+                SalaryCalculationAsync();
         }
 
         private void RadioButton2_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton2.Checked)
-                SalaryCalculation();
+                SalaryCalculationAsync();
         }
 
         private void RadioButton3_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton3.Checked)
-                SalaryCalculation();
+                SalaryCalculationAsync();
         }
 
         private void RadioButton4_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton4.Checked)
-                SalaryCalculation();
+                SalaryCalculationAsync();
         }
 
         private void RadioButton5_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton5.Checked)
-                SalaryCalculation();
+                SalaryCalculationAsync();
         }
 
         private void RadioButton6_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton6.Checked)
-                SalaryCalculation();
+                SalaryCalculationAsync();
         }
 
         private void RadioButton7_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton7.Checked)
-                SalaryCalculation();
+                SalaryCalculationAsync();
         }
 
         private void RadioButton8_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton8.Checked)
-                SalaryCalculation();
+                SalaryCalculationAsync();
         }
 
         private void RadioButton9_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton9.Checked)
-                SalaryCalculation();
+                SalaryCalculationAsync();
         }
 
         private void RadioButton10_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton10.Checked)
-                SalaryCalculation();
+                SalaryCalculationAsync();
         }
 
         private void RadioButton11_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton11.Checked)
-                SalaryCalculation();
+                SalaryCalculationAsync();
         }
 
         private void RadioButton12_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton12.Checked)
-                SalaryCalculation();
+                SalaryCalculationAsync();
         }
 
         private void ComboBoxCalculationByDate_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!loading)
-                SalaryCalculation();
+                SalaryCalculationAsync();
         }
 
         private async void ButtonSave_ClickAsync(object sender, EventArgs e)

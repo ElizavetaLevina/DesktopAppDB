@@ -8,14 +8,14 @@ namespace WinFormsApp1.Repository.Interfaces
         /// Получение списка типов
         /// </summary>
         /// <returns>Список типов</returns>
-        public List<TypeTechnicDTO> GetTypesTechnic();
+        public Task<List<TypeTechnicDTO>> GetTypesTechnicAsync(CancellationToken token = default);
 
         /// <summary>
         /// Получение записи по названию
         /// </summary>
         /// <param name="name">Название</param>
         /// <returns>Запись</returns>
-        public TypeTechnicDTO GetTypeTechnicByName(string name);
+        public Task<TypeTechnicDTO> GetTypeTechnicByNameAsync(string name, CancellationToken token = default);
 
 
         /// <summary>
@@ -23,10 +23,22 @@ namespace WinFormsApp1.Repository.Interfaces
         /// </summary>
         /// <param name="id">Идентификатор</param>
         /// <returns>Тип устройства</returns>
-        public TypeTechnicEditDTO GetTypeTechnic(int id);
+        public Task<TypeTechnicEditDTO> GetTypeTechnicAsync(int id, CancellationToken token = default);
 
+        /// <summary>
+        /// Сохранение типа устройства
+        /// </summary>
+        /// <param name="typeTechnicDTO">DTO типа устройства</param>
+        /// <param name="token">Идентификатор типа устройства</param>
+        /// <returns></returns>
         public Task<int> SaveTypeTechnicAsync(TypeTechnicEditDTO typeTechnicDTO, CancellationToken token = default);
 
+        /// <summary>
+        /// Удаление типа устройства
+        /// </summary>
+        /// <param name="typeTechnicDTO">DTO типа устройства</param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public Task RemoveTypeTechnicAsync(TypeTechnicEditDTO typeTechnicDTO, CancellationToken token = default);
     }
 }

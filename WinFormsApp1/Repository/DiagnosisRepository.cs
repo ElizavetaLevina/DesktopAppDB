@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MoreLinq.Extensions;
+using Microsoft.EntityFrameworkCore;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
 using WinFormsApp1.Repository.Interfaces;
@@ -15,32 +16,34 @@ namespace WinFormsApp1.Repository
         }
 
         /// <inheritdoc/>
-        public List<DiagnosisEditDTO> GetDiagnoses()
+        public async Task<List<DiagnosisEditDTO>> GetDiagnosesAsync(CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<DiagnosisEditDTO>(context.Set<Diagnosis>().OrderBy(i => i.Name)).ToList();
+            return await _mapper.ProjectTo<DiagnosisEditDTO>(context.Set<Diagnosis>().OrderBy(i => i.Name)).ToListAsync(token);
         }
 
         /// <inheritdoc/>
-        public DiagnosisEditDTO GetDiagnosis(int? id)
+        public async Task<DiagnosisEditDTO> GetDiagnosisAsync(int? id, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<DiagnosisEditDTO>(context.Set<Diagnosis>().Where(i => i.Id == id)).FirstOrDefault();
+            return await _mapper.ProjectTo<DiagnosisEditDTO>(context.Set<Diagnosis>().Where(i => i.Id == id))
+                .FirstOrDefaultAsync(token);
         }
 
         /// <inheritdoc/>
-        public List<DiagnosisEditDTO> GetDiagnosesByName(string name)
+        public async Task<List<DiagnosisEditDTO>> GetDiagnosesByNameAsync(string name, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<DiagnosisEditDTO>(context.Set<Diagnosis>()
-                .Where(i => i.Name.ToLower().Contains(name.ToLower()))).ToList();
+            return await _mapper.ProjectTo<DiagnosisEditDTO>(context.Set<Diagnosis>()
+                .Where(i => i.Name.ToLower().Contains(name.ToLower()))).ToListAsync(token);
         }
 
         /// <inheritdoc/>
-        public DiagnosisEditDTO GetDiagnosisByName(string name)
+        public async Task<DiagnosisEditDTO> GetDiagnosisByNameAsync(string name, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<DiagnosisEditDTO>(context.Set<Diagnosis>().Where(i => i.Name == name)).FirstOrDefault();
+            return await _mapper.ProjectTo<DiagnosisEditDTO>(context.Set<Diagnosis>().Where(i => i.Name == name))
+                .FirstOrDefaultAsync(token);
         }
 
         /// <inheritdoc/>
@@ -48,11 +51,6 @@ namespace WinFormsApp1.Repository
         {
             Context context = new();
             var diagnosis = _mapper.Map<DiagnosisEditDTO, Diagnosis>(diagnosisDTO);
-            /*Diagnosis diagnosis = new()
-            {
-                Id = diagnosisDTO.Id,
-                Name = diagnosisDTO.Name
-            };*/
             try
             {
                 if (diagnosis.Id == 0)
@@ -72,7 +70,6 @@ namespace WinFormsApp1.Repository
             {
                 Context context = new();
                 var diagnosis = _mapper.Map<DiagnosisEditDTO, Diagnosis>(diagnosisDTO);
-                //var diagnosis = context.Diagnosis.FirstOrDefault(c => c.Id == diagnosisDTO.Id);
                 context.Diagnosis.Remove(diagnosis);
                 await context.SaveChangesAsync(token);
 

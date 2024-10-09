@@ -9,38 +9,38 @@ namespace WinFormsApp1.Logic.Interfaces
         /// </summary>
         /// <param name="name">Название</param>
         /// <returns>Идентификатор</returns>
-        public int GetIdBrandTechnic(string name);
+        public Task<int> GetIdBrandTechnicAsync(string name);
 
         /// <summary>
         /// Получение бренда устройства по идентификатору
         /// </summary>
         /// <param name="id">Идентификатор</param>
         /// <returns>Бренд устройства</returns>
-        public BrandTechnicEditDTO GetBrandTechnic(int id);
+        public Task<BrandTechnicEditDTO> GetBrandTechnicAsync(int id);
 
         /// <summary>
         /// Получение списка брендов
         /// </summary>
         /// <returns>Список брендов</returns>
-        public List<BrandTechnicDTO> GetBrandsTechnic();
+        public Task<List<BrandTechnicDTO>> GetBrandsTechnicAsync();
 
         /// <summary>
         /// Получение названия бренда по идентификатору
         /// </summary>
         /// <param name="id">Идентификатор</param>
         /// <returns>Бренд</returns>
-        public string GetBrandTechnicName(int id);
+        public Task<string> GetBrandTechnicNameAsync(int id);
 
         /// <summary>
         /// Сохранение бренда устройтсва
         /// </summary>
         /// <param name="brandTechnicDTO">DTO бренда</param>
-        public int SaveBrandTechnic(BrandTechnicEditDTO brandTechnicDTO);
+        public Task<int> SaveBrandTechnicAsync(BrandTechnicEditDTO brandTechnicDTO);
 
         /// <summary>
         /// Удаление бренда устройства
         /// </summary>
         /// <param name="brandTechnicDTO">DTO бренда</param>
-        public void RemoveBrandTechnic(BrandTechnicEditDTO brandTechnicDTO);
+        public Task RemoveBrandTechnicAsync(BrandTechnicEditDTO brandTechnicDTO);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
 using WinFormsApp1.Repository.Interfaces;
@@ -15,11 +16,11 @@ namespace WinFormsApp1.Repository
         }
 
         /// <inheritdoc/>
-        public List<NoteSalaryMasterEditDTO> GetNoteSalaryMasters(DateTime date)
+        public async Task<List<NoteSalaryMasterEditDTO>> GetNoteSalaryMastersAsync(DateTime date, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<NoteSalaryMasterEditDTO>(context.Set<NoteSalaryMaster>()
-                .Where(i => i.Date == date.ToUniversalTime())).ToList();
+            return await _mapper.ProjectTo<NoteSalaryMasterEditDTO>(context.Set<NoteSalaryMaster>()
+                .Where(i => i.Date == date.ToUniversalTime())).ToListAsync();
         }
 
         /// <inheritdoc/>

@@ -9,8 +9,14 @@ namespace WinFormsApp1.Repository.Interfaces
         /// </summary>
         /// <param name="date">Дата</param>
         /// <returns>Список примечаний</returns>
-        public List<NoteSalaryMasterEditDTO> GetNoteSalaryMasters(DateTime date);
+        public Task<List<NoteSalaryMasterEditDTO>> GetNoteSalaryMastersAsync(DateTime date, CancellationToken token = default);
 
+        /// <summary>
+        /// Сохранение примечаний по зарплате мастера
+        /// </summary>
+        /// <param name="noteSalaryMasterDTO">DTO примечания</param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public Task SaveNoteSalaryMasterAsync(NoteSalaryMasterEditDTO noteSalaryMasterDTO, CancellationToken token = default);
     }
 }

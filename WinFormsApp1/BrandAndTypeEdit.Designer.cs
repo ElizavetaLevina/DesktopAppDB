@@ -52,7 +52,7 @@
             buttonSave.Tag = "Yes";
             buttonSave.Text = "Добавить";
             buttonSave.UseVisualStyleBackColor = true;
-            buttonSave.Click += ButtonSave_Click;
+            buttonSave.Click += ButtonSave_ClickAsync;
             // 
             // btnExit
             // 
@@ -132,7 +132,7 @@
             linkLabelDelete.TabIndex = 12;
             linkLabelDelete.TabStop = true;
             linkLabelDelete.Text = "Удалить";
-            linkLabelDelete.LinkClicked += LinkLabelDelete_LinkClicked;
+            linkLabelDelete.LinkClicked += LinkLabelDelete_LinkClickedAsync;
             // 
             // listBox1
             // 

@@ -15,14 +15,14 @@ namespace WinFormsApp1.Logic.Interfaces
         /// <param name="dateIssue">Дата выдачи заказа</param>
         /// <param name="id">Идентификатор заказа</param>
         /// <returns>Список заказов</returns>
-        public List<OrderTableDTO> GetOrdersForTable(StatusOrderEnum? statusOrder = null, bool? deleted = null, bool dateCreation = false,
-           bool dateCompleted = false, bool dateIssue = false, bool id = false);
+        public Task<List<OrderTableDTO>> GetOrdersForTableAsync(StatusOrderEnum? statusOrder = null, bool? deleted = null, 
+            bool dateCreation = false, bool dateCompleted = false, bool dateIssue = false, bool id = false);
 
         /// <summary>
         /// Удаление заказа
         /// </summary>
         /// <param name="orderDTO">DTO заказа</param>
-        public void RemoveOrder(OrderEditDTO orderDTO);
+        public Task RemoveOrderAsync(OrderEditDTO orderDTO);
 
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace WinFormsApp1.Logic.Interfaces
         /// </summary>
         /// <param name="idOrder">Идентификатор заказа</param>
         /// <returns></returns>
-        public OrderEditDTO GetOrder(int idOrder);
+        public Task<OrderEditDTO> GetOrderAsync(int idOrder);
 
         /// <summary>
         /// Получение списка заказов по параметрам поиска
@@ -43,21 +43,21 @@ namespace WinFormsApp1.Logic.Interfaces
         /// <param name="idClient">Id клиента</param>
         /// <param name="statusOrder">Статус заказа</param>
         /// <returns></returns>
-        public List<OrderTableDTO> GetOrdersBySearch(string numberOrder, string dateCreation, string dateStartWork, string masterName,
-            string device, string idClient, StatusOrderEnum? statusOrder);
+        public Task<List<OrderTableDTO>> GetOrdersBySearchAsync(string numberOrder, string dateCreation, string dateStartWork, 
+            string masterName, string device, string idClient, StatusOrderEnum? statusOrder);
 
         /// <summary>
         /// Получение списка заказов для экспорта в Excel таблицу
         /// </summary>
         /// <param name="orders">Заказы в главной таблице</param>
         /// <returns>Список заказов</returns>
-        public List<OrderTableExcelDTO> GetOrdersForExcel(List<OrderTableDTO> orders);
+        public Task<List<OrderTableExcelDTO>> GetOrdersForExcelAsync(List<OrderTableDTO> orders);
 
         /// <summary>
         /// Получение последнего + 1 номера квитанции
         /// </summary>
         /// <returns>Номер квитанции</returns>
-        public int GetLastIdOrder();
+        public Task<int> GetLastIdOrderAsync();
 
         /// <summary>
         /// Сохранение заказа
@@ -72,7 +72,7 @@ namespace WinFormsApp1.Logic.Interfaces
         /// <param name="dateCompleted">Дата завершения заказа</param>
         /// <param name="dateIssue">Дата выдачи заказа</param>
         /// <returns></returns>
-        public List<OrderEditDTO> GetOrdersForSalaries(DateTime? dateCompleted = null,
+        public Task<List<OrderEditDTO>> GetOrdersForSalariesAsync(DateTime? dateCompleted = null,
             DateTime? dateIssue = null);
 
         /// <summary>
@@ -80,14 +80,14 @@ namespace WinFormsApp1.Logic.Interfaces
         /// </summary>
         /// <param name="idDiagnosis">Идентификатор диагноза</param>
         /// <returns>Список заказов</returns>
-        public List<OrderEditDTO> GetOrdersByIdDiagnosis(int idDiagnosis);
+        public Task<List<OrderEditDTO>> GetOrdersByIdDiagnosisAsync(int idDiagnosis);
 
         /// <summary>
         /// Получение списка заказов по комплектации
         /// </summary>
         /// <param name="idEquipment">Идентификатор комплектации</param>
         /// <returns>Список заказов</returns>
-        public List<OrderEditDTO> GetOrdersByIdEquipment(int idEquipment);
+        public Task<List<OrderEditDTO>> GetOrdersByIdEquipmentAsync(int idEquipment);
 
         /// <summary>
         /// Получения списка заказов для диаграммы
@@ -96,12 +96,12 @@ namespace WinFormsApp1.Logic.Interfaces
         /// <param name="master">Указан ли мастер</param>
         /// <param name="masterId">Идентификатор мастера</param>
         /// <returns>Список заказов</returns>
-        public List<OrderEditDTO> GetOrdersForChart(int year, bool master = false, int? masterId = null);
+        public Task<List<OrderEditDTO>> GetOrdersForChartAsync(int year, bool master = false, int? masterId = null);
 
         /// <summary>
         /// Получение списка заказов
         /// </summary>
         /// <returns>Список заказов</returns>
-        public List<OrderEditDTO> GetOrders();
+        public Task<List<OrderEditDTO>> GetOrdersAsync();
     }
 }

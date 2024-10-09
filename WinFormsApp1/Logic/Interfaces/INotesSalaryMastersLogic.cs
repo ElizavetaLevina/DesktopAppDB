@@ -9,7 +9,7 @@ namespace WinFormsApp1.Logic.Interfaces
         /// </summary>
         /// <param name="date">Дата</param>
         /// <returns>Список примечаний</returns>
-        public List<NoteSalaryMasterEditDTO> GetNoteSalaryMasters(DateTime date);
+        public Task<List<NoteSalaryMasterEditDTO>> GetNoteSalaryMastersAsync(DateTime date);
 
         /// <summary>
         /// Сохранение примечаний по зарплате мастера

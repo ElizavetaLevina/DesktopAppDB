@@ -29,16 +29,16 @@ namespace WinFormsApp1
             InitializeComponent();
         }
 
-        public void InitializeDataTable()
+        public async void InitializeDataTableAsync()
         {
             if (newDetail)
-                dataGridView1.DataSource = Funcs.ToDataTable(warehousesLogic.GetWarehousesForTable(availability: true, 
+                dataGridView1.DataSource = Funcs.ToDataTable(await warehousesLogic.GetWarehousesForTableAsync(availability: true, 
                     datePurchase: true));
             else
             {
                 textBoxDevice.Visible = true;
                 textBoxDevice.Text = brandDevice;
-                dataGridView1.DataSource = Funcs.ToDataTable(warehousesLogic.GetWarehousesForTable(availability: true, 
+                dataGridView1.DataSource = Funcs.ToDataTable(await warehousesLogic.GetWarehousesForTableAsync(availability: true, 
                     datePurchase: true, name: brandDevice));
             }
             UpdateTable();
@@ -84,17 +84,17 @@ namespace WinFormsApp1
             }
         }
 
-        private void ButtonAddDetails_Click(object sender, EventArgs e)
+        private async void ButtonAddDetails_ClickAsync(object sender, EventArgs e)
         {
             DetailEdit detailEdit = Program.ServiceProvider.GetRequiredService<DetailEdit>();
-            detailEdit.InitializeElementsForm();
+            detailEdit.InitializeElementsFormAsync();
             detailEdit.ShowDialog();
-            dataGridView1.DataSource = Funcs.ToDataTable(warehousesLogic.GetWarehousesForTable(availability: true, 
+            dataGridView1.DataSource = Funcs.ToDataTable(await warehousesLogic.GetWarehousesForTableAsync(availability: true, 
                 datePurchase: true, name: textBoxDevice.Text));
             UpdateTable();
         }
 
-        private void ButtonDeleteDetail_Click(object sender, EventArgs e)
+        private async void ButtonDeleteDetail_ClickAsync(object sender, EventArgs e)
         {
             Warning warning = new()
             {
@@ -105,9 +105,9 @@ namespace WinFormsApp1
 
             if (warning.ShowDialog() == DialogResult.OK)
             {
-                var warehouseDTO = warehousesLogic.GetWarehouse(IdDetail);
-                warehousesLogic.RemoveWarehouse(warehouseDTO);
-                dataGridView1.DataSource = Funcs.ToDataTable(warehousesLogic.GetWarehousesForTable(availability: true,
+                var warehouseDTO = await warehousesLogic.GetWarehouseAsync(IdDetail);
+                await warehousesLogic.RemoveWarehouseAsync(warehouseDTO);
+                dataGridView1.DataSource = Funcs.ToDataTable(await warehousesLogic.GetWarehousesForTableAsync(availability: true,
                 datePurchase: true));
                 UpdateTable();
             }
@@ -124,9 +124,9 @@ namespace WinFormsApp1
             Close();
         }
 
-        private void TextBoxDevice_TextChanged(object sender, EventArgs e)
+        private async void TextBoxDevice_TextChangedAsync(object sender, EventArgs e)
         {
-            dataGridView1.DataSource = Funcs.ToDataTable(warehousesLogic.GetWarehousesForTable(availability: true,
+            dataGridView1.DataSource = Funcs.ToDataTable(await warehousesLogic.GetWarehousesForTableAsync(availability: true,
                 datePurchase: true, name: textBoxDevice.Text));
             UpdateTable();
             if (dataGridView1.RowCount > 0)
@@ -143,14 +143,14 @@ namespace WinFormsApp1
             }
         }
 
-        private void ButtonChangeDetail_Click(object sender, EventArgs e)
+        private async void ButtonChangeDetail_ClickAsync(object sender, EventArgs e)
         {
             DetailEdit addDetail = Program.ServiceProvider.GetRequiredService<DetailEdit>();
             addDetail.changeDetail = true;
             addDetail.idDetail = IdDetail;
-            addDetail.InitializeElementsForm();
+            addDetail.InitializeElementsFormAsync();
             addDetail.ShowDialog();
-            dataGridView1.DataSource = Funcs.ToDataTable(warehousesLogic.GetWarehousesForTable(availability: true,
+            dataGridView1.DataSource = Funcs.ToDataTable(await warehousesLogic.GetWarehousesForTableAsync(availability: true,
                 datePurchase: true));
             UpdateTable();
         }

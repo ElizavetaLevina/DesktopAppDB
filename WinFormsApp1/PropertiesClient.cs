@@ -15,9 +15,9 @@ namespace WinFormsApp1
             InitializeComponent();
         }
 
-        public void InitializeElementsForms()
+        public async void InitializeElementsFormsAsync()
         {
-            clientDTO = clientsLogic.GetClient(idClient);
+            clientDTO = await clientsLogic.GetClientAsync(idClient);
             textBoxID.Text = clientDTO.IdClient;
             textBoxNameAddress.Text = clientDTO.NameAndAddressClient;
             textBoxSecondPhone.Text = clientDTO.NumberSecondPhone;
@@ -33,7 +33,7 @@ namespace WinFormsApp1
             }
         }
 
-        private void ButtonSave_Click(object sender, EventArgs e)
+        private async void ButtonSave_ClickAsync(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(textBoxID.Text))
             {
@@ -41,7 +41,7 @@ namespace WinFormsApp1
                 clientDTO.NameAndAddressClient = textBoxNameAddress.Text;
                 clientDTO.NumberSecondPhone = textBoxSecondPhone.Text;
                 clientDTO.TypeClient = TypeClient();
-                clientsLogic.SaveClient(clientDTO);
+                await clientsLogic.SaveClientAsync(clientDTO);
 
                 DialogResult = DialogResult.OK;
                 Close();

@@ -110,32 +110,32 @@ namespace WinFormsApp1
             typesTechnicsLogic = _typesTechnicsLogic;
             typesBrandsLogic = _typesBrandsLogic;
             InitializeComponent();
-            InitializeElementsForm();
+            InitializeElementsFormAsync();
         }
 
-        private void InitializeElementsForm()
+        private async void InitializeElementsFormAsync()
         {
-            UpdateComboBox(ElementOfRepairEnum.MainMasterElement);
-            UpdateComboBox(ElementOfRepairEnum.AdditionalMasterElement);
-            UpdateComboBox(ElementOfRepairEnum.TypeDeviceElement);
-            UpdateComboBox(ElementOfRepairEnum.BrandDeviceElement);
+            UpdateComboBoxAsync(ElementOfRepairEnum.MainMasterElement);
+            UpdateComboBoxAsync(ElementOfRepairEnum.AdditionalMasterElement);
+            UpdateComboBoxAsync(ElementOfRepairEnum.TypeDeviceElement);
+            UpdateComboBoxAsync(ElementOfRepairEnum.BrandDeviceElement);
 
-            NumberOrder = GetLastIdOrder();
+            NumberOrder = await GetLastIdOrderAsync();
 
-            var clientsDTO = clientsLogic.GetClients();
+            var clientsDTO = await clientsLogic.GetClientsAsync();
             foreach (var client in clientsDTO)
             {
                 oldClients.Add(client.IdClient);
                 oldClientsType.Add(client.TypeClient.ToString());
             }
 
-            diagnosesDTO = diagnosesLogic.GetDiagnoses();
+            diagnosesDTO = await diagnosesLogic.GetDiagnosesAsync();
             foreach (var diagnosis in diagnosesDTO)
             {
                 diagnosisList.Add(diagnosis.Name);
             }
 
-            equipmentsDTO = equipmentsLogic.GetEquipments();
+            equipmentsDTO = await equipmentsLogic.GetEquipmentsAsync();
             foreach (var equipment in equipmentsDTO)
             {
                 equipmentList.Add(equipment.Name);
@@ -143,9 +143,9 @@ namespace WinFormsApp1
             listBoxClient.Visible = false;
         }
 
-        public void FillOrder(int IdOrder)
+        public async void FillOrderAsync(int IdOrder)
         {
-            var orderDTO = ordersLogic.GetOrder(IdOrder);
+            var orderDTO = await ordersLogic.GetOrderAsync(IdOrder);
             MainMasterName = orderDTO.MainMasterId == null ? "-" : orderDTO.MainMaster?.NameMaster;
             AdditionalMasterName = orderDTO.AdditionalMasterId == null ? "-" : orderDTO.AdditionalMaster?.NameMaster;
             TypeDevice = orderDTO.TypeTechnic.Name;
@@ -226,36 +226,36 @@ namespace WinFormsApp1
             if (!CheckIdClient())
                 return;
 
-            var clientDTO = clientsLogic.GetClientByIdClient(ClientName);
+            var clientDTO = await clientsLogic.GetClientByIdClientAsync(ClientName);
             int clientId = clientDTO.Id;
             if (clientId == 0)
             {
                 clientDTO.IdClient = ClientName;
                 clientDTO.NameAndAddressClient = ClientNameAddress;
                 clientDTO.NumberSecondPhone = ClientSecondPhone;
-                clientId = clientsLogic.SaveClient(clientDTO);
+                clientId = await clientsLogic.SaveClientAsync(clientDTO);
             }
 
-            var equipmentDTO = equipmentsLogic.GetEquipmentByName(Equipment);
+            var equipmentDTO = await equipmentsLogic.GetEquipmentByNameAsync(Equipment);
             int? equipmentId = equipmentDTO.Id;
             if (equipmentId == 0)
             {
                 if (!string.IsNullOrEmpty(Equipment))
                 {
                     equipmentDTO.Name = Equipment;
-                    equipmentId = equipmentsLogic.SaveEquipment(equipmentDTO);
+                    equipmentId = await equipmentsLogic.SaveEquipmentAsync(equipmentDTO);
                 }
                 else equipmentId = null;
             }
 
-            var diagnosisDTO = diagnosesLogic.GetDiagnosisByName(Diagnosis);
+            var diagnosisDTO = await diagnosesLogic.GetDiagnosisByNameAsync(Diagnosis);
             int? diagnosisId = diagnosisDTO.Id;
             if (diagnosisId == 0)
             {
                 if (!string.IsNullOrEmpty(Diagnosis))
                 {
                     diagnosisDTO.Name = Diagnosis;
-                    diagnosisId = diagnosesLogic.SaveDiagnosis(diagnosisDTO);
+                    diagnosisId = await diagnosesLogic.SaveDiagnosisAsync(diagnosisDTO);
                 }
                 else diagnosisId = null;
             }
@@ -292,7 +292,7 @@ namespace WinFormsApp1
             };
             if (warning.ShowDialog() == DialogResult.OK)
             {
-                orderDTO = ordersLogic.GetOrder(idNewOrder);
+                orderDTO = await ordersLogic.GetOrderAsync(idNewOrder);
                 ReportsLogic.GettingDeviceReport(orderDTO);
             }
             DialogResult = DialogResult.OK;
@@ -434,9 +434,9 @@ namespace WinFormsApp1
             else listBox.Visible = false;
         }
 
-        private void UpdateComboBox(ElementOfRepairEnum elementOfRepair)
+        private async void UpdateComboBoxAsync(ElementOfRepairEnum elementOfRepair)
         {
-            var mastersDTO = mastersLogic.GetMastersForOutput();
+            var mastersDTO = await mastersLogic.GetMastersForOutputAsync();
             mastersDTO.Insert(0, new MasterDTO() { Id = null, NameMaster = withoutMaster });
             switch (elementOfRepair)
             {
@@ -459,14 +459,14 @@ namespace WinFormsApp1
                     comboBoxDevice.Items.Clear();
                     comboBoxDevice.ValueMember = nameof(TypeTechnicDTO.Id);
                     comboBoxDevice.DisplayMember = nameof(TypeTechnicDTO.NameTypeTechnic);
-                    comboBoxDevice.DataSource = typesTechnicsLogic.GetTypesTechnic();
+                    comboBoxDevice.DataSource = await typesTechnicsLogic.GetTypesTechnicAsync();
                     break;
                 case ElementOfRepairEnum.BrandDeviceElement:
                     comboBoxBrand.DataSource = null;
                     comboBoxBrand.Items.Clear();
                     comboBoxBrand.ValueMember = nameof(TypeBrandComboBoxDTO.IdBrand);
                     comboBoxBrand.DisplayMember = nameof(TypeBrandComboBoxDTO.NameBrandTechnic);
-                    comboBoxBrand.DataSource = typesBrandsLogic.GetTypeBrandByNameType(TypeDevice);
+                    comboBoxBrand.DataSource = await typesBrandsLogic.GetTypeBrandByNameTypeAsync(TypeDevice);
                     break;
             }
         }
@@ -507,9 +507,9 @@ namespace WinFormsApp1
             NumberOrder = 1;
         }
 
-        private void LastId_Click(object sender, EventArgs e)
+        private async void LastId_ClickAsync(object sender, EventArgs e)
         {
-            NumberOrder = GetLastIdOrder();
+            NumberOrder = await GetLastIdOrderAsync();
         }
 
         private void ComboBoxMainMaster_SelectedIndexChanged(object sender, EventArgs e)
@@ -535,8 +535,8 @@ namespace WinFormsApp1
         {
             Masters addMaster = Program.ServiceProvider.GetRequiredService<Masters>();
             addMaster.ShowDialog();
-            UpdateComboBox(ElementOfRepairEnum.MainMasterElement);
-            UpdateComboBox(ElementOfRepairEnum.AdditionalMasterElement);
+            UpdateComboBoxAsync(ElementOfRepairEnum.MainMasterElement);
+            UpdateComboBoxAsync(ElementOfRepairEnum.AdditionalMasterElement);
         }
 
         private void ButtonNumber_Click(object sender, EventArgs e)
@@ -544,9 +544,9 @@ namespace WinFormsApp1
             contextMenuStrip1.Show(MousePosition);
         }
 
-        private int GetLastIdOrder()
+        private async Task<int> GetLastIdOrderAsync()
         {
-            return ordersLogic.GetLastIdOrder();
+            return await ordersLogic.GetLastIdOrderAsync();
         }
 
         private void TextBoxNameClient_TextChanged(object sender, EventArgs e)
@@ -627,14 +627,14 @@ namespace WinFormsApp1
         {
             TypesTechnic typeTechnic = Program.ServiceProvider.GetRequiredService<TypesTechnic>();
             typeTechnic.ShowDialog();
-            UpdateComboBox(ElementOfRepairEnum.TypeDeviceElement);
+            UpdateComboBoxAsync(ElementOfRepairEnum.TypeDeviceElement);
         }
 
         private void LinkLabelBrand_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             BrandsTechnic brandTechnic = Program.ServiceProvider.GetRequiredService<BrandsTechnic>();
             brandTechnic.ShowDialog();
-            UpdateComboBox(ElementOfRepairEnum.BrandDeviceElement);
+            UpdateComboBoxAsync(ElementOfRepairEnum.BrandDeviceElement);
         }
 
         private void TextBoxNumberOrder_KeyPress(object sender, KeyPressEventArgs e)
@@ -644,7 +644,7 @@ namespace WinFormsApp1
 
         private void ComboBoxDevice_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateComboBox(ElementOfRepairEnum.BrandDeviceElement);
+            UpdateComboBoxAsync(ElementOfRepairEnum.BrandDeviceElement);
         }
 
         private void TextBoxEquipment_TextChanged(object sender, EventArgs e)

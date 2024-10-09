@@ -10,7 +10,7 @@ namespace WinFormsApp1.Logic.Interfaces
         /// </summary>
         /// <param name="name">Название типа устройства</param>
         /// <returns></returns>
-        public List<TypeBrandComboBoxDTO> GetTypeBrandByNameType(string name);
+        public Task<List<TypeBrandComboBoxDTO>> GetTypeBrandByNameTypeAsync(string name);
 
         /// <summary>
         /// Получение списка тип-бренд устройства по идентификатору бренда или типа устройства
@@ -18,7 +18,7 @@ namespace WinFormsApp1.Logic.Interfaces
         /// <param name="idBrand">Идентификатор бренда</param>
         /// <param name="idType">Идентификатор типа устройства</param>
         /// <returns></returns>
-        public List<TypeBrandDTO> GetTypeBrand(int idBrand = 0, int idType = 0);
+        public Task<List<TypeBrandDTO>> GetTypeBrandAsync(int idBrand = 0, int idType = 0);
 
         /// <summary>
         /// Сохранение списка тип-бренд по списку типов/брендов
@@ -26,7 +26,7 @@ namespace WinFormsApp1.Logic.Interfaces
         /// <param name="list">Список типов/брендов</param>
         /// <param name="id">Идентификатор типа/бренда</param>
         /// <param name="name">Название таблицы</param>
-        public void SaveTypeBrand(List<int>? list, int id, NameTableToEditEnum name);
+        public Task SaveTypeBrandAsync(List<int>? list, int id, NameTableToEditEnum name);
 
         /// <summary>
         /// Удаление списка тип-бренд по списку типов/брендов
@@ -34,12 +34,12 @@ namespace WinFormsApp1.Logic.Interfaces
         /// <param name="list">Список типов/брендов</param>
         /// <param name="id">Идентификатор типа/бренда</param>
         /// <param name="name">Название таблицы</param>
-        public void RemoveTypeBrandByList(List<int>? list, int id, NameTableToEditEnum name);
+        public Task RemoveTypeBrandByListAsync(List<int>? list, int id, NameTableToEditEnum name);
 
         /// <summary>
         /// Удаление типа-бренда устройства
         /// </summary>
         /// <param name="typeBrandDTO">DTO типа-бренда устройства</param>
-        public void RemoveTypeBrand(TypeBrandDTO typeBrandDTO);
+        public Task RemoveTypeBrandAsync(TypeBrandDTO typeBrandDTO);
     }
 }

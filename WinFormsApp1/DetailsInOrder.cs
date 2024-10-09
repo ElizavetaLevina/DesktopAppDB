@@ -20,11 +20,11 @@ namespace WinFormsApp1
             InitializeComponent();
         }
 
-        public void UpdateTable()
+        public async void UpdateTableAsync()
         {
             int[] percent = [0, 70, 0, 30, 0, 0, 0];
 
-            list = warehousesLogic.GetWarehousesForTable(idOrder: idOrder);
+            list = await warehousesLogic.GetWarehousesForTableAsync(idOrder: idOrder);
             dataGridView1.DataSource = Funcs.ToDataTable(list);
 
             dataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -51,20 +51,20 @@ namespace WinFormsApp1
             Close();
         }
 
-        private void ButtonAddDetail_Click(object sender, EventArgs e)
+        private async void ButtonAddDetail_ClickAsync(object sender, EventArgs e)
         {
             DetailsInWarehouse details = Program.ServiceProvider.GetRequiredService<DetailsInWarehouse>();
             details.newDetail = false;
-            details.brandDevice = ordersLogic.GetOrder(idOrder).BrandTechnic?.Name;
-            details.InitializeDataTable();
+            details.brandDevice = (await ordersLogic.GetOrderAsync(idOrder)).BrandTechnic?.Name;
+            details.InitializeDataTableAsync();
 
             if (details.ShowDialog() == DialogResult.OK)
             {
-                var warehouseDTO = warehousesLogic.GetWarehouse(id: details.IdDetail);
+                var warehouseDTO = await warehousesLogic.GetWarehouseAsync(id: details.IdDetail);
                 warehouseDTO.Availability = false;
                 warehouseDTO.IdOrder = idOrder;
-                warehousesLogic.SaveDetail(warehouseDTO);
-                UpdateTable();
+                await warehousesLogic.SaveDetailAsync(warehouseDTO);
+                UpdateTableAsync();
             }
         }
 
@@ -75,13 +75,13 @@ namespace WinFormsApp1
                 DetailEdit detailEdit = Program.ServiceProvider.GetRequiredService<DetailEdit>();
                 detailEdit.changeDetail = true;
                 detailEdit.idDetail = IdDetail;
-                detailEdit.InitializeElementsForm();
+                detailEdit.InitializeElementsFormAsync();
                 if (detailEdit.ShowDialog() == DialogResult.OK)
-                    UpdateTable();
+                    UpdateTableAsync();
             }
         }
 
-        private void ButtonRemoveDetail_Click(object sender, EventArgs e)
+        private async void ButtonRemoveDetail_ClickAsync(object sender, EventArgs e)
         {
             if (dataGridView1.Rows.Count > 0)
             {
@@ -94,11 +94,11 @@ namespace WinFormsApp1
 
                 if (warning.ShowDialog() == DialogResult.OK)
                 {
-                    var warehouseDTO = warehousesLogic.GetWarehouse(id: IdDetail);
+                    var warehouseDTO = await warehousesLogic.GetWarehouseAsync(id: IdDetail);
                     warehouseDTO.Availability = true;
                     warehouseDTO.IdOrder = null;
-                    warehousesLogic.SaveDetail(warehouseDTO);
-                    UpdateTable();
+                    await warehousesLogic.SaveDetailAsync(warehouseDTO);
+                    UpdateTableAsync();
                 }
             }
         }

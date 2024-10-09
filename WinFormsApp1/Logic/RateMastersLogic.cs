@@ -1,6 +1,5 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Logic.Interfaces;
-using WinFormsApp1.Repository;
 using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Logic
@@ -15,28 +14,24 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public RateMasterEditDTO GetRateMasterByDate(int masterId, DateTime date)
+        public async Task<RateMasterEditDTO> GetRateMasterByDateAsync(int masterId, DateTime date)
         {
-            var rateMasterDTO = _rateMasterRepository.GetRateMasterByDate(masterId, date);
+            var rateMasterDTO = await _rateMasterRepository.GetRateMasterByDateAsync(masterId, date);
             if (rateMasterDTO == null)
                 return new RateMasterEditDTO();
             else return rateMasterDTO;
         }
 
         /// <inheritdoc/>
-        public List<RateMasterDTO> GetRateMasterByIdMaster(int id)
+        public async Task<List<RateMasterDTO>> GetRateMasterByIdMasterAsync(int id)
         {
-            return _rateMasterRepository.GetRateMasterByIdMaster(id);
+            return await _rateMasterRepository.GetRateMasterByIdMasterAsync(id);
         }
 
         /// <inheritdoc/>
-        public void SaveRateMaster(RateMasterEditDTO rateMasterDTO)
+        public async Task SaveRateMasterAsync(RateMasterEditDTO rateMasterDTO)
         {
-            var task = Task.Run(async () =>
-            {
-                await _rateMasterRepository.SaveRateMasterAsync(rateMasterDTO);
-            });
-            task.Wait();
+            await _rateMasterRepository.SaveRateMasterAsync(rateMasterDTO);
         }
     }
 }

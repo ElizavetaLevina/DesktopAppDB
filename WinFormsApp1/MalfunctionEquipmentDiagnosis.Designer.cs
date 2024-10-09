@@ -69,7 +69,7 @@
             buttonAdd.TabIndex = 1;
             buttonAdd.Text = "Добавить";
             buttonAdd.UseVisualStyleBackColor = true;
-            buttonAdd.Click += ButtonAdd_Click;
+            buttonAdd.Click += ButtonAdd_ClickAsync;
             // 
             // buttonChange
             // 
@@ -79,7 +79,7 @@
             buttonChange.TabIndex = 2;
             buttonChange.Text = "Изменить";
             buttonChange.UseVisualStyleBackColor = true;
-            buttonChange.Click += ButtonChange_Click;
+            buttonChange.Click += ButtonChange_ClickAsync;
             // 
             // buttonDelete
             // 

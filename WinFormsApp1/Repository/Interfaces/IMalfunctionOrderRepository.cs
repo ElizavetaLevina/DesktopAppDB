@@ -9,14 +9,14 @@ namespace WinFormsApp1.Repository.Interfaces
         /// </summary>
         /// <param name="idOrder">Номер заказа</param>
         /// <returns>Список неисправностей</returns>
-        public List<MalfunctionOrderEditDTO> GetMalfunctionOrdersByIdOrder(int idOrder);
+        public Task<List<MalfunctionOrderEditDTO>> GetMalfunctionOrdersByIdOrderAsync(int idOrder, CancellationToken token = default);
 
         /// <summary>
         /// Получение списка заказов с неисправностью
         /// </summary>
         /// <param name="idMalfunction">Номер неисправности</param>
         /// <returns>Список заказов</returns>
-        public List<MalfunctionOrderEditDTO> GetMalfunctionOrdersByIdMalfunction(int idMalfunction);
+        public Task<List<MalfunctionOrderEditDTO>> GetMalfunctionOrdersByIdMalfunctionAsync(int idMalfunction, CancellationToken token = default);
 
         public Task SaveMalfunctionOrderAsync(MalfunctionOrderEditDTO malfunctionOrderDTO, CancellationToken token = default);
 

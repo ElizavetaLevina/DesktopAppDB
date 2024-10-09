@@ -425,7 +425,7 @@
             lastId.Name = "lastId";
             lastId.Size = new Size(468, 32);
             lastId.Text = "На единицу больше, чем последняя квитанция";
-            lastId.Click += LastId_Click;
+            lastId.Click += LastId_ClickAsync;
             // 
             // pictureBox5
             // 

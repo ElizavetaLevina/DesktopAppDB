@@ -19,7 +19,7 @@ namespace WinFormsApp1
 
         public void InitializeElementsForm()
         {
-            UpdateTable();
+            UpdateTableAsync();
             comboBoxMonth.DataSource = System.Enum.GetValues(typeof(MonthEnum));
             comboBoxMonth.SelectedIndex = DateTime.Now.Month - 1;
 
@@ -34,19 +34,19 @@ namespace WinFormsApp1
             comboBoxYear.DataSource = years;
             comboBoxYear.SelectedItem = DateTime.Now.Year;
 
-            UpdatePercent();
+            UpdatePercentAsync();
         }
 
-        private void UpdateTable()
+        private async void UpdateTableAsync()
         {
-            dataGridView1.DataSource = rateMastersLogic.GetRateMasterByIdMaster(masterId);
+            dataGridView1.DataSource = await rateMastersLogic.GetRateMasterByIdMasterAsync(masterId);
             dataGridView1.Columns[nameof(RateMasterDTO.Id)].Visible = false;
         }
 
-        private void UpdatePercent()
+        private async void UpdatePercentAsync()
         {
             date = DateTime.Parse(string.Format("{0}.{1}.{2}", 1, comboBoxMonth.SelectedIndex + 1, comboBoxYear.SelectedValue));
-            rateMasterDTO = rateMastersLogic.GetRateMasterByDate(masterId, date);
+            rateMasterDTO = await rateMastersLogic.GetRateMasterByDateAsync(masterId, date);
             if (rateMasterDTO.Id != 0)
                 textBoxPercent.Text = rateMasterDTO.PercentProfit.ToString();
             else
@@ -58,7 +58,7 @@ namespace WinFormsApp1
             e.Handled = !Helpers.KeyPressHelper.CheckKeyPress(true, textBoxPercent.Text, e.KeyChar);
         }
 
-        private void ButtonSave_Click(object sender, EventArgs e)
+        private async void ButtonSave_ClickAsync(object sender, EventArgs e)
         {
             if ((string.IsNullOrEmpty(textBoxPercent.Text) || Convert.ToInt32(textBoxPercent.Text) > 100))
             {
@@ -80,19 +80,19 @@ namespace WinFormsApp1
             rateMasterDTO.DateStart = date.ToUniversalTime();
             rateMasterDTO.DateEnd = date.ToUniversalTime();
 
-            rateMastersLogic.SaveRateMaster(rateMasterDTO);
+            await rateMastersLogic.SaveRateMasterAsync(rateMasterDTO);
 
-            UpdateTable();
+            UpdateTableAsync();
         }
 
         private void ComboBoxMonth_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdatePercent();
+            UpdatePercentAsync();
         }
 
         private void ComboBoxYear_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdatePercent();
+            UpdatePercentAsync();
         }
     }
 }

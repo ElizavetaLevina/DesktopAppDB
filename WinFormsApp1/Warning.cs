@@ -57,7 +57,7 @@ namespace WinFormsApp1
         private void LinkLabelChangeMaxPrice_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             PropertiesOrder propertiesOrder = Program.ServiceProvider.GetRequiredService<PropertiesOrder>();
-            propertiesOrder.InitializeElementsForm(id, StatusOrderEnum.InRepair, true);
+            propertiesOrder.InitializeElementsFormAsync(id, StatusOrderEnum.InRepair, true);
             propertiesOrder.ShowDialog();
             DialogResult = DialogResult.OK;
             Close();

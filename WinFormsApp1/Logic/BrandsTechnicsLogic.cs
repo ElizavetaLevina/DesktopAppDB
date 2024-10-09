@@ -1,6 +1,5 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Logic.Interfaces;
-using WinFormsApp1.Repository;
 using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Logic
@@ -15,15 +14,16 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public int GetIdBrandTechnic(string name)
+        public async Task<int> GetIdBrandTechnicAsync(string name)
         {
-            return _brandTechnicRepository.GetBrandTechnicByName(name).Id;
+            var brandTechnicDTO = await _brandTechnicRepository.GetBrandTechnicByNameAsync(name);
+            return brandTechnicDTO.Id;
         }
 
         /// <inheritdoc/>
-        public BrandTechnicEditDTO GetBrandTechnic(int id)
+        public async Task<BrandTechnicEditDTO> GetBrandTechnicAsync(int id)
         {
-            var brandTechnicDTO = _brandTechnicRepository.GetBrandTechnic(id);
+            var brandTechnicDTO = await _brandTechnicRepository.GetBrandTechnicAsync(id);
             if (brandTechnicDTO == null)
                 return new BrandTechnicEditDTO();
             else
@@ -31,40 +31,30 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public List<BrandTechnicDTO> GetBrandsTechnic()
+        public async Task<List<BrandTechnicDTO>> GetBrandsTechnicAsync()
         {
-            return _brandTechnicRepository.GetBrandsTechnic();
+            return await _brandTechnicRepository.GetBrandsTechnicAsync();
         }
 
         /// <inheritdoc/>
-        public string GetBrandTechnicName(int id) 
+        public async Task<string> GetBrandTechnicNameAsync(int id) 
         {
-            var brandTechnicDTO = _brandTechnicRepository.GetBrandTechnic(id);
+            var brandTechnicDTO = await _brandTechnicRepository.GetBrandTechnicAsync(id);
             if (brandTechnicDTO == null)
                 return string.Empty;
             else return brandTechnicDTO.Name;
         }
 
         /// <inheritdoc/>
-        public int SaveBrandTechnic(BrandTechnicEditDTO brandTechnicDTO)
+        public async Task<int> SaveBrandTechnicAsync(BrandTechnicEditDTO brandTechnicDTO)
         {
-            var idBrandTechnic = 0;
-            var task = Task.Run(async () =>
-            {
-                idBrandTechnic = await _brandTechnicRepository.SaveBrandTechnicAsync(brandTechnicDTO);
-            });
-            task.Wait();
-            return idBrandTechnic;
+            return await _brandTechnicRepository.SaveBrandTechnicAsync(brandTechnicDTO);
         }
 
         /// <inheritdoc/>
-        public void RemoveBrandTechnic(BrandTechnicEditDTO brandTechnicDTO)
+        public async Task RemoveBrandTechnicAsync(BrandTechnicEditDTO brandTechnicDTO)
         {
-            var task = Task.Run(async () =>
-            {
-                await _brandTechnicRepository.RemoveBrandTechnicAsync(brandTechnicDTO);
-            });
-            task.Wait();
+            await _brandTechnicRepository.RemoveBrandTechnicAsync(brandTechnicDTO);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Logic.Interfaces;
-using WinFormsApp1.Repository;
 using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Logic
@@ -15,31 +14,30 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public List<TypeTechnicDTO> GetTypesTechnic()
+        public async Task<List<TypeTechnicDTO>> GetTypesTechnicAsync()
         {
-            return _typeTechnicRepository.GetTypesTechnic();
+            return await _typeTechnicRepository.GetTypesTechnicAsync();
         }
 
         /// <inheritdoc/>
-        public int GetIdTypeTechnic(string name)
+        public async Task<int> GetIdTypeTechnicAsync(string name)
         {
-            return _typeTechnicRepository.GetTypeTechnicByName(name).Id;
+            return (await _typeTechnicRepository.GetTypeTechnicByNameAsync(name)).Id;
         }
 
         /// <inheritdoc/>
-        public string GetTypeTechnicName(int id)
+        public async Task<string> GetTypeTechnicNameAsync(int id)
         {
-            //return _typeTechnicRepository.GetTypeTechnic(id).Name;
-            var typeTechnicDTO = _typeTechnicRepository.GetTypeTechnic(id);
+            var typeTechnicDTO = await _typeTechnicRepository.GetTypeTechnicAsync(id);
             if (typeTechnicDTO == null)
                 return string.Empty;
             else return typeTechnicDTO.Name;
         }
 
         /// <inheritdoc/>
-        public TypeTechnicEditDTO GetTypeTechnic(int id)
+        public async Task<TypeTechnicEditDTO> GetTypeTechnicAsync(int id)
         {
-            var typeTechnic = _typeTechnicRepository.GetTypeTechnic(id);
+            var typeTechnic = await _typeTechnicRepository.GetTypeTechnicAsync(id);
             if (typeTechnic == null)
                 return new TypeTechnicEditDTO();
             else
@@ -47,25 +45,15 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public int SaveTypeTechnic(TypeTechnicEditDTO typeTechnicDTO)
+        public async Task<int> SaveTypeTechnicAsync(TypeTechnicEditDTO typeTechnicDTO)
         {
-            var idTypeTechnic = 0;
-            var task = Task.Run(async () =>
-            {
-                idTypeTechnic = await _typeTechnicRepository.SaveTypeTechnicAsync(typeTechnicDTO);
-            });
-            task.Wait();
-            return idTypeTechnic;
+            return await _typeTechnicRepository.SaveTypeTechnicAsync(typeTechnicDTO);
         }
 
         /// <inheritdoc/>
-        public void RemoveTypeTechnic(TypeTechnicEditDTO typeTechnicDTO)
+        public async Task RemoveTypeTechnicAsync(TypeTechnicEditDTO typeTechnicDTO)
         {
-            var task = Task.Run(async () =>
-            {
-                await _typeTechnicRepository.RemoveTypeTechnicAsync(typeTechnicDTO);
-            });
-            task.Wait();
+            await _typeTechnicRepository.RemoveTypeTechnicAsync(typeTechnicDTO);
         }
     }
 }

@@ -1074,7 +1074,7 @@ namespace WinFormsApp1
             itemGettingDevice.Name = "itemGettingDevice";
             itemGettingDevice.Size = new Size(360, 32);
             itemGettingDevice.Text = "Квитанция о получении в ремонт";
-            itemGettingDevice.Click += ItemGettingDevice_Click;
+            itemGettingDevice.Click += ItemGettingDevice_ClickAsync;
             // 
             // itemIssuingDevice
             // 
@@ -1083,7 +1083,7 @@ namespace WinFormsApp1
             itemIssuingDevice.Name = "itemIssuingDevice";
             itemIssuingDevice.Size = new Size(360, 32);
             itemIssuingDevice.Text = "Квитанция о выдачи аппарата";
-            itemIssuingDevice.Click += ItemIssuingDevice_Click;
+            itemIssuingDevice.Click += ItemIssuingDevice_ClickAsync;
             // 
             // contextMenuReports
             // 

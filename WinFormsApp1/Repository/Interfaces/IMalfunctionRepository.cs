@@ -8,21 +8,21 @@ namespace WinFormsApp1.Repository.Interfaces
          /// Получение списка неисправностей
          /// </summary>
          /// <returns>Список неисправностей</returns>
-        public List<MalfunctionEditDTO> GetMalfunctions();
+        public Task<List<MalfunctionEditDTO>> GetMalfunctionsAsync(CancellationToken token = default);
 
         /// <summary>
         /// Получение неисправности по идентификатору
         /// </summary>
         /// <param name="id">Идентификатор</param>
         /// <returns>Неисправность</returns>
-        public MalfunctionEditDTO GetMalfunction(int id);
+        public Task<MalfunctionEditDTO> GetMalfunctionAsync(int id, CancellationToken token = default);
 
         /// <summary>
         /// Получение неисправности по названию
         /// </summary>
         /// <param name="name">Название</param>
         /// <returns>Неисправность</returns>
-        public MalfunctionEditDTO GetMalfunctionByName(string name);
+        public Task<MalfunctionEditDTO> GetMalfunctionByNameAsync(string name, CancellationToken token = default);
 
         public Task<int> SaveMalfunctionAsync(MalfunctionEditDTO malfunctionDTO, CancellationToken token = default);
 

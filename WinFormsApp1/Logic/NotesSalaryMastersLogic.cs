@@ -16,9 +16,9 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public List<NoteSalaryMasterEditDTO> GetNoteSalaryMasters(DateTime date)
+        public async Task<List<NoteSalaryMasterEditDTO>> GetNoteSalaryMastersAsync(DateTime date)
         {
-            return _noteSalaryMasterRepository.GetNoteSalaryMasters(date);
+            return await _noteSalaryMasterRepository.GetNoteSalaryMastersAsync(date);
         }
 
         /// <inheritdoc/>

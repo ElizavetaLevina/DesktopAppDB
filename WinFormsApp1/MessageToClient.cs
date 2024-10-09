@@ -14,9 +14,9 @@ namespace WinFormsApp1
             InitializeComponent();
         }
 
-        public void InitializeClient(string idClient)
+        public async void InitializeClientAsync(string idClient)
         {
-            clientDTO = clientsLogic.GetClient(idClient);
+            clientDTO = await clientsLogic.GetClientAsync(idClient);
             textBoxPhone.Text = clientDTO.IdClient;
         }
 

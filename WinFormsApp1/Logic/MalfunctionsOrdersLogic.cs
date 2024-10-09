@@ -14,35 +14,27 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public void SaveMalfunctionOrder(MalfunctionOrderEditDTO malfunctionOrderDTO)
+        public async Task SaveMalfunctionOrderAsync(MalfunctionOrderEditDTO malfunctionOrderDTO)
         {
-            var task = Task.Run(async () =>
-            {
-                await _malfunctionOrderRepository.SaveMalfunctionOrderAsync(malfunctionOrderDTO);
-            });
-            task.Wait();
+            await _malfunctionOrderRepository.SaveMalfunctionOrderAsync(malfunctionOrderDTO);
         }
 
         /// <inheritdoc/>
-        public List<MalfunctionOrderEditDTO> GetMalfunctionOrdersByIdOrder(int idOrder)
+        public async Task<List<MalfunctionOrderEditDTO>> GetMalfunctionOrdersByIdOrderAsync(int idOrder)
         {
-            return _malfunctionOrderRepository.GetMalfunctionOrdersByIdOrder(idOrder);
+            return await _malfunctionOrderRepository.GetMalfunctionOrdersByIdOrderAsync(idOrder);
         }
 
         /// <inheritdoc/>
-        public List<MalfunctionOrderEditDTO> GetMalfunctionOrdersByIdMalfunction(int idMalfunction)
+        public async Task<List<MalfunctionOrderEditDTO>> GetMalfunctionOrdersByIdMalfunctionAsync(int idMalfunction)
         {
-            return _malfunctionOrderRepository.GetMalfunctionOrdersByIdMalfunction(idMalfunction);
+            return await _malfunctionOrderRepository.GetMalfunctionOrdersByIdMalfunctionAsync(idMalfunction);
         }
 
         /// <inheritdoc/>
-        public void RemoveMalfunctionOrder(MalfunctionOrderEditDTO malfunctionOrderDTO)
+        public async Task RemoveMalfunctionOrderAsync(MalfunctionOrderEditDTO malfunctionOrderDTO)
         {
-            var task = Task.Run(async () =>
-            {
-                await _malfunctionOrderRepository.RemoveMalfunctionOrderAsync(malfunctionOrderDTO);
-            });
-            task.Wait();
+            await _malfunctionOrderRepository.RemoveMalfunctionOrderAsync(malfunctionOrderDTO);
         }
     }
 }

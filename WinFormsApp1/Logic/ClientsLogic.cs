@@ -15,9 +15,9 @@ namespace WinFormsApp1.Logic
 
 
         /// <inheritdoc/>
-        public ClientEditDTO GetClientByIdClient(string idClient)
+        public async Task<ClientEditDTO> GetClientByIdClientAsync(string idClient)
         {
-            var clientDTO = _clientRepository.GetClientByIdClient(idClient);
+            var clientDTO = await _clientRepository.GetClientByIdClientAsync(idClient);
             if (clientDTO == null)
                 return new ClientEditDTO();
             else
@@ -25,21 +25,15 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public int SaveClient(ClientEditDTO clientDTO)
+        public async Task<int> SaveClientAsync(ClientEditDTO clientDTO)
         {
-            int id = 0;
-            var task = Task.Run(async () =>
-            {
-                id = await _clientRepository.SaveClientAsync(clientDTO);
-            });
-            task.Wait();
-            return id;
+            return await _clientRepository.SaveClientAsync(clientDTO);
         }
 
         /// <inheritdoc/>
-        public List<ClientEditDTO> GetClients()
+        public async Task<List<ClientEditDTO>> GetClientsAsync()
         {
-            return _clientRepository.GetClients();
+            return await _clientRepository.GetClientsAsync();
         }
 
         /// <inheritdoc/>
@@ -61,9 +55,9 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public ClientEditDTO GetClient(string idClient)
+        public async Task<ClientEditDTO> GetClientAsync(string idClient)
         {
-            return _clientRepository.GetClient(idClient);
+            return await _clientRepository.GetClientAsync(idClient);
         }
     }
 }

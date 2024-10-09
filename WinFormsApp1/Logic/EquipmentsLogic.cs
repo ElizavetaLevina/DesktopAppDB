@@ -1,6 +1,5 @@
 ﻿using WinFormsApp1.DTO;
 using WinFormsApp1.Logic.Interfaces;
-using WinFormsApp1.Repository;
 using WinFormsApp1.Repository.Interfaces;
 
 namespace WinFormsApp1.Logic
@@ -16,33 +15,27 @@ namespace WinFormsApp1.Logic
 
 
         /// <inheritdoc/>
-        public int SaveEquipment(EquipmentEditDTO equipmentDTO)
+        public async Task<int> SaveEquipmentAsync(EquipmentEditDTO equipmentDTO)
         {
-            int equipmentId = 0;
-            var task = Task.Run(async () =>
-            {
-                equipmentId = await _equipmentRepository.SaveEquipmentAsync(equipmentDTO);
-            });
-            task.Wait();
-            return equipmentId;
+            return await _equipmentRepository.SaveEquipmentAsync(equipmentDTO);
         }
 
         /// <inheritdoc/>
-        public List<EquipmentEditDTO> GetEquipments()
+        public async Task<List<EquipmentEditDTO>> GetEquipmentsAsync()
         {
-            return _equipmentRepository.GetEquipments();
+            return await _equipmentRepository.GetEquipmentsAsync();
         }
 
         /// <inheritdoc/>
-        public List<EquipmentEditDTO> GetEquipmentsByName(string name)
+        public async Task<List<EquipmentEditDTO>> GetEquipmentsByNameAsync(string name)
         {
-            return _equipmentRepository.GetEquipmentsByName(name);
+            return await _equipmentRepository.GetEquipmentsByNameAsync(name);
         }
 
         /// <inheritdoc/>
-        public EquipmentEditDTO GetEquipmentByName(string name)
+        public async Task<EquipmentEditDTO> GetEquipmentByNameAsync(string name)
         {
-            var equipmentDTO = _equipmentRepository.GetEquipmentByName(name);
+            var equipmentDTO = await _equipmentRepository.GetEquipmentByNameAsync(name);
             if (equipmentDTO == null)
                 return new EquipmentEditDTO();
             else
@@ -50,9 +43,9 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public EquipmentEditDTO GetEquipment(int? id)
+        public async Task<EquipmentEditDTO> GetEquipmentAsync(int? id)
         {
-            var equipmentDTO = _equipmentRepository.GetEquipment(id);
+            var equipmentDTO = await _equipmentRepository.GetEquipmentAsync(id);
             if (equipmentDTO == null)
                 return new EquipmentEditDTO();
             else
@@ -60,13 +53,9 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public void RemoveEquipment(EquipmentEditDTO equipmentDTO)
+        public async Task RemoveEquipmentAsync(EquipmentEditDTO equipmentDTO)
         {
-            var task = Task.Run(async () =>
-            {
-                await _equipmentRepository.RemoveEquipmentAsync(equipmentDTO);
-            });
-            task.Wait();
+            await _equipmentRepository.RemoveEquipmentAsync(equipmentDTO);
         }
     }
 }

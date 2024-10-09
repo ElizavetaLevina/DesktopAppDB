@@ -43,12 +43,12 @@ namespace WinFormsApp1
             InitializeComponent();
         }
 
-        public void InitializeElementsForm()
+        public async void InitializeElementsFormAsync()
         {
             switch (nameTable)
             {
                 case NameTableToEditEnum.TypeTechnic:
-                    var name = typesTechnicsLogic.GetTypeTechnicName(id);
+                    var name = await typesTechnicsLogic.GetTypeTechnicNameAsync(id);
                     Text = id == 0 ? "Добавление типа устройства" : "Изменение типа устройства";
                     BtnText = "Сохранить";
                     NameTextBox = name;
@@ -56,7 +56,7 @@ namespace WinFormsApp1
                     LabelNameInList = String.Format("Фирмы-производители {0}", name);
                     break;
                 case NameTableToEditEnum.BrandTechnic:
-                    name = brandsTechnicsLogic.GetBrandTechnicName(id);
+                    name = await brandsTechnicsLogic.GetBrandTechnicNameAsync(id);
                     Text = id == 0 ? "Добавление фирмы-производителя" : "Изменение названия фирмы";
                     BtnText = "Сохранить";
                     NameTextBox = name;
@@ -64,10 +64,10 @@ namespace WinFormsApp1
                     LabelNameInList = String.Format("Типы устройств для {0}", name);
                     break;
             }
-            UpdateComboBox();
+            UpdateComboBoxAsync();
         }
 
-        private void ButtonSave_Click(object sender, EventArgs e)
+        private async void ButtonSave_ClickAsync(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(NameTextBox))
             {
@@ -80,18 +80,18 @@ namespace WinFormsApp1
                 switch (nameTable)
                 {
                     case NameTableToEditEnum.TypeTechnic:
-                        var typeTechnicDTO = typesTechnicsLogic.GetTypeTechnic(id);
+                        var typeTechnicDTO = await typesTechnicsLogic.GetTypeTechnicAsync(id);
                         typeTechnicDTO.Name = NameTextBox;
-                        var idTypeTechnic = typesTechnicsLogic.SaveTypeTechnic(typeTechnicDTO);
-                        typesBrandsLogic.SaveTypeBrand(idList, idTypeTechnic, nameTable);
-                        typesBrandsLogic.RemoveTypeBrandByList(idRemoveList, idTypeTechnic, nameTable);
+                        var idTypeTechnic = await typesTechnicsLogic.SaveTypeTechnicAsync(typeTechnicDTO);
+                        await typesBrandsLogic.SaveTypeBrandAsync(idList, idTypeTechnic, nameTable);
+                        await typesBrandsLogic.RemoveTypeBrandByListAsync(idRemoveList, idTypeTechnic, nameTable);
                         break;
                     case NameTableToEditEnum.BrandTechnic:
-                        var brandTechnicDTO = brandsTechnicsLogic.GetBrandTechnic(id);
+                        var brandTechnicDTO = await brandsTechnicsLogic.GetBrandTechnicAsync(id);
                         brandTechnicDTO.Name = NameTextBox;
-                        var idBrandTechnic = brandsTechnicsLogic.SaveBrandTechnic(brandTechnicDTO);
-                        typesBrandsLogic.SaveTypeBrand(idList, idBrandTechnic, nameTable);
-                        typesBrandsLogic.RemoveTypeBrandByList(idRemoveList, idBrandTechnic, nameTable);
+                        var idBrandTechnic = await brandsTechnicsLogic.SaveBrandTechnicAsync(brandTechnicDTO);
+                        await typesBrandsLogic.SaveTypeBrandAsync(idList, idBrandTechnic, nameTable);
+                        await typesBrandsLogic.RemoveTypeBrandByListAsync(idRemoveList, idBrandTechnic, nameTable);
                         break;
                 }
                 DialogResult = DialogResult.OK;
@@ -111,7 +111,7 @@ namespace WinFormsApp1
             nameTextBox.SelectAll();
         }
 
-        private void LinkLabelAdd_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private async void LinkLabelAdd_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
             {
@@ -123,10 +123,10 @@ namespace WinFormsApp1
                     switch (nameTable)
                     {
                         case NameTableToEditEnum.TypeTechnic:
-                            id = brandsTechnicsLogic.GetIdBrandTechnic(comboBoxSecondName.Text);
+                            id = await brandsTechnicsLogic.GetIdBrandTechnicAsync(comboBoxSecondName.Text);
                             break;
                         case NameTableToEditEnum.BrandTechnic:
-                            id = typesTechnicsLogic.GetIdTypeTechnic(comboBoxSecondName.Text);
+                            id = await typesTechnicsLogic.GetIdTypeTechnicAsync(comboBoxSecondName.Text);
                             break;
                     }
 
@@ -138,7 +138,7 @@ namespace WinFormsApp1
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
-        private void LinkLabelDelete_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private async void LinkLabelDelete_LinkClickedAsync(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
             {
@@ -148,10 +148,10 @@ namespace WinFormsApp1
                 switch (nameTable)
                 {
                     case NameTableToEditEnum.TypeTechnic:
-                        id = brandsTechnicsLogic.GetIdBrandTechnic(comboBoxSecondName.Text);
+                        id = await brandsTechnicsLogic.GetIdBrandTechnicAsync(comboBoxSecondName.Text);
                         break;
                     case NameTableToEditEnum.BrandTechnic:
-                        id = typesTechnicsLogic.GetIdTypeTechnic(comboBoxSecondName.Text);
+                        id = await typesTechnicsLogic.GetIdTypeTechnicAsync(comboBoxSecondName.Text);
                         break;
                 }
 
@@ -182,11 +182,11 @@ namespace WinFormsApp1
                 brandAndTypeEdit.nameTable = nameTable == NameTableToEditEnum.TypeTechnic ?
                     NameTableToEditEnum.BrandTechnic : NameTableToEditEnum.TypeTechnic;
                 if (brandAndTypeEdit.ShowDialog() == DialogResult.OK)
-                    UpdateComboBox();
+                    UpdateComboBoxAsync();
             }
         }
 
-        private void UpdateComboBox()
+        private async void UpdateComboBoxAsync()
         {
             comboBoxSecondName.DataSource = null;
             comboBoxSecondName.Items.Clear();
@@ -195,10 +195,10 @@ namespace WinFormsApp1
                 case NameTableToEditEnum.TypeTechnic:
                     comboBoxSecondName.ValueMember = "Id";
                     comboBoxSecondName.DisplayMember = "NameBrandTechnic";
-                    comboBoxSecondName.DataSource = brandsTechnicsLogic.GetBrandsTechnic();
+                    comboBoxSecondName.DataSource = await brandsTechnicsLogic.GetBrandsTechnicAsync();
                     if (id != 0)
                     {
-                        var list = typesBrandsLogic.GetTypeBrand(idType: id);
+                        var list = await typesBrandsLogic.GetTypeBrandAsync(idType: id);
                         for (int i = 0; i < list.Count; i++)
                         {
                             if (listBox1.Items.IndexOf(list[i].BrandTechnic?.Name) < 0)
@@ -212,10 +212,10 @@ namespace WinFormsApp1
                 case NameTableToEditEnum.BrandTechnic:
                     comboBoxSecondName.ValueMember = "Id";
                     comboBoxSecondName.DisplayMember = "NameTypeTechnic";
-                    comboBoxSecondName.DataSource = typesTechnicsLogic.GetTypesTechnic();
+                    comboBoxSecondName.DataSource = await typesTechnicsLogic.GetTypesTechnicAsync();
                     if (id != 0)
                     {
-                        var list = typesBrandsLogic.GetTypeBrand(idBrand: id); 
+                        var list = await typesBrandsLogic.GetTypeBrandAsync(idBrand: id); 
                         for (int i = 0; i < list.Count; i++)
                         {
                             if (listBox1.Items.IndexOf(list[i].TypeTechnic?.Name) < 0)

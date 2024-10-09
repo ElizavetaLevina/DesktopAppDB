@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
 using WinFormsApp1.Repository.Interfaces;
@@ -15,7 +16,8 @@ namespace WinFormsApp1.Repository
         }
 
         /// <inheritdoc/>
-        public List<WarehouseTableDTO> GetWarehousesForTable(bool? availability = null, bool datePurchase = false, string? name = null, int? idOrder = null)
+        public async Task<List<WarehouseTableDTO>> GetWarehousesForTableAsync(bool? availability = null, bool datePurchase = false, 
+            string? name = null, int? idOrder = null, CancellationToken token = default)
         {
             Context context = new();
             var set = context.Warehouse.Where(c => true);
@@ -28,28 +30,30 @@ namespace WinFormsApp1.Repository
             if(datePurchase)
                 set = set.OrderByDescending(i => i.DatePurchase);
 
-            return _mapper.ProjectTo<WarehouseTableDTO>(set).ToList();
+            return await _mapper.ProjectTo<WarehouseTableDTO>(set).ToListAsync(token);
         }
 
         /// <inheritdoc/>
-        public List<WarehouseDTO> GetWarehouses()
+        public async Task<List<WarehouseDTO>> GetWarehousesAsync(CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<WarehouseDTO>(context.Set<Warehouse>()).ToList();
+            return await _mapper.ProjectTo<WarehouseDTO>(context.Set<Warehouse>()).ToListAsync(token);
         }
 
         /// <inheritdoc/>
-        public WarehouseEditDTO GetWarehouse(int id)
+        public async Task<WarehouseEditDTO> GetWarehouseAsync(int id, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<WarehouseEditDTO>(context.Set<Warehouse>().Where(i => i.Id == id)).FirstOrDefault();
+            return await _mapper.ProjectTo<WarehouseEditDTO>(context.Set<Warehouse>().Where(i => i.Id == id))
+                .FirstOrDefaultAsync(token);
         }
 
         /// <inheritdoc/>
-        public List<WarehouseEditDTO> GetDetailsInOrder(int idOrder)
+        public async Task<List<WarehouseEditDTO>> GetDetailsInOrderAsync(int idOrder, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<WarehouseEditDTO>(context.Set<Warehouse>().Where(i => i.IdOrder == idOrder)).ToList();
+            return await _mapper.ProjectTo<WarehouseEditDTO>(context.Set<Warehouse>().Where(i => i.IdOrder == idOrder))
+                .ToListAsync(token);
         }
 
         /// <inheritdoc/>

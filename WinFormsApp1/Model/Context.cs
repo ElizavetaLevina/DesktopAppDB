@@ -29,7 +29,7 @@ namespace WinFormsApp1.Model
         {
             try
             {
-                var created = Database.EnsureCreated();
+                var created = Database.EnsureCreatedAsync();
             }
             catch (Exception ex)
             {

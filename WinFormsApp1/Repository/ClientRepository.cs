@@ -17,18 +17,18 @@ namespace WinFormsApp1.Repository
         }
 
         /// <inheritdoc/>
-        public ClientEditDTO GetClient(string idClient)
+        public async Task<ClientEditDTO> GetClientAsync(string idClient, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<ClientEditDTO>(context.Set<Client>().Where(i => i.IdClient == idClient)).FirstOrDefault();
+            return await _mapper.ProjectTo<ClientEditDTO>(context.Set<Client>().Where(i => i.IdClient == idClient))
+                .FirstOrDefaultAsync(token);
         }
 
         /// <inheritdoc/>
-        public List<ClientEditDTO> GetClients()
+        public async Task<List<ClientEditDTO>> GetClientsAsync(CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<ClientEditDTO>(context.Set<Client>()).ToList();
-            //context.Clients.Select(a => new ClientEditDTO(a)).ToList();
+            return await _mapper.ProjectTo<ClientEditDTO>(context.Set<Client>()).ToListAsync(token);
         }
 
         /// <inheritdoc/>
@@ -53,10 +53,11 @@ namespace WinFormsApp1.Repository
         }
 
         /// <inheritdoc/>
-        public ClientEditDTO GetClientByIdClient(string idClient)
+        public async Task<ClientEditDTO> GetClientByIdClientAsync(string idClient, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<ClientEditDTO>(context.Set<Client>().Where(i => i.IdClient == idClient)).FirstOrDefault();
+            return await _mapper.ProjectTo<ClientEditDTO>(context.Set<Client>().Where(i => i.IdClient == idClient))
+                .FirstOrDefaultAsync(token);
         }
 
         /// <inheritdoc/>
@@ -64,14 +65,6 @@ namespace WinFormsApp1.Repository
         {
             Context context = new();
             var client = _mapper.Map<ClientEditDTO, Client>(clientDTO);
-            /*Client client = new()
-            {
-                Id = clientDTO.Id,
-                IdClient = clientDTO.IdClient,
-                NameAndAddressClient = clientDTO.NameAndAddressClient,
-                NumberSecondPhone = clientDTO.NumberSecondPhone,
-                TypeClient = clientDTO.TypeClient
-            };*/
             try
             {
                 if (client.Id == 0)

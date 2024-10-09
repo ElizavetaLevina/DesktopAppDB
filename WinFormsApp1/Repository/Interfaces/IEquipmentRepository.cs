@@ -8,28 +8,28 @@ namespace WinFormsApp1.Repository.Interfaces
         /// Получение списка комплектации
         /// </summary>
         /// <returns>Список комплектации</returns>
-        public List<EquipmentEditDTO> GetEquipments();
+        public Task<List<EquipmentEditDTO>> GetEquipmentsAsync(CancellationToken token = default);
 
         /// <summary>
         /// Получение комплектации по идентификатору
         /// </summary>
         /// <param name="id">Идентификатор</param>
         /// <returns>Комплектация</returns>
-        public EquipmentEditDTO GetEquipment(int? id);
+        public Task<EquipmentEditDTO> GetEquipmentAsync(int? id, CancellationToken token = default);
 
         /// <summary>
         /// Получение списка комплектаций по названию
         /// </summary>
         /// <param name="name">Название</param>
         /// <returns>Список комплектаций</returns>
-        public List<EquipmentEditDTO> GetEquipmentsByName(string name);
+        public Task<List<EquipmentEditDTO>> GetEquipmentsByNameAsync(string name, CancellationToken token = default);
 
         /// <summary>
         /// Получение записи по названию
         /// </summary>
         /// <param name="name">Названию</param>
         /// <returns>Запись</returns>
-        public EquipmentEditDTO GetEquipmentByName(string name);
+        public Task<EquipmentEditDTO> GetEquipmentByNameAsync(string name, CancellationToken token = default);
 
         public Task<int> SaveEquipmentAsync(EquipmentEditDTO equipmentDTO, CancellationToken token = default);
 

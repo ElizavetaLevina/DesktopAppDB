@@ -98,7 +98,7 @@
             buttonRemove.TabIndex = 3;
             buttonRemove.Text = "Удалить фирму";
             buttonRemove.UseVisualStyleBackColor = true;
-            buttonRemove.Click += ButtonRemove_Click;
+            buttonRemove.Click += ButtonRemove_ClickAsync;
             // 
             // BrandsTechnic
             // 

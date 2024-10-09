@@ -9,40 +9,40 @@ namespace WinFormsApp1.Logic.Interfaces
         /// </summary>
         /// <param name="idOrder">Идентификатор заказа</param>
         /// <returns>Список деталей</returns>
-        public List<WarehouseEditDTO> GetDetailsInOrder(int idOrder);
+        public Task<List<WarehouseEditDTO>> GetDetailsInOrderAsync(int idOrder);
 
         /// <summary>
         /// Получение количества деталей в заказе
         /// </summary>
         /// <param name="idOrder">Идентификатор заказа</param>
         /// <returns>Количество деталей</returns>
-        public int GetCountDetailsInOrder(int idOrder);
+        public Task<int> GetCountDetailsInOrderAsync(int idOrder);
 
         /// <summary>
         /// Получение суммы деталей в заказе
         /// </summary>
         /// <param name="idOrder">Идентификатор заказа</param>
         /// <returns>Сумма деталей</returns>
-        public int GetPriceDetailsInOrder(int idOrder);
+        public Task<int> GetPriceDetailsInOrderAsync(int idOrder);
 
         /// <summary>
         /// Получение списка деталей на складе
         /// </summary>
         /// <returns>Список деталей на складе</returns>
-        public List<WarehouseDTO> GetWarehouses();
+        public Task<List<WarehouseDTO>> GetWarehousesAsync();
 
         /// <summary>
         /// Сохранение детали
         /// </summary>
         /// <param name="warehouseDTO">DTO детали</param>
-        public void SaveDetail(WarehouseEditDTO warehouseDTO);
+        public Task SaveDetailAsync(WarehouseEditDTO warehouseDTO);
 
         /// <summary>
         /// Получение детали по идентификатору
         /// </summary>
         /// <param name="id">Идентификатор</param>
         /// <returns>Деталь</returns>
-        public WarehouseEditDTO GetWarehouse(int id);
+        public Task<WarehouseEditDTO> GetWarehouseAsync(int id);
 
         /// <summary>
         /// Получение списка деталей на складе для таблицы
@@ -52,13 +52,13 @@ namespace WinFormsApp1.Logic.Interfaces
         /// <param name="name">Название</param>
         /// <param name="idOrder">Идентификатор заказа</param>
         /// <returns>Список деталей на складе</returns>
-        public List<WarehouseTableDTO> GetWarehousesForTable(bool? availability = null, bool datePurchase = false,
+        public Task<List<WarehouseTableDTO>> GetWarehousesForTableAsync(bool? availability = null, bool datePurchase = false,
             string? name = null, int? idOrder = null);
 
         /// <summary>
         /// Удаление детали
         /// </summary>
         /// <param name="warehouseDTO">DTO детали</param>
-        public void RemoveWarehouse(WarehouseEditDTO warehouseDTO);
+        public Task RemoveWarehouseAsync(WarehouseEditDTO warehouseDTO);
     }
 }

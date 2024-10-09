@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
 using WinFormsApp1.Repository.Interfaces;
@@ -15,31 +16,34 @@ namespace WinFormsApp1.Repository
         }
 
         /// <inheritdoc/>
-        public List<TypeTechnicDTO> GetTypesTechnic()
+        public async Task<List<TypeTechnicDTO>> GetTypesTechnicAsync(CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<TypeTechnicDTO>(context.Set<TypeTechnic>().OrderBy(i => i.NameTypeTechnic)).ToList();
+            return await _mapper.ProjectTo<TypeTechnicDTO>(context.Set<TypeTechnic>().OrderBy(i => i.NameTypeTechnic))
+                .ToListAsync(token);
         }
 
         /// <inheritdoc/>
-        public TypeTechnicDTO GetTypeTechnicByName(string name)
+        public async Task<TypeTechnicDTO> GetTypeTechnicByNameAsync(string name, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<TypeTechnicDTO>(context.Set<TypeTechnic>().Where(i => i.NameTypeTechnic == name)).FirstOrDefault();
+            return await _mapper.ProjectTo<TypeTechnicDTO>(context.Set<TypeTechnic>().Where(i => i.NameTypeTechnic == name))
+                .FirstOrDefaultAsync(token);
         }
 
 
         /// <inheritdoc/>
-        public TypeTechnicEditDTO GetTypeTechnic(int id)
+        public async Task<TypeTechnicEditDTO> GetTypeTechnicAsync(int id, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<TypeTechnicEditDTO>(context.Set<TypeTechnic>().Where(i => i.Id == id)).FirstOrDefault();
+            return await _mapper.ProjectTo<TypeTechnicEditDTO>(context.Set<TypeTechnic>().Where(i => i.Id == id))
+                .FirstOrDefaultAsync(token);
         }
 
         /// <inheritdoc/>
         public async Task<int> SaveTypeTechnicAsync(TypeTechnicEditDTO typeTechnicDTO, CancellationToken token = default)
         {
-            using Context context = new();
+            Context context = new();
             var typeTechnic = _mapper.Map<TypeTechnicEditDTO, TypeTechnic>(typeTechnicDTO);
             try
             {
@@ -58,7 +62,7 @@ namespace WinFormsApp1.Repository
         {
             try
             {
-                using Context context = new();
+                Context context = new();
                 var typeTechnic = _mapper.Map<TypeTechnicEditDTO, TypeTechnic>(typeTechnicDTO);
                 context.TypeTechnices.Remove(typeTechnic);
                 await context.SaveChangesAsync(token);

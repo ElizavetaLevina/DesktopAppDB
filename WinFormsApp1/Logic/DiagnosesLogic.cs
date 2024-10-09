@@ -14,27 +14,21 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public int SaveDiagnosis(DiagnosisEditDTO diagnosisDTO)
+        public async Task<int> SaveDiagnosisAsync(DiagnosisEditDTO diagnosisDTO)
         {
-            int diagnosisId = 0;
-            var task = Task.Run(async () =>
-            {
-                diagnosisId = await _diagnosisRepository.SaveDiagnosisAsync(diagnosisDTO);
-            });
-            task.Wait();
-            return diagnosisId;
+            return await _diagnosisRepository.SaveDiagnosisAsync(diagnosisDTO);
         }
 
         /// <inheritdoc/>
-        public List<DiagnosisEditDTO> GetDiagnoses()
+        public async Task<List<DiagnosisEditDTO>> GetDiagnosesAsync()
         {
-            return _diagnosisRepository.GetDiagnoses();
+            return await _diagnosisRepository.GetDiagnosesAsync();
         }
 
         /// <inheritdoc/>
-        public DiagnosisEditDTO GetDiagnosisByName(string name)
+        public async Task<DiagnosisEditDTO> GetDiagnosisByNameAsync(string name)
         {
-            var diagnosisDTO = _diagnosisRepository.GetDiagnosisByName(name);
+            var diagnosisDTO = await _diagnosisRepository.GetDiagnosisByNameAsync(name);
             if (diagnosisDTO == null)
                 return new DiagnosisEditDTO();
             else 
@@ -42,9 +36,9 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public DiagnosisEditDTO GetDiagnosis(int? id)
+        public async Task<DiagnosisEditDTO> GetDiagnosisAsync(int? id)
         {
-            var diagnosisDTO = _diagnosisRepository.GetDiagnosis(id);
+            var diagnosisDTO = await _diagnosisRepository.GetDiagnosisAsync(id);
             if (diagnosisDTO == null)
                 return new DiagnosisEditDTO();
             else 
@@ -52,19 +46,15 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public void RemoveDiagnosis(DiagnosisEditDTO diagnosisDTO)
+        public async Task RemoveDiagnosisAsync(DiagnosisEditDTO diagnosisDTO)
         {
-            var task = Task.Run(async () =>
-            {
-                await _diagnosisRepository.RemoveDiagnosisAsync(diagnosisDTO);
-            });
-            task.Wait();
+            await _diagnosisRepository.RemoveDiagnosisAsync(diagnosisDTO);
         }
 
         /// <inheritdoc/>
-        public List<DiagnosisEditDTO> GetDiagnosesByName(string name)
+        public async Task<List<DiagnosisEditDTO>> GetDiagnosesByNameAsync(string name)
         {
-            return _diagnosisRepository.GetDiagnosesByName(name);
+            return await _diagnosisRepository.GetDiagnosesByNameAsync(name);
         }
     }
 

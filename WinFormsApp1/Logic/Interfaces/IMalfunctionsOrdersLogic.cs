@@ -8,26 +8,26 @@ namespace WinFormsApp1.Logic.Interfaces
         /// Сохранение неисправности-заказа
         /// </summary>
         /// <param name="malfunctionOrderDTO">DTO неисправности-заказа</param>
-        public void SaveMalfunctionOrder(MalfunctionOrderEditDTO malfunctionOrderDTO);
+        public Task SaveMalfunctionOrderAsync(MalfunctionOrderEditDTO malfunctionOrderDTO);
 
         /// <summary>
         /// Получение списка неисправностей в заказе
         /// </summary>
         /// <param name="idOrder">Номер заказа</param>
         /// <returns>Список неисправностей</returns>
-        public List<MalfunctionOrderEditDTO> GetMalfunctionOrdersByIdOrder(int idOrder);
+        public Task<List<MalfunctionOrderEditDTO>> GetMalfunctionOrdersByIdOrderAsync(int idOrder);
 
         /// <summary>
         /// Получение списка заказов с неисправностью
         /// </summary>
         /// <param name="idMalfunction">Номер неисправности</param>
         /// <returns>Список заказов</returns>
-        public List<MalfunctionOrderEditDTO> GetMalfunctionOrdersByIdMalfunction(int idMalfunction);
+        public Task<List<MalfunctionOrderEditDTO>> GetMalfunctionOrdersByIdMalfunctionAsync(int idMalfunction);
 
         /// <summary>
         /// Удаление неиспрасности-заказа
         /// </summary>
         /// <param name="malfunctionOrderDTO">DTO неисправности-заказа</param>
-        public void RemoveMalfunctionOrder(MalfunctionOrderEditDTO malfunctionOrderDTO);
+        public Task RemoveMalfunctionOrderAsync(MalfunctionOrderEditDTO malfunctionOrderDTO);
     }
 }

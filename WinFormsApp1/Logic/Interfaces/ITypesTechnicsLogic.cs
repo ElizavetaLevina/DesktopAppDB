@@ -8,39 +8,39 @@ namespace WinFormsApp1.Logic.Interfaces
         /// Получение списка типов устройств
         /// </summary>
         /// <returns>Список типов устройств</returns>
-        public List<TypeTechnicDTO> GetTypesTechnic();
+        public Task<List<TypeTechnicDTO>> GetTypesTechnicAsync();
 
         /// <summary>
         /// Получение идентификатора типа устройства по названию 
         /// </summary>
         /// <param name="name">Название</param>
         /// <returns>Идентификатор</returns>
-        public int GetIdTypeTechnic(string name);
+        public Task<int> GetIdTypeTechnicAsync(string name);
 
         /// <summary>
         /// Получение названия типа устройства по идентификатору
         /// </summary>
         /// <param name="id">Идентификатор</param>
         /// <returns>Тип устройства</returns>
-        public string GetTypeTechnicName(int id);
+        public Task<string> GetTypeTechnicNameAsync(int id);
 
         /// <summary>
         /// Получение типа устройства по идентификатору
         /// </summary>
         /// <param name="id">Идентификатор</param>
         /// <returns>Тип устройства</returns>
-        public TypeTechnicEditDTO GetTypeTechnic(int id);
+        public Task<TypeTechnicEditDTO> GetTypeTechnicAsync(int id);
 
         /// <summary>
         /// Сохранение типа устройства
         /// </summary>
         /// <param name="typeTechnicDTO">DTO типа устройства</param>
-        public int SaveTypeTechnic(TypeTechnicEditDTO typeTechnicDTO);
+        public Task<int> SaveTypeTechnicAsync(TypeTechnicEditDTO typeTechnicDTO);
 
         /// <summary>
         /// Удаление типа устройства
         /// </summary>
         /// <param name="typeTechnicDTO">DTO типа устройства</param>
-        public void RemoveTypeTechnic(TypeTechnicEditDTO typeTechnicDTO);
+        public Task RemoveTypeTechnicAsync(TypeTechnicEditDTO typeTechnicDTO);
     }
 }

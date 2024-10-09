@@ -10,19 +10,19 @@ namespace WinFormsApp1.Logic.Interfaces
         /// <param name="masterId">Идентификатор мастера</param>
         /// <param name="date">Дата</param>
         /// <returns>Ставка мастера</returns>
-        public RateMasterEditDTO GetRateMasterByDate(int masterId, DateTime date);
+        public Task<RateMasterEditDTO> GetRateMasterByDateAsync(int masterId, DateTime date);
 
         /// <summary>
         /// Получение списка ставок мастера по идентификатору мастера
         /// </summary>
         /// <param name="id">Идентификатор мастера</param>
         /// <returns>Список ставок</returns>
-        public List<RateMasterDTO> GetRateMasterByIdMaster(int id);
+        public Task<List<RateMasterDTO>> GetRateMasterByIdMasterAsync(int id);
 
         /// <summary>
         /// Сохранение ставки мастера
         /// </summary>
         /// <param name="rateMasterDTO">DTO ставки</param>
-        public void SaveRateMaster(RateMasterEditDTO rateMasterDTO);
+        public Task SaveRateMasterAsync(RateMasterEditDTO rateMasterDTO);
     }
 }

@@ -31,12 +31,12 @@ namespace WinFormsApp1
             InitializeComponent();
         }
 
-        public void UpdateTable()
+        public async void UpdateTableAsync()
         {
             switch (status) 
             {
                 case NameTableToEditEnum.Malfunction:
-                    dataGridView1.DataSource = malfunctionsLogic.GetMalfunctions();
+                    dataGridView1.DataSource = await malfunctionsLogic.GetMalfunctionsAsync();
                     dataGridView1.Columns[nameof(MalfunctionEditDTO.Id)].Visible = false;
                     dataGridView1.Columns[nameof(MalfunctionEditDTO.Name)].HeaderText = "Название";
                     dataGridView1.Columns[nameof(MalfunctionEditDTO.Price)].HeaderText = "Цена";
@@ -49,13 +49,13 @@ namespace WinFormsApp1
                     }
                     break;
                 case NameTableToEditEnum.Diagnosis:
-                    dataGridView1.DataSource = diagnosesLogic.GetDiagnoses();
+                    dataGridView1.DataSource = await diagnosesLogic.GetDiagnosesAsync();
                     dataGridView1.Columns[nameof(MalfunctionEditDTO.Id)].Visible = false;
                     dataGridView1.Columns[nameof(MalfunctionEditDTO.Name)].HeaderText = "Название";
                     dataGridView1.Columns[nameof(MalfunctionEditDTO.Name)].Width = dataGridView1.Width;
                     break;
                 case NameTableToEditEnum.Equipment:
-                    dataGridView1.DataSource = equipmentsLogic.GetEquipments();
+                    dataGridView1.DataSource = await equipmentsLogic.GetEquipmentsAsync();
                     dataGridView1.Columns[nameof(MalfunctionEditDTO.Id)].Visible = false;
                     dataGridView1.Columns[nameof(MalfunctionEditDTO.Name)].HeaderText = "Название";
                     dataGridView1.Columns[nameof(MalfunctionEditDTO.Name)].Width = dataGridView1.Width;
@@ -63,7 +63,7 @@ namespace WinFormsApp1
             }
         }
 
-        private void ButtonAdd_Click(object sender, EventArgs e)
+        private async void ButtonAdd_ClickAsync(object sender, EventArgs e)
         {
             MalfunctionEquipmentDiagnosisEdit malfunctionEquipmentDiagnosisEdit = new(status);
             switch (status)
@@ -95,28 +95,28 @@ namespace WinFormsApp1
                             Name = malfunctionEquipmentDiagnosisEdit.TextBoxName,
                             Price = Convert.ToInt32(malfunctionEquipmentDiagnosisEdit.TextBoxPrice)
                         };
-                        malfunctionsLogic.SaveMalfunction(malfunctionDTO);
+                        await malfunctionsLogic.SaveMalfunctionAsync(malfunctionDTO);
                         break;
                     case NameTableToEditEnum.Diagnosis:
                         var diagnosisDTO = new DiagnosisEditDTO()
                         {
                             Name = malfunctionEquipmentDiagnosisEdit.TextBoxName
                         };
-                        diagnosesLogic.SaveDiagnosis(diagnosisDTO);
+                        await diagnosesLogic.SaveDiagnosisAsync(diagnosisDTO);
                         break;
                     case NameTableToEditEnum.Equipment:
                         var equipmentDTO = new EquipmentEditDTO()
                         {
                             Name = malfunctionEquipmentDiagnosisEdit.TextBoxName
                         };
-                        equipmentsLogic.SaveEquipment(equipmentDTO);
+                        await equipmentsLogic.SaveEquipmentAsync(equipmentDTO);
                         break;
                 }
-                UpdateTable();
+                UpdateTableAsync();
             }
         }
 
-        private void ButtonChange_Click(object sender, EventArgs e)
+        private async void ButtonChange_ClickAsync(object sender, EventArgs e)
         {
             if (dataGridView1.Rows.Count > 0)
             {
@@ -128,13 +128,13 @@ namespace WinFormsApp1
                 switch (status)
                 {
                     case NameTableToEditEnum.Malfunction:
-                        malfunctionDTO = malfunctionsLogic.GetMalfunction(Id);
+                        malfunctionDTO = await malfunctionsLogic.GetMalfunctionAsync(Id);
                         malfunctionEquipmentDiagnosisEdit.Text = "Изменение неисправности";
                         malfunctionEquipmentDiagnosisEdit.TextBoxName = malfunctionDTO.Name;
                         malfunctionEquipmentDiagnosisEdit.TextBoxPrice = malfunctionDTO.Price.ToString();
                         break;
                     case NameTableToEditEnum.Diagnosis:
-                        diagnosisDTO = diagnosesLogic.GetDiagnosis(Id);
+                        diagnosisDTO = await diagnosesLogic.GetDiagnosisAsync(Id);
                         malfunctionEquipmentDiagnosisEdit.Text = "Изменение диагноза";
                         malfunctionEquipmentDiagnosisEdit.TextBoxName = diagnosisDTO.Name;
                         malfunctionEquipmentDiagnosisEdit.LabelPriceVisible = false;
@@ -142,7 +142,7 @@ namespace WinFormsApp1
                         malfunctionEquipmentDiagnosisEdit.TextBoxPriceVisisble = false;
                         break;
                     case NameTableToEditEnum.Equipment:
-                        equipmentDTO = equipmentsLogic.GetEquipment(Id);
+                        equipmentDTO = await equipmentsLogic.GetEquipmentAsync(Id);
                         malfunctionEquipmentDiagnosisEdit.Text = "Изменение комплектации";
                         malfunctionEquipmentDiagnosisEdit.TextBoxName = equipmentDTO.Name;
                         malfunctionEquipmentDiagnosisEdit.LabelPriceVisible = false;
@@ -158,19 +158,19 @@ namespace WinFormsApp1
                         case NameTableToEditEnum.Malfunction:
                             malfunctionDTO.Name = malfunctionEquipmentDiagnosisEdit.TextBoxName;
                             malfunctionDTO.Price = Convert.ToInt32(malfunctionEquipmentDiagnosisEdit.TextBoxPrice);
-                            malfunctionsLogic.SaveMalfunction(malfunctionDTO);
+                            await malfunctionsLogic.SaveMalfunctionAsync(malfunctionDTO);
                             break;
                         case NameTableToEditEnum.Diagnosis:
                             diagnosisDTO.Name = malfunctionEquipmentDiagnosisEdit.TextBoxName;
-                            diagnosesLogic.SaveDiagnosis(diagnosisDTO);
+                            await diagnosesLogic.SaveDiagnosisAsync(diagnosisDTO);
                             break;
                         case NameTableToEditEnum.Equipment:
                             equipmentDTO.Name = malfunctionEquipmentDiagnosisEdit.TextBoxName;
-                            equipmentsLogic.SaveEquipment(equipmentDTO);
+                            await equipmentsLogic.SaveEquipmentAsync(equipmentDTO);
                             break;
                     }
                 }
-                UpdateTable();                
+                UpdateTableAsync();                
             }
         }
 
@@ -181,36 +181,36 @@ namespace WinFormsApp1
                 switch (status)
                 {
                     case NameTableToEditEnum.Malfunction:
-                        var malfunctionDTO = malfunctionsLogic.GetMalfunction(Id);
-                        var malfunctionOrderDTO = malfunctionsOrdersLogic.GetMalfunctionOrdersByIdMalfunction(Id);
+                        var malfunctionDTO = await malfunctionsLogic.GetMalfunctionAsync(Id);
+                        var malfunctionOrderDTO = await malfunctionsOrdersLogic.GetMalfunctionOrdersByIdMalfunctionAsync(Id);
                         foreach(var malfunctionOrder in malfunctionOrderDTO)
                         {
-                            malfunctionsOrdersLogic.RemoveMalfunctionOrder(malfunctionOrder);
+                            await malfunctionsOrdersLogic.RemoveMalfunctionOrderAsync(malfunctionOrder);
                         }
-                        malfunctionsLogic.RemoveMalfunction(malfunctionDTO);
+                        await malfunctionsLogic.RemoveMalfunctionAsync(malfunctionDTO);
                         break;
                     case NameTableToEditEnum.Diagnosis:
-                        var diagnosisDTO = diagnosesLogic.GetDiagnosis(Id);
-                        var ordersDTO = ordersLogic.GetOrdersByIdDiagnosis(Id);
+                        var diagnosisDTO = await diagnosesLogic.GetDiagnosisAsync(Id);
+                        var ordersDTO = await ordersLogic.GetOrdersByIdDiagnosisAsync(Id);
                         foreach(var order in ordersDTO)
                         {
                             order.DiagnosisId = null;
                             await ordersLogic.SaveOrderAsync(order);
                         }
-                        diagnosesLogic.RemoveDiagnosis(diagnosisDTO);
+                        await diagnosesLogic.RemoveDiagnosisAsync(diagnosisDTO);
                         break;
                     case NameTableToEditEnum.Equipment:
-                        var equipmentDTO = equipmentsLogic.GetEquipment(Id);
-                        ordersDTO = ordersLogic.GetOrdersByIdEquipment(Id);
+                        var equipmentDTO = await equipmentsLogic.GetEquipmentAsync(Id);
+                        ordersDTO = await ordersLogic.GetOrdersByIdEquipmentAsync(Id);
                         foreach (var order in ordersDTO)
                         {
                             order.EquipmentId = null;
                             await ordersLogic.SaveOrderAsync(order);
                         }
-                        equipmentsLogic.RemoveEquipment(equipmentDTO);
+                        await equipmentsLogic.RemoveEquipmentAsync(equipmentDTO);
                         break;
-                }                
-                UpdateTable();
+                }
+                UpdateTableAsync();
             }
         }
 

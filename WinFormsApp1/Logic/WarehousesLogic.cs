@@ -14,60 +14,52 @@ namespace WinFormsApp1.Logic
         }
 
         /// <inheritdoc/>
-        public List<WarehouseEditDTO> GetDetailsInOrder(int idOrder)
+        public async Task<List<WarehouseEditDTO>> GetDetailsInOrderAsync(int idOrder)
         {
-            return _warehouseRepository.GetDetailsInOrder(idOrder);
+            return await _warehouseRepository.GetDetailsInOrderAsync(idOrder);
         }
 
         /// <inheritdoc/>
-        public int GetCountDetailsInOrder(int idOrder)
+        public async Task<int> GetCountDetailsInOrderAsync(int idOrder)
         {
-            return GetDetailsInOrder(idOrder).Count;
+            return (await GetDetailsInOrderAsync(idOrder)).Count;
         }
 
         /// <inheritdoc/>
-        public int GetPriceDetailsInOrder(int idOrder)
+        public async Task<int> GetPriceDetailsInOrderAsync(int idOrder)
         {
-            return GetDetailsInOrder(idOrder).Sum(i => i.PriceSale);
+            return (await GetDetailsInOrderAsync(idOrder)).Sum(i => i.PriceSale);
         }
 
         /// <inheritdoc/>
-        public List<WarehouseDTO> GetWarehouses()
+        public async Task<List<WarehouseDTO>> GetWarehousesAsync()
         {
-            return _warehouseRepository.GetWarehouses();
+            return await _warehouseRepository.GetWarehousesAsync();
         }
 
         /// <inheritdoc/>
-        public void SaveDetail(WarehouseEditDTO warehouseDTO) 
+        public async Task SaveDetailAsync(WarehouseEditDTO warehouseDTO) 
         {
-            var task = Task.Run(async () =>
-            {
-                await _warehouseRepository.SaveWarehouseAsync(warehouseDTO);
-            });
-            task.Wait();
+            await _warehouseRepository.SaveWarehouseAsync(warehouseDTO);
         }
 
         /// <inheritdoc/>
-        public WarehouseEditDTO GetWarehouse(int id)
+        public async Task<WarehouseEditDTO> GetWarehouseAsync(int id)
         {
-            return _warehouseRepository.GetWarehouse(id);
+            return await _warehouseRepository.GetWarehouseAsync(id);
         }
 
         /// <inheritdoc/>
-        public List<WarehouseTableDTO> GetWarehousesForTable(bool? availability = null, bool datePurchase = false, 
+        public async Task<List<WarehouseTableDTO>> GetWarehousesForTableAsync(bool? availability = null, bool datePurchase = false, 
             string? name = null, int? idOrder = null)
         {
-            return _warehouseRepository.GetWarehousesForTable(availability, datePurchase, name, idOrder);
+            return await _warehouseRepository.GetWarehousesForTableAsync(availability, datePurchase, name, idOrder);
         }
 
         /// <inheritdoc/>
-        public void RemoveWarehouse(WarehouseEditDTO warehouseDTO)
+        public async Task RemoveWarehouseAsync(WarehouseEditDTO warehouseDTO)
         {
-            var task = Task.Run(async () =>
-            {
-                await _warehouseRepository.RemoveWarehouseAsync(warehouseDTO);
-            });
-            task.Wait();
+            await _warehouseRepository.RemoveWarehouseAsync(warehouseDTO);
         }
     }
 }

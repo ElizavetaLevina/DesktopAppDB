@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
 using WinFormsApp1.Repository.Interfaces;
@@ -15,32 +16,34 @@ namespace WinFormsApp1.Repository
         }
 
         /// <inheritdoc/>
-        public List<EquipmentEditDTO> GetEquipments()
+        public async Task<List<EquipmentEditDTO>> GetEquipmentsAsync(CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<EquipmentEditDTO>(context.Set<Equipment>().OrderBy(i => i.Name)).ToList();
+            return await _mapper.ProjectTo<EquipmentEditDTO>(context.Set<Equipment>().OrderBy(i => i.Name)).ToListAsync(token);
         }
 
         /// <inheritdoc/>
-        public EquipmentEditDTO GetEquipment(int? id)
+        public async Task<EquipmentEditDTO> GetEquipmentAsync(int? id, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<EquipmentEditDTO>(context.Set<Equipment>().Where(i => i.Id == id)).FirstOrDefault();
+            return await _mapper.ProjectTo<EquipmentEditDTO>(context.Set<Equipment>().Where(i => i.Id == id))
+                .FirstOrDefaultAsync(token);
         }
 
         /// <inheritdoc/>
-        public List<EquipmentEditDTO> GetEquipmentsByName(string name)
+        public async Task<List<EquipmentEditDTO>> GetEquipmentsByNameAsync(string name, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<EquipmentEditDTO>(context.Set<Equipment>()
-                .Where(i => i.Name.ToLower().Contains(name.ToLower()))).ToList();
+            return await _mapper.ProjectTo<EquipmentEditDTO>(context.Set<Equipment>()
+                .Where(i => i.Name.ToLower().Contains(name.ToLower()))).ToListAsync(token);
         }
 
         /// <inheritdoc/>
-        public EquipmentEditDTO GetEquipmentByName(string name)
+        public async Task<EquipmentEditDTO> GetEquipmentByNameAsync(string name, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<EquipmentEditDTO>(context.Set<Equipment>().Where(i => i.Name == name)).FirstOrDefault();
+            return await _mapper.ProjectTo<EquipmentEditDTO>(context.Set<Equipment>().Where(i => i.Name == name))
+                .FirstOrDefaultAsync(token);
         }
 
         /// <inheritdoc/>
@@ -48,11 +51,6 @@ namespace WinFormsApp1.Repository
         {
             Context context = new();
             var equipment = _mapper.Map<EquipmentEditDTO, Equipment>(equipmentDTO);
-            /*Equipment equipment = new()
-            {
-                Id = equipmentDTO.Id,
-                Name = equipmentDTO.Name
-            };*/
             try
             {
                 if (equipment.Id == 0)
@@ -72,7 +70,6 @@ namespace WinFormsApp1.Repository
             try
             {
                 Context context = new();
-                //var equipment = context.Equipment.FirstOrDefault(c => c.Id == equipmentDTO.Id);
                 var equipment = _mapper.Map<EquipmentEditDTO, Equipment>(equipmentDTO);
                 context.Equipment.Remove(equipment);
                 await context.SaveChangesAsync(token);

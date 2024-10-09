@@ -37,11 +37,11 @@ namespace WinFormsApp1
             InitializeComponent();
         }
 
-        public void InitializeElementsForm()
+        public async void InitializeElementsFormAsync()
         {
-            orderDTO = ordersLogic.GetOrder(idOrder);
-            var malfunctionOrderDTO = malfunctionsOrdersLogic.GetMalfunctionOrdersByIdOrder(idOrder);
-            var detailsDTO = warehousesLogic.GetDetailsInOrder(idOrder);
+            orderDTO = await ordersLogic.GetOrderAsync(idOrder);
+            var malfunctionOrderDTO = await malfunctionsOrdersLogic.GetMalfunctionOrdersByIdOrderAsync(idOrder);
+            var detailsDTO = await warehousesLogic.GetDetailsInOrderAsync(idOrder);
 
             labelPriceDetails.Text = String.Format("{0} руб.", detailsDTO.Sum(i => i.PriceSale));
             labelCountDetails.Text = String.Format("{0} шт.", detailsDTO.Count);
@@ -116,9 +116,9 @@ namespace WinFormsApp1
                 };
                 if (warning.ShowDialog() == DialogResult.OK)
                 {
-                    var orderDTO = ordersLogic.GetOrder(idOrder);
-                    var detalsDTO = warehousesLogic.GetDetailsInOrder(idOrder);
-                    var malfunctionOrderDTO = malfunctionsOrdersLogic.GetMalfunctionOrdersByIdOrder(idOrder);
+                    var orderDTO = await ordersLogic.GetOrderAsync(idOrder);
+                    var detalsDTO = await warehousesLogic.GetDetailsInOrderAsync(idOrder);
+                    var malfunctionOrderDTO = await malfunctionsOrdersLogic.GetMalfunctionOrdersByIdOrderAsync(idOrder);
                     ReportsLogic.IssuingDeviceReport(orderDTO, detalsDTO, malfunctionOrderDTO);
                 }
 

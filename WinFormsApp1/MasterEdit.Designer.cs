@@ -271,7 +271,7 @@
             Name = "MasterEdit";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Добавление нового мастера";
-            Activated += AddMasterForm_Activated;
+            Activated += AddMasterForm_ActivatedAsync;
             ((System.ComponentModel.ISupportInitialize)trackBarPercent).EndInit();
             ResumeLayout(false);
             PerformLayout();

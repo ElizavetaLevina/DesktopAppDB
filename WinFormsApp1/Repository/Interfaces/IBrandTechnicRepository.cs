@@ -8,14 +8,14 @@ namespace WinFormsApp1.Repository.Interfaces
         /// Получение списка брендов
         /// </summary>
         /// <returns>Список брендов</returns>
-        public List<BrandTechnicDTO> GetBrandsTechnic();
+        public Task<List<BrandTechnicDTO>> GetBrandsTechnicAsync(CancellationToken token = default);
 
         /// <summary>
         /// Получение записи по названию
         /// </summary>
         /// <param name="name">Название бренда</param>
         /// <returns>Запись</returns>
-        public BrandTechnicDTO GetBrandTechnicByName(string name);
+        public Task<BrandTechnicDTO> GetBrandTechnicByNameAsync(string name, CancellationToken token = default);
 
         /// <summary>
         /// Получение бренда устройства по идентификатору
@@ -23,7 +23,7 @@ namespace WinFormsApp1.Repository.Interfaces
         /// <param name="id">Идентификатор</param>
         /// <param name="name">Имя</param>
         /// <returns>Бренда устройства</returns>
-        public BrandTechnicEditDTO GetBrandTechnic(int id);
+        public Task<BrandTechnicEditDTO> GetBrandTechnicAsync(int id, CancellationToken token = default);
 
         public Task<int> SaveBrandTechnicAsync(BrandTechnicEditDTO brandTechnicDTO, CancellationToken token = default);
 

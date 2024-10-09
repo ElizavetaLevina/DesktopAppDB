@@ -35,7 +35,7 @@ namespace WinFormsApp1
         {
             try
             {
-                InProgress();
+                InProgressAsync();
                 NameColumns();
                 ToolStripEnabled();
                 Width = Properties.Settings.Default.WidthMedium;
@@ -114,30 +114,30 @@ namespace WinFormsApp1
             switch (status)
             {
                 case StatusOrderEnum.InRepair:
-                    InProgress();
+                    InProgressAsync();
                     break;
                 case StatusOrderEnum.Completed:
-                    Order—ompleted();
+                    Order—ompletedAsync();
                     break;
                 case StatusOrderEnum.GuaranteeIssue:
-                    OrderGuarantee();
+                    OrderGuaranteeAsync();
                     break;
                 case StatusOrderEnum.Archive:
-                    OrderArchive();
+                    OrderArchiveAsync();
                     break;
                 case StatusOrderEnum.Trash:
-                    Trash();
+                    TrashAsync();
                     break;
             }
         }
 
-        private void InProgress()
+        private async void InProgressAsync()
         {
             Enabled = false;
             status = StatusOrderEnum.InRepair;
             try
             {
-                orders = ordersLogic.GetOrdersForTable(statusOrder: status, deleted: false, dateCreation: true);
+                orders = await ordersLogic.GetOrdersForTableAsync(statusOrder: status, deleted: false, dateCreation: true);
                 dataGridView1.DataSource = Funcs.ToDataTable(orders);
                 UpdateVisibilityColumns();
                 UpdateWidthColumns();
@@ -147,13 +147,13 @@ namespace WinFormsApp1
             Enabled = true;
         }
 
-        private void Order—ompleted()
+        private async void Order—ompletedAsync()
         {
             Enabled = false;
             status = StatusOrderEnum.Completed;
             try
             {
-                orders = ordersLogic.GetOrdersForTable(statusOrder: status, deleted: false, dateCompleted: true);
+                orders = await ordersLogic.GetOrdersForTableAsync(statusOrder: status, deleted: false, dateCompleted: true);
                 dataGridView1.DataSource = Funcs.ToDataTable(orders);
                 UpdateVisibilityColumns();
                 UpdateWidthColumns();
@@ -163,13 +163,13 @@ namespace WinFormsApp1
             Enabled = true;
         }
 
-        private void OrderGuarantee()
+        private async void OrderGuaranteeAsync()
         {
             Enabled = false;
             status = StatusOrderEnum.GuaranteeIssue;
             try
             {
-                orders = ordersLogic.GetOrdersForTable(statusOrder: status, deleted: false, dateIssue: true);
+                orders = await ordersLogic.GetOrdersForTableAsync(statusOrder: status, deleted: false, dateIssue: true);
 
                 for (int i = 0; i < orders.Count; i++)
                 {
@@ -184,13 +184,13 @@ namespace WinFormsApp1
             Enabled = true;
         }
 
-        private void OrderArchive()
+        private async void OrderArchiveAsync()
         {
             Enabled = false;
             status = StatusOrderEnum.Archive;
             try
             {
-                orders = ordersLogic.GetOrdersForTable(statusOrder: status, deleted: false, dateIssue: true);
+                orders = await ordersLogic.GetOrdersForTableAsync(statusOrder: status, deleted: false, dateIssue: true);
 
                 foreach(var order in orders)
                 {
@@ -206,13 +206,13 @@ namespace WinFormsApp1
             Enabled = true;
         }
 
-        private void Trash()
+        private async void TrashAsync()
         {
             Enabled = false;
             status = StatusOrderEnum.Trash;
             try
             {
-                orders = ordersLogic.GetOrdersForTable(deleted: true, dateCompleted: true);
+                orders = await ordersLogic.GetOrdersForTableAsync(deleted: true, dateCompleted: true);
                 dataGridView1.DataSource = Funcs.ToDataTable(orders);
                 UpdateVisibilityColumns();
                 UpdateWidthColumns();
@@ -240,7 +240,7 @@ namespace WinFormsApp1
             if (dataGridView1.Rows.Count == 0)
                 return;
             PropertiesOrder propertiesOrder = Program.ServiceProvider.GetRequiredService<PropertiesOrder>();
-            propertiesOrder.InitializeElementsForm(IdOrder, status, logInSystem);
+            propertiesOrder.InitializeElementsFormAsync(IdOrder, status, logInSystem);
             propertiesOrder.ShowDialog();
             if (propertiesOrder.logIn)
             {
@@ -257,7 +257,7 @@ namespace WinFormsApp1
                 return;
             DetailsInOrder detailsInOrder = Program.ServiceProvider.GetRequiredService<DetailsInOrder>();
             detailsInOrder.idOrder = IdOrder;
-            detailsInOrder.UpdateTable();
+            detailsInOrder.UpdateTableAsync();
             detailsInOrder.ShowDialog();
         }
 
@@ -275,9 +275,9 @@ namespace WinFormsApp1
 
             if (warning.ShowDialog() == DialogResult.OK)
             {
-                var orderDTO = ordersLogic.GetOrder(IdOrder);
+                var orderDTO = await ordersLogic.GetOrderAsync(IdOrder);
                 if (orderDTO.Deleted)
-                    ordersLogic.RemoveOrder(orderDTO);
+                    await ordersLogic.RemoveOrderAsync(orderDTO);
                 else
                 {
                     orderDTO.Deleted = true;
@@ -292,13 +292,13 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            var orderDTO = ordersLogic.GetOrder(IdOrder);
+            var orderDTO = await ordersLogic.GetOrderAsync(IdOrder);
             orderDTO.Deleted = false;
             await ordersLogic.SaveOrderAsync(orderDTO);
-            Trash();
+            TrashAsync();
         }
 
-        private void CompletedTag()
+        private async void CompletedTagAsync()
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
@@ -329,7 +329,7 @@ namespace WinFormsApp1
             }
 
 
-            if (warehousesLogic.GetCountDetailsInOrder(IdOrder) == 0)
+            if (await warehousesLogic.GetCountDetailsInOrderAsync(IdOrder) == 0)
             {
                 warning = new()
                 {
@@ -349,9 +349,9 @@ namespace WinFormsApp1
             {
                 CompletedOrder completedOrder = Program.ServiceProvider.GetRequiredService<CompletedOrder>();
                 completedOrder.idOrder = IdOrder;
-                completedOrder.InitializeElementsForm();
+                completedOrder.InitializeElementsFormAsync();
                 if (completedOrder.ShowDialog() == DialogResult.OK)
-                    InProgress();
+                    InProgressAsync();
                 FocusButton(status);
             }
         }
@@ -364,9 +364,9 @@ namespace WinFormsApp1
             {
                 IssuingClient issuingClient = Program.ServiceProvider.GetRequiredService<IssuingClient>();
                 issuingClient.idOrder = IdOrder;
-                issuingClient.InitializeElementsForm();
+                issuingClient.InitializeElementsFormAsync();
                 if (issuingClient.ShowDialog() == DialogResult.OK)
-                    Order—ompleted();
+                    Order—ompletedAsync();
                 FocusButton(status);
             }
         }
@@ -386,7 +386,7 @@ namespace WinFormsApp1
             {
                 if (status == StatusOrderEnum.Completed)
                 {
-                    var orderDTO = ordersLogic.GetOrder(IdOrder);
+                    var orderDTO = await ordersLogic.GetOrderAsync(IdOrder);
                     orderDTO.StatusOrder = StatusOrderEnum.InRepair;
                     if (orderDTO.ReturnUnderGuarantee)
                         orderDTO.DateCompletedReturn = null;
@@ -394,12 +394,12 @@ namespace WinFormsApp1
                         orderDTO.DateCompleted = null;
                     await ordersLogic.SaveOrderAsync(orderDTO);
 
-                    var malfunctionsOrderDTO = malfunctionsOrdersLogic.GetMalfunctionOrdersByIdOrder(IdOrder);
+                    var malfunctionsOrderDTO = await malfunctionsOrdersLogic.GetMalfunctionOrdersByIdOrderAsync(IdOrder);
                     foreach(var item in  malfunctionsOrderDTO)
                     {
-                        malfunctionsOrdersLogic.RemoveMalfunctionOrder(item);
+                        await malfunctionsOrdersLogic.RemoveMalfunctionOrderAsync(item);
                     }
-                    Order—ompleted();
+                    Order—ompletedAsync();
                 }
                 FocusButton(status);
             }
@@ -420,13 +420,13 @@ namespace WinFormsApp1
             {
                 if (status == StatusOrderEnum.GuaranteeIssue)
                 {
-                    var orderDTO = ordersLogic.GetOrder(IdOrder);
+                    var orderDTO = await ordersLogic.GetOrderAsync(IdOrder);
                     orderDTO.DateCreation = DateTime.Now.ToUniversalTime();
                     orderDTO.DateStartWork = DateTime.Now.ToUniversalTime();
                     orderDTO.StatusOrder = StatusOrderEnum.InRepair;
                     orderDTO.ReturnUnderGuarantee = true;
                     await ordersLogic.SaveOrderAsync(orderDTO);
-                    OrderGuarantee();
+                    OrderGuaranteeAsync();
                 }
                 FocusButton(status);
             }
@@ -438,7 +438,7 @@ namespace WinFormsApp1
                 return;
 
             MessageToClient message = Program.ServiceProvider.GetRequiredService<MessageToClient>();
-            message.InitializeClient(IdClient);
+            message.InitializeClientAsync(IdClient);
             message.ShowDialog();
         }
 
@@ -448,43 +448,43 @@ namespace WinFormsApp1
                 return;
             PropertiesClient propertiesClient = Program.ServiceProvider.GetRequiredService<PropertiesClient>();
             propertiesClient.idClient = IdClient;
-            propertiesClient.InitializeElementsForms();
+            propertiesClient.InitializeElementsFormsAsync();
             if (propertiesClient.ShowDialog() == DialogResult.OK)
                 UpdateTableData();
             FocusButton(status);
         }
 
-        private void AddInWhitelist()
+        private async void AddInWhitelistAsync()
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            var clientDTO = clientsLogic.GetClientByIdClient(IdClient);
+            var clientDTO = await clientsLogic.GetClientByIdClientAsync(IdClient);
             clientDTO.TypeClient = TypeClientEnum.white;
-            clientsLogic.SaveClient(clientDTO);
+            await clientsLogic.SaveClientAsync(clientDTO);
         }
 
-        private void AddInBlacklist()
+        private async void AddInBlacklistAsync()
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            var clientDTO = clientsLogic.GetClientByIdClient(IdClient);
+            var clientDTO = await clientsLogic.GetClientByIdClientAsync(IdClient);
             clientDTO.TypeClient = TypeClientEnum.black;
-            clientsLogic.SaveClient(clientDTO);
+            await clientsLogic.SaveClientAsync(clientDTO);
         }
 
-        private void RemoveMarks()
+        private async void RemoveMarksAsync()
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            var clientDTO = clientsLogic.GetClientByIdClient(IdClient);
+            var clientDTO = await clientsLogic.GetClientByIdClientAsync(IdClient);
             clientDTO.TypeClient = TypeClientEnum.normal;
-            clientsLogic.SaveClient(clientDTO);
+            await clientsLogic.SaveClientAsync(clientDTO);
         }
 
         private void RepeatOrder()
         {
             AddDeviceIntoRepair addDeviceIntoRepair = Program.ServiceProvider.GetRequiredService<AddDeviceIntoRepair>();
-            addDeviceIntoRepair.FillOrder(IdOrder);
+            addDeviceIntoRepair.FillOrderAsync(IdOrder);
 
             if (addDeviceIntoRepair.ShowDialog() == DialogResult.OK)
             {
@@ -494,41 +494,41 @@ namespace WinFormsApp1
             FocusButton(status);
         }
 
-        private void ExportTableToExcel()
+        private async void ExportTableToExcelAsync()
         {
             if (saveFileDialog1.ShowDialog() == DialogResult.Cancel)
                 return;
-            var ordersForExcel = ordersLogic.GetOrdersForExcel(orders);
+            var ordersForExcel = await ordersLogic.GetOrdersForExcelAsync(orders);
             ReportsLogic.ExportMainTable(saveFileDialog1.FileName, ordersForExcel);
         }
 
-        private async void ButtonInProgress_Click(object sender, EventArgs e)
+        private void ButtonInProgress_Click(object sender, EventArgs e)
         {
-            InProgress();
+            InProgressAsync();
             ToolStripEnabled();
         }
 
         private void ButtonCompleted_Click(object sender, EventArgs e)
         {
-            Order—ompleted();
+            Order—ompletedAsync();
             ToolStripEnabled();
         }
 
         private void ButtonGuarantee_Click(object sender, EventArgs e)
         {
-            OrderGuarantee();
+            OrderGuaranteeAsync();
             ToolStripEnabled();
         }
 
         private void ButtonArchive_Click(object sender, EventArgs e)
         {
-            OrderArchive();
+            OrderArchiveAsync();
             ToolStripEnabled();
         }
 
         private void ButtonTrash_Click(object sender, EventArgs e)
         {
-            Trash();
+            TrashAsync();
             ToolStripEnabled();
         }
 
@@ -538,7 +538,7 @@ namespace WinFormsApp1
             {
                 var color = ColorTranslator.FromHtml(dataGridView1.Rows[i].
                     Cells[nameof(OrderTableDTO.ColorRow)].Value.ToString());
-                var orderDTO = ordersLogic.GetOrder(Convert.ToInt32(dataGridView1.Rows[i].
+                var orderDTO = await ordersLogic.GetOrderAsync(Convert.ToInt32(dataGridView1.Rows[i].
                     Cells[nameof(OrderTableDTO.Id)].Value));
                 if (color != ColorsRowsHelper.ColorDefinition(orderDTO))
                 {
@@ -818,7 +818,7 @@ namespace WinFormsApp1
 
         private void ItemCompletedTagMenuRightMouse_Click(object sender, EventArgs e)
         {
-            CompletedTag();
+            CompletedTagAsync();
         }
 
         private void ItemIssueMenuRightMouse_Click(object sender, EventArgs e)
@@ -848,17 +848,17 @@ namespace WinFormsApp1
 
         private void ItemWhiteListMenuRightMouse_Click(object sender, EventArgs e)
         {
-            AddInWhitelist();
+            AddInWhitelistAsync();
         }
 
         private void ItemBlackListMenuRightMouse_Click(object sender, EventArgs e)
         {
-            AddInBlacklist();
+            AddInBlacklistAsync();
         }
 
         private void ItemUnmarkMenuRightMouse_Click(object sender, EventArgs e)
         {
-            RemoveMarks();
+            RemoveMarksAsync();
         }
 
         private void ItemNewOrderAsCurrentMenuRightMouse_Click(object sender, EventArgs e)
@@ -916,7 +916,7 @@ namespace WinFormsApp1
 
         private void ButtonCompletedTag_Click(object sender, EventArgs e)
         {
-            CompletedTag();
+            CompletedTagAsync();
         }
 
         private void ButtonIssue_Click(object sender, EventArgs e)
@@ -1089,7 +1089,7 @@ namespace WinFormsApp1
             MalfunctionEquipmentDiagnosis malfunctionEquipmentDiagnosis = Program.ServiceProvider
                 .GetRequiredService<MalfunctionEquipmentDiagnosis>();
             malfunctionEquipmentDiagnosis.status = NameTableToEditEnum.Malfunction;
-            malfunctionEquipmentDiagnosis.UpdateTable();
+            malfunctionEquipmentDiagnosis.UpdateTableAsync();
             malfunctionEquipmentDiagnosis.ShowDialog();
             FocusButton(status);
         }
@@ -1100,7 +1100,7 @@ namespace WinFormsApp1
                 .GetRequiredService<MalfunctionEquipmentDiagnosis>();
             malfunctionEquipmentDiagnosis.Text = "ƒË‡„ÌÓÁ˚";
             malfunctionEquipmentDiagnosis.status = NameTableToEditEnum.Diagnosis;
-            malfunctionEquipmentDiagnosis.UpdateTable();
+            malfunctionEquipmentDiagnosis.UpdateTableAsync();
             malfunctionEquipmentDiagnosis.ShowDialog();
             UpdateTableData();
             FocusButton(status);
@@ -1112,7 +1112,7 @@ namespace WinFormsApp1
                 .GetRequiredService<MalfunctionEquipmentDiagnosis>();
             malfunctionEquipmentDiagnosis.Text = " ÓÏÔÎÂÍÚ‡ˆËˇ";
             malfunctionEquipmentDiagnosis.status = NameTableToEditEnum.Equipment;
-            malfunctionEquipmentDiagnosis.UpdateTable();
+            malfunctionEquipmentDiagnosis.UpdateTableAsync();
             malfunctionEquipmentDiagnosis.ShowDialog();
             FocusButton(status);
         }
@@ -1121,7 +1121,7 @@ namespace WinFormsApp1
         {
             try
             {
-                ExportTableToExcel();
+                ExportTableToExcelAsync();
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
@@ -1194,7 +1194,7 @@ namespace WinFormsApp1
 
         private void ItemCompletedTagMenuWorkingWithData_Click(object sender, EventArgs e)
         {
-            CompletedTag();
+            CompletedTagAsync();
         }
 
         private void ItemIssueMenuWorkingWithData_Click(object sender, EventArgs e)
@@ -1224,17 +1224,17 @@ namespace WinFormsApp1
 
         private void ItemWhiteListWorkingWithData_Click(object sender, EventArgs e)
         {
-            AddInWhitelist();
+            AddInWhitelistAsync();
         }
 
         private void ItemBlackListWorkingWithData_Click(object sender, EventArgs e)
         {
-            AddInBlacklist();
+            AddInBlacklistAsync();
         }
 
         private void ItemUnmarkWorkingWithData_Click(object sender, EventArgs e)
         {
-            RemoveMarks();
+            RemoveMarksAsync();
         }
 
         private void ItemNewOrderAsCurrentMenuWorkingWithData_Click(object sender, EventArgs e)
@@ -1264,22 +1264,22 @@ namespace WinFormsApp1
             UpdateTableData();
         }
 
-        private void ItemGettingDevice_Click(object sender, EventArgs e)
+        private async void ItemGettingDevice_ClickAsync(object sender, EventArgs e)
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            var orderDTO = ordersLogic.GetOrder(IdOrder);
+            var orderDTO = await ordersLogic.GetOrderAsync(IdOrder);
             ReportsLogic.GettingDeviceReport(orderDTO);
             FocusButton(status);
         }
 
-        private void ItemIssuingDevice_Click(object sender, EventArgs e)
+        private async void ItemIssuingDevice_ClickAsync(object sender, EventArgs e)
         {
             if (dataGridView1.Rows.Count == 0)
                 return;
-            var orderDTO = ordersLogic.GetOrder(IdOrder);
-            var detalsDTO = warehousesLogic.GetDetailsInOrder(IdOrder);
-            var malfunctionOrderDTO = malfunctionsOrdersLogic.GetMalfunctionOrdersByIdOrder(IdOrder);
+            var orderDTO = await ordersLogic.GetOrderAsync(IdOrder);
+            var detalsDTO = await warehousesLogic.GetDetailsInOrderAsync(IdOrder);
+            var malfunctionOrderDTO = await malfunctionsOrdersLogic.GetMalfunctionOrdersByIdOrderAsync(IdOrder);
             ReportsLogic.IssuingDeviceReport(orderDTO, detalsDTO, malfunctionOrderDTO);
             FocusButton(status);
         }
@@ -1327,40 +1327,40 @@ namespace WinFormsApp1
 
         private void TextBoxIdOrder_TextChanged(object sender, EventArgs e)
         {
-            Search();
+            SearchAsync();
         }
 
         private void TextBoxDateCreation_TextChanged(object sender, EventArgs e)
         {
-            Search();
+            SearchAsync();
         }
 
         private void TextBoxDateStartWork_TextChanged(object sender, EventArgs e)
         {
-            Search();
+            SearchAsync();
         }
 
         private void TextBoxNameMaster_TextChanged(object sender, EventArgs e)
         {
-            Search();
+            SearchAsync();
         }
 
         private void TextBoxDevice_TextChanged(object sender, EventArgs e)
         {
-            Search();
+            SearchAsync();
         }
 
         private void TextBoxNameClient_TextChanged(object sender, EventArgs e)
         {
-            Search();
+            SearchAsync();
         }
 
         private void CheckBoxSearch_CheckedChanged(object sender, EventArgs e)
         {
-            Search();
+            SearchAsync();
         }
 
-        private void Search()
+        private async void SearchAsync()
         {
             if (CheckNoFilters())
             {
@@ -1370,7 +1370,7 @@ namespace WinFormsApp1
             StatusOrderEnum? statusOrder = null;
             if (!checkBoxSearch.Checked)
                 statusOrder = status;
-            orders = ordersLogic.GetOrdersBySearch(numberOrder: textBoxIdOrder.Text,
+            orders = await ordersLogic.GetOrdersBySearchAsync(numberOrder: textBoxIdOrder.Text,
                 dateCreation: textBoxDateCreation.Text, dateStartWork: textBoxDateStartWork.Text,
                 masterName: textBoxNameMaster.Text, device: textBoxDevice.Text, idClient: textBoxNameClient.Text,
                 statusOrder: statusOrder);

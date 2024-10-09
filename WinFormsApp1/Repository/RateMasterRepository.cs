@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using WinFormsApp1.DTO;
 using WinFormsApp1.Model;
 using WinFormsApp1.Repository.Interfaces;
@@ -15,19 +16,19 @@ namespace WinFormsApp1.Repository
         }
 
         /// <inheritdoc/>
-        public List<RateMasterDTO> GetRateMasterByIdMaster(int id)
+        public async Task<List<RateMasterDTO>> GetRateMasterByIdMasterAsync(int id, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<RateMasterDTO>(context.Set<RateMaster>()
-                .Where(i => i.MasterId == id).OrderBy(i => i.DateStart)).ToList();
+            return await _mapper.ProjectTo<RateMasterDTO>(context.Set<RateMaster>()
+                .Where(i => i.MasterId == id).OrderBy(i => i.DateStart)).ToListAsync(token);
         }
 
         /// <inheritdoc/>
-        public RateMasterEditDTO GetRateMasterByDate(int masterId, DateTime date)
+        public async Task<RateMasterEditDTO> GetRateMasterByDateAsync(int masterId, DateTime date, CancellationToken token = default)
         {
             Context context = new();
-            return _mapper.ProjectTo<RateMasterEditDTO>(context.Set<RateMaster>().Where(i => i.MasterId == masterId && 
-            i.DateStart == date.ToUniversalTime())).FirstOrDefault();
+            return await _mapper.ProjectTo<RateMasterEditDTO>(context.Set<RateMaster>().Where(i => i.MasterId == masterId && 
+            i.DateStart == date.ToUniversalTime())).FirstOrDefaultAsync(token);
         }
 
         /// <inheritdoc/>

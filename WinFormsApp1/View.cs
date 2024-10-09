@@ -69,7 +69,7 @@ namespace WinFormsApp1
             Properties.Settings.Default.SecondLevelText = textBoxSecondLevelBefore.Text;
             Properties.Settings.Default.Save();
 
-            var ordersDTO = ordersLogic.GetOrders();
+            var ordersDTO = await ordersLogic.GetOrdersAsync();
             foreach (var order in ordersDTO)
             {
                 order.ColorRow = ColorTranslator.ToHtml(ColorsRowsHelper.ColorDefinition(order));

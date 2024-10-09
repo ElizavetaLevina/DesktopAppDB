@@ -19,14 +19,14 @@ namespace WinFormsApp1
         {
             mastersLogic = _mastersLogic;
             InitializeComponent();
-            UpdateTable();
+            UpdateTableAsync();
         }
 
         private void BtnAddMaster_Click(object sender, EventArgs e)
         {
             MasterEdit addMasterForm = Program.ServiceProvider.GetRequiredService<MasterEdit>();
             addMasterForm.ShowDialog();
-            UpdateTable();
+            UpdateTableAsync();
         }
 
         private void BtnChangeMaster_Click(object sender, EventArgs e)
@@ -38,7 +38,7 @@ namespace WinFormsApp1
                 addMasterForm.idMaster = IdMaster;
                 addMasterForm.Text = "Изменение информации о мастере";
                 addMasterForm.ShowDialog();
-                UpdateTable();
+                UpdateTableAsync();
             }
         }
 
@@ -46,9 +46,9 @@ namespace WinFormsApp1
         {
             if (dataGridView1.Rows.Count > 0)
             {
-                var masterDTO = mastersLogic.GetMaster(IdMaster);
+                var masterDTO = await mastersLogic.GetMasterAsync(IdMaster);
                 await mastersLogic.RemoveMasterAsync(masterDTO);
-                UpdateTable();
+                UpdateTableAsync();
             }
         }
 
@@ -57,9 +57,9 @@ namespace WinFormsApp1
             Close();
         }
 
-        private void UpdateTable()
+        private async void UpdateTableAsync()
         {
-            dataGridView1.DataSource = mastersLogic.GetMastersForOutput();
+            dataGridView1.DataSource = await mastersLogic.GetMastersForOutputAsync();
             dataGridView1.Columns[nameof(MasterDTO.Id)].Visible = false;
             dataGridView1.Columns[nameof(MasterDTO.NameMaster)].HeaderText = "ФИО";
             dataGridView1.Columns[nameof(MasterDTO.NumberPhone)].HeaderText = "Телефон";

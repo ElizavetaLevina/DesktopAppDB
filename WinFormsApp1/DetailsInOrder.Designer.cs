@@ -76,7 +76,7 @@
             buttonAddDetail.TabIndex = 1;
             buttonAddDetail.Text = "Добавить деталь";
             buttonAddDetail.UseVisualStyleBackColor = true;
-            buttonAddDetail.Click += ButtonAddDetail_Click;
+            buttonAddDetail.Click += ButtonAddDetail_ClickAsync;
             // 
             // buttonChangeDetail
             // 
@@ -96,7 +96,7 @@
             buttonRemoveDetail.TabIndex = 3;
             buttonRemoveDetail.Text = "Удалить деталь";
             buttonRemoveDetail.UseVisualStyleBackColor = true;
-            buttonRemoveDetail.Click += ButtonRemoveDetail_Click;
+            buttonRemoveDetail.Click += ButtonRemoveDetail_ClickAsync;
             // 
             // buttonExit
             // 

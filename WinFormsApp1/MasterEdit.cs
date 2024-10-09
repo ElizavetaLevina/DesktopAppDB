@@ -23,12 +23,12 @@ namespace WinFormsApp1
             labelPercent.Text = trackBarPercent.Value.ToString();
         }
 
-        private void AddMasterForm_Activated(object sender, EventArgs e)
+        private async void AddMasterForm_ActivatedAsync(object sender, EventArgs e)
         {
             linkLabelRateEdit.Visible = !newMaster;
             if (!newMaster)
             {
-                masterDTO = mastersLogic.GetMaster(idMaster);
+                masterDTO = await mastersLogic.GetMasterAsync(idMaster);
 
                 textBoxName.Text = masterDTO.NameMaster;
                 textBoxName.SelectAll();

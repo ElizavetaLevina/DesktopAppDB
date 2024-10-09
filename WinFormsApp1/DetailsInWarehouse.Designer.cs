@@ -73,7 +73,7 @@
             buttonAddDetails.TabIndex = 1;
             buttonAddDetails.Text = "Добавить деталь на склад";
             buttonAddDetails.UseVisualStyleBackColor = true;
-            buttonAddDetails.Click += ButtonAddDetails_Click;
+            buttonAddDetails.Click += ButtonAddDetails_ClickAsync;
             // 
             // buttonDeleteDetail
             // 
@@ -83,7 +83,7 @@
             buttonDeleteDetail.TabIndex = 2;
             buttonDeleteDetail.Text = "Удалить делать со склада";
             buttonDeleteDetail.UseVisualStyleBackColor = true;
-            buttonDeleteDetail.Click += ButtonDeleteDetail_Click;
+            buttonDeleteDetail.Click += ButtonDeleteDetail_ClickAsync;
             // 
             // label1
             // 
@@ -120,7 +120,7 @@
             textBoxDevice.Size = new Size(243, 31);
             textBoxDevice.TabIndex = 4;
             textBoxDevice.Visible = false;
-            textBoxDevice.TextChanged += TextBoxDevice_TextChanged;
+            textBoxDevice.TextChanged += TextBoxDevice_TextChangedAsync;
             // 
             // buttonChangeDetail
             // 
@@ -130,7 +130,7 @@
             buttonChangeDetail.TabIndex = 3;
             buttonChangeDetail.Text = "Изменить данные";
             buttonChangeDetail.UseVisualStyleBackColor = true;
-            buttonChangeDetail.Click += ButtonChangeDetail_Click;
+            buttonChangeDetail.Click += ButtonChangeDetail_ClickAsync;
             // 
             // DetailsInWarehouse
             // 
